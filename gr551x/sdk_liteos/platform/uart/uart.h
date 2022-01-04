@@ -13,15 +13,17 @@
  * limitations under the License.
  */
 
-#ifndef __LOG_SERIAL_H
-#define __LOG_SERIAL_H
+#ifndef __UART_H
+#define __UART_H
+
+#include "los_event.h"
+#include "los_compiler.h"
+#include "app_io.h"
+#include "app_uart.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "app_io.h"
-#include "app_uart.h"
 
 #define LOG_UART_ID                     APP_UART_ID_0
 #define LOG_UART_BAUDRATE               115200
@@ -37,10 +39,13 @@ extern "C" {
 /**< Size of app uart tx buffer. */
 #define UART_TX_BUFF_SIZE               0x2000    
 
+extern EVENT_CB_S g_shellInputEvent;
+
 void bsp_log_init(void);
+uint8_t UartGetc(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __LOG_SERIAL_H */
+#endif /* __UART_H */

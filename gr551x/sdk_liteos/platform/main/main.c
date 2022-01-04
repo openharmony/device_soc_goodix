@@ -18,7 +18,7 @@
 #include "stdint.h"
 #include "gr55xx_sys.h"
 #include "custom_config.h"
-#include "log_serial.h"
+#include "uart.h"
 #include "app_rng.h"
 #include "app_log.h"
 #include "los_task.h"
@@ -138,6 +138,10 @@ int main(void)
     ret = LOS_KernelInit();
     if (ret == LOS_OK) {
         OSVectorInit();
+#if (LOSCFG_USE_SHELL == 1)
+        LosShellInit();
+        OsShellInit();
+#endif
         SystemPeripheralsInit();
         HardwareRandomInit();
         DeviceManagerStart();

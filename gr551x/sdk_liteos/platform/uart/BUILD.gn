@@ -17,8 +17,6 @@ config("public") {
   include_dirs = [ "." ]
 }
 
-kernel_module("platform_log") {
-  sources = [
-    "log_serial.c",
-  ]
+kernel_module("platform_uart") {
+  sources = [ "uart.c" ]
 }

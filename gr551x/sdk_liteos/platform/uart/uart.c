@@ -15,16 +15,32 @@
 
 #include <stdio.h>
 #include "gr55xx.h"
-#include "log_serial.h"
 #include "app_log.h"
+#include "uart.h"
+#include "los_sem.h"
 
+static UINT32 rxSemHandle;
 static uint8_t s_uart_tx_buffer[UART_TX_BUFF_SIZE];
 static bool uart_initialized = false;
+
+static void uart_callback(app_uart_evt_t *p_evt)
+{
+    if ((p_evt->type == APP_UART_EVT_RX_DATA) || 
+        (p_evt->type == APP_UART_EVT_ERROR)) {
+
+        LOS_SemPost(rxSemHandle);
+#if (LOSCFG_USE_SHELL == 1)
+        (void)LOS_EventWrite(&g_shellInputEvent, 0x1);
+#endif
+    }
+}
 
 void bsp_uart_init(void)
 {
     app_uart_tx_buf_t uart_buffer;
     app_uart_params_t uart_param;
+
+    LOS_BinarySemCreate(0, &rxSemHandle);
 
     uart_buffer.tx_buf       = s_uart_tx_buffer;
     uart_buffer.tx_buf_size  = UART_TX_BUFF_SIZE;
@@ -45,8 +61,10 @@ void bsp_uart_init(void)
     uart_param.pin_cfg.tx.mux       = LOG_UART_TX_PINMUX;
     uart_param.pin_cfg.tx.pull      = LOG_UART_TX_PULL;
     uart_param.use_mode.type        = APP_UART_TYPE_INTERRUPT;
-    app_uart_init(&uart_param, NULL, &uart_buffer);
-
+    app_uart_init(&uart_param, uart_callback, &uart_buffer);
+#if (LOSCFG_USE_SHELL == 1)
+    (void)LOS_EventWrite(&g_shellInputEvent, 0x1);
+#endif
     uart_initialized = true;
 }
 
@@ -79,17 +97,6 @@ void bsp_log_init(void)
     app_assert_init();
 }
 
-__attribute__((weak)) int _read(int file, char *ptr, int len)
-{
-    return 0;
-}
-
-__attribute__((weak)) int _write(int file, char *ptr, int len)
-{
-    bsp_uart_send(ptr, len);
-    return len;
-}
-
 int HiLogWriteInternal(const char *buffer, size_t bufLen)
 {
     if (!buffer)
@@ -112,3 +119,14 @@ void _putchar(char character)
     bsp_uart_send(&character, 1);
 }
 
+uint8_t UartGetc(void)
+{
+    uint8_t ch = 0;
+
+    if (uart_initialized != true) {
+        return;
+    }
+    app_uart_receive_async(LOG_UART_ID, &ch, 1);
+    LOS_SemPend(rxSemHandle, LOS_WAIT_FOREVER);
+    return ch;
+}
