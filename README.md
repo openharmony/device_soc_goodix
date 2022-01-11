@@ -166,7 +166,7 @@ cd ~/openharmony
 ```
 2. 打包下载所有文件，此时默认的Harmony版本为Master：
 ```
-repo init -u https://gitee.com/openharmony-sig/manifest.git -m devboard_gr5515.xml --no-repo-verify
+repo init -u https://gitee.com/openharmony/manifest --no-repo-verify
 ```
 3. 下载好仓库后，输入：`repo sync -c`，也就是下载当前分支的代码。
 4. 下载好代码后，输入：`repo forall -c 'git lfs pull'`，下载部分大容量二进制文件。
@@ -442,7 +442,7 @@ J-Link仿真器与开发板或者产品正确连接，且J-Link仿真器的USB�
 
 ## 相关仓库
 
-[vendor_goodix](https://gitee.com/openharmony-sig/vendor_goodix)
+[vendor_goodix](https://gitee.com/openharmony/vendor_goodix)
 
-[device_board_goodix](https://gitee.com/openharmony-sig/device_board_goodix)
+[device_board_goodix](https://gitee.com/openharmony/device_board_goodix)
 

@@ -60,12 +60,12 @@
                                        Mutex module configuration
 =============================================================================*/
 #define LOSCFG_BASE_IPC_MUX                                 1
-#define LOSCFG_BASE_IPC_MUX_LIMIT                           24
+#define LOSCFG_BASE_IPC_MUX_LIMIT                           64
 /*=============================================================================
                                        Queue module configuration
 =============================================================================*/
 #define LOSCFG_BASE_IPC_QUEUE                               1
-#define LOSCFG_BASE_IPC_QUEUE_LIMIT                         24
+#define LOSCFG_BASE_IPC_QUEUE_LIMIT                         48
 /*=============================================================================
                                        Software timer module configuration
 =============================================================================*/
