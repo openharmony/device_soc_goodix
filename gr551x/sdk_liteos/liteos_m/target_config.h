@@ -60,7 +60,7 @@
                                        Mutex module configuration
 =============================================================================*/
 #define LOSCFG_BASE_IPC_MUX                                 1
-#define LOSCFG_BASE_IPC_MUX_LIMIT                           64
+#define LOSCFG_BASE_IPC_MUX_LIMIT                           80
 /*=============================================================================
                                        Queue module configuration
 =============================================================================*/
