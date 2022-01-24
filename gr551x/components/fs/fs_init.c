@@ -18,7 +18,7 @@
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
 #include "device_resource_if.h"
-#include "lfs_api.h"
+#include "lfs_adapter.h"
 
 struct fs_cfg {
     char *mount_point;
@@ -91,16 +91,15 @@ static int32_t FsDriverInit(struct HdfDeviceObject *object)
         fs[i].lfs_cfg.lookahead_size = 32;
         fs[i].lfs_cfg.block_cycles = 500;
 
-        SetDefaultMountPath(i, fs[i].mount_point);
         littlefs_flash_init(&fs[i].lfs_cfg);
 
         int ret = mount(NULL, fs[i].mount_point, "littlefs", 0, &fs[i].lfs_cfg);
         HDF_LOGI("%s: mount fs on '%s' %s\n", __func__, fs[i].mount_point, (ret == 0) ? "succeed" : "failed");
-        if (CheckPathIsMounted(fs[i].mount_point, &fileOpInfo) == TRUE) {
-            int lfs_ret = lfs_mkdir(&fileOpInfo->lfsInfo, fs[i].mount_point);
-            if (lfs_ret == LFS_ERR_OK) {
+        if (ret == 0) {
+            ret = mkdir(fs[i].mount_point, S_IRWXU | S_IRWXG | S_IRWXO);
+            if (ret == 0) {
                 HDF_LOGI("create root dir success.");
-            } else if (lfs_ret == LFS_ERR_EXIST) {
+            } else if (errno == EEXIST) {
                 HDF_LOGI("root dir exist.");
             } else {
                 HDF_LOGI("create root dir failed.");
