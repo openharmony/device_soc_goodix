@@ -20,6 +20,12 @@
 #include "device_resource_if.h"
 #include "lfs_api.h"
 
+#define LFS_CFG_READ_SIZE       16
+#define LFS_CFG_PROG_SIZE       16
+#define LFS_CFG_CACHE_SIZE      16
+#define LFS_CFG_LOOKAHEAD_SIZE  32
+#define LFS_CFG_BLOCK_CYCLES    500
+
 struct fs_cfg {
     char *mount_point;
     struct lfs_config lfs_cfg;
@@ -77,19 +83,19 @@ static int32_t FsDriverInit(struct HdfDeviceObject *object)
     }
 
     for (int i = 0; i < sizeof(fs) / sizeof(fs[0]); i++) {
-    if (fs[i].mount_point == NULL)
+        if (fs[i].mount_point == NULL) {
             continue;
-
+        }
         fs[i].lfs_cfg.read  = littlefs_block_read;
         fs[i].lfs_cfg.prog  = littlefs_block_write;
         fs[i].lfs_cfg.erase = littlefs_block_erase;
         fs[i].lfs_cfg.sync  = littlefs_block_sync;
 
-        fs[i].lfs_cfg.read_size = 16;
-        fs[i].lfs_cfg.prog_size = 16;
-        fs[i].lfs_cfg.cache_size = 16;
-        fs[i].lfs_cfg.lookahead_size = 32;
-        fs[i].lfs_cfg.block_cycles = 500;
+        fs[i].lfs_cfg.read_size = LFS_CFG_READ_SIZE;
+        fs[i].lfs_cfg.prog_size = LFS_CFG_PROG_SIZE;
+        fs[i].lfs_cfg.cache_size = LFS_CFG_CACHE_SIZE;
+        fs[i].lfs_cfg.lookahead_size = LFS_CFG_LOOKAHEAD_SIZE;
+        fs[i].lfs_cfg.block_cycles = LFS_CFG_BLOCK_CYCLES;
 
         SetDefaultMountPath(i, fs[i].mount_point);
         littlefs_flash_init(&fs[i].lfs_cfg);

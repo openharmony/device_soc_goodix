@@ -43,6 +43,7 @@ extern EVENT_CB_S g_shellInputEvent;
 
 void bsp_log_init(void);
 uint8_t UartGetc(void);
+void _putchar(char character);
 
 #ifdef __cplusplus
 }

@@ -121,7 +121,7 @@ static inline uint32_t get_wakeup_flag(void)
     return (AON->SOFTWARE_2 & (1 << SOFTWARE_REG_WAKEUP_FLAG_POS));
 }
 
-void set_msp()
+void set_msp(void)
 {
     #ifndef DRIVER_TEST
     #ifdef APP_CODE_RUN_ADDR

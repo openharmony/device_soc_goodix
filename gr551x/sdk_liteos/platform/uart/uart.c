@@ -19,8 +19,10 @@
 #include "uart.h"
 #include "los_sem.h"
 
+#define UART_TX_TIMEOUT         1000
+#define HILOG_IDX               2
+
 static UINT32 rxSemHandle;
-static uint8_t s_uart_tx_buffer[UART_TX_BUFF_SIZE];
 static bool uart_initialized = false;
 
 static void uart_callback(app_uart_evt_t *p_evt)
@@ -42,8 +44,8 @@ void bsp_uart_init(void)
 
     LOS_BinarySemCreate(0, &rxSemHandle);
 
-    uart_buffer.tx_buf       = s_uart_tx_buffer;
-    uart_buffer.tx_buf_size  = UART_TX_BUFF_SIZE;
+    uart_buffer.tx_buf              = NULL;
+    uart_buffer.tx_buf_size         = 0;
 
     uart_param.id                   = LOG_UART_ID;
     uart_param.init.baud_rate       = LOG_UART_BAUDRATE;
@@ -74,7 +76,7 @@ void bsp_uart_send(uint8_t *p_data, uint16_t length)
         return;
     }
 
-    app_uart_transmit_sync(LOG_UART_ID, p_data, length, 1000);
+    app_uart_transmit_sync(LOG_UART_ID, p_data, length, UART_TX_TIMEOUT);
 }
 
 void bsp_uart_flush(void)
@@ -99,17 +101,19 @@ void bsp_log_init(void)
 
 int HiLogWriteInternal(const char *buffer, size_t bufLen)
 {
-    if (!buffer)
+    if (!buffer) {
         return -1;
+    }
     // because it's called as HiLogWriteInternal(buf, strlen(buf) + 1)
-    if (bufLen < 2)
+    if (bufLen < HILOG_IDX) {
         return 0;
-    if (buffer[bufLen - 2] != '\n') {
+    }
+    if (buffer[bufLen - HILOG_IDX] != '\n') {
         *((char *)buffer + bufLen - 1) = '\n';
     } else {
         bufLen--;
     }
-    int ret = app_uart_transmit_sync(LOG_UART_ID, buffer, bufLen, 1000);
+    int ret = app_uart_transmit_sync(LOG_UART_ID, buffer, bufLen, UART_TX_TIMEOUT);
 
     return ret;
 }

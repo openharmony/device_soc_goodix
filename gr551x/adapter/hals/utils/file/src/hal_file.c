@@ -28,8 +28,10 @@
 #define LOG_E(fmt, ...)  HILOG_ERROR(HILOG_MODULE_APP, fmt, ##__VA_ARGS__)
 #define LOG_I(fmt, ...)  HILOG_INFO(HILOG_MODULE_APP, fmt, ##__VA_ARGS__)
 
-#define MaxOpenFile  32
-#define ROOT_PATH    "/data"
+#define ROOT_LEN         2
+#define MAX_PATH_LEN     40
+#define MaxOpenFile      32
+#define ROOT_PATH        "/data"
 
 typedef struct _File_Context {
     int fs_fd;
@@ -90,11 +92,12 @@ int HalFileOpen(const char *path, int oflag, int mode)
 {
     char *file_path;
     int fd;
+    uint16_t path_len;
 
-	if (strlen(path) >= 40) {
-		LOG_E("path name is too long!!!\n");
-		return -1;
-	}
+    if (strlen(path) >= MAX_PATH_LEN) {
+        LOG_E("path name is too long!!!\n");
+        return -1;
+    }
 
     fd = Find_Free_Num();
     if (fd == 0) {
@@ -102,12 +105,13 @@ int HalFileOpen(const char *path, int oflag, int mode)
         return -1;
     }
 
-    file_path = (char *)malloc(strlen(path) + strlen(ROOT_PATH) + 2);
+    path_len = strlen(path) + strlen(ROOT_PATH) + ROOT_LEN;
+    file_path = (char *)malloc(path_len);
     if (file_path == NULL) {
         LOG_E("malloc path name buffer failed!\n");
         return -1;
     }
-    strcpy(file_path, ROOT_PATH);
+    strcpy_s(file_path, path_len, ROOT_PATH);
     strcat(file_path, "/");
     strcat(file_path, path);
 
@@ -165,18 +169,21 @@ int HalFileWrite(int fd, const char *buf, unsigned int len)
 int HalFileDelete(const char *path)
 { 
     char *file_path;
+    uint16_t path_len;
 
-	if (strlen(path) >= 40) {
-		LOG_E("path name is too long!!!\n");
-		return -1;
-	}
+    if (strlen(path) >= MAX_PATH_LEN) {
+        LOG_E("path name is too long!!!\n");
+        return -1;
+    }
 
-    file_path = (char *)malloc(strlen(path) + strlen(ROOT_PATH) + 2);
+    path_len = strlen(path) + strlen(ROOT_PATH) + ROOT_LEN;
+    file_path = (char *)malloc(path_len);
     if (file_path == NULL) {
         LOG_E("malloc path name buffer failed!\n");
         return -1;
     }
-    strcpy(file_path, ROOT_PATH);
+
+    strcpy_s(file_path, path_len, ROOT_PATH);
     strcat(file_path, "/");
     strcat(file_path, path);
 
@@ -190,18 +197,20 @@ int HalFileStat(const char *path, unsigned int *fileSize)
 {
     char *file_path;
     struct stat f_info;
+    uint16_t path_len;
 
-	if (strlen(path) >= 40) {
-		LOG_E("path name is too long!!!\n");
-		return -1;
-	}
+    if (strlen(path) >= MAX_PATH_LEN) {
+        LOG_E("path name is too long!!!\n");
+        return -1;
+    }
 
-    file_path = (char *)malloc(strlen(path) + strlen(ROOT_PATH) + 2);
+    path_len = strlen(path) + strlen(ROOT_PATH) + ROOT_LEN;
+    file_path = (char *)malloc(path_len);
     if (file_path == NULL) {
         LOG_E("malloc path name buffer failed!\n");
         return -1;
     }
-    strcpy(file_path, ROOT_PATH);
+    strcpy_s(file_path, path_len, ROOT_PATH);
     strcat(file_path, "/");
     strcat(file_path, path);
 

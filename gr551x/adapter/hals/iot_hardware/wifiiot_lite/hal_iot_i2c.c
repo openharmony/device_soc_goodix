@@ -58,6 +58,11 @@
 #define I2C1_PARAM_CONFIG           {APP_I2C_ID_1, APP_I2C_ROLE_MASTER, I2C1_IO_CONFIG, I2C1_MODE_CONFIG, I2C1_I2C_CONFIG}
 #define I2C_SYNC_TIMEOUT            20
 
+#define I2C_BAUDRATE_100K           100
+#define I2C_BAUDRATE_400K           400
+#define I2C_BAUDRATE_1000K          1000
+#define I2C_BAUDRATE_2000K          2000
+
 static const app_i2c_params_t i2c_cfg_params[APP_I2C_ID_MAX] = {
     I2C0_PARAM_CONFIG,
     I2C1_PARAM_CONFIG
@@ -111,13 +116,13 @@ unsigned int IoTI2cInit(unsigned int id, unsigned int baudrate)
     }
 
     memcpy(&i2c_params, &i2c_cfg_params[id], sizeof(app_i2c_params_t));
-    if (baudrate == 100) {
+    if (baudrate == I2C_BAUDRATE_100K) {
         i2c_params.init.speed = I2C_SPEED_100K;
-    } else if (baudrate == 400) {
+    } else if (baudrate == I2C_BAUDRATE_400K) {
         i2c_params.init.speed = I2C_SPEED_400K;
-    }  else if (baudrate == 1000) {
+    }  else if (baudrate == I2C_BAUDRATE_1000K) {
         i2c_params.init.speed = I2C_SPEED_1000K;
-    } else if (baudrate == 2000) {
+    } else if (baudrate == I2C_BAUDRATE_2000K) {
         i2c_params.init.speed = I2C_SPEED_2000K;
     } else {
         return IOT_FAILURE;
