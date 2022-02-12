@@ -112,8 +112,12 @@ int HalFileOpen(const char *path, int oflag, int mode)
         return -1;
     }
     strcpy_s(file_path, path_len, ROOT_PATH);
-    strcat(file_path, "/");
-    strcat(file_path, path);
+    if (strcat_s(file_path, path_len, "/") != 0) {
+        return -1;
+    }
+    if (strcat_s(file_path, path_len, path) != 0) {
+        return -1;
+    }
 
     int fs_fd = open(file_path, ReadModeChange(oflag));
     if (fs_fd < 0) {
@@ -184,8 +188,12 @@ int HalFileDelete(const char *path)
     }
 
     strcpy_s(file_path, path_len, ROOT_PATH);
-    strcat(file_path, "/");
-    strcat(file_path, path);
+    if (strcat_s(file_path, path_len, "/") != 0) {
+        return -1;
+    }
+    if (strcat_s(file_path, path_len, path) != 0) {
+        return -1;
+    }
 
     int ret = unlink(file_path);
     free(file_path);
@@ -211,8 +219,12 @@ int HalFileStat(const char *path, unsigned int *fileSize)
         return -1;
     }
     strcpy_s(file_path, path_len, ROOT_PATH);
-    strcat(file_path, "/");
-    strcat(file_path, path);
+    if (strcat_s(file_path, path_len, "/") != 0) {
+        return -1;
+    }
+    if (strcat_s(file_path, path_len, path) != 0) {
+        return -1;
+    }
 
     int ret = stat(file_path, &f_info);
     *fileSize = f_info.st_size;

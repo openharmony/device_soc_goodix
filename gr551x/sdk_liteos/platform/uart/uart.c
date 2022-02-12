@@ -101,17 +101,18 @@ void bsp_log_init(void)
 
 int HiLogWriteInternal(const char *buffer, size_t bufLen)
 {
+    size_t len = bufLen;
     if (!buffer) {
         return -1;
     }
     // because it's called as HiLogWriteInternal(buf, strlen(buf) + 1)
-    if (bufLen < HILOG_IDX) {
+    if (len < HILOG_IDX) {
         return 0;
     }
-    if (buffer[bufLen - HILOG_IDX] != '\n') {
+    if (buffer[len - HILOG_IDX] != '\n') {
         *((char *)buffer + bufLen - 1) = '\n';
     } else {
-        bufLen--;
+        len--;
     }
     int ret = app_uart_transmit_sync(LOG_UART_ID, buffer, bufLen, UART_TX_TIMEOUT);
 

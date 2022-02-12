@@ -115,7 +115,7 @@ unsigned int IoTI2cInit(unsigned int id, unsigned int baudrate)
         return IOT_FAILURE;
     }
 
-    memcpy(&i2c_params, &i2c_cfg_params[id], sizeof(app_i2c_params_t));
+    memcpy_s(&i2c_params, sizeof(app_i2c_params_t), &i2c_cfg_params[id], sizeof(app_i2c_params_t));
     if (baudrate == I2C_BAUDRATE_100K) {
         i2c_params.init.speed = I2C_SPEED_100K;
     } else if (baudrate == I2C_BAUDRATE_400K) {
@@ -169,7 +169,7 @@ unsigned int IoTI2cSetBaudrate(unsigned int id, unsigned int baudrate)
         return IOT_FAILURE;
     }
 
-    memcpy(&i2c_params, &i2c_cfg_params[id], sizeof(app_i2c_params_t));
+    memcpy_s(&i2c_params, sizeof(app_i2c_params_t), &i2c_cfg_params[id], sizeof(app_i2c_params_t));
     if (baudrate == 100) {
         i2c_params.init.speed = I2C_SPEED_100K;
     } else if (baudrate == 400) {
