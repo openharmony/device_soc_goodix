@@ -42,11 +42,11 @@ GR5515 Starter Kit（以下简称GR5515 SK）套件是基于的GR551x芯片（�
 
 ### 下载系统
 
-笔者使用的系统版本标签是3.0.0_LTS，仅在此版本进行了验证，建议读者下载此版本的源码。
+笔者使用的系统版本标签是3.0.1_LTS，仅在此版本进行了验证，建议读者下载此版本的源码。
 
 源码下载步骤：
 
-1. 打包下载所有文件，此时默认的Harmony版本为3.0.0_LTS：`repo init -u https://gitee.com/openharmony-sig/manifest.git -b OpenHarmony-3.0-LTS --no-repo-verify -m devboard_gr5515.xml`。
+1. 打包下载所有文件，此时默认的Harmony版本为3.0.1_LTS：`repo init -u https://gitee.com/openharmony/manifest.git -b refs/tags/OpenHarmony-v3.0.1-LTS --no-repo-verify`。
 2. 下载好仓库后，输入：`repo sync -c`，也就是下载当前分支的代码。
 3. 下载好代码后，输入：`repo forall -c 'git lfs pull'`，下载部分大容量二进制文件。
 
@@ -56,8 +56,8 @@ GR5515 Starter Kit（以下简称GR5515 SK）套件是基于的GR551x芯片（�
 
 如果下载系统时选择了打包下载，可跳过此步。
 
-1. 从https://gitee.com/openharmony-sig/devboard_device_goodix_gr551x.git                下载device仓内容。
-2. 从https://gitee.com/openharmony-sig/devboard_vendor_goodix_gr5515_sk_basic.git 下载vendor仓内容。
+1. 从https://gitee.com/openharmony/device_soc_goodix.git 下载device仓内容。
+2. 从https://gitee.com/openharmony/vendor_goodix.git 下载vendor仓内容。
 
 
 
@@ -129,6 +129,4 @@ user:~/Harmony/vendor$ tree -L 3
 
 ## 相关仓库
 
-[devboard_device_goodix_gr551x](https://gitee.com/openharmony-sig/devboard_device_goodix_gr551x)
-
-[devboard_vendor_goodix_gr5515_sk_basic](https://gitee.com/openharmony-sig/devboard_vendor_goodix_gr5515_sk_basic)
+[vendor_goodix](https://gitee.com/openharmony/vendor_goodix)
