@@ -1,20 +1,6 @@
-# Copyright (c) 2021 GOODIX.
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # author: zhangqf
-
 """
 This module use arm-none-eabi-xxx function to deal the xxx.elf file. we recept two parameters, and the 
 format of the usage: bin_create.py input_file.elf  out_file.bin. Thanks for use this module
@@ -29,7 +15,8 @@ import re
 import os
 import json
 
-CUSTOM_CONFIG   = "../../../device/soc/goodix/gr551x/sdk_liteos/config/custom_config.h"
+TARGET_IMG_NAME = "application_fw"
+CUSTOM_CONFIG   = "../../../device/goodix/gr551x/sdk_liteos/config/custom_config.h"
 
 BufSize = 1024
 PatternValue = 0x4744
@@ -389,7 +376,6 @@ def main(input = ""):
 def make_bin(input_file = "", output_file = "", list_file=""):
     shell_script =  '''arm-none-eabi-objcopy -O binary -S {src_file} {dst_file}'''.format(src_file = input_file, dst_file = output_file)
     cmd_output = os.system(shell_script)
-    
     main(output_file)
 
     # shell_script =  '''arm-none-eabi-size {src_file}

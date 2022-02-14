@@ -19,8 +19,6 @@
 #include "app_io.h"
 #include "los_sem.h"
 
-#define UART_TIMEOUT     1000
-
 static void app_uart0_callback(app_uart_evt_t *p_evt);
 static void app_uart1_callback(app_uart_evt_t *p_evt);
 
@@ -213,7 +211,7 @@ int IoTUartWrite(unsigned int id, const unsigned char *data, unsigned int dataLe
     int ret = 0;
 
     LOS_MuxPend(uart_tx_mutex[id], LOS_WAIT_FOREVER);
-    ret = app_uart_transmit_sync(id, data, dataLen, UART_TIMEOUT);
+    ret = app_uart_transmit_sync(id, data, dataLen, 1000);
     if (ret != 0) {
         LOS_MuxPost(uart_tx_mutex[id]);
         return IOT_FAILURE;
