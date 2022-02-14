@@ -11,39 +11,115 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/config/subsystem/lite_subsystem.gni")
-import("//kernel/liteos_m/liteos.gni")
+import("//build/lite/config/component/lite_component.gni")
 
 copy("link-script") {
-  sources = [ "sdk_liteos/platform/startup/gr551x.ld" ]
-  outputs = [ "$root_build_dir/bin/link.ld" ]
+    sources = [ "sdk_liteos/platform/startup/gr551x.ld"]
+    outputs = [ "$root_build_dir/bin/link.ld" ]
 }
+
+# copy("hilink_btsdk_lib") {
+#      sources = [ "components/hilink/debug/libhilinkbtsdk.a"]
+#      outputs = [ "$root_build_dir/libs/libhilinkbtsdk.a" ]
+#  }
+
+# copy("hichain_lib") {
+#      sources = [ "components/hichain/libhichain_account.a"]
+#      outputs = [ "$root_build_dir/libs/libhichain_account.a" ]
+#  }
 
 copy("sdk_lib") {
-  sources =
-      [ "sdk_liteos/gr551x_sdk/components/sdk/linker/lib_gcc/libble_sdk.a" ]
-  outputs = [ "$root_build_dir/libs/libble_sdk.a" ]
-}
+     sources = [ "sdk_liteos/gr551x_sdk/components/sdk/linker/lib_gcc/libble_sdk.a"]
+     outputs = [ "$root_build_dir/libs/libble_sdk.a" ]
+ }
 
 copy("rom_symbol") {
-  sources = [
-    "sdk_liteos/gr551x_sdk/components/patch/symbol_table/rom_symbol_gcc.txt",
-  ]
-  outputs = [ "$root_build_dir/libs/rom_symbol_gcc.txt" ]
+     sources = [ "sdk_liteos/gr551x_sdk/components/patch/symbol_table/rom_symbol_gcc.txt"]
+     outputs = [ "$root_build_dir/libs/rom_symbol_gcc.txt" ]
+ }
+
+source_set("device_soc"){
+    sources = [
+        "sdk_liteos/platform/main/sdk_main.c",
+        "sdk_liteos/platform/main/main.c",
+        "sdk_liteos/platform/system/syscalls.c",
+        "sdk_liteos/platform/system/sysmem.c",
+        "sdk_liteos/platform/system/log_serial.c",
+        "sdk_liteos/platform/startup/startup_gr55xx.s",
+
+        "sdk_liteos/gr551x_sdk/toolchain/gr551x/source/interrupt_gr55xx.c",
+        "sdk_liteos/gr551x_sdk/toolchain/gr551x/source/platform_gr55xx.c",
+        "sdk_liteos/gr551x_sdk/toolchain/gr551x/source/system_gr55xx.c",
+
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_exflash.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_adc.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_gpio.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_pwr.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_aon_gpio.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_uart.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_calendar.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_aon_wdt.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_i2c.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_pwm.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_rng.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_qspi.c",
+        "sdk_liteos/gr551x_sdk/drivers/src/gr55xx_hal_spi.c",
+
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_dma.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_gpiote.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_io.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_pwr_mgmt.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_systick.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_uart.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_rtc.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_i2c.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_pwm.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_rng.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_qspi.c",
+        "sdk_liteos/gr551x_sdk/components/app_drivers/src/app_spi.c",
+        
+        "sdk_liteos/gr551x_sdk/components/libraries/ring_buffer/ring_buffer.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_error/app_error.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_assert/app_assert.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_log/app_log.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/utility/utility.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_timer/app_timer.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_lfs/lfs.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_lfs/lfs_util.c",
+        "sdk_liteos/gr551x_sdk/components/libraries/app_lfs/app_lfs.c",
+        "sdk_liteos/gr551x_sdk/components/drivers_ext/gr551x/gr551x_spi_flash.c",
+
+        "adapter/hals/bluetooth/hal_bt_gatt.c",
+        "adapter/hals/bluetooth/hal_bt_gatt_server.c",
+        "adapter/hals/bluetooth/hal_bt_ota.c",
+        "adapter/hals/bluetooth/hal_bt_evt_handler.c",
+    ]
+
+    deps = [
+        ":link-script",
+        ":sdk_lib",
+        # ":hilink_btsdk_lib",
+        # ":hichain_lib",
+        ":rom_symbol",
+        "//kernel/liteos_m:kernel",
+        "//build/lite/config/component/cJSON:cjson_static",
+    ]
 }
 
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  deps = [
-    ":link-script",
-    ":rom_symbol",
-    ":sdk_lib",
-    "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static",
-    "//build/lite/config/component/cJSON:cjson_static",
-  ]
-  modules = [
-    "sdk_liteos",
-    "components",
-  ]
+source_set("hdf_drivers") {
+    deps = [
+        "//drivers/adapter/khdf/liteos_m:hdf_lite",
+        "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static",
+        "hcs:hdf_hcs",
+        "drivers:drivers",
+    ]
+}
+
+group("gr551x") {
+    deps = [
+        ":device_soc",
+        ":hdf_drivers",
+    ]
 }

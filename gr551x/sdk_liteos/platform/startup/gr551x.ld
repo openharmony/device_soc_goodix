@@ -21,23 +21,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-_Min_Heap_Size = 0x800;	  /* required amount of heap  */
-_Min_Stack_Size = 0x2000;	/* required amount of stack */
-
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
-_sstack = _estack - _Min_Stack_Size;
+
+_Min_Heap_Size = 0x800;	  /* required amount of heap  */
+_Min_Stack_Size = 0x2000;	/* required amount of stack */
 
 /* Memories definition */
 MEMORY
 {
   FPB_RAM (xrw)   : ORIGIN = 0x30004000,   LENGTH = 0x20
   RAM     (xrw)   : ORIGIN = 0x00804400,   LENGTH = 239K
-  FLASH   (rx)    : ORIGIN = 0x0100B000,   LENGTH = 676K
+  FLASH   (rx)    : ORIGIN = 0x0100B000,   LENGTH = 936K
 }
 
 /* Sections */
@@ -55,7 +54,7 @@ SECTIONS
   .text :
   {
     . = ALIGN(4);
-    _stext = .;
+
     *(.text)           /* .text sections (code) */
     *(.text*)          /* .text* sections (code) */
     *(.glue_7)         /* glue arm to thumb code */
@@ -199,6 +198,7 @@ SECTIONS
     _hdf_drivers_end = .;
   } >FLASH
 
+
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
   __etext = .;
@@ -216,7 +216,7 @@ SECTIONS
     *(.RamFunc*)       /* .RamFunc* sections */
     *(RAM_CODE)        /* .RamFunc sections */
     *(.ramfunc)        /* .RamFunc sections */
-    *(TINY_RAM_SPACE) 
+    *(TINY_RAM_SPACE)
     . = ALIGN(4);
     __data_end__ = . ;/* define a global symbol at data end */
   } >RAM AT> FLASH
@@ -225,7 +225,7 @@ SECTIONS
   . = ALIGN(4);
   .bss :
   {
-    /* This is used by the startup in order to initialize the .bss section */ 
+    /* This is used by the startup in order to initialize the .bss section */
     __bss_start__ = .;  /* define a global symbol at bss start */
     *(.bss)
     *(.bss*)
@@ -235,14 +235,23 @@ SECTIONS
     __bss_end__ = .;  /* define a global symbol at bss end */
   } >RAM
 
-   . = ALIGN(16);
+  . = ALIGN(16);
   __los_heap_addr_start__ = .;
   __los_heap_addr_end__ = ORIGIN(RAM) + LENGTH(RAM) - _Min_Stack_Size - _Min_Heap_Size - 1;
+  _end = __los_heap_addr_end__;
+
+  /* Remove information from the compiler libraries */
+  /DISCARD/ :
+  {
+    libc.a ( * )
+    libm.a ( * )
+    libgcc.a ( * )
+  }
 
   .fpb :
   {
     . = ALIGN(0x100);
-    *(FPB)            
+    *(FPB)
   } >FPB_RAM AT> FLASH
 
   .ARM.attributes 0 : { *(.ARM.attributes) }

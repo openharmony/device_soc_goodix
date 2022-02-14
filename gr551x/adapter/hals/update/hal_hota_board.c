@@ -124,4 +124,8 @@ int HotaHalCheckVersionValid(const char *currentVersion, const char *pkgVersion,
     return (strncmp(currentVersion, pkgVersion, pkgVersionLength) == 0) ? 1 : 0;
 }
 
+// uint32_t HotaGetResource(const struct DeviceResourceNode *resourceNode)
+// {
+//     return OHOS_SUCCESS;
+// }
 

@@ -18,21 +18,17 @@
 #include "stdint.h"
 #include "gr55xx_sys.h"
 #include "custom_config.h"
-#include "uart.h"
+#include "log_serial.h"
 #include "app_rng.h"
 #include "app_log.h"
-#include "los_task.h"
-#include "cmsis_os2.h"
-
-#define CN_MINISECONDS_IN_SECOND    1000
-#define CN_MAINBOOT_TASK_STACKSIZE  0X1000
-#define CN_MAINBOOT_TASK_PRIOR      2
-#define CN_MAINBOOT_TASK_NAME       "MainBoot"
 
 #define RNG_PARAM   {APP_RNG_TYPE_POLLING, {RNG_SEED_FR0_S0, RNG_LFSR_MODE_59BIT, RNG_OUTPUT_LFSR, RNG_POST_PRO_NOT}}
 
 static const uint8_t  s_bd_addr[SYS_BD_ADDR_LEN] = {0x08, 0x08, 0x08, 0xea, 0xea, 0xea};
 static uint16_t g_random_seed[8] = {0x1234, 0x5678, 0x90AB, 0xCDEF, 0x1468, 0x2345, 0x5329, 0x2411};
+
+void hi_watchdog_enable(void){};
+void hi_watchdog_disable(void){};
 
 /* Initialize system peripherals. */
 void SystemPeripheralsInit(void)
@@ -46,7 +42,7 @@ void SystemPeripheralsInit(void)
     }
 
     bsp_log_init();
-    APP_LOG_INFO("GR551x system start!!!");
+    APP_LOG_INFO(">>>>>>>>>>>>>>>>>>>>>>>>>>GR551x system start!!!");
 }
 
 /* Initialize Hardware RNG peripherals. */
@@ -111,43 +107,16 @@ void OSVectorInit(void)
     NVIC_SetPriorityGrouping(0x3);
 }
 
-static void MainBoot(void)
+void DUAL_TIMER_IRQHandler(void)
 {
-    UINT32 uwRet;
-    UINT32 taskID;
-    TSK_INIT_PARAM_S stTask = {0};
-
-    stTask.pfnTaskEntry = (TSK_ENTRY_FUNC)OHOS_SystemInit;
-    stTask.uwStackSize = CN_MAINBOOT_TASK_STACKSIZE;
-    stTask.pcName = CN_MAINBOOT_TASK_NAME;
-    stTask.usTaskPrio = CN_MAINBOOT_TASK_PRIOR;
-    uwRet = LOS_TaskCreate(&taskID, &stTask);
-    if (uwRet != LOS_OK) {
-        APP_LOG_ERROR("MainBoot task create failed!!!");
-    }
 }
-
 /**
   * @brief  The application entry point.
   * @retval int
   */
+extern void OHOS_Boot(void);
 int main(void)
 {
-    UINT32 ret;
-
-    ret = LOS_KernelInit();
-    if (ret == LOS_OK) {
-        OSVectorInit();
-#if (LOSCFG_USE_SHELL == 1)
-        LosShellInit();
-        OsShellInit();
-#endif
-        SystemPeripheralsInit();
-        HardwareRandomInit();
-        DeviceManagerStart();
-        MainBoot();
-        LOS_Start();
-    }
-    return 0;
+    OHOS_Boot();
+    while(1);
 }
-

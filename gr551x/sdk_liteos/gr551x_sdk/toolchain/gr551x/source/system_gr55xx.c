@@ -6,7 +6,7 @@
  * @date     12. June 2018
  ******************************************************************************/
 /*
- * Copyright (c) 2018 GOODIX. All rights reserved.
+ * Copyright (c) 2009-2016 ARM Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -121,7 +121,7 @@ static inline uint32_t get_wakeup_flag(void)
     return (AON->SOFTWARE_2 & (1 << SOFTWARE_REG_WAKEUP_FLAG_POS));
 }
 
-void set_msp(void)
+void set_msp()
 {
     #ifndef DRIVER_TEST
     #ifdef APP_CODE_RUN_ADDR
@@ -131,7 +131,7 @@ void set_msp(void)
     #endif
     #endif
 }
-
+ 
 static void __sdk_init(void)
 {
     sactter_copy_info_t sactter_copy_info = {0};

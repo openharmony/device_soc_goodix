@@ -20,8 +20,17 @@
 #ifndef _TARGET_CONFIG_H
 #define _TARGET_CONFIG_H
 
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+#endif /* __cplusplus */
+
 #include "gr55xx.h"
 #include "gr55xx_sys.h"
+
+
+// #define  LITE_OS_SEC_TEXT    SECTION_RAM_CODE
 
 /*=============================================================================
                                         System clock module configuration
@@ -60,12 +69,12 @@
                                        Mutex module configuration
 =============================================================================*/
 #define LOSCFG_BASE_IPC_MUX                                 1
-#define LOSCFG_BASE_IPC_MUX_LIMIT                           80
+#define LOSCFG_BASE_IPC_MUX_LIMIT                           32
 /*=============================================================================
                                        Queue module configuration
 =============================================================================*/
 #define LOSCFG_BASE_IPC_QUEUE                               1
-#define LOSCFG_BASE_IPC_QUEUE_LIMIT                         48
+#define LOSCFG_BASE_IPC_QUEUE_LIMIT                         24
 /*=============================================================================
                                        Software timer module configuration
 =============================================================================*/
@@ -93,7 +102,13 @@ extern unsigned char __los_heap_addr_end__[];
                                         Exception module configuration
 =============================================================================*/
 #define LOSCFG_PLATFORM_EXC                                 1
+
 #define LOSCFG_KERNEL_PRINTF                                1
+#ifdef __cplusplus
+#if __cpluspluss
+}
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 
 
 #endif /* _TARGET_CONFIG_H */

@@ -1,0 +1,205 @@
+# Copyright (c) 2021 GOODIX.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Kernel type, e.g. "linux", "liteos_a", "liteos_m".
+kernel_type = "liteos_m"
+
+# Kernel version.
+kernel_version = "3.0.0"
+
+# Board CPU type, e.g. "cortex-a7", "riscv32".
+board_cpu = "cortex-m4"
+
+# Board arch, e.g.  "armv7-a", "rv32imac".
+board_arch = ""
+
+# Toolchain name used for system compiling.
+# E.g. gcc-arm-none-eabi, arm-linux-harmonyeabi-gcc, ohos-clang,  riscv32-unknown-elf.
+# Note: The default toolchain is "ohos-clang". It's not mandatory if you use the default toochain.
+board_toolchain = "arm-none-eabi-gcc"
+
+use_board_toolchain = true
+
+# The toolchain path instatlled, it's not mandatory if you have added toolchian path to your ~/.bashrc.
+board_toolchain_path = ""
+
+# Compiler prefix.
+board_toolchain_prefix = "arm-none-eabi-"
+
+# Compiler type, "gcc" or "clang".
+board_toolchain_type = "gcc"
+
+# Board related common compile flags.
+board_cflags = [
+    "-std=c99",
+    "--inline",
+    "-ggdb",
+    "-O1",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-mfloat-abi=softfp",
+    "-mfpu=fpv4-sp-d16",
+    "-mapcs-frame",
+    "-mcpu=cortex-m4",
+    "-mthumb",
+    "-mthumb-interwork",
+    "-gdwarf-2",
+    "-MD",
+    "-fno-stack-protector",
+    "-DAPP_LFS_BLOCK_COUNT=10",
+    "-DLOSCFG_BASE_CORE_HILOG=1",
+]
+board_cxx_flags = [  ]
+board_ld_flags = [
+
+    "-nostartfiles",
+    "-mcpu=cortex-m4",
+    "-mfloat-abi=softfp",
+    "-mfpu=fpv4-sp-d16",
+    "-mapcs-frame",
+    "-mthumb",
+    "-mthumb-interwork",
+    "-Wl,--gc-sections",
+    "-Wl,--start-group",
+    "-Llibs",
+    "-lmusl-c",
+    "-lmusl-m",
+    "-Wl,--whole-archive",
+
+    "-lhuks_3.0_sdk",
+    "-larch",
+    "-lbootstrap",
+    "-lexchook",
+    "-lsamgr",
+    "-lsamgr_adapter",
+    "-lsysparam",
+    "-ltoken_static",
+    "-lbroadcast",
+    "-lhilog_lite",
+    "-lhiview_lite",
+    "-lkernel",
+    "-lsamgr_source",
+    "-lutils",
+    "-lcmsis",
+    "-lhal_sysparam",
+    "-lposix",
+    "-lbacktrace",
+    "-lcpup",
+    "-lgpio",
+    "-luart",
+    "-lhal_token_static",
+    "-lutils_kv_store",
+    "-lble_sdk",
+    # "-lhilinkbtsdk",
+    # "-lhichain_account",
+
+    "-Wl,--no-whole-archive",
+    "-Wl,--end-group",
+    "-Tbin/link.ld",
+    "-Trom_symbol_gcc.txt",
+    "-Wl,-Map=bin/application.map",
+]
+
+# Board related headfiles search path.
+board_include_dirs = [
+
+    "//kernel/liteos_m/kernel/arch/arm/cortex-m4/gcc",
+    "//kernel/liteos_m/kernel/arch/include",
+    "//kernel/liteos_m/kernel/include",
+    "//kernel/liteos_m/kal/cmsis",
+    "//kernel/liteos_m/kal/posix/include",
+    "//kernel/liteos_m/utils",
+    "//kernel/liteos_m/components/exchook",
+    "//utils/native/lite/kal/timer",
+    "//utils/native/lite/include",
+
+    "//kernel/liteos_m/components/fs/fatfs",
+    "//third_party/FatFs/source",
+    "//third_party/cmsis/CMSIS/Core/Include",
+    "//third_party/musl/porting/liteos_m/kernel/include",
+    "//third_party/bounds_checking_function/include",
+    "//third_party/openssl",
+    "//third_party/openssl/include",
+    "//third_party/openssl/crypto/include",
+    "//third_party/openssl/crypto/ec",
+    "//third_party/mbedtls/include",
+    "//foundation/communication/bluetooth/interfaces/innerkits/native_c/include",
+
+    "//device/goodix/gr551x/sdk_liteos/platform/include",
+    "//device/goodix/gr551x/adapter/hals/bluetooth",
+    "//device/goodix/gr551x/components/hilink/include",
+    "//device/goodix/gr551x/sdk_liteos/config",
+    "//device/goodix/gr551x/sdk_liteos/liteos_m",
+    "//device/goodix/gr551x/components/watchdog",
+
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/app_drivers/inc",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/boards",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/drivers_ext/gr551x",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/drivers_ext/st7735",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/drivers_ext/vs1005",
+
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_lfs",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_alarm",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_assert",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_error",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_key",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_log",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_queue",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/app_timer",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/at_cmd",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/bsp",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/dfu_master",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/dfu_port",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/gui",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/gui/gui_config",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/hal_flash",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/hci_uart",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/pmu_calibration",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/ring_buffer",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/sensorsim",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/libraries/utility",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/patch/ind",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/components/sdk/",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/drivers/inc",
+    "//device/goodix/gr551x/sdk_liteos/gr551x_sdk/toolchain/gr551x/include",
+]
+
+# add hdf includes path
+board_include_dirs += [
+    "//drivers/adapter/khdf/liteos_m/osal/include/",
+    "//drivers/framework/ability/sbuf/include",
+    "//drivers/framework/core/host/include",
+    "//drivers/framework/core/common/include/host",
+    "//drivers/framework/core/shared/include",
+    "//drivers/framework/include",
+    "//drivers/framework/include/osal",
+    "//drivers/framework/include/config",
+    "//drivers/framework/include/core",
+    "//drivers/framework/include/platform",
+    "//drivers/framework/include/utils",
+    "//drivers/framework/include/platform",
+    "//drivers/framework/support/platform/include",
+    "//drivers/framework/support/platform/include/common",
+    "//drivers/framework/utils/include",
+    "//base/hiviewdfx/hilog_lite/interfaces/native/kits",
+]
+
+# Board adapter dir for OHOS components.
+board_adapter_dir = ""
+
+# Sysroot path.
+board_configed_sysroot = ""
+
+# Board storage type, it used for file system generation.
+storage_type = ""
+

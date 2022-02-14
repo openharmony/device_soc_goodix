@@ -49,17 +49,5 @@ root {
                 }
             }
         }
-        misc :: host {
-            hostName = "misc_host";
-            priority = 50;
-            fs :: device {
-                littlefs :: deviceNode {
-                    policy = 0;
-                    priority = 100;
-                    moduleName = "HDF_FS_LITTLEFS";
-                    deviceMatchAttr = "littlefs_config";
-                }
-            }
-        }
     }
 }

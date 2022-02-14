@@ -75,7 +75,7 @@
 #endif
 
 #define APP_LOG_LINE_BUF_SIZE           256                        /**< Buffer size for every line's log. */
-#define APP_LOG_SEVERITY_LEVEL          APP_LOG_LVL_DEBUG           /**< Default log severity level. */
+#define APP_LOG_SEVERITY_LEVEL          APP_LOG_LVL_INFO           /**< Default log severity level. */
 #define APP_LOG_TAG_LEN_MAX             20                         /**< Maximum length of output filter's tag. */
 #define APP_LOG_LINE_NB_LEN_MAX         5                          /**< Maximum length of output line number. */
 #define APP_LOG_NEWLINE_SIGN            "\r\n"                     /**< Newline sign output. */
