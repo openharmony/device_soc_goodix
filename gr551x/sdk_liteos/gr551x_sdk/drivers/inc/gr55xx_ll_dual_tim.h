@@ -78,24 +78,24 @@ typedef struct _ll_dual_timer_init
     uint32_t prescaler;         /**< Specifies the prescaler value used to divide the TIMER clock.
                                    This parameter can be a value of @ref DUAL_TIMER_EC_LL_PRESCALER.
 
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_prescaler().*/
+                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_prescaler().   */
 
     uint32_t counter_size;       /**< Specifies the prescaler value used to divide the DUAL_TIMER clock.
                                    This parameter can be a value of @ref DUAL_TIMER_EC_LL_COUNTERSIZE.
 
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_counter_size().*/
+                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_counter_size().   */
 
     uint32_t counter_mode;       /**< Specifies the counter mode.
                                    This parameter can be a value of @ref DUAL_TIMER_LL_EC_COUNTERMODE.
 
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_counter_mode().*/
+                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_counter_mode().   */
 
     uint32_t auto_reload;        /**< Specifies the auto reload value to be loaded into the active
                                    Auto-Reload Register at the next update event.
                                    This parameter must be a number between Min_Data=0x00000000 and Max_Data=0xFFFFFFFF.
                                    Some timer instances may support 16 bits counters. In that case this parameter must be a number between 0x0000 and 0xFFFF.
 
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_auto_reload().*/
+                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_auto_reload().   */
 } ll_dual_timer_init_t;
 
 /** @} */

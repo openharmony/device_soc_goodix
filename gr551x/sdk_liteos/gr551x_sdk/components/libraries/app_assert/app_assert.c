@@ -123,15 +123,15 @@ static void app_assert_info_output(uint8_t assert_type)
 
     if (APP_ASSERT_ERROR == assert_type)
     {
-        sprintf(assert_info,"[ERROR] %s", s_assert_info.expr);
+        sprintf_s(assert_info, sizeof(assert_info), "[ERROR] %s", s_assert_info.expr);
     }
     else if (APP_ASSERT_WARNING == assert_type)
     {
-        sprintf(assert_info,"[WARNING] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
+        sprintf_s(assert_info, sizeof(assert_info), "[WARNING] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
     }
     else if (APP_ASSERT_PARAM == assert_type)
     {
-        sprintf(assert_info,"[PARAM] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
+        sprintf_s(assert_info, sizeof(assert_info), "[PARAM] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
     }
 
     app_log_output(APP_LOG_LVL_ERROR,
@@ -156,8 +156,8 @@ __WEAK void app_assert_warn_cb(int param0, int param1, const char *file, int lin
 
     file_name_len = (APP_ASSERT_FILE_NAME_LEN < strlen(file)) ? APP_ASSERT_FILE_NAME_LEN : strlen(file);
 
-    memset(&s_assert_info, 0, sizeof(s_assert_info));
-    memcpy(s_assert_info.file_name, file, file_name_len);
+    memset_s(&s_assert_info, sizeof(s_assert_info), 0, sizeof(s_assert_info));
+    memcpy_s(s_assert_info.file_name, sizeof (s_assert_info.file_name), file, file_name_len);
 
     s_assert_info.magic1    = APP_ASSERT_WARN_MAGIC_1;
     s_assert_info.file_line = line;
@@ -179,8 +179,8 @@ __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int li
 
     file_name_len = (APP_ASSERT_FILE_NAME_LEN < strlen(file)) ? APP_ASSERT_FILE_NAME_LEN : strlen(file);
 
-    memset(&s_assert_info, 0, sizeof(s_assert_info));
-    memcpy(s_assert_info.file_name, file, file_name_len);
+    memset_s(&s_assert_info, sizeof (s_assert_info), 0, sizeof(s_assert_info));
+    memcpy_s(s_assert_info.file_name, sizeof (s_assert_info.file_name), file, file_name_len);
 
     s_assert_info.magic1    = (int)APP_ASSERT_PARAM_MAGIC_1;
     s_assert_info.file_line = line;
@@ -206,9 +206,9 @@ __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
     file_name_len = (APP_ASSERT_FILE_NAME_LEN < strlen(file)) ? APP_ASSERT_FILE_NAME_LEN : strlen(file);
     expre_len     = (APP_ASSERT_EXPR_NAME_LEN < strlen(expr)) ? APP_ASSERT_EXPR_NAME_LEN : strlen(expr);
 
-    memset(&s_assert_info, 0, sizeof(s_assert_info));
-    memcpy(s_assert_info.file_name, file, file_name_len);
-    memcpy(s_assert_info.expr, expr, expre_len);
+    memset_s(&s_assert_info, sizeof(s_assert_info), 0, sizeof(s_assert_info));
+    memcpy_s(s_assert_info.file_name, sizeof(s_assert_info.file_name), file, file_name_len);
+    memcpy_s(s_assert_info.expr, sizeof(s_assert_info.expr), expr, expre_len);
 
     s_assert_info.magic1    = (int)APP_ASSERT_ERR_MAGIC_1;
     s_assert_info.file_line = line;

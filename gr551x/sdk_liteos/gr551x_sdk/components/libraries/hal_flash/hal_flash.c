@@ -60,7 +60,7 @@
 #endif
 
 #ifndef VFLASH_ENABLE
-//#define VFLASH_ENABLE                       /**<Use vflash for BLE Stack in Flash. */
+// #define VFLASH_ENABLE                       /**<Use vflash for BLE Stack in Flash. */
 #endif
 
 extern uint32_t sys_security_enable_status_check(void);

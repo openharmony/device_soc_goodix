@@ -78,33 +78,33 @@ typedef struct _ll_spim_init_t
     uint32_t transfer_direction;    /**< Specifies the SPI unidirectional or bidirectional data mode.
                                          This parameter can be a value of @ref SPI_LL_EC_TRANSFER_MODE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_transfer_direction().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_transfer_direction().   */
 
     uint32_t data_size;             /**< Specifies the SPI data size.
                                          This parameter can be a value of @ref SPI_LL_EC_DATASIZE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().   */
 
     uint32_t clock_polarity;        /**< Specifies the serial clock steady state.
                                          This parameter can be a value of @ref SPI_LL_EC_POLARITY.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().   */
 
     uint32_t clock_phase;           /**< Specifies the clock active edge for the bit capture.
                                          This parameter can be a value of @ref SPI_LL_EC_PHASE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().   */
 
     uint32_t slave_select;          /**< Specifies the SPI slave select.
                                          This parameter can be a value of @ref SPI_LL_EC_SLAVESELECT.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_enable_ss().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_enable_ss().   */
 
     uint32_t baud_rate;             /**< Specifies the BaudRate prescaler value which will be used to configure the transmit and receive SCK clock.
                                          This parameter can be one even value between 2 and 65534, if the value is 0, the SCLK is disable.
                                          @note The communication clock is derived from the master clock. The slave clock does not need to be set.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_baud_rate_prescaler().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_baud_rate_prescaler().   */
 } ll_spim_init_t;
 
 /**
@@ -115,17 +115,17 @@ typedef struct _ll_spis_init_t
     uint32_t data_size;             /**< Specifies the SPI data width.
                                          This parameter can be a value of @ref SPI_LL_EC_DATASIZE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().   */
 
     uint32_t clock_polarity;        /**< Specifies the serial clock steady state.
                                          This parameter can be a value of @ref SPI_LL_EC_POLARITY.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().   */
 
     uint32_t clock_phase;           /**< Specifies the clock active edge for the bit capture.
                                          This parameter can be a value of @ref SPI_LL_EC_PHASE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().   */
 
 } ll_spis_init_t;
 
@@ -137,48 +137,48 @@ typedef struct _ll_qspi_init_t
     uint32_t transfer_direction;        /**< Specifies the QSPI transfer or receive mode.
                                              This parameter can be a value of @ref SPI_LL_EC_TRANSFER_MODE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_transfer_direction().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_transfer_direction().   */
 
     uint32_t instruction_size;          /**< Specifies the QSPI instruction width.
                                              This parameter can be a value of @ref SPI_LL_EC_INSTRUCTIONSIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_instruction_size().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_instruction_size().   */
 
     uint32_t address_size;              /**< Specifies the QSPI address width.
                                              This parameter can be a value of @ref SPI_LL_EC_ADDRESSSIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_address_size().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_address_size().   */
 
     uint32_t inst_addr_transfer_format; /**< Specifies the QSPI instruction and address transfer format.
                                              This parameter can be a value of @ref SPI_LL_EC_ADDRINSTTRNASFERFORMAT.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_add_inst_transfer_format().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_add_inst_transfer_format().   */
 
     uint32_t wait_cycles;               /**< Specifies the QSPI dummy clock.
                                              This parameter can be one of the following values: 0 ~ 31.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_wait_cycles().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_wait_cycles().   */
 
     uint32_t data_size;                 /**< Specifies the SPI data width.
                                              This parameter can be a value of @ref SPI_LL_EC_DATASIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().   */
 
     uint32_t clock_polarity;            /**< Specifies the serial clock steady state.
                                              This parameter can be a value of @ref SPI_LL_EC_POLARITY.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().   */
 
     uint32_t clock_phase;               /**< Specifies the clock active edge for the bit capture.
                                              This parameter can be a value of @ref SPI_LL_EC_PHASE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().   */
 
     uint32_t baud_rate;                 /**< Specifies the BaudRate prescaler value which will be used to configure the transmit and receive SCK clock.
                                              This parameter can be one even value between 2 and 65534, if the value is 0, the SCLK is disable.
                                              @note The communication clock is derived from the master clock. The slave clock does not need to be set.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_baud_rate_prescaler().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_baud_rate_prescaler().   */
 
     uint32_t rx_sample_delay;           /**< Specifies the RX sample delay. It is used to delay the sample of the RX input port.
                                              This parameter can be a number between 0 and 0x7 */

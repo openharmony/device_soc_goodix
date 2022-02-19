@@ -405,7 +405,7 @@ TINY_RAM_SECTION sdk_err_t app_timer_start(app_timer_id_t p_timer_id, uint32_t d
    if (NULL == p_timer_node)
        return SDK_ERR_INVALID_PARAM;
       
-   //**DO NOT SUPPORT NULL TIMER*//
+   /* DO NOT SUPPORT NULL TIMER */
    if (TIMER_INVALID_DELAY_VALUE == delay)
    {
        return SDK_ERR_INVALID_PARAM;
@@ -525,13 +525,13 @@ sdk_err_t app_timer_create(app_timer_id_t *p_timer_id, app_timer_type_t mode, ap
    if (NULL == callback) 
        return SDK_ERR_INVALID_PARAM;
 
-   //**p_timer_id is already in use*//
+   /* p_timer_id is already in use */
    if (NULL != *p_timer_id)
        return SDK_ERR_DISALLOWED;
    
    APP_TIMER_LOCK();
    
-   //**pick up one null item for new timer node*//
+   /* pick up one null item for new timer node */
    handle = app_timer_get_valid_node();
    if (TIMER_INVALID_NODE_NUMBER == handle)
    {

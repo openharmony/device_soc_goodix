@@ -61,7 +61,7 @@
 #define FLASH_IO_0      (LL_GPIO_PIN_7)      /* XQSPI flash IO0       */
 #define FLASH_IO_1      (LL_GPIO_PIN_6)      /* XQSPI flash IO1       */
 #define FLASH_IO_2      (LL_GPIO_PIN_5)      /* XQSPI flash IO2 (WP)  */
-#define FLASH_IO_3      (LL_GPIO_PIN_3)      /* XQSPI flash IO3 (HOLD)*/
+#define FLASH_IO_3      (LL_GPIO_PIN_3)      /* XQSPI flash IO3 (HOLD) */
 #define HAL_EXFLASH_IO_PULL_SET(_PIN_, _PULL_)  ll_gpio_set_pin_pull(GPIO1, _PIN_, _PULL_)
 
 extern uint8_t nvds_put_patch(NvdsTag_t tag, uint16_t len, const uint8_t *p_buf);
@@ -126,10 +126,6 @@ void ble_sdk_env_init(void)
     // register the msg handler for patch
     uint16_t msg_cnt = sizeof(msg_tab) / sizeof(msg_tab_item_t);
     reg_msg_patch_tab(msg_tab, msg_cnt);
-
-    // regist the hci cmd handler for patch
-    uint16_t hci_cmd_cnt = sizeof(hci_cmd_tab) / sizeof(hci_cmd_tab_item_t);
-    reg_hci_cmd_patch_tab(hci_cmd_tab, hci_cmd_cnt);
 
 #if CFG_MAX_CONNECTIONS
     ble_con_env_init();
@@ -230,11 +226,6 @@ void platform_init(void)
 #if ENCRYPT_ENABLE
     dfu_cmd_handler_replace_for_encrypt();
 #endif
-
-    #ifndef DRIVER_TEST
-    /* Enable auto pmu calibration function period =3s on default. */
-    //system_pmu_calibration_init(30000);
-    #endif
 
     system_pmu_deinit();
     SystemCoreSetClock((mcu_clock_type_t)SYSTEM_CLOCK);

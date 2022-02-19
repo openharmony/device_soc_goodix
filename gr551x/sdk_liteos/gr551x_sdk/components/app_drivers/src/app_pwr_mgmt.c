@@ -99,7 +99,7 @@ exit:
 
 void pwr_unregister_sleep_cb(pwr_id_t id)
 {
-    if(id < APP_SLEEP_CB_MAX)// Is id valid?
+    if(id < APP_SLEEP_CB_MAX)
     {
         s_pwr_env.pwr_sleep_cb[id] = NULL;
     }

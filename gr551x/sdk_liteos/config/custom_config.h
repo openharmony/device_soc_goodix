@@ -285,4 +285,4 @@
 // </h>
 
 // <<< end of configuration section >>>
-#endif //__CUSTOM_CONFIG_H__
+#endif // __CUSTOM_CONFIG_H__

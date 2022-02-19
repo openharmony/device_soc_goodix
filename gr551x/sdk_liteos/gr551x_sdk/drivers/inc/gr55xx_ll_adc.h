@@ -93,17 +93,17 @@ typedef struct _ll_adc_init
     uint32_t ref_source;    /**< Specifies the source of the ADC reference.
                                  This parameter can be a value of @ref LL_ADC_EC_REFERENCE_SRC.
 
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_ref().*/
+                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_ref(). */
 
     uint32_t ref_value;     /*!< Specifies the value of the ADC buffered reference.
                                  This parameter can be a value of @ref LL_ADC_EC_REFERENCE.
 
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_ref_value().*/
+                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_ref_value(). */
 
     uint32_t clock;         /**< Specifies the clock of ADC.
                                  This parameter can be a value of @ref LL_ADC_EC_CLK.
 
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_clock().*/
+                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_clock(). */
 
 } ll_adc_init_t;
 
@@ -138,7 +138,7 @@ typedef struct _ll_adc_init
 #define LL_ADC_REF_VALUE_0P8        (0x3UL << AON_SNSADC_CFG_REF_VALUE_Pos)   /**< Reference = 0.85 V */
 #define LL_ADC_REF_VALUE_1P2        (0x7UL << AON_SNSADC_CFG_REF_VALUE_Pos)   /**< Reference = 1.28 V */
 #define LL_ADC_REF_VALUE_1P6        (0xAUL << AON_SNSADC_CFG_REF_VALUE_Pos)   /**< Reference = 1.60 V */
-//#define LL_ADC_REF_VALUE_2P0        (0xFUL << AON_SNSADC_CFG_REF_VALUE_Pos)   /**< Reference = 2.00 V */
+
 /** @} */
 
 /** @defgroup LL_ADC_EC_INPUT_MODE ADC Input Mode

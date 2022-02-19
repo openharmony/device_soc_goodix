@@ -160,7 +160,7 @@ static bool log_store_time_stamp_encode(uint8_t *p_buffer, uint8_t buffer_size)
 
     s_log_store_ops.time_get(&rtc_time);
 
-    if (APP_LOG_STORE_TIME_SIZE == snprintf((char *)p_buffer,
+    if (APP_LOG_STORE_TIME_SIZE == snprintf_s((char *)p_buffer, APP_LOG_STORE_TIME_SIZE,
                                             APP_LOG_STORE_TIME_SIZE,
                                             "[%04d/%02d/%02d %02d:%02d:%02d:%03d] ", 
                                             rtc_time.year, rtc_time.month, rtc_time.day,
@@ -333,7 +333,7 @@ uint16_t app_log_store_init(app_log_store_info_t *p_info, app_log_store_op_t *p_
 
     ring_buffer_init(&s_log_store_rbuf, s_log_store_cache, APP_LOG_STORE_CACHE_SIZE);
 
-    memcpy(&s_log_store_ops, p_op_func, sizeof(s_log_store_ops));
+    memcpy_s(&s_log_store_ops, sizeof (s_log_store_ops), p_op_func, sizeof(s_log_store_ops));
 
     s_log_store_env.head_nv_tag = p_info->nv_tag;
     s_log_store_env.blk_size    = p_info->blk_size;

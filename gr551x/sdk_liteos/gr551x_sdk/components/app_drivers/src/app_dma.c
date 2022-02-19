@@ -251,13 +251,13 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
 
         if (i < DMA_HANDLE_MAX)
         {
-            if (s_sleep_cb_registered_flag == false)// register sleep callback
+            if (s_sleep_cb_registered_flag == false)
             {
                 s_sleep_cb_registered_flag = true;
                 s_dma_pwr_id = pwr_register_sleep_cb(&dma_sleep_cb, APP_DRIVER_DMA_WAPEUP_PRIORITY);
             }
             s_dma_env[i].handle.channel = p_params->channel_number;
-            memcpy(&s_dma_env[i].handle.init, &p_params->init, sizeof(dma_init_t));
+            memcpy_s(&s_dma_env[i].handle.init, sizeof (s_dma_env[i].handle.init),&p_params->init, sizeof(dma_init_t));
             s_dma_env[i].handle.xfer_tfr_callback   = dma_tfr_callback;
             s_dma_env[i].handle.xfer_error_callback = dma_err_callback;
             s_dma_env[i].handle.xfer_abort_callback = NULL;

@@ -141,7 +141,7 @@ typedef enum
 /** @} */
 
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
-//#define APP_DRIVER_WAKEUP_CALL_FUN
+// #define APP_DRIVER_WAKEUP_CALL_FUN
 #endif
 
 

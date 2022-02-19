@@ -65,7 +65,6 @@ extern "C" {
 #define HAL_PWR_MODULE_ENABLED          /**< Enable PWR module driver          */
 #define HAL_QSPI_MODULE_ENABLED         /**< Enable QSPI module driver         */
 #define HAL_SPI_MODULE_ENABLED          /**< Enable SPI module driver          */
-//#define HAL_SPI_V2_MODULE_ENABLED       /**< Enable SPI.v2 module driver       */
 #define HAL_TIMER_MODULE_ENABLED        /**< Enable TIM module driver          */
 #define HAL_UART_MODULE_ENABLED         /**< Enable UART module driver         */
 #define HAL_WDT_MODULE_ENABLED          /**< Enable WDT module driver          */

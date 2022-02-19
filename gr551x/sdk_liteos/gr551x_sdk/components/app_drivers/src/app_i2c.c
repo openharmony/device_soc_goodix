@@ -418,10 +418,10 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
     s_i2c_env[id].use_mode.rx_dma_channel = p_params->use_mode.rx_dma_channel;
     s_i2c_env[id].use_mode.tx_dma_channel = p_params->use_mode.tx_dma_channel;
     s_i2c_env[id].role = p_params->role;
-    memcpy(&s_i2c_env[id].pin_cfg, &p_params->pin_cfg, sizeof(app_i2c_pin_cfg_t));
+    memcpy_s(&s_i2c_env[id].pin_cfg, sizeof (s_i2c_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_i2c_pin_cfg_t));
     s_i2c_env[id].evt_handler = evt_handler;
 
-    memcpy(&s_i2c_env[id].handle.init, &p_params->init, sizeof(i2c_init_t));
+    memcpy_s(&s_i2c_env[id].handle.init, sizeof (s_i2c_env[id].handle.init), &p_params->init, sizeof(i2c_init_t));
     s_i2c_env[id].handle.p_instance = (i2c_regs_t *)s_i2c_instance[id];
     hal_err_code = hal_i2c_deinit(&s_i2c_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
@@ -429,7 +429,7 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
     hal_err_code = hal_i2c_init(&s_i2c_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    if(s_sleep_cb_registered_flag == false)// register sleep callback
+    if(s_sleep_cb_registered_flag == false)
     {
         s_sleep_cb_registered_flag = true;
         s_i2c_pwr_id = pwr_register_sleep_cb(&i2c_sleep_cb, APP_DRIVER_I2C_WAPEUP_PRIORITY);

@@ -78,31 +78,31 @@ typedef struct _ll_i2s_init_t
     uint32_t rxdata_size;           /**< Specifies the I2S receive data size.
                                          This parameter can be a value of @ref I2S_LL_EC_DATASIZE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_rxsize().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_rxsize(). */
 
     uint32_t txdata_size;           /**< Specifies the I2S transmit data size.
                                          This parameter can be a value of @ref I2S_LL_EC_DATASIZE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_txsize().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_txsize(). */
 
     uint32_t rx_threshold;          /**< Specifies the I2S receive FIFO threshold.
                                          This parameter can be a value of @ref I2S_LL_EC_FIFO_THRESHOLD.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_rx_fifo_threshold().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_rx_fifo_threshold(). */
 
     uint32_t tx_threshold;          /**< Specifies the I2S transmit FIFO threshold.
                                          This parameter can be a value of @ref I2S_LL_EC_FIFO_THRESHOLD.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_tx_fifo_threshold().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_tx_fifo_threshold(). */
 
     uint32_t clock_source;          /**< Specifies the source of the I2S clock.
                                          This parameter can be a value of @ref I2S_LL_EC_CLOCK_SOURCE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_clock_src().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_clock_src(). */
 
     uint32_t audio_freq;            /**< Specifies the frequency selected for the I2S communication.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_clock_div().*/
+                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_clock_div(). */
 
 } ll_i2s_init_t;
 

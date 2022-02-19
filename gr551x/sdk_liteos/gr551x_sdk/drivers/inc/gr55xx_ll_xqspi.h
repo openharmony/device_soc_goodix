@@ -76,42 +76,42 @@ extern "C" {
 typedef struct _ll_xqspi_init_t
 {
     uint32_t mode;                      /**< Specifies the work mode, XIP mode or QSPI mode.
-                                             This parameter can be a value of @ref XQSPI_LL_EC_MODE.*/
+                                             This parameter can be a value of @ref XQSPI_LL_EC_MODE. */
 
     uint32_t cache_mode;                /**< Specifies the cache mode in XIP mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_CACHE_MODE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_enable_cache().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_enable_cache(). */
 
     uint32_t read_cmd;                  /**< Specifies the XQSPI read command in XIP mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_XIP_READ_CMD.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cmd().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cmd(). */
 
     uint32_t data_size;                 /**< Specifies the XQSPI data width, only in QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_DATASIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_datasize().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_datasize(). */
 
     uint32_t data_order;                /**< Specifies the XQSPI data order, MSB oe LSB, only in QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_DATAORDER.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_data_order().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_data_order(). */
 
     uint32_t clock_polarity;            /**< Specifies the serial clock steady state.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_POLARITY in XIP mode or @ref XQSPI_LL_EC_QSPI_POLARITY in QSPI mode.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cpol() or @ref ll_xqspi_set_qspi_cpol().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cpol() or @ref ll_xqspi_set_qspi_cpol(). */
 
     uint32_t clock_phase;               /**< Specifies the clock active edge for the bit capture.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_PHASE in XIP mode or @ref XQSPI_LL_EC_QSPI_PHASE in QSPI mode.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cpha() or @ref ll_xqspi_set_qspi_cpha().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cpha() or @ref ll_xqspi_set_qspi_cpha(). */
 
     uint32_t baud_rate;                 /**< Specifies the BaudRate  be used to configure the transmit and receive SCK clock.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_BAUD_REAT.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_speed().*/
+                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_speed(). */
 
 } ll_xqspi_init_t;
 
@@ -2212,7 +2212,6 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_set_flash_write(xqspi_regs_t *XQS
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_xqspi_get_flash_write(xqspi_regs_t *XQSPIx)
 {
-    //GR5515_C and future version.
     return READ_REG(XQSPIx->QSPI.FLASH_WRITE);
 }
 

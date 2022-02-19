@@ -249,8 +249,8 @@ uint16_t app_pwm_init(app_pwm_params_t *p_params)
 
     s_pwm_env[id].handle.active_channel = (hal_pwm_active_channel_t)p_params->active_channel;
 
-    memcpy(&s_pwm_env[id].pin_cfg, &p_params->pin_cfg, sizeof(app_pwm_pin_cfg_t));
-    memcpy(&s_pwm_env[id].handle.init, &p_params->init, sizeof(pwm_init_t));
+    memcpy_s(&s_pwm_env[id].pin_cfg, sizeof (s_pwm_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_pwm_pin_cfg_t));
+    memcpy_s(&s_pwm_env[id].handle.init, sizeof (s_pwm_env[id].handle.init), &p_params->init, sizeof(pwm_init_t));
 
     pwm_gpio_config(s_pwm_env[id].pin_cfg);
     

@@ -75,14 +75,13 @@
     #define SYS_FAULT_TRACE_MODE 1
 #endif
 
-//-----------------------------------------------------------------------------------------------
 #define NVDS_FAULT_INFO_LEN_MAX (1024)
 static char s_fault_info_nvds[NVDS_FAULT_INFO_LEN_MAX] = {0};
 static uint32_t s_fault_info_nvds_len = 0;
 
 void __fault_trace_nvds_save_prepare(void)
 {
-    memset(s_fault_info_nvds, 0, NVDS_FAULT_INFO_LEN_MAX);
+    memset_s(s_fault_info_nvds, NVDS_FAULT_INFO_LEN_MAX, 0, NVDS_FAULT_INFO_LEN_MAX);
     s_fault_info_nvds_len = 0;
 }
 
@@ -93,7 +92,7 @@ void __fault_trace_nvds_add(const char *format, ...)
 
     va_list argx;
     va_start(argx,format);
-    vsprintf(s_fault_info_nvds+s_fault_info_nvds_len,format,argx);
+    vsprintf_s(s_fault_info_nvds+s_fault_info_nvds_len, NVDS_FAULT_INFO_LEN_MAX,format,argx);
     va_end(argx);
     s_fault_info_nvds_len = strlen(s_fault_info_nvds);
 }
@@ -102,12 +101,12 @@ void __fault_trace_nvds_save_flush(void)
 {
     fault_db_record_add((uint8_t *)s_fault_info_nvds, s_fault_info_nvds_len);
 }
-//--------------------------------------------------------------------------------------
-#if SYS_FAULT_TRACE_MODE == 1    //only UART Print
+
+#if SYS_FAULT_TRACE_MODE == 1    // only UART Print
     #define __FAULT_TRACE_OUTPUT_PREPARE()     
     #define __FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format,##__VA_ARGS__)
     #define __FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush()
-#elif SYS_FAULT_TRACE_MODE == 2  //only Save to NVDS
+#elif SYS_FAULT_TRACE_MODE == 2  // only Save to NVDS
     #define __FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();__fault_trace_nvds_save_prepare()
     #define __FAULT_TRACE_OUTPUT(format, ...)  __fault_trace_nvds_add(format,##__VA_ARGS__);__fault_trace_nvds_add("\r\n")
     #define __FAULT_TRACE_OUTPUT_FLUSH()       __fault_trace_nvds_save_flush()
@@ -260,8 +259,6 @@ static const char * const s_print_info[] =
 
 static uint32_t s_main_stack_start_addr       = 0;
 static uint32_t s_main_stack_size             = 0;
-//static uint32_t s_code_start_addr             = 0;
-//static uint32_t s_code_size                   = 0;
 static bool     s_is_stack_overflow           = false;
 static bool     s_is_on_thread_before_fault   = false;
 static bool     s_is_on_fault                 = false;
@@ -461,7 +458,7 @@ static void cb_fault_diagnosis(void)
             }
         }
 
-        //Bus Fault
+        // Bus Fault
         if (s_regs.bfsr.value)
         {
             if (s_regs.bfsr.bits.IBUSERR)
@@ -709,7 +706,7 @@ static void cb_call_stack_print(uint32_t sp)
     {
 //        sprintf(s_call_stack_info + i * (8 + 1), "%08lx", call_stack_buf[i]);
 //        s_call_stack_info[i * (8 + 1) + 8] = ' ';
-        sprintf(s_call_stack_info + i * (8 + 3), "%08lx", call_stack_buf[i]);
+        sprintf_s(s_call_stack_info + i * (8 + 3), NVDS_FAULT_INFO_LEN_MAX, "%08lx", call_stack_buf[i]);
         s_call_stack_info[i * (8 + 3) + 8] = '<';
         s_call_stack_info[i * (8 + 3) + 9] = '-';
         s_call_stack_info[i * (8 + 3) + 10] = '-';
@@ -759,24 +756,24 @@ void cortex_backtrace_fault_handler(uint32_t fault_handler_lr, uint32_t fault_ha
     __FAULT_TRACE_OUTPUT_PREPARE();
 
 #if defined(GR5515_D)
-    //BL 0 ER_IROM_BOOT
+    // BL 0 ER_IROM_BOOT
     s_code_section_infos[s_code_section_count    ].code_start_addr = 0x00000000;
     s_code_section_infos[s_code_section_count    ].code_end_addr   = 0x000036FE;
-    //BL 1 ER_IROM_BOOT
+    // BL 1 ER_IROM_BOOT
     s_code_section_infos[s_code_section_count + 1].code_start_addr = 0x00003C00;
     s_code_section_infos[s_code_section_count + 1].code_end_addr   = 0x00003D3A;
-    //BL 1 ER_IROM_BLE_STACK
+    // BL 1 ER_IROM_BLE_STACK
     s_code_section_infos[s_code_section_count + 2].code_start_addr = 0x00003D6C;
     s_code_section_infos[s_code_section_count + 2].code_end_addr   = 0x0005CE3A;
-    //SDK ER_SDK
+    // SDK ER_SDK
     s_code_section_infos[s_code_section_count + 3].code_start_addr = 0x00062C00;
     s_code_section_infos[s_code_section_count + 3].code_end_addr   = 0x0007D0E4;
     s_code_section_count += 4;
 #else
-    //ER_IROM_BOOT
+    // ER_IROM_BOOT
     s_code_section_infos[s_code_section_count    ].code_start_addr = 0x00004000;
     s_code_section_infos[s_code_section_count    ].code_end_addr   = 0x0000413A;
-    //ER_IROM_BLE_STACK
+    // ER_IROM_BLE_STACK
     s_code_section_infos[s_code_section_count + 1].code_start_addr = 0x0000416C;
     s_code_section_infos[s_code_section_count + 1].code_end_addr   = 0x0004c25A;
     s_code_section_count += 2;

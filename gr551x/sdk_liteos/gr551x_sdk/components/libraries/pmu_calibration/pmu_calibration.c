@@ -135,7 +135,7 @@ void system_pmu_calibration_init(uint32_t interval)
                                    pmu_timer_handler
 #else
                                    pmu_calibration_handler
-#endif //CFG_LPCLK_INTERNAL_EN
+#endif // CFG_LPCLK_INTERNAL_EN
                                    );
 
         xTaskCreate(system_pmu_calibration_task, "pmu_calibration_task", 512, NULL, configMAX_PRIORITIES - 1, NULL);
@@ -146,10 +146,10 @@ void system_pmu_calibration_init(uint32_t interval)
                          pmu_timer_handler
 #else
                          pmu_calibration_handler
-#endif  //CFG_LPCLK_INTERNAL_EN
+#endif  // CFG_LPCLK_INTERNAL_EN
                          );
         app_timer_start(s_pmu_calibration_timer_id, interval_new, NULL);
-#endif  //ENV_USE_FREERTOS
+#endif  // ENV_USE_FREERTOS
 
 #if CFG_LPCLK_INTERNAL_EN
         pmu_interval_prev = interval_new;

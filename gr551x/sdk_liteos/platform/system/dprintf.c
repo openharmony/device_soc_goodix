@@ -26,6 +26,10 @@ int printf(char const  *fmt, ...)
     va_list ap;
     va_start(ap, fmt);
     int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, fmt, ap);
+	if ( len < 0 ) {
+	    return len;	
+	}
+	
     va_end(ap);
     if (len > 0) {
         char const *s = buf;
@@ -36,15 +40,16 @@ int printf(char const  *fmt, ...)
     return len;
 }
 
+/*
 int sprintf(char *buf, const char *fmt, ...)
 {    
     va_list args;
     int val;
 
     va_start(args, fmt);
-    val = vsprintf(buf, fmt, args);
+    val = vsprintf_s(buf, fmt, args);
     va_end(args);
 
     return val;
 }
-
+*/

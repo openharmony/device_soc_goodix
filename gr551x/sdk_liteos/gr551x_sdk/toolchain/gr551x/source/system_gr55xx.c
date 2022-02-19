@@ -57,12 +57,12 @@ typedef struct
 volatile uint32_t g_app_msp_addr;   /* record app msp address */
 
 static const uint32_t systemClock[CLK_TYPE_NUM] = {
-                                        CLK_64M, /*CPLL_S64M_CLK*/
-                                        CLK_48M, /*CPLL_F48M_CLK*/
-                                        CLK_16M, /*XO_S16M_CLK*/
-                                        CLK_24M, /*CPLL_T24M_CLK*/
-                                        CLK_16M, /*CPLL_S16M_CLK*/
-                                        CLK_32M, /*CPLL_T32M_CLK*/
+                                        CLK_64M, /* CPLL_S64M_CLK */
+                                        CLK_48M, /* CPLL_F48M_CLK */
+                                        CLK_16M, /* XO_S16M_CLK */
+                                        CLK_24M, /* CPLL_T24M_CLK */
+                                        CLK_16M, /* CPLL_S16M_CLK */
+                                        CLK_32M, /* CPLL_T32M_CLK */
                                         };
 
 // xqspi clock table by sys_clk_type
@@ -80,8 +80,8 @@ const uint32_t mcu_clk_2_qspi_clk[CLK_TYPE_NUM] = {
 uint32_t SystemCoreClock = CLK_64M;  /* System Core Clock Frequency as 64Mhz     */
 extern exflash_handle_t g_exflash_handle;                     
                                         
-//lint -e{2,10,48,63}
-//The previous line of comment is to inhibit PC-Lint errors for next code block.
+// lint -e{2,10,48,63}
+// The previous line of comment is to inhibit PC-Lint errors for next code block.
 void SystemCoreSetClock(mcu_clock_type_t clock_type)
 {
     if (clock_type >= CLK_TYPE_NUM)
@@ -90,7 +90,7 @@ void SystemCoreSetClock(mcu_clock_type_t clock_type)
     if ((AON->PWR_RET01 & AON_PWR_REG01_SYS_CLK_SEL) != clock_type)
     {
         uint32_t temp = AON->PWR_RET01 & (~(AON_PWR_REG01_SYS_CLK_SEL | AON_PWR_REG01_XF_SCK_CLK_SEL));
-        //When a 16M or 64M clock is switched to another clock, it needs to be switched to 32M first.
+        // When a 16M or 64M clock is switched to another clock, it needs to be switched to 32M first.
         AON->PWR_RET01 = (temp | (CPLL_T32M_CLK << AON_PWR_REG01_SYS_CLK_SEL_Pos) | (QSPI_32M_CLK << AON_PWR_REG01_XF_SCK_CLK_SEL_Pos));
         
         __asm ("nop;nop;nop;nop;");
@@ -100,7 +100,7 @@ void SystemCoreSetClock(mcu_clock_type_t clock_type)
 
     SystemCoreClock = systemClock[clock_type];
 
-    //update sleep parameters by system clock.
+    // update sleep parameters by system clock.
     pwr_mgmt_update_wkup_param();
 
     return;
@@ -138,19 +138,19 @@ static void __sdk_init(void)
 
     for(int i = 0; i < (REGION_TABLE_LIMIT - REGION_TABLE_BASE) / (sizeof(sactter_copy_info_t)); i++)
     {
-        memcpy((void *)&sactter_copy_info,(void *)(REGION_TABLE_BASE + i * sizeof(sactter_copy_info_t)), sizeof(sactter_copy_info_t));
+        memcpy_s((void *)&sactter_copy_info, sizeof (sactter_copy_info), (void *)(REGION_TABLE_BASE + i * sizeof(sactter_copy_info_t)), sizeof(sactter_copy_info_t));
 
         if((sactter_copy_info.fun + 1) == SCATTERLOAD_COPY)
         {
             if (sactter_copy_info.ram_addr == DFU_DATA_START_ADDR)
                 continue;
-            memcpy((void *)(sactter_copy_info.ram_addr), (void *)(sactter_copy_info.rom_addr), sactter_copy_info.len);
+            memcpy_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len, (void *)(sactter_copy_info.rom_addr), sactter_copy_info.len);
         }
         else
         {
             if((sactter_copy_info.fun + 1) == SCATTERLOAD_ZEROINIT)
             {
-                memset((void *)(sactter_copy_info.ram_addr), 0, sactter_copy_info.len);
+                memset_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len, 0, sactter_copy_info.len);
             }
         }
     }

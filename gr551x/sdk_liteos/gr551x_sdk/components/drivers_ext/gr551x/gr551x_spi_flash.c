@@ -328,7 +328,7 @@ bool qspi_flash_sector_erase(uint32_t address)
  */
 bool spi_flash_init(flash_init_t *p_flash_init)
 {
-    memcpy(&g_flash_init, p_flash_init, sizeof(flash_init_t));
+    memcpy_s(&g_flash_init, sizeof (g_flash_init), p_flash_init, sizeof(flash_init_t));
 
     if (FLASH_SPIM_ID == p_flash_init->spi_type)
     {
@@ -412,7 +412,6 @@ bool spi_flash_init(flash_init_t *p_flash_init)
                 return false;
             }
 
-            //set qspi hold/wp pin to high
             app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
             
             io_init.mode = APP_IO_MODE_OUT_PUT;

@@ -73,7 +73,7 @@ extern "C" {
 typedef struct _ll_iso7816_init
 {
     uint32_t clk_div;                 /*!< clk_div is used for dividing the system clock,
-                                           and ISO7816 output clock is equal to (system clock)/(clk_div+1).*/
+                                           and ISO7816 output clock is equal to (system clock)/(clk_div+1). */
     uint32_t wait_time;               /*!< Specifies the guard time value in terms of number of baud clocks */
     uint16_t guard_time;              /*!< Specifies the maximum card response time (leading edge to leading edge) */
     uint8_t  detect_coding;           /*!< Specifies whether automatically detect coding convention during ATR receiption. */

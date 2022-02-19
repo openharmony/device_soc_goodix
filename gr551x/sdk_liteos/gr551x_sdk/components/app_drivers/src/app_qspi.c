@@ -494,10 +494,10 @@ uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_h
 
     s_qspi_env[id].use_mode.type = p_params->use_mode.type;
     s_qspi_env[id].use_mode.dma_channel = p_params->use_mode.dma_channel;
-    memcpy(&s_qspi_env[id].pin_cfg, &p_params->pin_cfg, sizeof(app_qspi_pin_cfg_t));
+    memcpy_s(&s_qspi_env[id].pin_cfg, sizeof (s_qspi_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_qspi_pin_cfg_t));
     s_qspi_env[id].evt_handler = evt_handler;
 
-    memcpy(&s_qspi_env[id].handle.init, &p_params->init, sizeof(qspi_init_t));
+    memcpy_s(&s_qspi_env[id].handle.init, sizeof (s_qspi_env[id].handle.init), &p_params->init, sizeof(qspi_init_t));
     s_qspi_env[id].handle.p_instance = (ssi_regs_t *)s_qspi_instance[id];
     hal_err_code = hal_qspi_deinit(&s_qspi_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
@@ -505,7 +505,7 @@ uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_h
     hal_err_code =hal_qspi_init(&s_qspi_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    if(!s_sleep_cb_registered_flag)// register sleep callback
+    if(!s_sleep_cb_registered_flag)
     {
         s_sleep_cb_registered_flag = true;
         s_qspi_pwr_id = pwr_register_sleep_cb(&qspi_sleep_cb, APP_DRIVER_QSPI_WAPEUP_PRIORITY);
@@ -723,7 +723,7 @@ uint16_t app_qspi_command_receive_high_speed_sync(app_qspi_id_t id, app_qspi_com
 #endif
 
     s_qspi_env[id].user_mode = 0x1;
-    //BLE_INT_DISABLE();
+   
     s_qspi_env[id].rx_done = 0;
     if (s_qspi_env[id].start_flag == false)
     {
@@ -758,7 +758,7 @@ uint16_t app_qspi_command_receive_high_speed_sync(app_qspi_id_t id, app_qspi_com
 
 exit:
     s_qspi_env[id].user_mode = 0x0;
-    //BLE_INT_RESTORE();
+   
     return app_err_code;
 }
 
@@ -929,7 +929,7 @@ uint16_t app_qspi_command_transmit_high_speed_sync(app_qspi_id_t id, app_qspi_co
 #endif
 
     s_qspi_env[id].user_mode = 0x1;
-    //BLE_INT_DISABLE();
+   
     s_qspi_env[id].tx_done = 0;
     if (s_qspi_env[id].start_flag == false)
     {
@@ -968,7 +968,7 @@ uint16_t app_qspi_command_transmit_high_speed_sync(app_qspi_id_t id, app_qspi_co
 
 exit:
     s_qspi_env[id].user_mode = 0x0;
-    //BLE_INT_RESTORE();
+   
     return app_err_code;
 }
 
@@ -1135,7 +1135,7 @@ uint16_t app_qspi_command_high_speed_sync(app_qspi_id_t id, app_qspi_command_t *
 #endif
 
     s_qspi_env[id].user_mode = 0x1;
-    //BLE_INT_DISABLE();
+   
     s_qspi_env[id].tx_done = 0;
     if (s_qspi_env[id].start_flag == false)
     {
@@ -1172,7 +1172,7 @@ uint16_t app_qspi_command_high_speed_sync(app_qspi_id_t id, app_qspi_command_t *
 
 exit:
     s_qspi_env[id].user_mode = 0x0;
-    //BLE_INT_RESTORE();
+   
     return app_err_code;
 }
 
@@ -1340,7 +1340,7 @@ uint16_t app_qspi_transmit_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, ui
 #endif
 
     s_qspi_env[id].user_mode = 0x1;
-    //BLE_INT_DISABLE();
+   
     s_qspi_env[id].tx_done = 0;
     if (s_qspi_env[id].start_flag == false)
     {
@@ -1378,7 +1378,7 @@ uint16_t app_qspi_transmit_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, ui
 
 exit:
     s_qspi_env[id].user_mode = 0x0;
-    //BLE_INT_RESTORE();
+   
     return app_err_code;
 }
 
@@ -1547,7 +1547,7 @@ uint16_t app_qspi_receive_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, uin
 #endif
 
     s_qspi_env[id].user_mode = 0x1;
-    //BLE_INT_DISABLE();
+   
     s_qspi_env[id].rx_done = 0;
     if (s_qspi_env[id].start_flag == false)
     {
@@ -1584,7 +1584,7 @@ uint16_t app_qspi_receive_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, uin
 
 exit:
     s_qspi_env[id].user_mode = 0x0;
-    //BLE_INT_RESTORE();
+   
     return app_err_code;
 }
 

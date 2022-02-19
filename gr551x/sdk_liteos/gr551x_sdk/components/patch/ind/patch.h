@@ -34,7 +34,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************************
  */
- 
+
 #ifndef __PATCH_H_
 #define __PATCH_H_
 
@@ -42,8 +42,7 @@
  * ENUMERATIONS
  ****************************************************************************************
  */
-enum
-{
+enum {
     BIT_HCI_SEND_2_CONTROLLER,
     BIT_HAL_XQSPI_SET_XIP_PRESENT_STATUS,
     BIT_LL_XQSPI_INIT,
@@ -51,7 +50,7 @@ enum
     BIT_HAL_EXFLASH_ERASE,
     BIT_HAL_EXFLASH_READ,
     BIT_BLE_BM_SET_SEC_INFO,
-    BIT_NVDS_PUT,
+    BIT_KE_TASK_SCHEDULE,
 };
 
 
@@ -59,21 +58,22 @@ enum
  * MACRO DECLARATIONS
  ****************************************************************************************
  */
-#define PATCH_ENABLE_FLAG(BIT)      (1<<BIT)
+#define PATCH_ENABLE_FLAG(BIT)      (1<<(BIT))
 
 
-#define ENCRYPT_PATCH               (PATCH_ENABLE_FLAG(BIT_HCI_SEND_2_CONTROLLER) |\
-                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_WRITE)     |\
-                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_ERASE)     |\
-                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_READ)      |\
-                                     PATCH_ENABLE_FLAG(BIT_BLE_BM_SET_SEC_INFO)   |\
-                                     PATCH_ENABLE_FLAG(BIT_NVDS_PUT))
+#define ENCRYPT_PATCH               ((PATCH_ENABLE_FLAG(BIT_HCI_SEND_2_CONTROLLER) | \
+                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_WRITE)     | \
+                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_ERASE)     | \
+                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_READ)      | \
+                                     PATCH_ENABLE_FLAG(BIT_BLE_BM_SET_SEC_INFO))  | \
+                                     PATCH_ENABLE_FLAG(BIT_KE_TASK_SCHEDULE))
 
-#define NO_ENCRYPT_PATCH            (PATCH_ENABLE_FLAG(BIT_HCI_SEND_2_CONTROLLER) |\
-                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_WRITE)     |\
-                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_ERASE)     |\
-                                     PATCH_ENABLE_FLAG(BIT_BLE_BM_SET_SEC_INFO)   |\
-                                     PATCH_ENABLE_FLAG(BIT_NVDS_PUT))
+
+#define NO_ENCRYPT_PATCH            ((PATCH_ENABLE_FLAG(BIT_HCI_SEND_2_CONTROLLER) | \
+                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_WRITE)     | \
+                                     PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_ERASE)     | \
+                                     PATCH_ENABLE_FLAG(BIT_BLE_BM_SET_SEC_INFO))  | \
+                                     PATCH_ENABLE_FLAG(BIT_KE_TASK_SCHEDULE))
 
 /**
  *****************************************************************************************
@@ -85,8 +85,8 @@ extern void cold_patch_apply(void);
 
 /**
  *****************************************************************************************
- * @brief  Patch Enabling Function 
- *         This function can not be used directly. It needs to be registered with FPB unit 
+ * @brief  Patch Enabling Function
+ *         This function can not be used directly. It needs to be registered with FPB unit
  *         and automatically enabled by the system.
  *****************************************************************************************
  */
@@ -95,7 +95,7 @@ extern void fpb_patch_enable(void);
 /**
  *****************************************************************************************
  * @brief  Patch Enabling Function for encrypt
- *         This function can not be used directly. It needs to be registered with FPB unit 
+ *         This function can not be used directly. It needs to be registered with FPB unit
  *         and automatically enabled by the system.
  *****************************************************************************************
  */

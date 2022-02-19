@@ -239,12 +239,12 @@ sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_fu
     if (NULL == p_log_init)
     {
         s_app_log_env.is_filter_set = false;
-        memset(&s_app_log_env.app_log_init, 0, sizeof(app_log_init_t));
+        memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), 0, sizeof(app_log_init_t));
     }
     else if ( p_log_init->filter.level <= APP_LOG_LVL_DEBUG)
     {
         s_app_log_env.is_filter_set = true;
-        memcpy(&s_app_log_env.app_log_init, p_log_init, sizeof(app_log_init_t));
+        memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), p_log_init, sizeof(app_log_init_t));
     }
     else
     {
@@ -333,7 +333,7 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
 
         if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
         {
-            snprintf(line_num, APP_LOG_LINE_NB_LEN_MAX, "%ld", line);
+            snprintf_s(line_num, sizeof (line_num), APP_LOG_LINE_NB_LEN_MAX, "%ld", line);
             log_length += app_log_strcpy(log_length, s_log_encode_buf, line_num);
         }
 
@@ -341,7 +341,7 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
     }
 
     // Encode other log data to buffer. '\0' must be added in the end by vsnprintf. */
-    fmt_result = vsnprintf((char *)s_log_encode_buf + log_length, APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
+    fmt_result = vsnprintf_s((char *)s_log_encode_buf + log_length, sizeof (s_log_encode_buf), APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
 
     va_end(ap);
 
@@ -393,7 +393,7 @@ void app_log_raw_info(const char *format, ...)
 
     APP_LOG_LOCK();
 
-    fmt_result = vsnprintf((char *)s_log_encode_buf, APP_LOG_LINE_BUF_SIZE, format, ap);
+    fmt_result = vsnprintf_s((char *)s_log_encode_buf, sizeof(s_log_encode_buf), APP_LOG_LINE_BUF_SIZE, format, ap);
 
     if ((fmt_result > -1) && (fmt_result) <= APP_LOG_LINE_BUF_SIZE)
     {
@@ -432,7 +432,7 @@ void app_log_hex_dump(uint8_t *p_data, uint16_t length)
         }
         else
         {
-            snprintf(dump_str, 8, "%02X ", p_data[convert_idx]);
+            snprintf_s(dump_str, sizeof (dump_str), 8, "%02X ", p_data[convert_idx]);
             log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
         }
     }
