@@ -91,7 +91,7 @@ typedef struct _ll_msio_init
     uint32_t pull;          /**< Specifies the operating Pull-up/Pull down for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_PULL.
 
-                                 MSIO HW configuration can be modified afterwards using unitary function @ref ll_msio_set_pin_pull().*/
+                                 MSIO HW configuration can be modified afterwards using unitary function @ref ll_msio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                 This parameter can be a value of @ref MSIO_LL_EC_MUX.

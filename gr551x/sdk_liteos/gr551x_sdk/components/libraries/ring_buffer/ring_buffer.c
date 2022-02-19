@@ -97,8 +97,8 @@ uint32_t ring_buffer_write(ring_buffer_t *p_ring_buff, uint8_t const *p_wr_data,
         }
     }
 
-    memcpy(p_ring_buff->p_buffer + wr_idx, p_wr_data, length - over_flow);
-    memcpy(p_ring_buff->p_buffer, p_wr_data + length - over_flow, over_flow);
+    memcpy_s(p_ring_buff->p_buffer + wr_idx, length - over_flow, p_wr_data, length - over_flow);
+    memcpy_s(p_ring_buff->p_buffer, over_flow, p_wr_data + length - over_flow, over_flow);
     wr_idx += length;
 
     if (wr_idx >= p_ring_buff->buffer_size)
@@ -138,8 +138,8 @@ uint32_t ring_buffer_read(ring_buffer_t *p_ring_buff, uint8_t *p_rd_data, uint32
         }
     }
 
-    memcpy(p_rd_data, p_ring_buff->p_buffer + rd_idx, length - over_flow);
-    memcpy(p_rd_data + length - over_flow, p_ring_buff->p_buffer, over_flow);
+    memcpy_s(p_rd_data, length - over_flow, p_ring_buff->p_buffer + rd_idx, length - over_flow);
+    memcpy_s(p_rd_data + length - over_flow, over_flow, p_ring_buff->p_buffer, over_flow);
     rd_idx += length;
 
     if (rd_idx >= p_ring_buff->buffer_size && rd_idx > wr_idx)
@@ -179,8 +179,8 @@ uint32_t ring_buffer_pick(ring_buffer_t *p_ring_buff, uint8_t *p_rd_data, uint32
         }
     }
 
-    memcpy(p_rd_data, p_ring_buff->p_buffer + rd_idx, length - over_flow);
-    memcpy(p_rd_data + length - over_flow, p_ring_buff->p_buffer, over_flow);
+    memcpy_s(p_rd_data, length - over_flow, p_ring_buff->p_buffer + rd_idx, length - over_flow);
+    memcpy_s(p_rd_data + length - over_flow, over_flow, p_ring_buff->p_buffer, over_flow);
 
     RING_BUFFER_UNLOCK();
 

@@ -114,10 +114,10 @@ typedef enum
 typedef struct
 {
     uint8_t duty;               /**< Specifies the duty in PWM output mode.
-                                     This parameter must be a number between 0 ~ 100.*/
+                                     This parameter must be a number between 0 ~ 100. */
 
     uint8_t drive_polarity;     /**< Specifies the drive polarity in PWM output mode.
-                                     This parameter can be a value of @ref PWM_Drive_Polarity.*/
+                                     This parameter can be a value of @ref PWM_Drive_Polarity. */
 
 } pwm_channel_init_t;
 
@@ -133,7 +133,7 @@ typedef struct
                                              This parameter can be a value of @ref PWM_Alignment_Mode */
 
     uint32_t freq;                      /**< Specifies the PWM frequency.
-                                             This parameter must be a number between 0 ~ SystemFreq/2 (max = 32Mhz).*/
+                                             This parameter must be a number between 0 ~ SystemFreq/2 (max = 32Mhz). */
 
     uint32_t bperiod;                   /**< Specifies the PWM breath period in breath mode. Unit: ms.
                                              This parameter must be a number between 0 ~ 0xFFFFFFFF/SystemFreq*1000. */

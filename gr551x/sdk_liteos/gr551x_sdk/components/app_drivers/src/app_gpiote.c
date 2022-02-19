@@ -180,7 +180,7 @@ uint16_t app_gpiote_init(const app_gpiote_param_t *p_params, uint8_t table_cnt)
             continue;
         }
 
-        memcpy(&s_gpiote_env.params[s_gpiote_env.total_used], &p_params[idx], sizeof(app_gpiote_param_t));
+        memcpy_s(&s_gpiote_env.params[s_gpiote_env.total_used], sizeof(s_gpiote_env.params[s_gpiote_env.total_used]), &p_params[idx], sizeof(app_gpiote_param_t));
 
         if ((p_params[idx].handle_mode == APP_IO_ENABLE_WAKEUP) && (p_params[idx].type == APP_IO_TYPE_AON))
         {
@@ -377,7 +377,7 @@ void hal_aon_gpio_callback(uint16_t aon_gpio_pin)
     {
         gpiote_evt.ctx_type = APP_IO_CTX_INT;
     }
-    memset(aon_cb_called_table, 0, sizeof(aon_cb_called_table));
+    memset_s(aon_cb_called_table, sizeof (aon_cb_called_table), 0, sizeof(aon_cb_called_table));
     for (uint8_t idx = 0; idx < s_gpiote_env.total_used; idx++)
     {
         if ((s_gpiote_env.params[idx].type == APP_IO_TYPE_AON) && \

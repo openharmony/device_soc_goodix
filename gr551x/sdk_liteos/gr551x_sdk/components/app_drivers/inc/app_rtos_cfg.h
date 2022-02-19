@@ -132,7 +132,7 @@ typedef void *                        mutex_t;
   * @{
   */
 #define ENV_RTOS_USE_SEMP    1    /**< Enable semaphore in app driver */
-//#define ENV_RTOS_USE_MUTEX 1    /**< Enable mutex in app driver */
+// #define ENV_RTOS_USE_MUTEX 1    /**< Enable mutex in app driver */
 /** @} */
 
 /** @addtogroup APP_RTOS_CONFIG_FUNCTIONS Functions

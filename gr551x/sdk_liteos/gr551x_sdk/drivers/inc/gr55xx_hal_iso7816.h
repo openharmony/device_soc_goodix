@@ -100,7 +100,7 @@ typedef enum
 typedef struct
 {
     uint32_t clk_div;                 /*!< clk_div is used for dividing the system clock,
-                                           and ISO7816 output clock is equal to (system clock)/(clk_div+1).*/
+                                           and ISO7816 output clock is equal to (system clock)/(clk_div+1). */
     uint32_t wait_time;               /*!< Specifies the guard time value in terms of number of baud clocks */
     uint16_t guard_time;              /*!< Specifies the maximum card response time (leading edge to leading edge) */
     uint8_t  detect_coding;           /*!< Specifies whether automatically detect coding convention during ATR receiption. */
@@ -201,7 +201,7 @@ typedef struct _iso7816_callback
 #define HAL_ISO7816_ACTION_OFF              LL_ISO7816_ACTION_OFF            /**< Switch Off.                        */
 #define HAL_ISO7816_ACTION_STOPCLK          LL_ISO7816_ACTION_STOPCLK        /**< Stop the clock.                    */
 #define HAL_ISO7816_ACTION_ON               LL_ISO7816_ACTION_ON             /**< Switch on and receive ATR.         */
-#define HAL_ISO7816_ACTION_WARMRST          LL_ISO7816_ACTION_WARMRST        /**< Trigger warm reset and receive ATR.*/
+#define HAL_ISO7816_ACTION_WARMRST          LL_ISO7816_ACTION_WARMRST        /**< Trigger warm reset and receive ATR. */
 #define HAL_ISO7816_ACTION_RX               LL_ISO7816_ACTION_RX             /**< Receive.                           */
 #define HAL_ISO7816_ACTION_TX               LL_ISO7816_ACTION_TX             /**< Transmit.                          */
 #define HAL_ISO7816_ACTION_TXRX             LL_ISO7816_ACTION_TXRX           /**< Transmit, followed by RX.          */

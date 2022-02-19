@@ -56,16 +56,16 @@
 #define RAM_START_ADDR          0x30000000
 #endif
 
-#if (CHIP_TYPE == 0) //GR5515
+#if (CHIP_TYPE == 0)
     #define RAM_SIZE            0x00040000
-#else               //GR5513
+#else
     #define RAM_SIZE            0x00020000
 #endif
 
 #define RAM_END_ADDR            (RAM_START_ADDR + RAM_SIZE)
 
 
-#define FERP_SIZE               0x8000     //32K
+#define FERP_SIZE               0x8000     // 32K
 #define CRITICAL_CODE_MAX_SIZE  0x10000    // maximum size of critical code reserved
 
 #if (APP_CODE_RUN_ADDR == APP_CODE_LOAD_ADDR && \

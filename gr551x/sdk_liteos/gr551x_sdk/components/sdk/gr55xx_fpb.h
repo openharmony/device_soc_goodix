@@ -52,7 +52,7 @@
 #include <stdbool.h>
 
 /**
- *@addtogroup GR55XX_FPB_ENUMERATIONS Enumerations
+ * @addtogroup GR55XX_FPB_ENUMERATIONS Enumerations
  * @{
  */
 /**@brief FPB mode. */

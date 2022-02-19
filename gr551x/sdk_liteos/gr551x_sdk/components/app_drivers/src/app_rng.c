@@ -261,7 +261,7 @@ uint16_t app_rng_init(app_rng_params_t *p_params, app_rng_evt_handler_t evt_hand
     s_rng_env.ues_type = p_params->use_type;
     s_rng_env.evt_handler = evt_handler;
 
-    memcpy(&s_rng_env.handle.init, &p_params->init, sizeof(rng_init_t));
+    memcpy_s(&s_rng_env.handle.init, sizeof (s_rng_env.handle.init), &p_params->init, sizeof(rng_init_t));
     s_rng_env.handle.p_instance = RNG;
     hal_err_code = hal_rng_deinit(&s_rng_env.handle);
     APP_DRV_ERR_CODE_CHECK(hal_err_code);

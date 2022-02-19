@@ -71,7 +71,7 @@ SECTION_RAM_CODE __asm void SVC_Handler (void)
     BL       SVC_handler_proc
     MOV      R12, R0
     POP      {R0-R3,LR}
-    CMP      R12,#0                      //make sure current point isn't null
+    CMP      R12,#0
     BLXNE    R12
     BX       LR                      ; RETI
 SVC_Dead
@@ -79,26 +79,7 @@ SVC_Dead
     ALIGN
 }
 #endif
-
 #elif defined ( __GNUC__ )
-// SECTION_RAM_CODE void __attribute__((naked))SVC_Handler (void)
-// {
-//     __asm("TST R14,$4\n");
-//     __asm("IT NE\n");
-//     __asm("MRSNE   R12,PSP\n");
-//     __asm("IT EQ\n");
-//     __asm("MOVEQ   R12,SP\n");
-//     __asm("PUSH    {R0-R3,LR}\n");
-//     __asm("MOV  R0, R12\n");
-//     __asm("BL  SVC_handler_proc\n");
-//     __asm("MOV  R12, R0\n");
-//     __asm("POP {R0-R3,LR}\n");
-//     __asm("CMP R12,$0\n");
-//     __asm("IT NE\n");
-//     __asm("BLXNE     R12\n");
-//     __asm("BX      LR\n");
-// }
-
 #elif defined (__ICCARM__)
 
 extern uint32_t *SVC_Table;
@@ -220,12 +201,6 @@ SECTION_RAM_CODE void __attribute__((naked))HardFault_Handler (void)
 
 #endif
 
-
-//void HardFault_Handler (void)
-//{
-//    while (1);
-//}
-
 /**
  ****************************************************************************************
  * @brief  MemManage fault Interrupt Handler
@@ -269,14 +244,3 @@ SECTION_RAM_CODE void SLPTIMER_IRQHandler(void)
 {
     hal_pwr_sleep_timer_irq_handler();
 }
-
-/**
- ****************************************************************************************
- * @brief  SysTick Interrupt Handler
- * @retval  void
- ****************************************************************************************
- */
-// __WEAK void SysTick_Handler(void)
-// {
-
-// }

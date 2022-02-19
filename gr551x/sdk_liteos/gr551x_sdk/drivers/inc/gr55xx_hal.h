@@ -95,31 +95,6 @@ typedef struct _hal_callback
   * @{
   */
 
-//** @brief Disable interrupts globally in the system(apart from the NMI).
-// *  This macro must be used in conjunction with the @ref GLOBAL_EXCEPTION_ENABLE macro
-// *  since this last one will close the brace that the current macro opens.  This means
-// *  that both macros must be located at the same scope level.
-// */
-//#define GLOBAL_EXCEPTION_DISABLE()                         \
-//do {                                                       \
-//    uint32_t __l_irq_rest = __get_PRIMASK();               \
-//    __set_PRIMASK(1)
-
-
-//** @brief Restore interrupts from the previous global disable(apart from the NMI).
-// *  @sa GLOBAL_EXCEPTION_ENABLE
-// */
-//#define GLOBAL_EXCEPTION_ENABLE()                          \
-//    if(__l_irq_rest == 0)                                  \
-//    {                                                      \
-//        __set_PRIMASK(0);                                  \
-//    }                                                      \
-//    else                                                   \
-//    {                                                      \
-//        __set_PRIMASK(1);                                  \
-//    }                                                      \
-//} while(0)
-
 /** @brief compare if a > b
  *  @sa CO_MAX
  */

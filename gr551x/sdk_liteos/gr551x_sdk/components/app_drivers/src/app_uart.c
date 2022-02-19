@@ -528,16 +528,16 @@ uint16_t app_uart_init(app_uart_params_t *p_params, app_uart_evt_handler_t evt_h
     s_uart_env[id].use_mode.type = p_params->use_mode.type;
     s_uart_env[id].use_mode.rx_dma_channel = p_params->use_mode.rx_dma_channel;
     s_uart_env[id].use_mode.tx_dma_channel = p_params->use_mode.tx_dma_channel;
-    memcpy(&s_uart_env[id].pin_cfg, &p_params->pin_cfg, sizeof(app_uart_pin_cfg_t));
+    memcpy_s(&s_uart_env[id].pin_cfg, sizeof (s_uart_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_uart_pin_cfg_t));
     s_uart_env[id].evt_handler = evt_handler;
 
-    memcpy(&s_uart_env[id].handle.init, &p_params->init, sizeof(uart_init_t));
+    memcpy_s(&s_uart_env[id].handle.init, sizeof (s_uart_env[id].handle.init), &p_params->init, sizeof(uart_init_t));
     s_uart_env[id].handle.p_instance = (uart_regs_t *)s_uart_instance[id];
 
     hal_uart_deinit(&s_uart_env[id].handle);
     hal_uart_init(&s_uart_env[id].handle);
 
-    if (s_sleep_cb_registered_flag == false)// register sleep callback
+    if (s_sleep_cb_registered_flag == false)
     {
         s_sleep_cb_registered_flag = true;
         s_uart_pwr_id = pwr_register_sleep_cb(&uart_sleep_cb, APP_DRIVER_UART_WAPEUP_PRIORITY);

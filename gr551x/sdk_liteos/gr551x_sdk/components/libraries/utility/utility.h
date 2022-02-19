@@ -96,7 +96,7 @@ extern "C" {
 
 #define BIT_MASK(n)     (uint8_t)(((1) << n) - 1)
 
-/*takes a byte out of a uint32:var -uint32, ByteNum - byte tao take out(0-3)*/
+/* takes a byte out of a uint32:var -uint32, ByteNum - byte tao take out(0-3) */
 #define BREAK_U32(var, ByteNum) (uint8_t)((uint32_t)(((var) >> ((uint8_t)((ByteNum) * 8))) & 0x00FF))
 
 #define BUILD_U32(Byte0, Byte1, Byte2, Byte3) \

@@ -86,7 +86,7 @@ typedef struct _ll_aon_gpio_init
     uint32_t pull;          /**< Specifies the operating Pull-up/Pull down for the selected pins.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_PULL.
 
-                                 AON_GPIO HW configuration can be modified afterwards using unitary function @ref ll_aon_gpio_set_pin_pull().*/
+                                 AON_GPIO HW configuration can be modified afterwards using unitary function @ref ll_aon_gpio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                 This parameter can be a value of @ref AON_GPIO_LL_EC_MUX.
@@ -373,7 +373,6 @@ __STATIC_INLINE uint32_t ll_aon_gpio_get_pin_pull(uint32_t pin)
 {
     uint32_t RTypeMask = (pin << AON_PAD_CTL0_GPO_RTYPE_Pos) & AON_PAD_CTL0_GPO_RTYPE;
     uint32_t REnMask = (pin << AON_PAD_CTL0_GPO_RE_N_Pos) & AON_PAD_CTL0_GPO_RE_N;
-    //return (READ_BITS(AON->AON_PAD_CTL0, REnMask | RTypeMask) >> POSITION_VAL(Pin));
     return ((READ_BITS(AON->AON_PAD_CTL0, REnMask) != RESET) ? LL_AON_GPIO_PULL_NO :
             ((READ_BITS(AON->AON_PAD_CTL0, RTypeMask) != RESET) ? LL_AON_GPIO_PULL_UP : LL_AON_GPIO_PULL_DOWN));
 }

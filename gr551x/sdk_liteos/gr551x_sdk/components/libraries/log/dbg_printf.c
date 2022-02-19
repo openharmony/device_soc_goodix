@@ -88,7 +88,7 @@ static void dbg_uart_init(uart_regs_t *UARTx, dbg_printf_mode_t mode)
     gpio_init_t gpio_config = GPIO_DEFAULT_CONFIG;
 
     /* Initialize ring buffer */
-    memset(&dbg_ring_buf, 0, sizeof(dbg_ring_buf));
+    memset_s(&dbg_ring_buf, sizeof (dbg_ring_buf), 0, sizeof(dbg_ring_buf));
 
     /* Enable serial module clock */
     ll_cgc_disable_force_off_serial_hclk();

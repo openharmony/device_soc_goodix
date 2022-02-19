@@ -77,13 +77,13 @@ typedef struct _ll_pwm_channel_init_t
                                      This parameter must be a number ranges between Min_Data=0 and Max_Data=100.
 
                                      This feature can be modified afterwards using unitary function ll_pwm_set_compare_xn()
-                                     where X can be (A, B, C) and n can be (0, 1).*/
+                                     where X can be (A, B, C) and n can be (0, 1). */
 
     uint8_t drive_polarity;      /**< Specifies the drive polarity in PWM output mode.
                                      This parameter can be a value of @ref PWM_LL_EC_DRIVEPOLARITY.
 
                                      This feature can be modified afterwards using unitary function ll_pwm_enable_positive_drive_channel_x()
-                                     and ll_pwm_disable_positive_drive_channel_x() where X can be (A, B, C).*/
+                                     and ll_pwm_disable_positive_drive_channel_x() where X can be (A, B, C). */
 
 } ll_pwm_channel_init_t;
 
@@ -95,36 +95,36 @@ typedef struct _ll_pwm_init_t
     uint32_t mode;              /**< Specifies the PWM output mode.
                                      This parameter can be a value of @ref PWM_LL_EC_MODE.
     
-                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_mode().*/
+                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_mode(). */
 
     uint32_t align;             /**< Specifies the PWM alignment pulses.
-                                     This parameter can be a value of @ref PWM_LL_EC_ALIGN.*/
+                                     This parameter can be a value of @ref PWM_LL_EC_ALIGN. */
 
     uint32_t prescaler;         /**< Specifies the prescaler value which will be used configure PWM output frequency.
                                      This parameter must be a number ranges between Min_Data = 0 and Max_Data = 0xFFFFFFFF.
                                      This parameter should be larger than 128.
 
-                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_prescaler().*/
+                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_prescaler(). */
 
     uint32_t bprescaler;        /**< Specifies the required prescaler that the duty changes from 0% to 100% in breath mode.
                                      This parameter must be a number ranges between Min_Data=0 and Max_Data=0xFFFFFFFF.
                                      This parameter is recommended to be larger than 128*prescaler to guarantee an ideal breath effect.
 
-                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_breath_prescaler().*/
+                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_breath_prescaler(). */
 
     uint32_t hprescaler;        /**< Specifies the required prescaler in breath hold state.
                                      This parameter must be a number ranges between Min_Data=0 and Max_Data=0xFFFFFF.
 
-                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_hold_prescaler().*/
+                                     This feature can be modified afterwards using unitary function @ref ll_pwm_set_hold_prescaler(). */
 
     ll_pwm_channel_init_t channel_a;    /**< Specifies the configuration of channelA.
-                                                 This parameter can be a value of @ref ll_pwm_channel_init_t.*/
+                                                 This parameter can be a value of @ref ll_pwm_channel_init_t. */
 
     ll_pwm_channel_init_t channel_b;    /**< Specifies the configuration of channelB.
-                                                 This parameter can be a value of @ref ll_pwm_channel_init_t.*/
+                                                 This parameter can be a value of @ref ll_pwm_channel_init_t. */
 
     ll_pwm_channel_init_t channel_c;    /**< Specifies the configuration of channelC.
-                                                 This parameter can be a value of @ref ll_pwm_channel_init_t.*/
+                                                 This parameter can be a value of @ref ll_pwm_channel_init_t. */
 
 } ll_pwm_init_t;
 

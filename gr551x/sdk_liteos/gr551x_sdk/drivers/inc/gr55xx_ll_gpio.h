@@ -86,7 +86,7 @@ typedef struct _ll_gpio_init
     uint32_t pull;          /*!< Specifies the operating Pull-up/Pull down for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_PULL.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref ll_gpio_set_pin_pull().*/
+                              GPIO HW configuration can be modified afterwards using unitary function @ref ll_gpio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                 This parameter can be a value of @ref GPIO_LL_EC_MUX.

@@ -77,27 +77,27 @@ typedef struct _ll_uart_init_t
 {
     uint32_t baud_rate;                 /**< This field defines expected Usart communication baud rate.
 
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_baud_rate().*/
+                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_baud_rate(). */
 
     uint32_t data_bits;                 /**< Specifies the number of data bits transmitted or received in a frame.
                                            This parameter can be a value of @ref UART_LL_EC_DATABITS.
 
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_data_bits_length().*/
+                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_data_bits_length(). */
 
     uint32_t stop_bits;                 /**< Specifies the number of stop bits transmitted.
                                            This parameter can be a value of @ref UART_LL_EC_STOPBITS.
 
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_stop_bits_length().*/
+                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_stop_bits_length(). */
 
     uint32_t parity;                    /**< Specifies the parity mode.
                                            This parameter can be a value of @ref UART_LL_EC_PARITY.
 
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_parity().*/
+                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_parity(). */
 
     uint32_t hw_flow_ctrl;              /**< Specifies whether the hardware flow control mode is enabled or disabled.
                                            This parameter can be a value of @ref UART_LL_EC_HWCONTROL.
 
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_hw_flow_ctrl().*/
+                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_hw_flow_ctrl(). */
 } ll_uart_init_t;
 
 /** @} */

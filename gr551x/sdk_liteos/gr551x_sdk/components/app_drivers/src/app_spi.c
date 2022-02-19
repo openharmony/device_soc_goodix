@@ -538,16 +538,16 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
     s_spi_env[id].use_mode.type = p_params->use_mode.type;
     s_spi_env[id].use_mode.rx_dma_channel = p_params->use_mode.rx_dma_channel;
     s_spi_env[id].use_mode.tx_dma_channel = p_params->use_mode.tx_dma_channel;
-    memcpy(&s_spi_env[id].pin_cfg, &p_params->pin_cfg, sizeof(app_spi_pin_cfg_t));
+    memcpy_s(&s_spi_env[id].pin_cfg, sizeof (s_spi_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_spi_pin_cfg_t));
     s_spi_env[id].evt_handler = evt_handler;
 
-    memcpy(&s_spi_env[id].handle.init, &p_params->init, sizeof(spi_init_t));
+    memcpy_s(&s_spi_env[id].handle.init, sizeof (s_spi_env[id].handle.init), &p_params->init, sizeof(spi_init_t));
     s_spi_env[id].handle.p_instance = (ssi_regs_t *)s_spi_instance[id];
 
     hal_spi_deinit(&s_spi_env[id].handle);
     hal_spi_init(&s_spi_env[id].handle);
 
-    if (s_sleep_cb_registered_flag == false)// register sleep callback
+    if (s_sleep_cb_registered_flag == false)
     {
         s_sleep_cb_registered_flag = true;
         s_spi_pwr_id = pwr_register_sleep_cb(&spi_sleep_cb, APP_DRIVER_SPI_WAPEUP_PRIORITY);

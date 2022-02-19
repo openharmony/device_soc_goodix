@@ -706,7 +706,7 @@ hal_status_t hal_dma_resume_reg(dma_handle_t *p_dma);
 }
 #endif
 
-#endif /* __GR55xx_HAL_DMA_H__*/
+#endif /* __GR55xx_HAL_DMA_H__ */
 
 /** @} */
 
