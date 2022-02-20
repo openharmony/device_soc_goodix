@@ -38,9 +38,6 @@
 #include "custom_config.h"
 #endif
 #endif
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /** @addtogroup Library_configuration_section
   * @{
@@ -77,25 +74,26 @@ extern "C" {
 
 /** @} */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup Exported_types
   * @{
   */
 
-typedef enum
-{
+typedef enum {
     RESET = 0,
     SET = !RESET
 } flag_status_t, it_status_t;
 
-typedef enum
-{
+typedef enum {
     DISABLE = 0,
     ENABLE = !DISABLE
 } functional_state_t;
 #define IS_FUNCTIONAL_STATE(STATE) (((STATE) == DISABLE) || ((STATE) == ENABLE))
 
-typedef enum
-{
+typedef enum {
     ERROR = 0,
     SUCCESS = !ERROR
 } error_status_t;
@@ -148,7 +146,8 @@ typedef enum
 #if defined ( __ICCARM__ )
     #define SECTION_RAM_CODE __ramfunc
 #else
-    #define SECTION_RAM_CODE __attribute__((section("RAM_CODE")))   /**< To prevent doxygen from misidentifying the function name */
+    /**< To prevent doxygen from misidentifying the function name */
+    #define SECTION_RAM_CODE __attribute__((section("RAM_CODE")))
 #endif
 #endif
 #endif
@@ -160,7 +159,8 @@ typedef enum
 #if defined ( __ICCARM__ )
     #define TINY_RAM_SECTION __ramfunc
 #else
-    #define TINY_RAM_SECTION __attribute__((section("TINY_RAM_SPACE")))   /**< To prevent doxygen from misidentifying the function name */
+    /**< To prevent doxygen from misidentifying the function name */
+    #define TINY_RAM_SECTION __attribute__((section("TINY_RAM_SPACE")))
 #endif
 #endif
 #endif
@@ -180,7 +180,7 @@ do {                                                       \
  *  @sa GLOBAL_EXCEPTION_ENABLE
  */
 #define GLOBAL_EXCEPTION_ENABLE()                          \
-    if(__l_irq_rest == 0)                                  \
+    if (__l_irq_rest == 0)                                 \
     {                                                      \
         __set_PRIMASK(0);                                  \
     }                                                      \
@@ -188,7 +188,7 @@ do {                                                       \
     {                                                      \
         __set_PRIMASK(1);                                  \
     }                                                      \
-} while(0)
+} while (0)
 /** @} */
 
 #ifdef __cplusplus

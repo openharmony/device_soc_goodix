@@ -145,7 +145,8 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
             }
             else if (APP_ERROR_CODE_NB == i)
             {
-                sprintf_s(s_error_print_info, sizeof(s_error_print_info), "Error code 0x%04X: No found information.", p_error_info->value.error_code);
+                sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
+                          "Error code 0x%04X: No found information.", p_error_info->value.error_code);
                 break;
             }
         }

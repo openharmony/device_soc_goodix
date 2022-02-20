@@ -34,95 +34,13 @@
 #ifndef __GR551xx_H__
 #define __GR551xx_H__
 
+#include <stdint.h>
+#include "system_gr55xx.h"        /*      System Header */
+#include "core_cm4.h"             /*      Cortex-M4 processor and core peripherals */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/** @addtogroup Peripheral_interrupt_number_definition
-  * @{
-  */
-
-/**
- * @brief GR55xx Interrupt Number Definition, according to the selected device
- *        in @ref Library_configuration_section
- */
-
-/* ================================================================================================================= */
-/* ================                           Interrupt Number Definition                           ================ */
-/* ================================================================================================================= */
-typedef enum IRQn
-{
-/* ==================================  ARM Cortex-M# Specific Interrupt Numbers  =================================== */
-
-    NonMaskableInt_IRQn       = -14,  /**< -14  Non maskable Interrupt, cannot be stopped or preempted               */
-    HardFault_IRQn            = -13,  /**< -13  Hard Fault, all classes of Fault                                     */
-    MemoryManagement_IRQn     = -12,  /**< -12  Memory Management, MPU mismatch, including Access Violation
-                                                and No Match                                                         */
-    BusFault_IRQn             = -11,  /**< -11  Bus Fault, Pre-Fetch-, Memory Access Fault, other address/memory
-                                                related Fault                                                        */
-    UsageFault_IRQn           = -10,  /**< -10  Usage Fault, i.e. Undef Instruction, Illegal State Transition        */
-    SVCall_IRQn               =  -5,  /**< -5 System Service Call via SVC instruction                                */
-    DebugMonitor_IRQn         =  -4,  /**< -4 Debug Monitor                                                          */
-    PendSV_IRQn               =  -2,  /**< -2 Pendable request for system service                                    */
-    SysTick_IRQn              =  -1,  /**< -1 System Tick Timer                                                      */
-
-/* ======================================  <Device> Specific Interrupt Numbers  ==================================== */
-    WDT_IRQn                  =   0,  /**< Watchdog Timer Interrupt                                                  */
-    BLE_SDK_IRQn              =   1,  /**< BLE_SDK_SCHEDULE Interrupt                                                */
-    BLE_IRQn                  =   2,  /**< BLE Interrupt                                                             */
-    DMA_IRQn                  =   3,  /**< DMA Interrupt                                                             */
-    SPI_M_IRQn                =   4,  /**< SPI_M Interrupt                                                           */
-    SPI_S_IRQn                =   5,  /**< SPI_S Interrupt                                                           */
-    EXT0_IRQn                 =   6,  /**< EXT0 Interrupt                                                            */
-    EXT1_IRQn                 =   7,  /**< EXT1 Interrupt                                                            */
-    TIMER0_IRQn               =   8,  /**< Timer0 Interrupt                                                          */
-    TIMER1_IRQn               =   9,  /**< Timer1 Interrupt                                                          */
-    DUAL_TIMER_IRQn           =  10,  /**< Dual_Timer Interrupt                                                      */
-    QSPI0_IRQn                =  11,  /**< QSPI0 Interrupt                                                           */
-    UART0_IRQn                =  12,  /**< UART0 Interrupt                                                           */
-    UART1_IRQn                =  13,  /**< UART1 Interrupt                                                           */
-    I2C0_IRQn                 =  14,  /**< I2C0 Interrupt                                                            */
-    I2C1_IRQn                 =  15,  /**< I2C1 Interrupt                                                            */
-    AES_IRQn                  =  16,  /**< AES Interrupt                                                             */
-    HMAC_IRQn                 =  17,  /**< HMAC Interrupt                                                            */
-    EXT2_IRQn                 =  18,  /**< EXT2 Interrupt                                                            */
-    RNG_IRQn                  =  19,  /**< RNG Interrupt                                                             */
-    PMU_IRQn                  =  20,  /**< PMU Interrupt                                                             */
-    PKC_IRQn                  =  21,  /**< PKC Interrupt                                                             */
-    XQSPI_IRQn                =  22,  /**< XQSPI Interrupt                                                           */
-    QSPI1_IRQn                =  23,  /**< QSPI1 Interrupt                                                           */
-    PWR_CMD_IRQn              =  24,  /**< POWER CMD ACK Interrupt                                                   */
-    BLESLP_IRQn               =  25,  /**< BLE Sleep Interrupt                                                       */
-    SLPTIMER_IRQn             =  26,  /**< Sleep Timer Interrupt                                                     */
-    COMP_EXT_IRQn             =  27,  /**< Comparator and External Wakeup Interrupt                                  */
-    AON_WDT_IRQn              =  28,  /**< Always on Watchdog Interrupt                                              */
-    I2S_M_IRQn                =  29,  /**< I2S_M Interrupt                                                           */
-    I2S_S_IRQn                =  30,  /**< I2S_S Interrupt                                                           */
-    ISO7816_IRQn              =  31,  /**< ISO7816 Interrupt                                                         */
-    PRESENT_IRQn              =  32,  /**< Presnet Done Interrupt                                                    */
-    CALENDAR_IRQn             =  33,  /**< AON Calendar Timer Interrupt                                              */
-    MAX_NUMS_IRQn             =  34,  /**< Last Interrupt                                                            */
-} IRQn_Type;
-
-/** @} */ /* End of group Peripheral     _interrupt_number_definition */
-
-/* ================================================================================================================= */
-/* ================                        Processor and Core Peripheral Section                    ================ */
-/* ================================================================================================================= */
-
-/* ===================================  Start of section using anonymous unions  =================================== */
-
-/* ======================  Configuration of the ARM Cortex-M4 Processor and Core Peripherals  ====================== */
-#define __CM4_REV                 0x0001U   /* Core revision r0p1 */
-#define __MPU_PRESENT             1         /* MPU present */
-#define __VTOR_PRESENT            1         /* VTOR present */
-#define __NVIC_PRIO_BITS          8         /* Number of Bits used for Priority Levels */
-#define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
-#define __FPU_PRESENT             1         /* FPU present */
-
-#include "core_cm4.h"             /*      Cortex-M4 processor and core peripherals */
-#include "system_gr55xx.h"        /*      System Header */
-#include <stdint.h>
 
 #if   defined (__CC_ARM)
     #pragma push
@@ -157,8 +75,7 @@ typedef enum IRQn
 /**
   * @brief AES
   */
-typedef struct _aes_regs
-{
+typedef struct _aes_regs {
     __IOM uint32_t CTRL;                /**< AES_REG_CTRL,          Address offset: 0x00 */
     __IOM uint32_t CONFIG;              /**< AES_REG_CONFIG,        Address offset: 0x04 */
     __IM  uint32_t STATUS;              /**< AES_REG_STATUS,        Address offset: 0x08 */
@@ -181,8 +98,7 @@ typedef struct _aes_regs
 /**
   * @brief AON
   */
-typedef struct _aon_regs
-{
+typedef struct _aon_regs {
     __IOM uint32_t SOFTWARE_0;              /**< AON_REG_SOFTWARE_0,            Address offset: 0x00 */
     __IOM uint32_t PWR_RET01;               /**< AON_REG_PWR_RET01,             Address offset: 0x04 */
     __IOM uint32_t SNSADC_CFG;              /**< AON_REG_SNSADC_CFG,            Address offset: 0x08 */
@@ -232,8 +148,7 @@ typedef struct _aon_regs
   */
 #define DMA_REG(name)                   __IOM uint32_t name; __IOM uint32_t __pad_##name
 /* DMA/Channel_x_Registers Registers */
-typedef struct
-{
+typedef struct {
     DMA_REG(SAR);                       /**< Source Address,                Address offset: 0x00 */
     DMA_REG(DAR);                       /**< Destination Address,           Address offset: 0x08 */
     DMA_REG(LLP);                       /**< Linked List Pointer,           Address offset: 0x10 */
@@ -250,8 +165,7 @@ typedef struct
 } DMA_CH_REGS;
 
 /* DMA/Interrupt_Registers Registers */
-typedef struct
-{
+typedef struct {
     __IO uint32_t RAW_CH_EVT[10];       /**< Raw channel event,             Address offset: 0x00 */
     __I  uint32_t STATUS_CH_EVT[10];    /**< Status channel event,          Address offset: 0x28 */
     __IO uint32_t MASK_CH_EVT[10];      /**< Mask channel event,            Address offset: 0x50 */
@@ -260,8 +174,7 @@ typedef struct
 } DMA_INT_REGS;
 
 /* DMA/Software_Handshake_Registers Registers */
-typedef struct
-{
+typedef struct {
     DMA_REG(REQ_SRC);                   /**< Source Transaction Request,            Address offset: 0x00 */
     DMA_REG(REQ_DST);                   /**< Destination Transaction Request,       Address offset: 0x08 */
     DMA_REG(SGL_RQ_SRC);                /**< Source Single Transaction Request,     Address offset: 0x20 */
@@ -271,8 +184,7 @@ typedef struct
 } DMA_HS_REGS;
 
 /* DMA/Miscellaneous_Registers Registers */
-typedef struct
-{
+typedef struct {
     DMA_REG(CFG);                       /**< DMA Configuration,             Address offset: 0x00 */
     DMA_REG(CH_EN);                     /**< DMA Channel Enable,            Address offset: 0x08 */
     DMA_REG(ID);                        /**< DMA ID,                        Address offset: 0x20 */
@@ -288,8 +200,7 @@ typedef struct
     DMA_REG(COMPS_ID);                  /**< DMA Component ID,              Address offset: 0x70 */
 } DMA_MISC_REGS;
 
-typedef struct _dma_regs
-{
+typedef struct _dma_regs {
     DMA_CH_REGS         CHANNEL[8];     /**< DMA_REG_CH register,           Address offset: 0x000 */
     DMA_INT_REGS        EVENT;          /**< DMA_REG_INT register,          Address offset: 0x2C0 */
     DMA_HS_REGS         HANDSHAKE;      /**< DMA_REG_HS register,           Address offset: 0x368 */
@@ -299,8 +210,7 @@ typedef struct _dma_regs
 /**
   * @brief DUAL_TIM
   */
-typedef struct _dual_timer_regs
-{
+typedef struct _dual_timer_regs {
     __IOM uint32_t RELOAD;          /**< DUAL_TIMER auto-reload register,            Address offset: 0x00 */
     __IM  uint32_t VALUE;           /**< DUAL_TIMER counter value register,          Address offset: 0x04 */
     __IOM uint32_t CTRL;            /**< DUAL_TIMER control register,                Address offset: 0x08 */
@@ -313,8 +223,7 @@ typedef struct _dual_timer_regs
 /**
   * @brief GPIO
   */
-typedef struct _gpio_regs
-{
+typedef struct _gpio_regs {
     __IOM uint32_t DATA;                /**< GPIO_REG_DATA register,            Address offset: 0x000 */
     __IOM uint32_t DATAOUT;             /**< GPIO_REG_DATAOUT register,         Address offset: 0x004 */
     __IM  uint32_t RESERVED0[2];        /**< GPIO_REG_RESERVED register,        Address offset: 0x008 */
@@ -337,8 +246,7 @@ typedef struct _gpio_regs
 /**
   * @brief HMAC
   */
-typedef struct _hmac_regs
-{
+typedef struct _hmac_regs {
     __IOM uint32_t CTRL;                /**< HMAC_REG_CTRL register,            Adderss offset: 0x00 */
     __IOM uint32_t CONFIG;              /**< HMAC_REG_CONFIG register,          Adderss offset: 0x04 */
     __IM  uint32_t STATUS;              /**< HMAC_REG_STATUS register,          Adderss offset: 0x08 */
@@ -358,75 +266,73 @@ typedef struct _hmac_regs
 /**
   * @brief I2C
   */
-typedef struct _i2c_regs
-{
-    __IOM uint32_t CON;                        /**< I2C control,                                      Address offset: 0x00 */
-    __IOM uint32_t TAR;                        /**< I2C target address,                               Address offset: 0x04 */
-    __IOM uint32_t SAR;                        /**< I2C slave address,                                Address offset: 0x08 */
-    __IOM uint32_t HS_MADDR;                   /**< I2C HS Master Mode Code address,                  Address offset: 0x0C */
-    __IOM uint32_t DATA_CMD;                   /**< I2C Rx/Tx Data Buffer and Command,                Address offset: 0x10 */
-    __IOM uint32_t SS_SCL_HCNT;                /**< Standard Speed I2C clock SCL High Count,          Address offset: 0x14 */
-    __IOM uint32_t SS_SCL_LCNT;                /**< Standard Speed I2C clock SCL Low Count,           Address offset: 0x18 */
-    __IOM uint32_t FS_SCL_HCNT;                /**< Fast Speed I2C clock SCL Low Count,               Address offset: 0x1C */
-    __IOM uint32_t FS_SCL_LCNT;                /**< Fast Speed I2C clock SCL Low Count,               Address offset: 0x20 */
-    __IOM uint32_t HS_SCL_HCNT;                /**< High Speed I2C clock SCL Low Count,               Address offset: 0x24 */
-    __IOM uint32_t HS_SCL_LCNT;                /**< High Speed I2C clock SCL Low Count,               Address offset: 0x28 */
-    __IM  uint32_t INTR_STAT;                  /**< I2C Interrupt Status,                             Address offset: 0x2C */
-    __IOM uint32_t INTR_MASK;                  /**< I2C Interrupt Mask,                               Address offset: 0x30 */
-    __IM  uint32_t RAW_INTR_STAT;              /**< I2C Raw Interrupt Status,                         Address offset: 0x34 */
-    __IOM uint32_t RX_TL;                      /**< I2C Receive FIFO Threshold,                       Address offset: 0x38 */
-    __IOM uint32_t TX_TL;                      /**< I2C Transmit FIFO Threshold,                      Address offset: 0x3C */
-    __IM  uint32_t CLR_INTR;                   /**< Clear combined and Individual Interrupts,         Address offset: 0x40 */
-    __IM  uint32_t CLR_RX_UNDER;               /**< Clear RX_UNDER Interrupt,                         Address offset: 0x44 */
-    __IM  uint32_t CLR_RX_OVER;                /**< Clear RX_OVER Interrupt,                          Address offset: 0x48 */
-    __IM  uint32_t CLR_TX_OVER;                /**< Clear TX_OVER Interrupt,                          Address offset: 0x4C */
-    __IM  uint32_t CLR_RD_REQ;                 /**< Clear RQ_REQ Interrupt,                           Address offset: 0x50 */
-    __IM  uint32_t CLR_TX_ABRT;                /**< Clear TX_ABRT Interrupt,                          Address offset: 0x54 */
-    __IM  uint32_t CLR_RX_DONE;                /**< Clear RX_DONE Interrupt,                          Address offset: 0x58 */
-    __IM  uint32_t CLR_ACTIVITY;               /**< Clear ACTIVITY Interrupt,                         Address offset: 0x5C */
-    __IM  uint32_t CLR_STOP_DET;               /**< Clear STOP_DET Interrupt,                         Address offset: 0x60 */
-    __IM  uint32_t CLR_START_DET;              /**< Clear START_DET Interrupt,                        Address offset: 0x64 */
-    __IM  uint32_t CLR_GEN_CALL;               /**< Clear GEN_CALL Interrupt,                         Address offset: 0x68 */
-    __IOM uint32_t ENABLE;                     /**< I2C Enable,                                       Address offset: 0x6C */
-    __IM  uint32_t STATUS;                     /**< I2C Status,                                       Address offset: 0x70 */
-    __IM  uint32_t TXFLR;                      /**< Transmit FIFO Level Register,                     Address offset: 0x74 */
-    __IM  uint32_t RXFLR;                      /**< Receive FIFO Level Register,                      Address offset: 0x78 */
-    __IOM uint32_t SDA_HOLD;                   /**< SDA Hold Time Length Reg,                         Address offset: 0x7C */
-    __IM  uint32_t TX_ABRT_SOURCE;             /**< I2C Transmit Abort Status Reg,                    Address offset: 0x80 */
-    __IOM uint32_t SLV_DATA_NACK_ONLY;         /**< Generate SLV_DATA_NACK Register,                  Address offset: 0x84 */
-    __IOM uint32_t DMA_CR;                     /**< DMA Control Register,                             Address offset: 0x88 */
-    __IOM uint32_t DMA_TDLR;                   /**< DMA Transmit Data Level,                          Address offset: 0x8C */
-    __IOM uint32_t DMA_RDLR;                   /**< DMA Receive Data Level,                           Address offset: 0x90 */
-    __IOM uint32_t SDA_SETUP;                  /**< SDA Setup Register,                               Address offset: 0x94 */
-    __IOM uint32_t ACK_GENERAL_CALL;           /**< ACK General Call Register,                        Address offset: 0x98 */
-    __IM  uint32_t ENABLE_STATUS;              /**< Enable Status Register,                           Address offset: 0x9C */
-    __IOM uint32_t FS_SPKLEN;                  /**< ISS and FS spike suppression limit,               Address offset: 0xA0 */
-    __IOM uint32_t HS_SPKLEN;                  /**< HS spike suppression limit,                       Address offset: 0xA4 */
-    __IM  uint32_t CLR_RESTART_DET;            /**< Clear RESTART_DET Interrupt Register,             Address offset: 0xA8 */
-    __IOM uint32_t SCL_STUCK_AT_LOW_TIMEOUT;   /**< I2C SCL Stuck at Low Timeout,                     Address offset: 0xAC */
-    __IOM uint32_t SDA_STUCK_AT_LOW_TIMEOUT;   /**< I2C SDA Stuck at Low Timeout,                     Address offset: 0xB0 */
-    __IM  uint32_t CLR_SCL_STUCK_DET;          /**< Clear SCL Stuck at Low Detect Interrupt Register, Address offset: 0xB4 */
-    __IM  uint32_t DEVICE_ID;                  /**< I2C Device-ID Register,                           Address offset: 0xB8 */
-    __IOM uint32_t SMBUS_CLK_LOW_SEXT;         /**< SMBus Slave Clock Extend Timeout Register,        Address offset: 0xBC */
-    __IOM uint32_t SMBUS_CLK_LOW_MEXT;         /**< SMBus Master Clock Extend Timeout Register,       Address offset: 0xC0 */
-    __IOM uint32_t SMBUS_THIGH_MAX_IDLE_COUNT; /**< SMBus Master THigh MAX Bus-idle count Register,   Address offset: 0xC4 */
-    __IM  uint32_t SMBUS_INTSTAT;              /**< SMBUS Interrupt Status Register,                  Address offset: 0xC8 */
-    __IOM uint32_t SMBUS_INTMASK;              /**< SMBus Interrupt Mask Register,                    Address offset: 0xCC */
-    __IM  uint32_t SMBUS_RAW_INTSTAT;          /**< SMBus Raw Interrupt Status Register,              Address offset: 0xD0 */
-    __OM  uint32_t SMBUS_INTCLR;               /**< SMBus Clear Interrupt Register,                   Address offset: 0xD4 */
-    __IOM uint32_t OPTIONAL_SAR;               /**< I2C Optional Slave Address Register,              Address offset: 0xD8 */
-    __IOM uint32_t SMBUS_UDID_LSB;             /**< SMBUS ARP UDID LSB Register,                      Address offset: 0xDC */
-    __IM  uint32_t RESERVED[5];                /**< I2C RESERVED register,                            Address offset: 0xE0 */
-    __IM  uint32_t COMP_PARAM_1;               /**< Component Parameter Register 1,                   Address offset: 0xF4 */
-    __IM  uint32_t COMP_VERSION;               /**< Component Version Register,                       Address offset: 0xF8 */
-    __IM  uint32_t COMP_TYPE;                  /**< Component Type Register,                          Address offset: 0xFC */
+typedef struct _i2c_regs {
+    __IOM uint32_t CON;                        /**< I2C control,                                 Address offset: 0x00 */
+    __IOM uint32_t TAR;                        /**< I2C target address,                          Address offset: 0x04 */
+    __IOM uint32_t SAR;                        /**< I2C slave address,                           Address offset: 0x08 */
+    __IOM uint32_t HS_MADDR;                   /**< I2C HS Master Mode Code address,             Address offset: 0x0C */
+    __IOM uint32_t DATA_CMD;                   /**< I2C Rx/Tx Data Buffer and Command,           Address offset: 0x10 */
+    __IOM uint32_t SS_SCL_HCNT;                /**< Standard Speed I2C clock SCL High Count,     Address offset: 0x14 */
+    __IOM uint32_t SS_SCL_LCNT;                /**< Standard Speed I2C clock SCL Low Count,      Address offset: 0x18 */
+    __IOM uint32_t FS_SCL_HCNT;                /**< Fast Speed I2C clock SCL Low Count,          Address offset: 0x1C */
+    __IOM uint32_t FS_SCL_LCNT;                /**< Fast Speed I2C clock SCL Low Count,          Address offset: 0x20 */
+    __IOM uint32_t HS_SCL_HCNT;                /**< High Speed I2C clock SCL Low Count,          Address offset: 0x24 */
+    __IOM uint32_t HS_SCL_LCNT;                /**< High Speed I2C clock SCL Low Count,          Address offset: 0x28 */
+    __IM  uint32_t INTR_STAT;                  /**< I2C Interrupt Status,                        Address offset: 0x2C */
+    __IOM uint32_t INTR_MASK;                  /**< I2C Interrupt Mask,                          Address offset: 0x30 */
+    __IM  uint32_t RAW_INTR_STAT;              /**< I2C Raw Interrupt Status,                    Address offset: 0x34 */
+    __IOM uint32_t RX_TL;                      /**< I2C Receive FIFO Threshold,                  Address offset: 0x38 */
+    __IOM uint32_t TX_TL;                      /**< I2C Transmit FIFO Threshold,                 Address offset: 0x3C */
+    __IM  uint32_t CLR_INTR;                   /**< Clear combined and Individual Interrupts,    Address offset: 0x40 */
+    __IM  uint32_t CLR_RX_UNDER;               /**< Clear RX_UNDER Interrupt,                    Address offset: 0x44 */
+    __IM  uint32_t CLR_RX_OVER;                /**< Clear RX_OVER Interrupt,                     Address offset: 0x48 */
+    __IM  uint32_t CLR_TX_OVER;                /**< Clear TX_OVER Interrupt,                     Address offset: 0x4C */
+    __IM  uint32_t CLR_RD_REQ;                 /**< Clear RQ_REQ Interrupt,                      Address offset: 0x50 */
+    __IM  uint32_t CLR_TX_ABRT;                /**< Clear TX_ABRT Interrupt,                     Address offset: 0x54 */
+    __IM  uint32_t CLR_RX_DONE;                /**< Clear RX_DONE Interrupt,                     Address offset: 0x58 */
+    __IM  uint32_t CLR_ACTIVITY;               /**< Clear ACTIVITY Interrupt,                    Address offset: 0x5C */
+    __IM  uint32_t CLR_STOP_DET;               /**< Clear STOP_DET Interrupt,                    Address offset: 0x60 */
+    __IM  uint32_t CLR_START_DET;              /**< Clear START_DET Interrupt,                   Address offset: 0x64 */
+    __IM  uint32_t CLR_GEN_CALL;               /**< Clear GEN_CALL Interrupt,                    Address offset: 0x68 */
+    __IOM uint32_t ENABLE;                     /**< I2C Enable,                                  Address offset: 0x6C */
+    __IM  uint32_t STATUS;                     /**< I2C Status,                                  Address offset: 0x70 */
+    __IM  uint32_t TXFLR;                      /**< Transmit FIFO Level Register,                Address offset: 0x74 */
+    __IM  uint32_t RXFLR;                      /**< Receive FIFO Level Register,                 Address offset: 0x78 */
+    __IOM uint32_t SDA_HOLD;                   /**< SDA Hold Time Length Reg,                    Address offset: 0x7C */
+    __IM  uint32_t TX_ABRT_SOURCE;             /**< I2C Transmit Abort Status Reg,               Address offset: 0x80 */
+    __IOM uint32_t SLV_DATA_NACK_ONLY;         /**< Generate SLV_DATA_NACK Register,             Address offset: 0x84 */
+    __IOM uint32_t DMA_CR;                     /**< DMA Control Register,                        Address offset: 0x88 */
+    __IOM uint32_t DMA_TDLR;                   /**< DMA Transmit Data Level,                     Address offset: 0x8C */
+    __IOM uint32_t DMA_RDLR;                   /**< DMA Receive Data Level,                      Address offset: 0x90 */
+    __IOM uint32_t SDA_SETUP;                  /**< SDA Setup Register,                          Address offset: 0x94 */
+    __IOM uint32_t ACK_GENERAL_CALL;           /**< ACK General Call Register,                   Address offset: 0x98 */
+    __IM  uint32_t ENABLE_STATUS;              /**< Enable Status Register,                      Address offset: 0x9C */
+    __IOM uint32_t FS_SPKLEN;                  /**< ISS and FS spike suppression limit,          Address offset: 0xA0 */
+    __IOM uint32_t HS_SPKLEN;                  /**< HS spike suppression limit,                  Address offset: 0xA4 */
+    __IM  uint32_t CLR_RESTART_DET;            /**< Clear RESTART_DET Interrupt Register,        Address offset: 0xA8 */
+    __IOM uint32_t SCL_STUCK_AT_LOW_TIMEOUT;   /**< I2C SCL Stuck at Low Timeout,                Address offset: 0xAC */
+    __IOM uint32_t SDA_STUCK_AT_LOW_TIMEOUT;   /**< I2C SDA Stuck at Low Timeout,                Address offset: 0xB0 */
+    __IM  uint32_t CLR_SCL_STUCK_DET;          /**< Clear SCL Stuck at Low Detect Interrupt,     Address offset: 0xB4 */
+    __IM  uint32_t DEVICE_ID;                  /**< I2C Device-ID Register,                      Address offset: 0xB8 */
+    __IOM uint32_t SMBUS_CLK_LOW_SEXT;         /**< SMBus Slave Clock Extend Timeout Register,   Address offset: 0xBC */
+    __IOM uint32_t SMBUS_CLK_LOW_MEXT;         /**< SMBus Master Clock Extend Timeout Register,  Address offset: 0xC0 */
+    __IOM uint32_t SMBUS_THIGH_MAX_IDLE_COUNT; /**< SMBus Master THigh MAX Bus-idle count,       Address offset: 0xC4 */
+    __IM  uint32_t SMBUS_INTSTAT;              /**< SMBUS Interrupt Status Register,             Address offset: 0xC8 */
+    __IOM uint32_t SMBUS_INTMASK;              /**< SMBus Interrupt Mask Register,               Address offset: 0xCC */
+    __IM  uint32_t SMBUS_RAW_INTSTAT;          /**< SMBus Raw Interrupt Status Register,         Address offset: 0xD0 */
+    __OM  uint32_t SMBUS_INTCLR;               /**< SMBus Clear Interrupt Register,              Address offset: 0xD4 */
+    __IOM uint32_t OPTIONAL_SAR;               /**< I2C Optional Slave Address Register,         Address offset: 0xD8 */
+    __IOM uint32_t SMBUS_UDID_LSB;             /**< SMBUS ARP UDID LSB Register,                 Address offset: 0xDC */
+    __IM  uint32_t RESERVED[5];                /**< I2C RESERVED register,                       Address offset: 0xE0 */
+    __IM  uint32_t COMP_PARAM_1;               /**< Component Parameter Register 1,              Address offset: 0xF4 */
+    __IM  uint32_t COMP_VERSION;               /**< Component Version Register,                  Address offset: 0xF8 */
+    __IM  uint32_t COMP_TYPE;                  /**< Component Type Register,                     Address offset: 0xFC */
 } i2c_regs_t;
 
 /**
   * @brief I2S
   */
-typedef struct
-{
+typedef struct {
     __IOM uint32_t DATA_L;                  /**< Left TX/RX buffer register,                Address offset: 0x000 */
     __IOM uint32_t DATA_R;                  /**< Right TX/RX buffer register,               Address offset: 0x004 */
     __IOM uint32_t RXEN;                    /**< RX enable,                                 Address offset: 0x008 */
@@ -444,8 +350,7 @@ typedef struct
     __IM  uint32_t RESERVED[2];             /**< Reversed,                                  Address offset: 0x038 */
 }I2S_CHANNEL_REGS;
 
-typedef struct _i2s_regs
-{
+typedef struct _i2s_regs {
     __IOM uint32_t   ENABLE;                /**< I2S enable,                                Address offset: 0x000 */
     __IOM uint32_t   RBEN;                  /**< I2S receiver block enable,                 Address offset: 0x004 */
     __IOM uint32_t   TBEN;                  /**< I2S transmitter block enable,              Address offset: 0x008 */
@@ -470,8 +375,7 @@ typedef struct _i2s_regs
 /**
   * @brief ISO7816
   */
-typedef struct _iso7816_regs
-{
+typedef struct _iso7816_regs {
     __OM  uint32_t CTRL;                      /**< Control Register,                       Address offset: 0x0000 */
     __IM  uint32_t STAT;                      /**< Status Register,                        Address offset: 0x0004 */
     __IOM uint32_t CLK_CFG;                   /**< Clock Configuration Register ,          Address offset: 0x0008 */
@@ -487,8 +391,7 @@ typedef struct _iso7816_regs
 /**
   * @brief MCU_SUB
   */
-typedef struct _mcu_sub_regs
-{
+typedef struct _mcu_sub_regs {
     __IM  uint32_t SENSE_ADC_FIFO;          /**< MCU_SUB_REG_SENSE_ADC_FIFO,        Address offset: 0x000 */
     __IM  uint32_t RESERVED0[63];           /**< RESERVED,                          Address offset: 0x004 */
     __IOM uint32_t SENSE_FF_THRESH;         /**< MCU_SUB_REG_SENSE_FF_THRESH,       Address offset: 0x100 */
@@ -535,8 +438,7 @@ typedef struct _mcu_sub_regs
 /**
   * @brief PKC
   */
-typedef struct _pkc_regs
-{
+typedef struct _pkc_regs {
     __IOM uint32_t CTRL;            /**< PKC_REG_CTRL,          Address offset: 0x00 */
     __IOM uint32_t CONFIG0;         /**< PKC_REG_CONFIG0,       Address offset: 0x04 */
     __IOM uint32_t CONFIG1;         /**< PKC_REG_CONFIG1,       Address offset: 0x08 */
@@ -581,8 +483,7 @@ typedef struct _pkc_regs
 /**
   * @brief PWM
   */
-typedef struct _pwm_regs
-{
+typedef struct _pwm_regs {
     __IOM uint32_t MODE;            /**< PWM_REG_MODE,      Address, offset: 0x00 */
     __IOM uint32_t UPDATE;          /**< PWM_REG_UPDATE,    Address, offset: 0x04 */
     __IOM uint32_t PRD;             /**< PWM_REG_PRD,       Address, offset: 0x08 */
@@ -600,8 +501,7 @@ typedef struct _pwm_regs
 /**
   * @brief SSI
   */
-typedef struct _ssi_regs
-{
+typedef struct _ssi_regs {
     __IOM uint32_t CTRL0;           /**< SSI_REG_CTRL0,         Address offset: 0x00 */
     __IOM uint32_t CTRL1;           /**< SSI_REG_CTRL1,         Address offset: 0x04 */
     __IOM uint32_t SSI_EN;          /**< SSI_REG_SSI_EN,        Address offset: 0x08 */
@@ -635,8 +535,7 @@ typedef struct _ssi_regs
 /**
   * @brief TIM
   */
-typedef struct _timer_regs
-{
+typedef struct _timer_regs {
     __IOM uint32_t CTRL;            /**< TIMER control register,          Address offset: 0x00 */
     __IOM uint32_t VALUE;           /**< TIMER counter value register,    Address offset: 0x04 */
     __IOM uint32_t RELOAD;          /**< TIMER auto-reload register,      Address offset: 0x08 */
@@ -646,21 +545,17 @@ typedef struct _timer_regs
 /**
   * @brief UART
   */
-typedef struct _uart_regs
-{
-    union
-    {
+typedef struct _uart_regs {
+    union {
         __IOM uint32_t RBR;
         __IOM uint32_t DLL;
         __IOM uint32_t THR;
     } RBR_DLL_THR;                  /**< UART_REG_RBR_DLL_THR,  Address offset: 0x00 */
-    union
-    {
+    union {
         __IOM uint32_t DLH;
         __IOM uint32_t IER;
     } DLH_IER;                      /**< UART_REG_DLH_IER,      Address offset: 0x04 */
-    union
-    {
+    union {
         __IOM uint32_t FCR;
         __IOM uint32_t IIR;
     } FCR_IIR;                      /**< UART_REG_FCR_IIR,      Address offset: 0x08 */
@@ -672,8 +567,7 @@ typedef struct _uart_regs
     __IOM uint32_t LPDLL;           /**< UART_REG_LPDLL,        Address offset: 0x20 */
     __IOM uint32_t LPDLH;           /**< UART_REG_LPDLH,        Address offset: 0x24 */
     __IOM uint32_t REVERSED0[2];    /**< REVERSED,              Address offset: 0x28 */
-    union
-    {
+    union {
         __IOM uint32_t SRBR[16];
         __IOM uint32_t STHR[16];
     } SRBR_STHR;                    /**< UART_REG_SRBR_STHR,    Address offset: 0x30 */
@@ -710,8 +604,7 @@ typedef struct _uart_regs
 /**
   * @brief WDT
   */
-typedef struct _wdt_regs
-{
+typedef struct _wdt_regs {
     __IOM uint32_t LOAD;            /**< WDT_REG_LOAD,          Address offset: 0x000 */
     __IOM uint32_t VALUE;           /**< WDT_REG_VALUE,         Address offset: 0x004 */
     __IOM uint32_t CTRL;            /**< WDT_REG_CONTROL,       Address offset: 0x008 */
@@ -726,8 +619,7 @@ typedef struct _wdt_regs
   * @brief XQSPI
   */
 /* XQSPI/Cache Registers */
-typedef struct
-{
+typedef struct {
     __IOM uint32_t CTRL0;               /**< Cache Control 0 Register,  Address offset: 0x00 */
     __IOM uint32_t CTRL1;               /**< Cache Control 1 Register,  Address offset: 0x04 */
     __IM  uint32_t HIT_COUNT;           /**< Cache hits count,          Address offset: 0x08 */
@@ -738,8 +630,7 @@ typedef struct
 } CACHE_REGS;
 
 /* XQSPI/QSPI Registers */
-typedef struct
-{
+typedef struct {
     __OM  uint32_t TX_DATA;             /**< Serial Data Transmit,         Address offset: 0x00 */
     __IM  uint32_t RX_DATA;             /**< Serial Data Receive,          Address offset: 0x04 */
     __IM  uint32_t RESERVED0;           /**< RESERVED,                     Address offset: 0x08 */
@@ -772,8 +663,7 @@ typedef struct
 } QSPI_REGS;
 
 /* XQSPI/XIP Registers */
-typedef struct
-{
+typedef struct {
     __IOM uint32_t CTRL0;               /**< XIP Control 0 Register,       Address offset: 0x00 */
     __IOM uint32_t CTRL1;               /**< XIP Control 1 Register,       Address offset: 0x04 */
     __IOM uint32_t CTRL2;               /**< XIP Control 2 Register,       Address offset: 0x08 */
@@ -786,8 +676,7 @@ typedef struct
     __OM  uint32_t INTCLR;              /**< Interrupt Clear   (Intr4),    Address offset: 0x24 */
 } XIP_REGS;
 
-typedef struct _xqspi_regs
-{
+typedef struct _xqspi_regs {
     CACHE_REGS      CACHE;              /**< CACHE Registers,              Address offset: 0x000 */
     __IM  uint32_t  RESERVED0[249];
     QSPI_REGS       QSPI;               /**< QSPI Registers,               Address offset: 0x400 */
@@ -798,8 +687,7 @@ typedef struct _xqspi_regs
 /**
   * @brief EFUSE
   */
-typedef struct _efuse_regs
-{
+typedef struct _efuse_regs {
     __IOM uint32_t TPGM;                /**< EFUSE_TPGM,                   Address offset: 0x000 */
     __IOM uint32_t PGENB;               /**< EFUSE_PGENB,                  Address offset: 0x004 */
     __IM  uint32_t TEST_MODE;           /**< EFUSE_TEST_MODE,              Address offset: 0x008 */
@@ -816,8 +704,7 @@ typedef struct _efuse_regs
 /**
   * @brief RNG
   */
-typedef struct _rng_regs
-{
+typedef struct _rng_regs {
     __IOM uint32_t CTRL;                /**< RNG_CTRL,                     Address offset: 0x000 */
     __IOM uint32_t STATUS;              /**< RNG_STATUS,                   Address offset: 0x004 */
     __IM  uint32_t DATA;                /**< RNG_DATA,                     Address offset: 0x008 */
@@ -1838,9 +1725,12 @@ typedef struct _rng_regs
 #define AON_MEM_CTL_SLP_Len                                 (7U)
 #define AON_MEM_CTL_SLP_Msk                                 (0x7FU << AON_MEM_CTL_SLP_Pos)
 #define AON_MEM_CTL_SLP_EN                                  AON_MEM_CTL_SLP_Msk
-#define AON_MEM_CTL_SLP_ALL                                 (AON_MEM_CTL_SLP_TRN_OFF_DCDC      | AON_MEM_CTL_SLP_TRN_OFF_XO |\
-                                                             AON_MEM_CTL_SLP_TRN_OFF_PLL_EN    | AON_MEM_CTL_SLP_TRN_OFF_PLL_TUNE |\
-                                                             AON_MEM_CTL_SLP_TRN_OFF_LDO_EN    | AON_MEM_CTL_SLP_TRN_OFF_PLL_RST |\
+#define AON_MEM_CTL_SLP_ALL                                 (AON_MEM_CTL_SLP_TRN_OFF_DCDC |      \
+                                                             AON_MEM_CTL_SLP_TRN_OFF_XO |        \
+                                                             AON_MEM_CTL_SLP_TRN_OFF_PLL_EN    | \
+                                                             AON_MEM_CTL_SLP_TRN_OFF_PLL_TUNE |  \
+                                                             AON_MEM_CTL_SLP_TRN_OFF_LDO_EN    | \
+                                                             AON_MEM_CTL_SLP_TRN_OFF_PLL_RST |   \
                                                              AON_MEM_CTL_SLP_TRN_OFF_IO_LDO_EN )
 
 #define AON_MEM_CTL_SLP_TRN_OFF_IO_LDO_EN_Pos               (22U)
@@ -2784,13 +2674,13 @@ typedef struct _rng_regs
 #define GPIO_MASKLOWBYTE_DATA_Pos                           (0U)
 #define GPIO_MASKLOWBYTE_DATA_Len                           (8U)
 #define GPIO_MASKLOWBYTE_DATA_Msk                           (0xFFU << GPIO_MASKLOWBYTE_DATA_Pos)
-#define GPIO_MASKLOWBYTE_DATA                               GPIO_MASKLOWBYTE_DATA_Msk   /**< Lower eight bits masked access */
+#define GPIO_MASKLOWBYTE_DATA                               GPIO_MASKLOWBYTE_DATA_Msk /**< Lower 8 bits masked access */
 
 /*******************  Bit definition for GPIO_MASKLOWBYTE register  ***********/
 #define GPIO_MASKHIGHBYTE_DATA_Pos                          (8U)
 #define GPIO_MASKHIGHBYTE_DATA_Len                          (8U)
 #define GPIO_MASKHIGHBYTE_DATA_Msk                          (0xFFU << GPIO_MASKHIGHBYTE_DATA_Pos)
-#define GPIO_MASKHIGHBYTE_DATA                              GPIO_MASKHIGHBYTE_DATA   /**< Higher eight bits masked access */
+#define GPIO_MASKHIGHBYTE_DATA                              GPIO_MASKHIGHBYTE_DATA /**< Higher 8 bits masked access */
 
 
 /* ================================================================================================================= */
@@ -3180,10 +3070,6 @@ typedef struct _rng_regs
 #define I2C_TX_TL_TXTL                                      I2C_TX_TL_TXTL_Msk
 
 /*******************  Bit definition for IC_ENABLE register  ******************/
-// #define I2C_ENABLE_TX_CMD_BLOCK_Pos             (2U)
-// #define I2C_ENABLE_TX_CMD_BLOCK_Len             (1U)
-// #define I2C_ENABLE_TX_CMD_BLOCK_Msk             (0x1U << I2C_ENABLE_TX_CMD_BLOCK_Pos)
-// #define I2C_ENABLE_TX_CMD_BLOCK                 I2C_ENABLE_TX_CMD_BLOCK_Msk
 #define I2C_ENABLE_ABORT_Pos                                (1U)
 #define I2C_ENABLE_ABORT_Len                                (1U)
 #define I2C_ENABLE_ABORT_Msk                                (0x1U << I2C_ENABLE_ABORT_Pos)
@@ -3690,7 +3576,7 @@ typedef struct _rng_regs
 
 
 /* ================================================================================================================= */
-/* ================                                        ISO7816                                      ================ */
+/* ================                                      ISO7816                                    ================ */
 /* ================================================================================================================= */
 /*******************  Bit definition for ISO7816_CTRL register  *******************/
 #define ISO7816_CTRL_ACTION_POS                             (0U)
@@ -4248,160 +4134,160 @@ typedef struct _rng_regs
 #define MCU_SUB_WFI_MSK_HCLK_0                              (0xFFFU)                                   
 
 #define MCU_SUB_WFI_I2S_S_HCLK_Pos                          (11U)
-#define MCU_SUB_WFI_I2S_S_HCLK_Len                          (1U)  
+#define MCU_SUB_WFI_I2S_S_HCLK_Len                          (1U)
 #define MCU_SUB_WFI_I2S_S_HCLK_Msk                          (0x01 << MCU_SUB_WFI_I2S_S_HCLK_Pos)
 #define MCU_SUB_WFI_I2S_S_HCLK                              MCU_SUB_WFI_I2S_S_HCLK_Msk
 
 #define MCU_SUB_WFI_SERIAL_HCLK_Pos                         (10U)
-#define MCU_SUB_WFI_SERIAL_HCLK_Len                         (1U)  
+#define MCU_SUB_WFI_SERIAL_HCLK_Len                         (1U)
 #define MCU_SUB_WFI_SERIAL_HCLK_Msk                         (0x01 << MCU_SUB_WFI_SERIAL_HCLK_Pos)
 #define MCU_SUB_WFI_SERIAL_HCLK                             MCU_SUB_WFI_SERIAL_HCLK_Msk
 
 #define MCU_SUB_WFI_APB_SUB_HCLK_Pos                        (9U)
-#define MCU_SUB_WFI_APB_SUB_HCLK_Len                        (1U)  
+#define MCU_SUB_WFI_APB_SUB_HCLK_Len                        (1U)
 #define MCU_SUB_WFI_APB_SUB_HCLK_Msk                        (0x01 << MCU_SUB_WFI_APB_SUB_HCLK_Pos)
-#define MCU_SUB_WFI_APB_SUB_HCLK                            MCU_SUB_WFI_APB_SUB_HCLK_Msk  
+#define MCU_SUB_WFI_APB_SUB_HCLK                            MCU_SUB_WFI_APB_SUB_HCLK_Msk
 
 #define MCU_SUB_WFI_BLE_BRG_HCLK_Pos                        (8U)
-#define MCU_SUB_WFI_BLE_BRG_HCLK_Len                        (1U)  
+#define MCU_SUB_WFI_BLE_BRG_HCLK_Len                        (1U)
 #define MCU_SUB_WFI_BLE_BRG_HCLK_Msk                        (0x01 << MCU_SUB_WFI_BLE_BRG_HCLK_Pos)
 #define MCU_SUB_WFI_BLE_BRG_HCLK                            MCU_SUB_WFI_BLE_BRG_HCLK_Msk
 
 #define MCU_SUB_WFI_DMA_HCLK_Pos                            (7U)
-#define MCU_SUB_WFI_DMA_HCLK_Len                            (1U)  
+#define MCU_SUB_WFI_DMA_HCLK_Len                            (1U)
 #define MCU_SUB_WFI_DMA_HCLK_Msk                            (0x01 << MCU_SUB_WFI_DMA_HCLK_Pos)
 #define MCU_SUB_WFI_DMA_HCLK                                MCU_SUB_WFI_DMA_HCLK_Msk
 
 #define MCU_SUB_WFI_GPIO_HCLK_Pos                           (6U)
-#define MCU_SUB_WFI_GPIO_HCLK_Len                           (1U)  
+#define MCU_SUB_WFI_GPIO_HCLK_Len                           (1U)
 #define MCU_SUB_WFI_GPIO_HCLK_Msk                           (0x01 << MCU_SUB_WFI_GPIO_HCLK_Pos)
 #define MCU_SUB_WFI_GPIO_HCLK                               MCU_SUB_WFI_GPIO_HCLK_Msk
 
 #define MCU_SUB_WFI_SNSADC_HCLK_Pos                         (5U)
-#define MCU_SUB_WFI_SNSADC_HCLK_Len                         (1U)  
+#define MCU_SUB_WFI_SNSADC_HCLK_Len                         (1U)
 #define MCU_SUB_WFI_SNSADC_HCLK_Msk                         (0x01 << MCU_SUB_WFI_SNSADC_HCLK_Pos)
-#define MCU_SUB_WFI_SNSADC_HCLK                             MCU_SUB_WFI_SNSADC_HCLK_Msk 
+#define MCU_SUB_WFI_SNSADC_HCLK                             MCU_SUB_WFI_SNSADC_HCLK_Msk
 
 #define MCU_SUB_WFI_ROM_HCLK_Pos                            (4U)
-#define MCU_SUB_WFI_ROM_HCLK_Len                            (1U)  
+#define MCU_SUB_WFI_ROM_HCLK_Len                            (1U)
 #define MCU_SUB_WFI_ROM_HCLK_Msk                            (0x01 << MCU_SUB_WFI_ROM_HCLK_Pos)
-#define MCU_SUB_WFI_ROM_HCLK                                MCU_SUB_WFI_ROM_HCLK_Msk  
+#define MCU_SUB_WFI_ROM_HCLK                                MCU_SUB_WFI_ROM_HCLK_Msk
 
 #define MCU_SUB_WFI_PWM_HCLK_Pos                            (3U)
-#define MCU_SUB_WFI_PWM_HCLK_Len                            (1U)  
+#define MCU_SUB_WFI_PWM_HCLK_Len                            (1U)
 #define MCU_SUB_WFI_PWM_HCLK_Msk                            (0x01 << MCU_SUB_WFI_PWM_HCLK_Pos)
-#define MCU_SUB_WFI_PWM_HCLK                                MCU_SUB_WFI_PWM_HCLK_Msk 
+#define MCU_SUB_WFI_PWM_HCLK                                MCU_SUB_WFI_PWM_HCLK_Msk
 
 #define MCU_SUB_WFI_HTB_HCLK_Pos                            (2U)
-#define MCU_SUB_WFI_HTB_HCLK_Len                            (1U)  
+#define MCU_SUB_WFI_HTB_HCLK_Len                            (1U)
 #define MCU_SUB_WFI_HTB_HCLK_Msk                            (0x01 << MCU_SUB_WFI_HTB_HCLK_Pos)
 #define MCU_SUB_WFI_HTB_HCLK                                MCU_SUB_WFI_HTB_HCLK_Msk
 
 #define MCU_SUB_WFI_SIM_HCLK_Pos                            (1U)
-#define MCU_SUB_WFI_SIM_HCLK_Len                            (1U)  
+#define MCU_SUB_WFI_SIM_HCLK_Len                            (1U)
 #define MCU_SUB_WFI_SIM_HCLK_Msk                            (0x01 << MCU_SUB_WFI_SIM_HCLK_Pos)
 #define MCU_SUB_WFI_SIM_HCLK                                MCU_SUB_WFI_SIM_HCLK_Msk
 
 #define MCU_SUB_WFI_SECU_HCLK_Pos                           (0U)
-#define MCU_SUB_WFI_SECU_HCLK_Len                           (1U)  
+#define MCU_SUB_WFI_SECU_HCLK_Len                           (1U)
 #define MCU_SUB_WFI_SECU_HCLK_Msk                           (0x01 << MCU_SUB_WFI_SECU_HCLK_Pos)
-#define MCU_SUB_WFI_SECU_HCLK                               MCU_SUB_WFI_SECU_HCLK_Msk    
+#define MCU_SUB_WFI_SECU_HCLK                               MCU_SUB_WFI_SECU_HCLK_Msk
 
 /**********  Bit definition for MCU_SUB_REG_MCU_SUBSYS_CG_CTRL_1 register  ***********/
-#define MCU_SUB_FORCE_MSK_HCLK_0                            (0xFFFU) 
+#define MCU_SUB_FORCE_MSK_HCLK_0                            (0xFFFU)
 
 #define MCU_SUB_FORCE_I2S_S_HCLK_Pos                        (11U)
-#define MCU_SUB_FORCE_I2S_S_HCLK_Len                        (1U)  
+#define MCU_SUB_FORCE_I2S_S_HCLK_Len                        (1U)
 #define MCU_SUB_FORCE_I2S_S_HCLK_Msk                        (0x01 << MCU_SUB_FORCE_I2S_S_HCLK_Pos)
 #define MCU_SUB_FORCE_I2S_S_HCLK                            MCU_SUB_FORCE_I2S_S_HCLK_Msk
 
 #define MCU_SUB_FORCE_SERIAL_HCLK_Pos                       (10U)
-#define MCU_SUB_FORCE_SERIAL_HCLK_Len                       (1U)  
+#define MCU_SUB_FORCE_SERIAL_HCLK_Len                       (1U)
 #define MCU_SUB_FORCE_SERIAL_HCLK_Msk                       (0x01 << MCU_SUB_FORCE_SERIAL_HCLK_Pos)
 #define MCU_SUB_FORCE_SERIAL_HCLK                           MCU_SUB_FORCE_SERIAL_HCLK_Msk
 
 #define MCU_SUB_FORCE_APB_SUB_HCLK_Pos                      (9U)
-#define MCU_SUB_FORCE_APB_SUB_HCLK_Len                      (1U)  
+#define MCU_SUB_FORCE_APB_SUB_HCLK_Len                      (1U)
 #define MCU_SUB_FORCE_APB_SUB_HCLK_Msk                      (0x01 << MCU_SUB_FORCE_APB_SUB_HCLK_Pos)
-#define MCU_SUB_FORCE_APB_SUB_HCLK                          MCU_SUB_FORCE_APB_SUB_HCLK_Msk  
+#define MCU_SUB_FORCE_APB_SUB_HCLK                          MCU_SUB_FORCE_APB_SUB_HCLK_Msk
 
 #define MCU_SUB_FORCE_BLE_BRG_HCLK_Pos                      (8U)
-#define MCU_SUB_FORCE_BLE_BRG_HCLK_Len                      (1U)  
+#define MCU_SUB_FORCE_BLE_BRG_HCLK_Len                      (1U)
 #define MCU_SUB_FORCE_BLE_BRG_HCLK_Msk                      (0x01 << MCU_SUB_FORCE_BLE_BRG_HCLK_Pos)
 #define MCU_SUB_FORCE_BLE_BRG_HCLK                          MCU_SUB_FORCE_BLE_BRG_HCLK_Msk
 
 #define MCU_SUB_FORCE_DMA_HCLK_Pos                          (7U)
-#define MCU_SUB_FORCE_DMA_HCLK_Len                          (1U)  
+#define MCU_SUB_FORCE_DMA_HCLK_Len                          (1U)
 #define MCU_SUB_FORCE_DMA_HCLK_Msk                          (0x01 << MCU_SUB_FORCE_DMA_HCLK_Pos)
 #define MCU_SUB_FORCE_DMA_HCLK                              MCU_SUB_FORCE_DMA_HCLK_Msk
 
 #define MCU_SUB_FORCE_GPIO_HCLK_Pos                         (6U)
-#define MCU_SUB_FORCE_GPIO_HCLK_Len                         (1U)  
+#define MCU_SUB_FORCE_GPIO_HCLK_Len                         (1U)
 #define MCU_SUB_FORCE_GPIO_HCLK_Msk                         (0x01 << MCU_SUB_FORCE_GPIO_HCLK_Pos)
 #define MCU_SUB_FORCE_GPIO_HCLK                             MCU_SUB_FORCE_GPIO_HCLK_Msk
 
 #define MCU_SUB_FORCE_SNSADC_HCLK_Pos                       (5U)
-#define MCU_SUB_FORCE_SNSADC_HCLK_Len                       (1U)  
+#define MCU_SUB_FORCE_SNSADC_HCLK_Len                       (1U)
 #define MCU_SUB_FORCE_SNSADC_HCLK_Msk                       (0x01 << MCU_SUB_FORCE_SNSADC_HCLK_Pos)
-#define MCU_SUB_FORCE_SNSADC_HCLK                           MCU_SUB_FORCE_SNSADC_HCLK_Msk 
+#define MCU_SUB_FORCE_SNSADC_HCLK                           MCU_SUB_FORCE_SNSADC_HCLK_Msk
 
 #define MCU_SUB_FORCE_ROM_HCLK_Pos                          (4U)
-#define MCU_SUB_FORCE_ROM_HCLK_Len                          (1U)  
+#define MCU_SUB_FORCE_ROM_HCLK_Len                          (1U)
 #define MCU_SUB_FORCE_ROM_HCLK_Msk                          (0x01 << MCU_SUB_FORCE_ROM_HCLK_Pos)
-#define MCU_SUB_FORCE_ROM_HCLK                              MCU_SUB_FORCE_ROM_HCLK_Msk  
+#define MCU_SUB_FORCE_ROM_HCLK                              MCU_SUB_FORCE_ROM_HCLK_Msk
 
 #define MCU_SUB_FORCE_PWM_HCLK_Pos                          (3U)
-#define MCU_SUB_FORCE_PWM_HCLK_Len                          (1U)  
+#define MCU_SUB_FORCE_PWM_HCLK_Len                          (1U)
 #define MCU_SUB_FORCE_PWM_HCLK_Msk                          (0x01 << MCU_SUB_FORCE_PWM_HCLK_Pos)
-#define MCU_SUB_FORCE_PWM_HCLK                              MCU_SUB_FORCE_PWM_HCLK_Msk 
+#define MCU_SUB_FORCE_PWM_HCLK                              MCU_SUB_FORCE_PWM_HCLK_Msk
 
 #define MCU_SUB_FORCE_HTB_HCLK_Pos                          (2U)
-#define MCU_SUB_FORCE_HTB_HCLK_Len                          (1U)  
+#define MCU_SUB_FORCE_HTB_HCLK_Len                          (1U)
 #define MCU_SUB_FORCE_HTB_HCLK_Msk                          (0x01 << MCU_SUB_FORCE_HTB_HCLK_Pos)
 #define MCU_SUB_FORCE_HTB_HCLK                              MCU_SUB_FORCE_HTB_HCLK_Msk
 
 #define MCU_SUB_FORCE_SIM_HCLK_Pos                          (1U)
-#define MCU_SUB_FORCE_SIM_HCLK_Len                          (1U)  
+#define MCU_SUB_FORCE_SIM_HCLK_Len                          (1U)
 #define MCU_SUB_FORCE_SIM_HCLK_Msk                          (0x01 << MCU_SUB_FORCE_SIM_HCLK_Pos)
 #define MCU_SUB_FORCE_SIM_HCLK                              MCU_SUB_FORCE_SIM_HCLK_Msk
 
 #define MCU_SUB_FORCE_SECU_HCLK_Pos                         (0U)
-#define MCU_SUB_FORCE_SECU_HCLK_Len                         (1U)  
+#define MCU_SUB_FORCE_SECU_HCLK_Len                         (1U)
 #define MCU_SUB_FORCE_SECU_HCLK_Msk                         (0x01 << MCU_SUB_FORCE_SECU_HCLK_Pos)
-#define MCU_SUB_FORCE_SECU_HCLK                             MCU_SUB_FORCE_SECU_HCLK_Msk                                          
+#define MCU_SUB_FORCE_SECU_HCLK                             MCU_SUB_FORCE_SECU_HCLK_Msk
 
 /**********  Bit definition for MCU_SUB_REG_MCU_SUBSYS_CG_CTRL_2 register  ***********/
-#define MCU_SUB_FORCE_MSK_HCLK_1                            (0x00070000U) 
+#define MCU_SUB_FORCE_MSK_HCLK_1                            (0x00070000U)
 
 #define MCU_SUB_FORCE_SRAM_HCLK_Pos                         (18U)
-#define MCU_SUB_FORCE_SRAM_HCLK_Len                         (1U)  
+#define MCU_SUB_FORCE_SRAM_HCLK_Len                         (1U)
 #define MCU_SUB_FORCE_SRAM_HCLK_Msk                         (0x1UL << MCU_SUB_FORCE_SRAM_HCLK_Pos)
 #define MCU_SUB_FORCE_SRAM_HCLK                             MCU_SUB_FORCE_SRAM_HCLK_Msk
 
 #define MCU_SUB_FORCE_XF_XQSPI_HCLK_Pos                     (17U)
-#define MCU_SUB_FORCE_XF_XQSPI_HCLK_Len                     (1U)  
+#define MCU_SUB_FORCE_XF_XQSPI_HCLK_Len                     (1U)
 #define MCU_SUB_FORCE_XF_XQSPI_HCLK_Msk                     (0x1UL << MCU_SUB_FORCE_XF_XQSPI_HCLK_Pos)
 #define MCU_SUB_FORCE_XF_XQSPI_HCLK                         MCU_SUB_FORCE_XF_XQSPI_HCLK_Msk
 
 #define MCU_SUB_FORCE_AON_MCUSUB_HCLK_Pos                   (16U)
-#define MCU_SUB_FORCE_AON_MCUSUB_HCLK_Len                   (1U)  
+#define MCU_SUB_FORCE_AON_MCUSUB_HCLK_Len                   (1U)
 #define MCU_SUB_FORCE_AON_MCUSUB_HCLK_Msk                   (0x1UL << MCU_SUB_FORCE_AON_MCUSUB_HCLK_Pos)
 #define MCU_SUB_FORCE_AON_MCUSUB_HCLK                       MCU_SUB_FORCE_AON_MCUSUB_HCLK_Msk
 
-#define MCU_SUB_WFI_MSK_HCLK_1                              (0x00000007U) 
+#define MCU_SUB_WFI_MSK_HCLK_1                              (0x00000007U)
 
 #define MCU_SUB_WFI_SRAM_HCLK_Pos                           (2U)
-#define MCU_SUB_WFI_SRAM_HCLK_Len                           (1U)  
+#define MCU_SUB_WFI_SRAM_HCLK_Len                           (1U)
 #define MCU_SUB_WFI_SRAM_HCLK_Msk                           (0x1UL << MCU_SUB_WFI_SRAM_HCLK_Pos)
 #define MCU_SUB_WFI_SRAM_HCLK                               MCU_SUB_WFI_SRAM_HCLK_Msk
 
 #define MCU_SUB_WFI_XF_XQSPI_HCLK_Pos                       (1U)
-#define MCU_SUB_WFI_XF_XQSPI_HCLK_Len                       (1U)  
+#define MCU_SUB_WFI_XF_XQSPI_HCLK_Len                       (1U)
 #define MCU_SUB_WFI_XF_XQSPI_HCLK_Msk                       (0x1UL << MCU_SUB_WFI_XF_XQSPI_HCLK_Pos)
 #define MCU_SUB_WFI_XF_XQSPI_HCLK                           MCU_SUB_WFI_XF_XQSPI_HCLK_Msk
 
 #define MCU_SUB_WFI_AON_MCUSUB_HCLK_Pos                     (0U)
-#define MCU_SUB_WFI_AON_MCUSUB_HCLK_Len                     (1U)  
+#define MCU_SUB_WFI_AON_MCUSUB_HCLK_Len                     (1U)
 #define MCU_SUB_WFI_AON_MCUSUB_HCLK_Msk                     (0x1UL << MCU_SUB_WFI_AON_MCUSUB_HCLK_Pos)
 #define MCU_SUB_WFI_AON_MCUSUB_HCLK                         MCU_SUB_WFI_AON_MCUSUB_HCLK_Msk
 
@@ -4505,8 +4391,6 @@ typedef struct _rng_regs
 #define MCU_SUB_BLE_DSLEEP_HW_TIM_CORR_DELAY_Len            (9U)
 #define MCU_SUB_BLE_DSLEEP_HW_TIM_CORR_DELAY_Msk            (0x1FFU << MCU_SUB_BLE_DSLEEP_HW_TIM_CORR_DELAY_Pos)
 #define MCU_SUB_BLE_DSLEEP_HW_TIM_CORR_DELAY                MCU_SUB_BLE_DSLEEP_HW_TIM_CORR_DELAY_Msk
-
-
 
 /* ================================================================================================================= */
 /* ================                                        PKC                                      ================ */
@@ -5488,12 +5372,14 @@ typedef struct _rng_regs
 #define UART_IER_PTIME_Pos                                  (7U)
 #define UART_IER_PTIME_Len                                  (1U)
 #define UART_IER_PTIME_Msk                                  (0x1U << UART_IER_PTIME_Pos)
-#define UART_IER_PTIME                                      UART_IER_PTIME_Msk  /**< Programmable THRE Interrupt Mode Enable */
+#define UART_IER_PTIME                                      UART_IER_PTIME_Msk  /**< Programmable THRE Interrupt
+                                                                                     Mode Enable */
 
 #define UART_IER_ELCOLR_Pos                                 (4U)
 #define UART_IER_ELCOLR_Len                                 (1U)
 #define UART_IER_ELCOLR_Msk                                 (0x1U << UART_IER_ELCOLR_Pos)
-#define UART_IER_ELCOLR                                     UART_IER_ELCOLR_Msk /**< Enable Auto Clear LSR Register by read RBR/LSR, read only */
+#define UART_IER_ELCOLR                                     UART_IER_ELCOLR_Msk /**< Enable Auto Clear LSR Register
+                                                                                     by read RBR/LSR, read only */
 
 #define UART_IER_EDSSI_Pos                                  (3U)
 #define UART_IER_EDSSI_Len                                  (1U)
@@ -5503,17 +5389,20 @@ typedef struct _rng_regs
 #define UART_IER_ERLS_Pos                                   (2U)
 #define UART_IER_ERLS_Len                                   (1U)
 #define UART_IER_ERLS_Msk                                   (0x1U << UART_IER_ERLS_Pos)
-#define UART_IER_ERLS                                       UART_IER_ERLS_Msk   /**< Enable Receiver Line Status Interrupt */
+#define UART_IER_ERLS                                       UART_IER_ERLS_Msk   /**< Enable Receiver Line Status
+                                                                                     Interrupt */
 
 #define UART_IER_ETBEI_Pos                                  (1U)
 #define UART_IER_ETBEI_Len                                  (1U)
 #define UART_IER_ETBEI_Msk                                  (0x1U << UART_IER_ETBEI_Pos)
-#define UART_IER_ETBEI                                      UART_IER_ETBEI_Msk  /**< Enable Transmit Holding Register Empty Interrupt */
+#define UART_IER_ETBEI                                      UART_IER_ETBEI_Msk  /**< Enable Transmit Holding Register
+                                                                                     Empty Interrupt */
 
 #define UART_IER_ERBFI_Pos                                  (0U)
 #define UART_IER_ERBFI_Len                                  (1U)
 #define UART_IER_ERBFI_Msk                                  (0x1U << UART_IER_ERBFI_Pos)
-#define UART_IER_ERBFI                                      UART_IER_ERBFI_Msk  /**< Enable Received Data Available Interrupt */
+#define UART_IER_ERBFI                                      UART_IER_ERBFI_Msk  /**< Enable Received Data 
+                                                                                     Available Interrupt */
 
 /*******************  Bit definition for UART_FCR register  *******************/
 #define UART_TXFIFO_SIZE                                    128
@@ -5578,27 +5467,27 @@ typedef struct _rng_regs
 #define UART_LCR_PARITY_Pos                                 (3U)
 #define UART_LCR_PARITY_Len                                 (3U)
 #define UART_LCR_PARITY_Msk                                 (0x7U << UART_LCR_PARITY_Pos)
-#define UART_LCR_PARITY                                     UART_LCR_PARITY_Msk             /**< Parity, SP,EPS,PEN bits */
-#define UART_LCR_PARITY_NONE                                (0x0U << UART_LCR_PARITY_Pos)   /**< Parity none */
-#define UART_LCR_PARITY_ODD                                 (0x1U << UART_LCR_PARITY_Pos)   /**< Parity odd */
-#define UART_LCR_PARITY_EVEN                                (0x3U << UART_LCR_PARITY_Pos)   /**< Parity even */
-#define UART_LCR_PARITY_SP0                                 (0x5U << UART_LCR_PARITY_Pos)   /**< Parity stick 0 */
-#define UART_LCR_PARITY_SP1                                 (0x7U << UART_LCR_PARITY_Pos)   /**< Parity stick 1 */
+#define UART_LCR_PARITY                                     UART_LCR_PARITY_Msk           /**< Parity,SP,EPS,PEN bits */
+#define UART_LCR_PARITY_NONE                                (0x0U << UART_LCR_PARITY_Pos) /**< Parity none */
+#define UART_LCR_PARITY_ODD                                 (0x1U << UART_LCR_PARITY_Pos) /**< Parity odd */
+#define UART_LCR_PARITY_EVEN                                (0x3U << UART_LCR_PARITY_Pos) /**< Parity even */
+#define UART_LCR_PARITY_SP0                                 (0x5U << UART_LCR_PARITY_Pos) /**< Parity stick 0 */
+#define UART_LCR_PARITY_SP1                                 (0x7U << UART_LCR_PARITY_Pos) /**< Parity stick 1 */
 
 #define UART_LCR_STOP_Pos                                   (2U)
 #define UART_LCR_STOP_Msk                                   (0x1U << UART_LCR_STOP_Pos)
-#define UART_LCR_STOP                                       UART_LCR_STOP_Msk               /**< Stop bit */
-#define UART_LCR_STOP_1                                     (0x0U << UART_LCR_STOP_Pos)     /**< Stop bit 1 */
-#define UART_LCR_STOP_1_5                                   (0x1U << UART_LCR_STOP_Pos)     /**< Stop bit 1.5 (DLS = 0) */
-#define UART_LCR_STOP_2                                     (0x1U << UART_LCR_STOP_Pos)     /**< Stop bit 2 (DLS != 0) */
+#define UART_LCR_STOP                                       UART_LCR_STOP_Msk             /**< Stop bit */
+#define UART_LCR_STOP_1                                     (0x0U << UART_LCR_STOP_Pos)   /**< Stop bit 1 */
+#define UART_LCR_STOP_1_5                                   (0x1U << UART_LCR_STOP_Pos)   /**< Stop bit 1.5 (DLS = 0) */
+#define UART_LCR_STOP_2                                     (0x1U << UART_LCR_STOP_Pos)   /**< Stop bit 2 (DLS != 0) */
 
 #define UART_LCR_DLS_Pos                                    (0U)
 #define UART_LCR_DLS_Msk                                    (0x3U << UART_LCR_DLS_Pos)
-#define UART_LCR_DLS                                        UART_LCR_DLS_Msk                /**< Data Length Select */
-#define UART_LCR_DLS_5                                      (0x0U << UART_LCR_DLS_Pos)      /**< Data bits 5 */
-#define UART_LCR_DLS_6                                      (0x1U << UART_LCR_DLS_Pos)      /**< Data bits 6 */
-#define UART_LCR_DLS_7                                      (0x2U << UART_LCR_DLS_Pos)      /**< Data bits 7 */
-#define UART_LCR_DLS_8                                      (0x3U << UART_LCR_DLS_Pos)      /**< Data bits 8 */
+#define UART_LCR_DLS                                        UART_LCR_DLS_Msk              /**< Data Length Select */
+#define UART_LCR_DLS_5                                      (0x0U << UART_LCR_DLS_Pos)    /**< Data bits 5 */
+#define UART_LCR_DLS_6                                      (0x1U << UART_LCR_DLS_Pos)    /**< Data bits 6 */
+#define UART_LCR_DLS_7                                      (0x2U << UART_LCR_DLS_Pos)    /**< Data bits 7 */
+#define UART_LCR_DLS_8                                      (0x3U << UART_LCR_DLS_Pos)    /**< Data bits 8 */
 
 /*******************  Bit definition for UART_MCR register  *******************/
 #define UART_MCR_AFCE_Pos                                   (5U)

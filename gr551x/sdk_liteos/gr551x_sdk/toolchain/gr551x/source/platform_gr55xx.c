@@ -93,31 +93,28 @@ static void nvds_setup(void)
     uint8_t err_code = nvds_init(0, NVDS_NUM_SECTOR);
 #endif
 
-    switch(err_code)
-    {
+    switch (err_code) {
         case NVDS_FAIL:
         case NVDS_STORAGE_ACCESS_FAILED:
             {
                 uint32_t start_addr  = nvds_get_start_addr();
                 uint32_t sector_size = hal_flash_sector_size();
-                if (hal_flash_erase(start_addr, NVDS_NUM_SECTOR * sector_size))
-                {
+                if (hal_flash_erase(start_addr, NVDS_NUM_SECTOR * sector_size)) {
                     err_code = nvds_init(start_addr, NVDS_NUM_SECTOR);
-                    if (NVDS_SUCCESS == err_code)
-                    {
+                    if (NVDS_SUCCESS == err_code) {
                         break;
                     }
                 }
                 /* Flash fault, cannot startup.
                  * TODO: Output log via UART or Dump an error code to flash. */
-                while(1);
+                while (1){}
             }
         case NVDS_SUCCESS:
             break;
         default:
             /* Illegal NVDS Parameters.
              * Please check the start address and number of sectors. */
-            while(1);
+            while (1) {}
     }
 }
 
@@ -140,6 +137,38 @@ void ble_sdk_env_init(void)
 #endif
 }
 
+static void BLE_power_check(void)
+{
+    if ((AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_TIMER) ||
+       (AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_CORE)) {
+        ll_pwr_enable_comm_core_reset();
+        ll_pwr_enable_comm_timer_reset();
+        ll_pwr_disable_comm_core_power();
+        ll_pwr_disable_comm_timer_power();
+        /* TODO: Reserve System Cold Fully Reset Method. */
+    }
+}
+
+static void system_calibration(void)
+{
+    system_pmu_deinit();
+    SystemCoreSetClock((mcu_clock_type_t)SYSTEM_CLOCK);
+    system_pmu_init((mcu_clock_type_t)SYSTEM_CLOCK);
+
+    // recover the default setting by temperature, should be called in the end
+    pmu_calibration_handler(NULL);
+
+    /* RTC calibration function */
+#if !CFG_LPCLK_INTERNAL_EN
+    rtc_calibration();
+#endif
+
+    /* rng calibration */
+#ifndef GR5515_E
+    rng_calibration();
+#endif
+}
+
 static void exflash_io_pull_config(void)
 {
     /* XQSPI IO configuration needs to match Flash. 
@@ -155,49 +184,38 @@ static void exflash_io_pull_config(void)
 void platform_init(void)
 {
     /* if BLE not fully power off, reset and power off it manually */
-    if((AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_TIMER) || \
-       (AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_CORE))
-    {
-        ll_pwr_enable_comm_core_reset();
-        ll_pwr_enable_comm_timer_reset();
-        ll_pwr_disable_comm_core_power();
-        ll_pwr_disable_comm_timer_power();
-        /* TODO: Reserve System Cold Fully Reset Method. */
-        // hal_nvic_system_reset();
-    }
+    BLE_power_check();
 
     /* Clear All Wakeup Event When Cold Boot */
     ll_pwr_clear_wakeup_event(LL_PWR_WKUP_EVENT_ALL);
-    for(uint8_t i = 0; i < MAX_NUMS_IRQn; i++)
-    {
+    for (uint8_t i = 0; i < MAX_NUMS_IRQn; i++) {
         NVIC_ClearPendingIRQ((IRQn_Type)(i));
     }
 
-    #ifdef EXFLASH_WAKEUP_DELAY
+#ifdef EXFLASH_WAKEUP_DELAY
     warm_boot_set_exflash_readid_delay(EXFLASH_WAKEUP_DELAY * 5);
     run_mode_t run_mode = (run_mode_t)(SYSTEM_CLOCK);
     uint16_t osc_time = ble_wakeup_osc_time_get(run_mode) + (EXFLASH_WAKEUP_DELAY * 5);
     ble_wakeup_osc_time_set(run_mode, osc_time);
-    #endif
+#endif
 
     /* enable protection. */
-    #ifndef GR5515_E
+#ifndef GR5515_E
     platform_init_push();
-    #endif
+#endif
 
     /* set sram power state. */
     mem_pwr_mgmt_init();
 
-    if (!hal_flash_init())
-    {
+    if (!hal_flash_init()) {
         /* Flash fault, cannot startup.
          * TODO: Output log via UART or Dump an error code to flash. */
-        while(1);
+        while (1) {}
     }
 
-    #if (defined(GR5515_E) && defined(ROM_RUN_IN_FLASH)) || !defined(GR5515_E)
+#if (defined(GR5515_E) && defined(ROM_RUN_IN_FLASH)) || !defined(GR5515_E)
     platform_flash_enable_quad();
-    #endif
+#endif
 
     platform_flash_protection(FLASH_PROTECT_PRIORITY);
 
@@ -205,11 +223,11 @@ void platform_init(void)
     nvds_setup();
 
     /* To choose the System clock source and set the accuracy of OSC. */
-    #if CFG_LPCLK_INTERNAL_EN
-    platform_clock_init_rng((mcu_clock_type_t)SYSTEM_CLOCK, RNG_OSC_CLK2, 500, 0);
-    #else
+#if CFG_LPCLK_INTERNAL_EN
+    platform_clock_init_rng((mcu_clock_type_t)SYSTEM_CLOCK, RNG_OSC_CLK2, CFG_LF_ACCURACY_PPM, 0);
+#else
     platform_clock_init((mcu_clock_type_t)SYSTEM_CLOCK, RTC_OSC_CLK, CFG_LF_ACCURACY_PPM, 0);
-    #endif
+#endif
 
     /* Register the SVC Table. */
     svc_table_register(SVC_TABLE_USER_SPACE);
@@ -227,33 +245,18 @@ void platform_init(void)
     dfu_cmd_handler_replace_for_encrypt();
 #endif
 
-    system_pmu_deinit();
-    SystemCoreSetClock((mcu_clock_type_t)SYSTEM_CLOCK);
-    system_pmu_init((mcu_clock_type_t)SYSTEM_CLOCK);
+    system_calibration();
 
-    // recover the default setting by temperature, should be called in the end
-    pmu_calibration_handler(NULL);
-
-    /* RTC calibration function */
-    #if !CFG_LPCLK_INTERNAL_EN
-    rtc_calibration();
-    #endif
-
-    /* rng calibration */
-    #ifndef GR5515_E
-    rng_calibration();
-    #endif
-
-    #if (CFG_LCP_SUPPORT && (CHIP_TYPE == 0))
+#if (CFG_LCP_SUPPORT && (CHIP_TYPE == 0))
     gdx_lcp_buf_init((uint32_t)lcp_buf);
-    #endif
+#endif
 
     exflash_io_pull_config();
 
     /* disable protection. */
-    #ifndef GR5515_E
+#ifndef GR5515_E
     platform_init_pop();
-    #endif
+#endif
 
     return;
 }
@@ -295,8 +298,6 @@ void $Sub$$main(void)
     $Super$$main();
 }
 #endif
-
-
 
 #if defined ( __ICCARM__ )
 
