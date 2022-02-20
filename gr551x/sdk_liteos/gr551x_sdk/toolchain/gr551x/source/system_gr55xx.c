@@ -31,6 +31,12 @@
 #include "custom_config.h"
 
 /*----------------------------------------------------------------------------
+  WEAK Functions
+ *----------------------------------------------------------------------------*/
+__WEAK void sdk_init (void) {}
+__WEAK void rom_init (void) {}
+
+/*----------------------------------------------------------------------------
   Define clocks
  *----------------------------------------------------------------------------*/
 #define SOFTWARE_REG_WAKEUP_FLAG_POS   (8)
@@ -46,8 +52,7 @@
 #define SCATTERLOAD_ZEROINIT         0x00062d21
 #define DFU_DATA_START_ADDR         (0x800000 + 0x4000)
 
-typedef struct
-{
+typedef struct {
     uint32_t rom_addr;
     uint32_t ram_addr;
     uint32_t len;
@@ -57,28 +62,28 @@ typedef struct
 volatile uint32_t g_app_msp_addr;   /* record app msp address */
 
 static const uint32_t systemClock[CLK_TYPE_NUM] = {
-                                        CLK_64M, /* CPLL_S64M_CLK */
-                                        CLK_48M, /* CPLL_F48M_CLK */
-                                        CLK_16M, /* XO_S16M_CLK */
-                                        CLK_24M, /* CPLL_T24M_CLK */
-                                        CLK_16M, /* CPLL_S16M_CLK */
-                                        CLK_32M, /* CPLL_T32M_CLK */
-                                        };
+    CLK_64M, /* CPLL_S64M_CLK */
+    CLK_48M, /* CPLL_F48M_CLK */
+    CLK_16M, /* XO_S16M_CLK */
+    CLK_24M, /* CPLL_T24M_CLK */
+    CLK_16M, /* CPLL_S16M_CLK */
+    CLK_32M, /* CPLL_T32M_CLK */
+};
 
 // xqspi clock table by sys_clk_type
 const uint32_t mcu_clk_2_qspi_clk[CLK_TYPE_NUM] = {
-                                        [CPLL_S64M_CLK] = QSPI_64M_CLK, 
-                                        [CPLL_F48M_CLK] = QSPI_48M_CLK,  
-                                        [CPLL_T32M_CLK] = QSPI_32M_CLK,  
-                                        [CPLL_T24M_CLK] = QSPI_24M_CLK,  
-                                        [CPLL_S16M_CLK] = QSPI_16M_CLK,  
-                                        [XO_S16M_CLK] = QSPI_16M_CLK, 
-                                        }; 
+    [CPLL_S64M_CLK] = QSPI_64M_CLK,
+    [CPLL_F48M_CLK] = QSPI_48M_CLK,
+    [CPLL_T32M_CLK] = QSPI_32M_CLK,
+    [CPLL_T24M_CLK] = QSPI_24M_CLK,
+    [CPLL_S16M_CLK] = QSPI_16M_CLK,
+    [XO_S16M_CLK] = QSPI_16M_CLK,
+}; 
 /*----------------------------------------------------------------------------
   System Core Clock Variable
  *----------------------------------------------------------------------------*/
 uint32_t SystemCoreClock = CLK_64M;  /* System Core Clock Frequency as 64Mhz     */
-extern exflash_handle_t g_exflash_handle;                     
+extern exflash_handle_t g_exflash_handle;
                                         
 // lint -e{2,10,48,63}
 // The previous line of comment is to inhibit PC-Lint errors for next code block.
@@ -87,15 +92,16 @@ void SystemCoreSetClock(mcu_clock_type_t clock_type)
     if (clock_type >= CLK_TYPE_NUM)
         return;        // input parameter is out of range
 
-    if ((AON->PWR_RET01 & AON_PWR_REG01_SYS_CLK_SEL) != clock_type)
-    {
+    if ((AON->PWR_RET01 & AON_PWR_REG01_SYS_CLK_SEL) != clock_type) {
         uint32_t temp = AON->PWR_RET01 & (~(AON_PWR_REG01_SYS_CLK_SEL | AON_PWR_REG01_XF_SCK_CLK_SEL));
         // When a 16M or 64M clock is switched to another clock, it needs to be switched to 32M first.
-        AON->PWR_RET01 = (temp | (CPLL_T32M_CLK << AON_PWR_REG01_SYS_CLK_SEL_Pos) | (QSPI_32M_CLK << AON_PWR_REG01_XF_SCK_CLK_SEL_Pos));
+        AON->PWR_RET01 = (temp | (CPLL_T32M_CLK << AON_PWR_REG01_SYS_CLK_SEL_Pos) |
+                          (QSPI_32M_CLK << AON_PWR_REG01_XF_SCK_CLK_SEL_Pos));
         
         __asm ("nop;nop;nop;nop;");
-        temp = AON->PWR_RET01 & (~(AON_PWR_REG01_SYS_CLK_SEL | AON_PWR_REG01_XF_SCK_CLK_SEL));      
-        AON->PWR_RET01 = (temp | (clock_type << AON_PWR_REG01_SYS_CLK_SEL_Pos) | (mcu_clk_2_qspi_clk[clock_type] << AON_PWR_REG01_XF_SCK_CLK_SEL_Pos));
+        temp = AON->PWR_RET01 & (~(AON_PWR_REG01_SYS_CLK_SEL | AON_PWR_REG01_XF_SCK_CLK_SEL));
+        AON->PWR_RET01 = (temp | (clock_type << AON_PWR_REG01_SYS_CLK_SEL_Pos) |
+                          (mcu_clk_2_qspi_clk[clock_type] << AON_PWR_REG01_XF_SCK_CLK_SEL_Pos));
     }
 
     SystemCoreClock = systemClock[clock_type];
@@ -123,33 +129,31 @@ static inline uint32_t get_wakeup_flag(void)
 
 void set_msp(void)
 {
-    #ifndef DRIVER_TEST
-    #ifdef APP_CODE_RUN_ADDR
+#ifndef DRIVER_TEST
+#ifdef APP_CODE_RUN_ADDR
     __DMB();
-     __set_MSP(REG_PL_RD(APP_CODE_RUN_ADDR));
+    __set_MSP(REG_PL_RD(APP_CODE_RUN_ADDR));
     __DSB();
-    #endif
-    #endif
+#endif
+#endif
 }
 
 static void __sdk_init(void)
 {
     sactter_copy_info_t sactter_copy_info = {0};
 
-    for(int i = 0; i < (REGION_TABLE_LIMIT - REGION_TABLE_BASE) / (sizeof(sactter_copy_info_t)); i++)
-    {
-        memcpy_s((void *)&sactter_copy_info, sizeof (sactter_copy_info), (void *)(REGION_TABLE_BASE + i * sizeof(sactter_copy_info_t)), sizeof(sactter_copy_info_t));
+    for (int i = 0; i < (REGION_TABLE_LIMIT - REGION_TABLE_BASE) / (sizeof(sactter_copy_info_t)); i++) {
+        memcpy_s((void *)&sactter_copy_info, sizeof (sactter_copy_info),
+                 (void *)(REGION_TABLE_BASE + i * sizeof(sactter_copy_info_t)), sizeof(sactter_copy_info_t));
 
-        if((sactter_copy_info.fun + 1) == SCATTERLOAD_COPY)
-        {
-            if (sactter_copy_info.ram_addr == DFU_DATA_START_ADDR)
+        if ((sactter_copy_info.fun + 1) == SCATTERLOAD_COPY) {
+            if (sactter_copy_info.ram_addr == DFU_DATA_START_ADDR) {
                 continue;
-            memcpy_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len, (void *)(sactter_copy_info.rom_addr), sactter_copy_info.len);
-        }
-        else
-        {
-            if((sactter_copy_info.fun + 1) == SCATTERLOAD_ZEROINIT)
-            {
+            }
+            memcpy_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len, 
+                     (void *)(sactter_copy_info.rom_addr), sactter_copy_info.len);
+        } else {
+            if ((sactter_copy_info.fun + 1) == SCATTERLOAD_ZEROINIT) {
                 memset_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len, 0, sactter_copy_info.len);
             }
         }
@@ -158,20 +162,19 @@ static void __sdk_init(void)
 
 void SystemInit(void)
 {
-    #if (__FPU_USED == 1)
+#if (__FPU_USED == 1)
     SCB->CPACR |= ((3UL << 10*2) |                 /* set CP10 Full Access */
-                    (3UL << 11*2)  );               /* set CP11 Full Access */
-    #endif
+                    (3UL << 11*2)  );              /* set CP11 Full Access */
+#endif
 
-    #ifdef UNALIGNED_SUPPORT_DISABLE
+#ifdef UNALIGNED_SUPPORT_DISABLE
     SCB->CCR |= SCB_CCR_UNALIGN_TRP_Msk;
-    #endif
+#endif
 
-    if(COLD_BOOT == get_wakeup_flag())
-    {
-        #if defined(GR5515_D)
+    if (COLD_BOOT == get_wakeup_flag()) {
+#if defined(GR5515_D)
         __sdk_init();
-        #endif
+#endif
     }
 
     return;
@@ -180,11 +183,9 @@ void SystemInit(void)
 void system_platform_init(void)
 {
 #if (!defined(ROM_RUN_IN_FLASH)) && defined(GR5515_E)
-    extern void sdk_init(void);
     sdk_init();
 #else
     #if defined(GR5515_E)
-    extern void rom_init(void);
     rom_init();
     #endif
 #endif
@@ -200,15 +201,12 @@ void system_platform_init(void)
 void main_init(void)
 {
     uint32_t boot_flag = get_wakeup_flag();
-    if(COLD_BOOT == boot_flag)
-    {
+    if (COLD_BOOT == boot_flag) {
         extern void __main(void);
         __main();
-    }
-    else
-    {
+    } else {
         pwr_mgmt_warm_boot();
-        while (1);
+        while (1) {}
     }
     // Never execute here
 }
