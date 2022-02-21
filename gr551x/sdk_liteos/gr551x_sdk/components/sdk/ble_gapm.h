@@ -131,23 +131,23 @@
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_POD          5187     /**< Location Pod (Outdoor Sports Activity subtype). */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_POD  5188     /**< Location and Navigation Pod (Outdoor Sports Activity subtype). */
 
-/**@defgroup BLE_GAP_PHYS GAP PHYs (bitmask)
+/** @defgroup BLE_GAP_PHYS GAP PHYs (bitmask)
  * @{ */
 #define BLE_GAP_PHY_ANY       0x00     /**< No preferred PHY. */
 #define BLE_GAP_PHY_LE_1MBPS  (1 << 0) /**< LE 1M PHY preferred for an active link. */
 #define BLE_GAP_PHY_LE_2MBPS  (1 << 1) /**< LE 2M PHY preferred for an active link. */
 #define BLE_GAP_PHY_LE_CODED  (1 << 2) /**< LE Coded PHY preferred for an active link. */
-/**@} */
+/** @} */
 
 
-/**@defgroup BLE_GAP_ADV_CHANNEL GAP ADV CHANNEL (bitmask)
+/** @defgroup BLE_GAP_ADV_CHANNEL GAP ADV CHANNEL (bitmask)
  * @{ */
 #define GAP_ADV_CHANNEL_37              0x01 /**< Advertising Channel 37 (2402MHz). */ 
 #define GAP_ADV_CHANNEL_38              0x02 /**< Advertising Channel 38 (2426MHz). */
 #define GAP_ADV_CHANNEL_39              0x04 /**< Advertising Channel 39 (2480MHz). */
 #define GAP_ADV_CHANNEL_37_38_39        0x07 /**< Advertising Channel 37, 38, 39. */
-/**@} */
-/**@} */
+/** @} */
+/** @} */
 
 /** @addtogroup BLE_GAPM_ENUMERATIONS Enumerations
  * @{ */
@@ -197,7 +197,7 @@ typedef enum
 } gap_adv_data_type_t;
 
 
-/**@brief Get device parameters operation code. */
+/** @brief Get device parameters operation code. */
 typedef enum
 {
     BLE_GAP_GET_DEV_VERSION = 0,            /**< Get version information for the local Controller. */
@@ -215,7 +215,7 @@ typedef enum
     BLE_GAP_GET_DEV_RF_RF_PATH_COMP,        /**< Get RF path compensation values. */
 } gap_dev_info_get_type_t;
 
-/**@brief GAP advertising modes. */
+/** @brief GAP advertising modes. */
 typedef enum
 {
     GAP_ADV_TYPE_ADV_IND = 0,         /**< Undirected connectable and scannable mode. */
@@ -225,7 +225,7 @@ typedef enum
     GAP_ADV_TYPE_ADV_LOW_DIRECT_IND,  /**< Directed low duty cycle mode. */
 } gap_adv_mode_t;
 
-/**@brief GAP discoverability modes. */
+/** @brief GAP discoverability modes. */
 typedef enum
 {
     GAP_DISC_MODE_NON_DISCOVERABLE = 0, /**< Non-discoverable mode. */
@@ -508,7 +508,7 @@ typedef enum
 
 /** @} */
 
-/**@addtogroup BLE_GAPM_STRUCTURES Structures
+/** @addtogroup BLE_GAPM_STRUCTURES Structures
  * @{ */
 
 /**

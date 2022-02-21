@@ -53,10 +53,10 @@
 #include "system_gr55xx.h"
 #include "gr55xx_hal_def.h"
 
-/**@addtogroup PlAT_SDK_ENUM Enumerations
+/** @addtogroup PlAT_SDK_ENUM Enumerations
  * @{ */
 
-/**@brief system clock and run mode. */
+/** @brief system clock and run mode. */
 typedef enum
 {
    XIP_64M = 0,            /**< XIP 64M. */
@@ -73,7 +73,7 @@ typedef enum
    MIRROR_32M,             /**< MIRROR 32M. */
 } run_mode_t;
 
-/**@brief sdk clock type. */
+/** @brief sdk clock type. */
 typedef enum
 {
     RNG_OSC_CLK = 0,       /**< RNG OSC CLOCK. */
@@ -82,7 +82,7 @@ typedef enum
 } sdk_clock_type_t;
 
 
-/**@brief memory power setting mode. */
+/** @brief memory power setting mode. */
 typedef enum
 {
    MEM_POWER_FULL_MODE = 0,   /**< Full mode. */

@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_GPIO_EX_H__
 #define __GR55xx_HAL_GPIO_EX_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal_def.h"
 #include "gr55xx_ll_gpio.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -169,7 +169,7 @@ extern "C" {
 #define GPIO0_PIN5_MUX_SIM_CLK              GPIO_MUX_1  /**< GPIO0_PIN5 Mux Select SIM_CLK */
 #define GPIO0_PIN5_MUX_SPIM_MISO            GPIO_MUX_2  /**< GPIO0_PIN5 Mux Select SPIM_MISO */
 #define GPIO0_PIN5_MUX_SPIS_MOSI            GPIO_MUX_3  /**< GPIO0_PIN5 Mux Select SPIS_MOSI */
-//#define GPIO0_PIN5_MUX_SPIM_MISO            GPIO_MUX_4  /**< GPIO0_PIN5 Mux Select SPIM_MISO */
+// #define GPIO0_PIN5_MUX_SPIM_MISO            GPIO_MUX_4  /**< GPIO0_PIN5 Mux Select SPIM_MISO */
 #define GPIO0_PIN5_MUX_I2C0_SCL             GPIO_MUX_5  /**< GPIO0_PIN5 Mux Select I2C0_SCL */
 #define GPIO0_PIN5_MUX_COEX_WLAN_TX         GPIO_MUX_6  /**< GPIO0_PIN5 Mux Select COEX_WLAN_TX */
 /** @} */

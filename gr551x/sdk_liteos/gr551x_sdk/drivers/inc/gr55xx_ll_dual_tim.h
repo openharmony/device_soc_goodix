@@ -52,12 +52,12 @@
 #ifndef __GR55XX_LL_DUAL_TIMER_H__
 #define __GR55XX_LL_DUAL_TIMER_H__
 
+/* Includes ------------------------------------------------------------------*/
+#include "gr55xx.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Includes ------------------------------------------------------------------*/
-#include "gr55xx.h"
 
 #if defined (DUAL_TIMER0) || defined (DUAL_TIMER1)
 

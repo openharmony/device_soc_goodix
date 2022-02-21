@@ -35,13 +35,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_PWR_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
 
-/* extern function -----------------------------------------------------------*/
-
-extern void hal_pwr_config_timer_wakeup_ext(uint8_t timer_mode, uint32_t load_count);
-extern void hal_pwr_register_timer_elaspsed_handler(pwr_slp_elapsed_handler_t pwr_slp_elapsed_hander);
 
 /* Private variables ---------------------------------------------------------*/
 

@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_MSIO_EX_H__
 #define __GR55xx_HAL_MSIO_EX_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal_def.h"
 #include "gr55xx_ll_msio.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 

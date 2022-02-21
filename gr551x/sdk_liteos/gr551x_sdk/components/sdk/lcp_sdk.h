@@ -51,15 +51,15 @@
 #define _LCP_SDK_H_
 
 
-/**@addtogroup BLE_LCP_TYPEDEFS Typedefs
+/** @addtogroup BLE_LCP_TYPEDEFS Typedefs
  * @{ */
-/**@brief RX handler callback function. */
+/** @brief RX handler callback function. */
 typedef uint16_t (*rx_handler_cb_t) (uint8_t header, uint8_t length, uint8_t *p_payload);
 /** @} */
 
-/**@addtogroup BLE_LCP_ENUMERATIONS Enumerations
+/** @addtogroup BLE_LCP_ENUMERATIONS Enumerations
  * @{ */
-/**@brief Protocol Mode. */
+/** @brief Protocol Mode. */
 enum PROTOCOL_MODE
 {
     BLE_ADV,       /**< BLE ADV mode. */
@@ -69,9 +69,9 @@ enum PROTOCOL_MODE
 };
 /** @} */
 
-/**@addtogroup BLE_LCP_STRUCTURES Structures
+/** @addtogroup BLE_LCP_STRUCTURES Structures
  * @{ */
-/**@brief LCP Parameter. */
+/** @brief LCP Parameter. */
 typedef struct
 {
     uint8_t   mode;                 /**< Set protocol mode, see @ref PROTOCOL_MODE. */

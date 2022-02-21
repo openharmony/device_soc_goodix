@@ -70,18 +70,18 @@
 #define GAP_ADDR_LEN             0x06 /**< The length of address. */
 #define GAP_INVALID_CONN_INDEX   0xFF /**< Invalid connection index. */
 
-/**@defgroup BLE_GAP_ADDR_TYPES GAP Address types
+/** @defgroup BLE_GAP_ADDR_TYPES GAP Address types
  * @{ */
 #define BLE_GAP_ADDR_TYPE_PUBLIC                        0x00 /**< Public (identity) address.*/
 #define BLE_GAP_ADDR_TYPE_RANDOM_STATIC                 0x01 /**< Random static (identity) address. */
-/**@} */
+/** @} */
 
-/**@defgroup BLE_GAP_PHY_OPTIONS GAP PHY OPTIONS (bitmask)
+/** @defgroup BLE_GAP_PHY_OPTIONS GAP PHY OPTIONS (bitmask)
  * @{ */
 #define PHY_OPT_NO_CODING    0x00       /**< The Host has no preferred coding when transmitting on the LE Coded PHY. */
 #define PHY_OPT_S2_CODING    0x01       /**< The Host prefers that S=2 coding be used when transmitting on the LE Coded PHY. */
 #define PHY_OPT_S8_CODING    0x02       /**< The Host prefers that S=8 coding be used when transmitting on the LE Coded PHY. */
-/**@} */
+/** @} */
 
 /** @} */
 
@@ -98,7 +98,7 @@ typedef enum
     GAP_GET_CHAN_SEL_ALGO        /**< Get selection algorithm for connection channel. */
 } gap_get_conn_info_op_t;
 
-/**@brief The operation code used to get peer device info. */
+/** @brief The operation code used to get peer device info. */
 typedef enum 
 {
     GAP_GET_PEER_VERSION = 0,    /**< Get peer device version info. */
@@ -476,7 +476,7 @@ typedef struct
     uint16_t max_rx_time;   /**<  The maximum time that the local Controller will take to RX. */
 } gap_le_pkt_size_ind_t;
 
-/**@brief The Structure for BLE Connection Arrangement. */
+/** @brief The Structure for BLE Connection Arrangement. */
 typedef struct
 {
     uint16_t conn_idx;     /**< Connection Index. */
@@ -720,7 +720,7 @@ typedef struct
     
     /**
       ****************************************************************************************
-      *@brief This callback function will be called when the peer device requests updating connection.
+      * @brief This callback function will be called when the peer device requests updating connection.
       * @param[in] conn_idx:                The connection index.
       * @param[in] p_conn_param_update_req: Pointer to the connection update request param. See @ref gap_conn_param_t.
       * @retval void

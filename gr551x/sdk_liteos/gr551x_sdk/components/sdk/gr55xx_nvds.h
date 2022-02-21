@@ -55,16 +55,16 @@
  * @{ */
 #define NV_TAGCAT_APP       0x4000  /**< NVDS tag mask for user application. */
 
-/**@brief Get NVDS tag for user application.
+/** @brief Get NVDS tag for user application.
  * The values of Tag 0x0000 and 0xFFFF are invalid. idx should not be used
  * as the parameter of NVDS APIs directly. The range of idx is 0x0001~0x3FFF.
  */
 #define NV_TAG_APP(idx)     (NV_TAGCAT_APP | ((idx) & 0x3FFF))
 /** @} */
 
-/**@addtogroup NVDS_ENUMERATIONS Enumerations
+/** @addtogroup NVDS_ENUMERATIONS Enumerations
  * @{ */
-/**@brief NVDS Returned Status. */
+/** @brief NVDS Returned Status. */
 enum NVDS_STATUS
 {
     NVDS_SUCCESS,                /**< NVDS succeeds. */
@@ -83,9 +83,9 @@ enum NVDS_STATUS
 };
 /** @} */
 
-/**@addtogroup NVDS_STRUCTURES Structures
+/** @addtogroup NVDS_STRUCTURES Structures
  * @{ */
-/**@brief NVDS Item tag. */
+/** @brief NVDS Item tag. */
 typedef uint16_t NvdsTag_t;
 /** @} */
 
@@ -164,7 +164,7 @@ uint16_t nvds_tag_length(NvdsTag_t tag);
 
 /** @addtogroup LOCAL_FLASH_FUNCTIONS Local Flash Functions
  * @{ */
-/**@brief Flash operation API based on hal flash.*/
+/** @brief Flash operation API based on hal flash.*/
 /**
  ****************************************************************************************
  * @brief Erase flash chip.

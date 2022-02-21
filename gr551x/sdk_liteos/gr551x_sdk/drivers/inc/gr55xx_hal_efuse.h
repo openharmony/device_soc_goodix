@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_EFUSE_H__
 #define __GR55xx_HAL_EFUSE_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal_def.h"
 #include "gr55xx_ll_efuse.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_EFUSE_ENUMERATIONS Enumerations

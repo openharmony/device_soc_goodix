@@ -52,10 +52,10 @@
 #include "ble_error.h"
 #include <stdbool.h>
 
-/**@addtogroup BLE_SM_DEFINES Defines 
+/** @addtogroup BLE_SM_DEFINES Defines 
  * @{ 
  */
-/**@defgroup SEC_AUTH_FLAG  SEC Auth Flag
+/** @defgroup SEC_AUTH_FLAG  SEC Auth Flag
 * @{ 
 */
 #define AUTH_NONE               0                 /**< No auth requirement. */
@@ -64,9 +64,9 @@
 #define AUTH_SEC_CON           (1 << 3)           /**< Security connection flag. */
 #define AUTH_KEY_PRESS_NOTIFY  (1 << 4)           /**< Key press notify flag. */
 #define AUTH_ALL               (AUTH_BOND | AUTH_MITM | AUTH_SEC_CON | AUTH_KEY_PRESS_NOTIFY)  /**< All authentication flags are on. */
-/**@} */
+/** @} */
 
-/**@defgroup SEC_KEY_DIST_FLAG  SEC Key Distribution Flag
+/** @defgroup SEC_KEY_DIST_FLAG  SEC Key Distribution Flag
 * @{ 
 */
 #define KDIST_NONE      0            /**< No key needs to be distributed. */
@@ -75,12 +75,12 @@
 #define KDIST_SIGNKEY  (1 << 2)      /**< Distribute signing info. */
 #define KDIST_ALL      (KDIST_ENCKEY | KDIST_IDKEY | KDIST_SIGNKEY)  /**< Distribute all info. */
 
-/**@} */
-/**@} */
+/** @} */
+/** @} */
 
-/**@addtogroup BLE_SEC_ENUMERATIONS Enumerations
+/** @addtogroup BLE_SEC_ENUMERATIONS Enumerations
  * @{ */
-/**@brief SEC IO Capability. */
+/** @brief SEC IO Capability. */
 typedef enum
 {
     IO_DISPLAY_ONLY       = 0x00,       /**< Display only. */
@@ -90,8 +90,8 @@ typedef enum
     IO_KEYBOARD_DISPLAY   = 0x04        /**< Keyboard and display. */
 } sec_io_cap_t;
 
-/**@brief SEC Encryption Request Type.
-  *@note These types indicate some operations need to interact with app during pair process.
+/** @brief SEC Encryption Request Type.
+ * @note These types indicate some operations need to interact with app during pair process.
  */
 typedef enum
 {
@@ -101,7 +101,7 @@ typedef enum
     NC_REQ          /**< Number comparison request. Apps need to check if it is the same number displayed in Master and Slave. */
 } sec_enc_req_type_t;
 
-/**@brief SEC Key Press Notify.  */
+/** @brief SEC Key Press Notify.  */
 typedef enum
 {
     KEY_PRESS_STARTED   = 0x00,        /**< Passkey entry started. */
@@ -111,7 +111,7 @@ typedef enum
     KEY_PRESS_COMPLETED = 0x04         /**< Passkey entry completed. */
 } sec_keypress_notify_t;
 
-/**@brief SEC pair result.  */
+/** @brief SEC pair result.  */
 typedef enum
 {
     ENC_SUCCESS                     = 0x00, /**< Encrypt success. */
@@ -138,7 +138,7 @@ typedef enum
     ENC_FAIL_LTK_MISSING = 0x0F,            /**< Indicate the LTK of peer devices missing. */
 } sec_enc_ind_t;
 
-/**@brief SEC mode and level.  */
+/** @brief SEC mode and level.  */
 typedef enum
 {
     SEC_MODE1_LEVEL1 = 0x00,    /**< No security is needed. */
@@ -149,7 +149,7 @@ typedef enum
     SEC_MODE2_LEVEL2 = 0x05,    /**< Data signing is required. Necessary: MITM; unnecessary: SC. */
 } sec_mode_level_t;
 
-/**@brief SEC TK type. */
+/** @brief SEC TK type. */
 typedef enum
 {
     SEC_TK_OOB = 0x00,        /**<TK got from OOB (out of band) method. */
@@ -157,7 +157,7 @@ typedef enum
     SEC_TK_KEY_ENTRY          /**<TK shall be entered by user using device keyboard. */
 } sec_tk_type_t;
 
-/**@brief Key missing reason. */
+/** @brief Key missing reason. */
 typedef enum
 {
     BOND_INFO_LOAD_FAILED = 0x00,      /**<Bond information load failed. */
@@ -166,9 +166,9 @@ typedef enum
 } sec_key_missing_reason_t;
 /** @} */
 
-/**@addtogroup BLE_SEC_STRUCTURES Structures
+/** @addtogroup BLE_SEC_STRUCTURES Structures
  * @{ */
-/**@brief SEC Parameter. */
+/** @brief SEC Parameter. */
 typedef struct
 {
     sec_mode_level_t level;         /**< Set the minimum security level of the device, see @ref sec_mode_level_t. */
@@ -180,27 +180,27 @@ typedef struct
     uint8_t          rkey_dist;     /**< Set the response key distribution, see @ref SEC_KEY_DIST_FLAG. */
 } sec_param_t;
 
-/**@brief TK value. */
+/** @brief TK value. */
 typedef struct
 {
     uint8_t key[16];          /**< TK value. */
 } sec_tk_t;
 
-/**@brief SEC OOB value. */
+/** @brief SEC OOB value. */
 typedef struct
 {
     uint8_t conf[16];        /**< Confirm value. */
     uint8_t rand[16];        /**< Random value. */
 } sec_oob_t;
 
-/**@brief SEC Confirm encryption data. */
+/** @brief SEC Confirm encryption data. */
 typedef union
 {
     sec_tk_t  tk;           /**< TK value, see @ref sec_tk_t. */
     sec_oob_t oob;          /**< OOB value, see @ref sec_oob_t. */
 } sec_cfm_enc_data_t;
 
-/**@brief SEC Confirm encryption. */
+/** @brief SEC Confirm encryption. */
 typedef struct
 {
     sec_enc_req_type_t req_type;         /**< Request type, see @ref sec_enc_req_type_t. */
@@ -208,13 +208,13 @@ typedef struct
     sec_cfm_enc_data_t data;             /**< SEC Confirm encryption data, see @ref sec_cfm_enc_data_t. */
 } sec_cfm_enc_t;
 
-/**@brief SEC number comparison value. */
+/** @brief SEC number comparison value. */
 typedef struct
 {
     uint8_t value[4];       /**< Number comparison value (000000~999999). */
 } sec_nc_t;
 
-/**@brief SEC encryption request data. */
+/** @brief SEC encryption request data. */
 typedef union
 {
     sec_tk_type_t tk_type;      /**<TK type, see @ref sec_tk_type_t. */
@@ -222,14 +222,14 @@ typedef union
     sec_nc_t      nc_data;      /**<Number comparison data, see @ref sec_nc_t. */
 } sec_enc_req_data_t;
 
-/**@brief SEC encryption request. */
+/** @brief SEC encryption request. */
 typedef struct
 {
     sec_enc_req_type_t req_type;        /**< Indicate the request type, @ref sec_enc_req_type_t. */
     sec_enc_req_data_t data;            /**< SEC encryption request data, @ref sec_enc_req_data_t. */
 } sec_enc_req_t;
 
-/**@brief SEC register call back. */
+/** @brief SEC register call back. */
 typedef struct
 {
     void (*app_sec_enc_req_cb)(uint8_t conn_idx, sec_enc_req_t *p_enc_req);                   /**< Security manager module receives encryption request callback. */
