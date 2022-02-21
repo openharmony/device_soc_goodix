@@ -54,10 +54,10 @@
 #include <stdint.h>  
 #include <stdbool.h>
 
-/**@addtogroup BLE_L2CAP_ENUMERATIONS Enumerations
+/** @addtogroup BLE_L2CAP_ENUMERATIONS Enumerations
  * @{ */
 
-/**@brief LE credit based disconnection reasons. */
+/** @brief LE credit based disconnection reasons. */
 typedef enum
 {
     REMOTE_USER_TERM_CON = 0x00,       /**< Remote user terminates the connection. */
@@ -172,7 +172,7 @@ typedef struct
     uint16_t     credits;        /**< Number of peer credit used. */
 }lecb_sdu_send_evt_t;
 
-/**@brief Callback registered by APP. */
+/** @brief Callback registered by APP. */
 typedef struct 
 {
     void (*app_l2cap_lecb_conn_req_cb)(uint8_t conn_idx, lecb_conn_req_ind_t *p_conn_req);                        /**< Callback for receiving LE credit based connection request. */

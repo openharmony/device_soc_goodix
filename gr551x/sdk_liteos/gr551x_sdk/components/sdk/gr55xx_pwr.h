@@ -61,7 +61,7 @@
  * @{
  */
 
-/**@brief power manager setting parameter.
+/** @brief power manager setting parameter.
  *        Use pwr_mgmt_var_set to transfer the parameters in the structure to PMU, 
  *        and then the pwr_mgmt_mode_set function will use the new parameters for
  *        power management.
@@ -75,14 +75,14 @@ typedef struct
     uint32_t  pwr_mgmt_rtc_timer_thrd;    /**< RTC timer threshold. */
 } pwr_mgmt_var_box_t;
 
-/**@brief power manager boot type. */
+/** @brief power manager boot type. */
 typedef enum 
 {
     COLD_BOOT = 0,                    /**< Cold boot state. */
     WARM_BOOT,                        /**< Warm boot state. */
 } boot_mode_t;
 
-/**@brief power manager model. */
+/** @brief power manager model. */
 typedef enum
 {
     PMR_MGMT_ACTIVE_MODE = 0x0,       /**< Full speed state. */
@@ -90,21 +90,21 @@ typedef enum
     PMR_MGMT_SLEEP_MODE,              /**< Deep sleep state. */
 } pwr_mgmt_mode_t;
 
-/**@brief power manager device work state. */
+/** @brief power manager device work state. */
 typedef enum
 {
     DEVICE_BUSY = 0x0,                /**< Device busy state. */
     DEVICE_IDLE,                      /**< Device idle state. */
 } pwr_mgmt_dev_state_t;
 
-/**@brief power manager app timer work state. */
+/** @brief power manager app timer work state. */
 typedef enum
 {
     EVENT_APP_TIMER_START = 0,        /**< App-timer start state. */
     EVENT_APP_TIMER_STOP,             /**< App-timer stop state. */
 } notify_timer_event_t;
 
-/**@brief  PMU Tracking*/
+/** @brief  PMU Tracking*/
 enum
 {
    TRC_PWR_WFE_MODE = 0,           /**< WFE mode. */
@@ -116,7 +116,7 @@ enum
    TRC_PWR_BLE_TIMER_PASS,         /**< BLE timer pass. */
 };
 
-/**@brief parameter configuration table. */ 
+/** @brief parameter configuration table. */ 
 typedef struct 
 {
    uint16_t pwr_dur;             /**< Duration. */
@@ -129,25 +129,25 @@ typedef struct
    uint32_t pwr_ble_ths;         /**< BLE timer threshold. */
 } pwr_table_t; 
 
-/**@brief Trace function type. */ 
+/** @brief Trace function type. */ 
 typedef void (*trace_func_t)(uint8_t);
 
-/**@brief Peripheral function type. */ 
+/** @brief Peripheral function type. */ 
 typedef void (*periph_func_t)(void);
 
-/**@brief Before sleep function type. */ 
+/** @brief Before sleep function type. */ 
 typedef void (*pwr_before_sleep_func_t)(void);
 
-/**@brief Device check function type. */ 
+/** @brief Device check function type. */ 
 typedef pwr_mgmt_dev_state_t (*pwr_dev_check_func_t)(void);
 
-/**@brief function registered to dump io configuration. */
+/** @brief function registered to dump io configuration. */
 typedef void (*io_dump_func_t)(void);
 
-/**@brief mem check process type. */
+/** @brief mem check process type. */
 typedef void (*mem_check_proc_t)(void);
 
-/**@brief pwr table. */ 
+/** @brief pwr table. */ 
 extern pwr_table_t pwr_table[];
  
 /** @} */

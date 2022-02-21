@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_AON_GPIO_EX_H__
 #define __GR55xx_HAL_AON_GPIO_EX_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal_def.h"
 #include "gr55xx_ll_gpio.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 

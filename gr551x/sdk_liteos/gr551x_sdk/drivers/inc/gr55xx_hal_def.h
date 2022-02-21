@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_DEF__
 #define __GR55xx_HAL_DEF__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx.h"
 #include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_ENUMERATIONS Enumerations

@@ -55,7 +55,7 @@
  * @addtogroup GR55XX_FPB_ENUMERATIONS Enumerations
  * @{
  */
-/**@brief FPB mode. */
+/** @brief FPB mode. */
 typedef enum
 {
     FPB_MODE_PATCH_ONLY = 0,                /**< FPB MODE ENABLE FOR PATCH ONLY*/
@@ -63,14 +63,14 @@ typedef enum
     FPB_MODE_PATCH_AND_DEBUG,               /**< FPB MODE ENABLE FOR PATCH AND DEBUG*/
 } fpb_mode_t ;
 
-/**@brief FPB state. */
+/** @brief FPB state. */
 typedef enum
 {
     FPB_PATCH_OFF = 0,                      /**< FPB patch disable */
     FPB_PATCH_ON,                           /**< FPB patch enable  */
 } fpb_state_t;
 
-/**@brief FPB register. */
+/** @brief FPB register. */
 typedef struct
 {
     volatile uint32_t CTRL;                 /**< Offset: 0x000 (R/W)  Data */ 
@@ -90,7 +90,7 @@ typedef struct
  * @defgroup GR55XX_FPB_TYPEDEF Typedefs
  * @{
  */
-/**@brief FPB function.*/
+/** @brief FPB function.*/
 typedef void(*fun_t)(void);
 /** @} */
 

@@ -52,14 +52,14 @@
 #ifndef __GR55xx_HAL_EXFLASH_H__
 #define __GR55xx_HAL_EXFLASH_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_xqspi.h"
 #include "gr55xx_hal_xqspi.h"
 #include "gr55xx_hal_def.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_EXFLASH_ENUMERATIONS Enumerations

@@ -51,11 +51,11 @@
 
 #include <stdint.h>
 
-/**@addtogroup BLE_ERROR_CODES Defines 
+/** @addtogroup BLE_ERROR_CODES Defines 
  * @{ 
  */
 
-/**@defgroup SDK_ERROR_CODES  SDK Specific Error Codes
+/** @defgroup SDK_ERROR_CODES  SDK Specific Error Codes
 * @{ 
 */
 #define SDK_SUCCESS                                 0x0000      /**< Successful. */
@@ -102,14 +102,14 @@
 #define SDK_ERR_NOT_ENOUGH_CREDITS                  0x002A      /**< Not enough credits. */
 
 #define SDK_ERR_APP_ERROR                           0x0080      /**< Application error. */
-/**@} */
+/** @} */
 
-/**@defgroup BLE_STACK_ERROR_CODES  BLE Stack specific error codes
+/** @defgroup BLE_STACK_ERROR_CODES  BLE Stack specific error codes
 * @{ 
 */
 
 #define BLE_SUCCESS                                 0x00        /**< Operation is Successful. */
-/**@brief ATT Specific Error. */
+/** @brief ATT Specific Error. */
 #define BLE_ATT_ERR_INVALID_HANDLE                  0x01        /**< The given attribute handle was not valid on this server. */
 #define BLE_ATT_ERR_READ_NOT_PERMITTED              0x02        /**< The attribute cannot be read. */
 #define BLE_ATT_ERR_WRITE_NOT_PERMITTED             0x03        /**< The attribute cannot be written. */
@@ -128,7 +128,7 @@
 #define BLE_ATT_ERR_UNSUPP_GRP_TYPE                 0x10        /**< The attribute type is not a supported grouping attribute as defined by a higher layer specification. */
 #define BLE_ATT_ERR_INSUFF_RESOURCE                 0x11        /**< Insufficient resources to complete the request. */
 
-/**@brief L2CAP Specific Error. */
+/** @brief L2CAP Specific Error. */
 #define BLE_L2C_ERR_CONNECTION_LOST                 0x30        /**< Message cannot be sent because connection is lost (disconnected). */
 #define BLE_L2C_ERR_INVALID_MTU_EXCEED              0x31        /**< Invalid PDU length exceeds MTU. */
 #define BLE_L2C_ERR_INVALID_MPS_EXCEED              0x32        /**< Invalid PDU length exceeds MPS. */
@@ -145,7 +145,7 @@
 #define BLE_L2C_ERR_CREDIT_ERROR                    0x3D        /**< Credit error: invalid number of credit received. */
 #define BLE_L2C_ERR_CID_ALREADY_ALLOC               0x3E        /**< Channel identifier already allocated. */
 
-/**@brief GAP Specific Error. */
+/** @brief GAP Specific Error. */
 #define BLE_GAP_ERR_INVALID_PARAM                   0x40        /**< Invalid parameters set. */
 #define BLE_GAP_ERR_PROTOCOL_PROBLEM                0x41        /**< Problem with protocol exchange, resulting in unexpected responses. */
 #define BLE_GAP_ERR_NOT_SUPPORTED                   0x42        /**< Request not supported by software configuration. */
@@ -161,7 +161,7 @@
 #define BLE_GAP_ERR_UNEXPECTED                      0x4C        /**< Unexpected error. */
 #define BLE_GAP_ERR_MISMATCH                        0x4D        /**< Feature mismatch. */
 
-/**@brief GATT Specific Error. */
+/** @brief GATT Specific Error. */
 #define BLE_GATT_ERR_INVALID_ATT_LEN                0x50        /**< Problem with ATTC protocol response. */
 #define BLE_GATT_ERR_INVALID_TYPE_IN_SVC_SEARCH     0x51        /**< Error in service search. */
 #define BLE_GATT_ERR_WRITE                          0x52        /**< Invalid write data. */
@@ -172,7 +172,7 @@
 #define BLE_GATT_ERR_BROWSE_NO_ANY_MORE             0x57        /**< GATT browses no any more contents. */
 
 
-/**@brief LL Specific Error. */
+/** @brief LL Specific Error. */
 #define BLE_LL_ERR_UNKNOWN_HCI_COMMAND              0x91        /**< Unknown HCI Command. */
 #define BLE_LL_ERR_UNKNOWN_CONNECTION_ID            0x92        /**< Unknown Connection Identifier. */
 #define BLE_LL_ERR_HARDWARE_FAILURE                 0x93        /**< Hardware Failure. */
@@ -231,18 +231,18 @@
 #define BLE_LL_ERR_ADV_TO                           0xCC        /**< Advertising Timeout. */
 #define BLE_LL_ERR_TERMINATED_MIC_FAILURE           0xCD        /**< Connection Terminated due to a MIC failure. */
 #define BLE_LL_ERR_CONN_FAILED_TO_BE_EST            0xCE        /**< Connection failed to be established. */
-/**@} */
+/** @} */
 
 /**
  * @defgroup BLE_ERROR_TYPEDEF Typedefs
  * @{
  */
-/**@brief Callback function error parameter type. */
+/** @brief Callback function error parameter type. */
 typedef uint8_t   ble_err_t;
-/**@brief SDK API result type. */
+/** @brief SDK API result type. */
 typedef uint16_t  sdk_err_t;
-/**@} */
-/**@} */
+/** @} */
+/** @} */
 
 
 #endif

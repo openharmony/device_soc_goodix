@@ -1,9 +1,9 @@
 /**
  ****************************************************************************************
  *
- * @file gr55xx_sys_cfg.h
+ * @file gr55xx_delay.h
  *
- * @brief Define the chip configuration
+ * @brief PERIPHERAL API DELAY DRIVER
  *
  ****************************************************************************************
  * @attention
@@ -32,60 +32,59 @@
   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************************
+ ****************************************************************************************
  */
 
- /**
- * @addtogroup SYSTEM
- * @{
- */
- 
-/**
- * @addtogroup SYS_CFG System Configuration
- * @{
- * @brief Definitions and prototypes for SYS_CFG interface.
- */
- 
-#ifndef __GR55XX_SYS_CFG_H__
-#define __GR55XX_SYS_CFG_H__
+#ifndef __GR55xx_DELAY_H__
+#define __GR55xx_DELAY_H__
 
-#include <cmsis_compiler.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/** @addtogroup GR55XX_SYS_CFG_DEFINES Defines
- * @{
- */
-#define __ARRAY_EMPTY  /**< Empty Array. */
-/** @} */
+#include "gr55xx.h"
 
-/**
- * @defgroup GR55XX_SYS_CFG_STRUCT Structures
- * @{
- */
-/** @brief BLE Sleep configure defination. */
-typedef struct
-{
-    uint8_t  sleep_enable;           /**< Sleep enable flag. */
-    uint8_t  ext_wakeup_enable;      /**< External wake-up support. */
-    uint16_t twosc;                  /**< Twosc delay. */
-    uint16_t twext;                  /**< Twext delay. */
-    uint16_t twrm;                   /**< Twrm delay. */
-    uint16_t sleep_algo_dur;         /**< Duration of sleep and wake-up algorithm (depends on CPU speed) expressed in half us.. */
-} ble_slp_config_t ;
 
-/** @brief BLE Scheduler configure defination. */
-typedef struct
-{
-    uint8_t prog_delay;             /**< Programme delay. */
-} ble_sch_config_t;
+#if defined ( __CC_ARM )
 
-/** @brief GR55XX Chip configure defination */
-typedef struct
-{
-    ble_slp_config_t ble_slp_cfg;    /**< BLE Sleep configure. */
-    ble_sch_config_t ble_sch_cfg;    /**< BLE Sch configure. */
-} gr55xx_chip_config_t;
-/** @} */
+#ifndef __STATIC_FORCEINLINE
+#define __STATIC_FORCEINLINE                   static __forceinline     /**< Static inline define */
+#endif
+
+#elif defined ( __GNUC__ )
+
+#ifndef __STATIC_FORCEINLINE
+#define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline /**< Static inline define */
+#endif
+
+#else
+
+#ifndef __STATIC_FORCEINLINE
+#define __STATIC_FORCEINLINE                   __STATIC_INLINE          /**< Static inline define */
+#endif
 
 #endif
-/** @} */
-/** @} */
+
+
+/* ****************************************************************** */
+/** 
+ * @brief 
+ * -
+ * @param timer_mode 
+ * @param load_count 
+ */
+extern void hal_pwr_config_timer_wakeup_ext(uint8_t timer_mode, uint32_t load_count);
+/** 
+ * @brief 
+ * -
+ * @param pwr_slp_elapsed_hander 
+ */
+extern void hal_pwr_register_timer_elaspsed_handler(pwr_slp_elapsed_handler_t pwr_slp_elapsed_hander);
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __GR55xx_DELAY_H__ */

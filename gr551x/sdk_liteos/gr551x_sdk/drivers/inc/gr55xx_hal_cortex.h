@@ -52,12 +52,12 @@
 #ifndef __GR55xx_HAL_CORTEX_H__
 #define __GR55xx_HAL_CORTEX_H__
 
+/* Includes ------------------------------------------------------------------*/
+#include "gr55xx_hal_def.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Includes ------------------------------------------------------------------*/
-#include "gr55xx_hal_def.h"
 
 /* Exported types ------------------------------------------------------------*/
 

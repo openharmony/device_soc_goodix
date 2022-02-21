@@ -53,14 +53,14 @@
 #ifndef __GR55xx_HAL_H__
 #define __GR55xx_HAL_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx.h"
 #include "gr55xx_hal_conf.h"
 #include "gr55xx_delay.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** @addtogroup HAL_HAL_CALLBACK_STRUCTURES Callback Structures
   * @{

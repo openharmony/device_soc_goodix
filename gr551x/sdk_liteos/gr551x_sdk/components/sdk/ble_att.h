@@ -84,7 +84,7 @@
 #define BLE_ATT_EXT_RFU                         0xFFFC    /**< Characteristic Extended Property:  Reserved for Future Use. */
 /** @} */
 
-/**@brief Characteristic Base UUID. */
+/** @brief Characteristic Base UUID. */
 #define BLE_ATT_BT_UUID_128             {0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, \
                                          0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 /** @brief  Change a 16-bit UUID array to a 128-bit one (append 0).
@@ -104,7 +104,7 @@
 /** @addtogroup BLE_ATT_ENUMERATIONS Enumerations
  * @{ */
 
-/**@brief Attribute Specification Definitions: Common 16-bit (Universal Unique Identifier). */
+/** @brief Attribute Specification Definitions: Common 16-bit (Universal Unique Identifier). */
 typedef enum
 {
     BLE_ATT_INVALID_UUID                                         = BLE_ATT_UUID_16(0x0000), /**< Invalid UUID. */

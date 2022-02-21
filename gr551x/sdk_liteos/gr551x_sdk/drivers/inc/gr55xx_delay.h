@@ -38,12 +38,11 @@
 #ifndef __GR55xx_DELAY_H__
 #define __GR55xx_DELAY_H__
 
+#include "gr55xx.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "gr55xx.h"
-
 
 #if defined ( __CC_ARM )
 

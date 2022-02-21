@@ -238,7 +238,7 @@ typedef enum
 }gattc_prf_reg_evt_t;
 
 
-/**@brief GATTC Profile callback Structures. */
+/** @brief GATTC Profile callback Structures. */
 typedef struct
 {
     void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t * p_prim_srvc_disc);                /**< Primary Service Discovery Response callback. */

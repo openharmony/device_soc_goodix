@@ -52,12 +52,12 @@
 #ifndef __GR55xx_LL_ISO7816_H__
 #define __GR55xx_LL_ISO7816_H__
 
+/* Includes ------------------------------------------------------------------*/
+#include "gr55xx.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Includes ------------------------------------------------------------------*/
-#include "gr55xx.h"
 
 #if defined (ISO7816)
 /** @defgroup ISO7816_LL_STRUCTURES Structures

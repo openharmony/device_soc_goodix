@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_SPI_H__
 #define __GR55xx_HAL_SPI_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_spi.h"
 #include "gr55xx_hal_def.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_SPI_ENUMERATIONS Enumerations

@@ -52,14 +52,14 @@
 #ifndef __GR55xx_HAL_ADC_H__
 #define __GR55xx_HAL_ADC_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_adc.h"
 #include "gr55xx_hal_def.h"
 #include "gr55xx_hal_dma.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_ADC_ENUMERATIONS Enumerations

@@ -125,14 +125,14 @@ typedef struct
     uint8_t        *p_value;            /**< Value to write. */
 } gattc_write_no_resp_t;
 
-/**@brief Read Multiple Handles. */
+/** @brief Read Multiple Handles. */
 typedef struct
 {
     uint16_t    handle;    /**< Attribute handle. */
     uint16_t    len;       /**< Known value: length of the handle (len shall not be set to 0). */
 } read_multiple_t;
 
-/**@brief GATTC Read Multiple. */
+/** @brief GATTC Read Multiple. */
 typedef struct
 {
     uint16_t            handle_count;      /**< Handle count of the multiple attributes to be read. */
@@ -140,7 +140,7 @@ typedef struct
 } gattc_read_multiple_t;
 
 
-/**@brief GATTC Browse information about Characteristic. */
+/** @brief GATTC Browse information about Characteristic. */
 typedef struct
 {
     uint8_t     attr_type;                      /**< Attribute type. See @ref BLE_GATTC_BROWSE_ATTR_CHAR for Characteristic Declaration. */
@@ -150,7 +150,7 @@ typedef struct
     uint8_t     uuid[BLE_ATT_UUID_128_LEN];     /**< Characteristic UUID. */
 } gattc_browse_attr_char_t;
 
-/**@brief GATTC Browse information about Included Service. */
+/** @brief GATTC Browse information about Included Service. */
 typedef struct
 {
     uint8_t  attr_type;                      /**< Attribute type. See @ref BLE_GATTC_BROWSE_INC_SRVC for Included Service Information. */
@@ -160,7 +160,7 @@ typedef struct
     uint16_t end_hdl;                        /**< Included Service end handle. */
 } gattc_browse_inc_srvc_t;
 
-/**@brief GATTC Browse information about Attribute. */
+/** @brief GATTC Browse information about Attribute. */
 typedef struct
 {
     uint8_t  attr_type;                     /**< Attribute type. See @ref BLE_GATTC_BROWSE_ATTR_VAL for Attribute Value. See @ref BLE_GATTC_BROWSE_ATTR_DESC for Attribute Descriptor. */
@@ -168,7 +168,7 @@ typedef struct
     uint8_t  uuid[BLE_ATT_UUID_128_LEN];    /**< Characteristic UUID or Characteristic Descriptor UUID. */
 } gattc_browse_attr_t;
 
-/**@brief GATTC Browse attribute information. */
+/** @brief GATTC Browse attribute information. */
 union gattc_browse_attr_info
 {
     uint8_t                  attr_type;        /**< Attribute type. See @ref gatt_attr_t. */
@@ -177,7 +177,7 @@ union gattc_browse_attr_info
     gattc_browse_attr_t      attr;             /**< Information about Attribute. When union attr_type is @ref BLE_GATTC_BROWSE_ATTR_VAL or @ref BLE_GATTC_BROWSE_ATTR_DESC. */
 };
 
-/**@brief GATTC Browse service(s) indication. */
+/** @brief GATTC Browse service(s) indication. */
 typedef struct
 {
     uint8_t  uuid_len;                                  /**< Service UUID length. */
@@ -190,7 +190,7 @@ typedef struct
 
 
 
-/**@brief GATT service. */
+/** @brief GATT service. */
 typedef struct
 {
     uint16_t  start_hdl;            /**< Start handle. */
@@ -199,7 +199,7 @@ typedef struct
     uint8_t  *p_uuid;               /**< Service UUID. */
 } ble_gattc_service_t;
 
-/**@brief GATT include. */
+/** @brief GATT include. */
 typedef struct
 {
     uint16_t  attr_hdl;               /**< Attribute handle. */
@@ -209,7 +209,7 @@ typedef struct
     uint8_t  *p_uuid;                 /**< Service UUID. */
 } ble_gattc_include_t;
 
-/**@brief GATT characteristic. */
+/** @brief GATT characteristic. */
 typedef struct
 {
     uint16_t  handle_decl;            /**< Handle of the Characteristic Declaration. */
@@ -219,7 +219,7 @@ typedef struct
     uint8_t  *p_uuid;                 /**< Characteristic UUID. */
 } ble_gattc_char_t;
 
-/**@brief GATT descriptor. */
+/** @brief GATT descriptor. */
 typedef struct
 {
     uint16_t  attr_hdl;               /**< Attribute handle. */
@@ -227,35 +227,35 @@ typedef struct
     uint8_t  *p_uuid;                 /**< Descriptor UUID. */
 } ble_gattc_desc_t;
 
-/**@brief GATT service discovery. */
+/** @brief GATT service discovery. */
 typedef struct
 {
     uint16_t            count;                        /**< Service count. */
     ble_gattc_service_t services[__ARRAY_EMPTY];      /**< Service data. */
 }ble_gattc_srvc_disc_t;
 
-/**@brief GATT include discovery. */
+/** @brief GATT include discovery. */
 typedef struct
 {
     uint16_t            count;                       /**< Include count. */
     ble_gattc_include_t includes[__ARRAY_EMPTY];     /**< Include data. */
 }ble_gattc_incl_disc_t;
 
-/**@brief GATT characteristic discovery. */
+/** @brief GATT characteristic discovery. */
 typedef struct
 {
     uint16_t            count;                  /**< Characteristic count. */
     ble_gattc_char_t    chars[__ARRAY_EMPTY];   /**< Characteristic data. */
 }ble_gattc_char_disc_t;
 
-/**@brief GATT characteristic descriptor discovery. */
+/** @brief GATT characteristic descriptor discovery. */
 typedef struct
 {
     uint16_t            count;                      /**< Descriptor count. */
     ble_gattc_desc_t    char_descs[__ARRAY_EMPTY];  /**< Descriptor data. */
 }ble_gattc_char_desc_disc_t;
 
-/**@brief GATT Client Read value. */
+/** @brief GATT Client Read value. */
 typedef struct
 {
     uint16_t  handle;                 /**< Attribute handle. */
@@ -264,7 +264,7 @@ typedef struct
     uint8_t  *p_value;                /**< Pointer to the attribute value data. */
 } ble_gattc_read_value_t;
 
-/**@brief GATT value Read response. */
+/** @brief GATT value Read response. */
 typedef struct
 {
     uint16_t                    count;                 /**< Value Count. */
@@ -272,14 +272,14 @@ typedef struct
 }ble_gattc_read_rsp_t;
 
 
-/**@brief GATT Client Write. */
+/** @brief GATT Client Write. */
 typedef struct
 {
     uint16_t handle;            /**< Attribute handle. */
 } ble_gattc_write_t;
 
 
-/**@brief GATTC Notification and Indication value indication. */
+/** @brief GATTC Notification and Indication value indication. */
 typedef struct
 {
     gatt_evt_type_t  type;               /**< Event type. */
@@ -288,7 +288,7 @@ typedef struct
     uint8_t         *p_value;            /**< Pointer to the attribute value data. */
 } ble_gattc_ntf_ind_t;
 
-/**@brief GATTC Event callback Structures. */
+/** @brief GATTC Event callback Structures. */
 typedef struct
 {
     void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t * p_prim_srvc_disc);                   /**< Primary Service Discovery Response callback. */

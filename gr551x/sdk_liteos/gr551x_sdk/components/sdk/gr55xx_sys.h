@@ -75,38 +75,38 @@
  * @defgroup GR55XX_SYS_TYPEDEF Typedefs
  * @{
  */
-/**@brief The function pointers to register event callback. */
+/** @brief The function pointers to register event callback. */
 typedef void (*callback_t)(int);
 
 /** @brief Timer callback type. */
 typedef void (*timer_callback_t)(uint8_t timer_id);
 
-/**@brief Printf callback type. */
+/** @brief Printf callback type. */
 typedef int (*vprintf_callback_t) (const char *fmt, va_list argp);
 
-/**@brief Low power clock update function type. */
+/** @brief Low power clock update function type. */
 typedef void (*void_func_t)(void);
 
-/**@brief Low power clock update function type with resturn. */
+/** @brief Low power clock update function type with resturn. */
 typedef int (*int_func_t)(void);
 
-/**@brief Function type for saving user context before deep sleep. */
+/** @brief Function type for saving user context before deep sleep. */
 typedef void (*sys_context_func_t)(void);
 
-/**@brief Error assert callback type. */
+/** @brief Error assert callback type. */
 typedef void (*assert_err_cb_t)(const char *expr, const char *file, int line);
 
-/**@brief Parameter assert callback type. */
+/** @brief Parameter assert callback type. */
 typedef void (*assert_param_cb_t)(int param0, int param1, const char *file, int line);
 
-/**@brief Warning assert callback type. */
+/** @brief Warning assert callback type. */
 typedef void (*assert_warn_cb_t)(int param0, int param1, const char *file, int line);
 /** @} */
 
 /** @addtogroup GR55XX_SYS_ENUMERATIONS Enumerations
  * @{
  */
-/**@brief Definition of Device SRAM Size Enumerations. */
+/** @brief Definition of Device SRAM Size Enumerations. */
 typedef enum
 {
     SYS_DEV_SRAM_64K           = 0x02,    /**< Supported 64K SRAM.                   */
@@ -114,7 +114,7 @@ typedef enum
     SYS_DEV_SRAM_256K          = 0x00,    /**< Supported 256K SRAM.                  */
 } sram_size_t;
 
-/**@brief package type. */
+/** @brief package type. */
 typedef enum
 {
     PACKAGE_NONE            = 0,    /**< Package unused. */
@@ -132,7 +132,7 @@ typedef enum
 /** @addtogroup GR55XX_SYS_STRUCTURES Structures
  * @{
  */
-/**@brief SDK version definition. */
+/** @brief SDK version definition. */
 typedef struct
 {
     uint8_t  major;                         /**< Major version. */
@@ -141,7 +141,7 @@ typedef struct
     uint32_t commit_id;                     /**< commit ID. */
 }sdk_version_t;
 
-/**@brief Assert callbacks.*/
+/** @brief Assert callbacks.*/
 typedef struct
 {
     assert_err_cb_t   assert_err_cb;    /**< Assert error type callback. */
@@ -149,7 +149,7 @@ typedef struct
     assert_warn_cb_t  assert_warn_cb;   /**< Assert warning type callback. */
 }sys_assert_cb_t;
 
-/**@brief Link RX information definition. */
+/** @brief Link RX information definition. */
 typedef struct
 {
     uint32_t rx_total_cnt;     /**< Counts of RX times. */
@@ -161,14 +161,14 @@ typedef struct
     uint32_t rx_normal_cnt;    /**< Counts of RX normal times. */
 } link_rx_info_t;
 
-/**@brief RF trim parameter information definition. */
+/** @brief RF trim parameter information definition. */
 typedef struct
 {
     int8_t  rssi_cali;    /**< RSSI calibration. */
     int8_t  tx_power;     /**< TX power. */
 } rf_trim_info_t;
 
-/**@brief ADC trim parameter information definition. */
+/** @brief ADC trim parameter information definition. */
 typedef struct
 {
     uint16_t adc_temp;                /**< ADC TEMP. */
@@ -184,7 +184,7 @@ typedef struct
     uint16_t offset_ext_1p0;          /**< External reference 1.0v. */ 
 } adc_trim_info_t;
 
-/**@brief PMU trim parameter information definition. */
+/** @brief PMU trim parameter information definition. */
 typedef struct
 {
     uint8_t  io_ldo_bypass;    /**< IO LDO bypass */

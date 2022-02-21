@@ -56,7 +56,7 @@
 #define DFU_ADV_MAX_LENGTH  18      /**< The max length of advertisement is 18 bytes. */
 #define RECEIVE_MAX_LEN     2048    /**< The max length of received data is 2048 bytes. */
 
-/**@defgroup DFU_CMD_DISABLE DFU cmd disable option (bitmask)
+/** @defgroup DFU_CMD_DISABLE DFU cmd disable option (bitmask)
  * @{ */
 #define DFU_WRITE_RAM_DISABLE           0x0001     /**< Disable DFU write ram. */      
 #define DFU_READ_RAM_DISABLE            0x0002     /**< Disable DFU read ram. */  
@@ -68,14 +68,14 @@
 #define DFU_OPERATE_EFUSE_DISABLE       0x0080     /**< Disable DFU operate EFUSE. */  
 #define DFU_CONFIG_SPI_FLASH_DISABLE    0x0100     /**< Disable DFU config spi flash. */  
 #define DFU_OPERATE_REG_DISABLE         0x0200     /**< Disable DFU operate register. */  
-/**@} */
+/** @} */
 
 /** @} */
 
-/**@addtogroup DFU_ENUMERATIONS Enumerations
+/** @addtogroup DFU_ENUMERATIONS Enumerations
  * @{ */
 
-/**@brief UART baudrate definition. */
+/** @brief UART baudrate definition. */
 typedef enum
 {
     DFU_UART_BAUDRATE_9600          = 9600,     /**< Baudrate 9600. */
@@ -87,7 +87,7 @@ typedef enum
     DFU_UART_BAUDRATE_921600        = 921600,   /**< Baudrate 921600. */
 } dfu_uart_baudrate_t;
 
-/**@brief UART data bit definition. */
+/** @brief UART data bit definition. */
 typedef enum
 {
     DFU_UART_DATA_BIT_5             = 0,        /**< Data bit 5. */
@@ -96,7 +96,7 @@ typedef enum
     DFU_UART_DATA_BIT_8,                        /**< Data bit 8. */
 } dfu_uart_data_bit_t;
 
-/**@brief UART stop bit definition. */
+/** @brief UART stop bit definition. */
 typedef enum
 {
     DFU_UART_STOP_BIT_1             = 0,        /**< Stop bit 1. Avaliable when data bit = 5,6,7,8. */
@@ -104,7 +104,7 @@ typedef enum
     DFU_UART_STOP_BIT_2,                        /**< Stop bit 2. Avaliable when data bit = 6,7,8. */
 } dfu_uart_stop_bit_t;
 
-/**@brief UART parity definition. */
+/** @brief UART parity definition. */
 typedef enum
 {
     DFU_UART_PARITY_NONE            = 0,        /**< Parity none. */
@@ -114,7 +114,7 @@ typedef enum
     DFU_UART_PARITY_SP_1,                       /**< Parity stick 1. */
 } dfu_uart_parity_bit_t;
 
-/**@brief UART pin group definition. */
+/** @brief UART pin group definition. */
 typedef enum
 {
     DFU_UART_PIN_GROUP_0 = 0,              /**< GPIO0_PIN3  -> UART0_TXD(MUX0),GPIO0_PIN4  -> UART0_RXD(MUX0)*/
@@ -125,7 +125,7 @@ typedef enum
     DFU_UART_PIN_GROUP_5,                  /**< GPIO0_PIN9  -> UART1_TXD(MUX3),GPIO0_PIN8  -> UART1_RXD(MUX3)*/ 
 } dfu_uart_pin_group_t;
 
-/**@brief DFU informatica status. */
+/** @brief DFU informatica status. */
 typedef enum
 {
     DFU_INFO_DISABLE = 0x5775,                 /**< DFU Config Info Disable. */
@@ -134,10 +134,10 @@ typedef enum
 } dfu_info_state;
 /** @} */
 
-/**@addtogroup DFU_STRUCTURES Structures
+/** @addtogroup DFU_STRUCTURES Structures
  * @{ */
 
-/**@brief BootLoader information definition. */
+/** @brief BootLoader information definition. */
 typedef struct
 {
     uint32_t bin_size;                      /**< Firmware Size. */
@@ -156,7 +156,7 @@ typedef struct
 } boot_info_t;
 
 
-/**@brief DFU uart config definition. */
+/** @brief DFU uart config definition. */
 typedef struct
 {
     dfu_info_state        state;              /**< DFU UART Enable or Disable. This parameter can be a value of @ref dfu_info_state.*/
@@ -167,7 +167,7 @@ typedef struct
     dfu_uart_pin_group_t  pin_group;          /**< Uart pin group. This parameter can be a value of @ref dfu_uart_pin_group_t.*/
 } dfu_uart_info_t;
 
-/**@brief DFU Advertisement name config definition. */
+/** @brief DFU Advertisement name config definition. */
 typedef struct
 {
     dfu_info_state state;                          /**< If a set name is used, this parameter can be a value of @ref dfu_info_state.*/
@@ -175,7 +175,7 @@ typedef struct
     uint16_t       adv_name_length;                /**< The length of the name. */
 } dfu_adv_name_info_t;
 
-/**@brief DFU NVDS init info definition. */
+/** @brief DFU NVDS init info definition. */
 typedef struct
 {
     dfu_info_state  state;                         /**< If NVDS init is required, this parameter can be a value of @ref dfu_info_state.*/
@@ -183,7 +183,7 @@ typedef struct
     uint32_t        start_address;                 /**< NVDS start address. */
 }dfu_nvds_info_t;
 
-/**@brief DFU cmd disable info definition. */
+/** @brief DFU cmd disable info definition. */
 typedef struct
 {
     dfu_info_state state;                         /**< If DFU cmd disable config is required, this parameter can be a value of @ref dfu_info_state.*/
@@ -191,7 +191,7 @@ typedef struct
 }dfu_cmd_disable_t;
 
 
-/**@brief DFU used functions config definition. */
+/** @brief DFU used functions config definition. */
 typedef struct
 {
     void (*dfu_ble_send_data)(uint8_t *p_data, uint16_t length);                                  /**< The function is used to send data to master by BLE. */
@@ -205,7 +205,7 @@ typedef struct
 	void (*dfu_flash_get_info)(uint32_t *id, uint32_t *size);                                     /**< The function is used to get the flash id and size. */
 } dfu_func_t;
 
-/**@brief SPI used functions config definition. */
+/** @brief SPI used functions config definition. */
 typedef struct
 {
     void (*dfu_spi_flash_init)(uint8_t *p_data);                                                   /**< The function is used to config flash spi. */
@@ -217,7 +217,7 @@ typedef struct
 }dfu_spi_flash_func_t;
 
 
-/**@brief DFU program state callback definition. */
+/** @brief DFU program state callback definition. */
 typedef struct
 {
     void (*dfu_program_start_callback)(void);          /**<DFU program start callback. */

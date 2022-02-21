@@ -89,7 +89,7 @@ typedef enum
 /** @addtogroup BLE_COMMEN_STRUCTURES Structures
  * @{
  */
-/**@brief The app callbacks for GAP, GATT, SM and L2CAP. */
+/** @brief The app callbacks for GAP, GATT, SM and L2CAP. */
 typedef struct
 {
     app_ble_init_cmp_cb_t        app_ble_init_cmp_callback;         /**< Callback function for BLE initialization completed */
@@ -99,7 +99,7 @@ typedef struct
     sec_cb_fun_t                *app_sec_callback;                  /**< Callback function for SM*/
 }app_callback_t;
 
-/**@brief The table contains the pointers to four arrays which are used
+/** @brief The table contains the pointers to four arrays which are used
  * as heap memory by BLE stack in ROM. The size of four arrays depends on
  * the number of connections and the number of attributes of profiles. */
 typedef struct 
@@ -120,7 +120,7 @@ typedef struct
     uint32_t   conn_size;       /**< The size of the array for connection heap */
 }stack_heaps_table_t;
 
-/**@brief The function pointers for HCI UART. */
+/** @brief The function pointers for HCI UART. */
 typedef struct
 {
     void (*init)(void);                                                                             /**< Initialize UART. */
@@ -136,7 +136,7 @@ typedef struct
  * @{
  */
 
-/**@brief The BLE sync event callback. */
+/** @brief The BLE sync event callback. */
 typedef void (*ble_sync_evt_cb_t)(uint32_t sync_cnt, uint16_t sync_period);
 /** @} */
 

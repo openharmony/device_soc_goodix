@@ -52,12 +52,13 @@
 #ifndef __GR55XX_LL_AON_WDT_H__
 #define __GR55XX_LL_AON_WDT_H__
 
+/* Includes ------------------------------------------------------------------*/
+#include "gr55xx.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
-#include "gr55xx.h"
 
 #if defined (AON)
 
@@ -174,7 +175,8 @@ __STATIC_INLINE uint32_t ll_aon_wdt_get_counter(void)
   */
 __STATIC_INLINE void ll_aon_wdt_set_alarm_counter(uint32_t counter)
 {
-    MODIFY_REG(AON->EXT_WKUP_CTL, AON_EXT_WKUP_CTL_WDT_ALARM, (counter << AON_EXT_WKUP_CTL_WDT_ALARM_Pos) & AON_EXT_WKUP_CTL_WDT_ALARM);
+    MODIFY_REG(AON->EXT_WKUP_CTL, AON_EXT_WKUP_CTL_WDT_ALARM, \
+               (counter << AON_EXT_WKUP_CTL_WDT_ALARM_Pos) & AON_EXT_WKUP_CTL_WDT_ALARM);
 }
 
 /**

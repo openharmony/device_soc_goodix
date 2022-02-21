@@ -52,13 +52,13 @@
 #ifndef __GR55xx_HAL_AON_WDT_H__
 #define __GR55xx_HAL_AON_WDT_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_aon_wdt.h"
 #include "gr55xx_hal_def.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_AON_WDT_STRUCTURES Structures
