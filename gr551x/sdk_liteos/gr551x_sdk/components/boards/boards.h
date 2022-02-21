@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef __BOARDS_DEFINE_H
-#define __BOARDS_DEFINE_H
+#ifndef __BOARD_CONFIG_H__
+#define __BOARD_CONFIG_H__
 
 #include "custom_config.h"
 

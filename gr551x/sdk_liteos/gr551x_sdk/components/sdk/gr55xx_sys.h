@@ -107,16 +107,14 @@ typedef void (*assert_warn_cb_t)(int param0, int param1, const char *file, int l
  * @{
  */
 /** @brief Definition of Device SRAM Size Enumerations. */
-typedef enum
-{
+typedef enum {
     SYS_DEV_SRAM_64K           = 0x02,    /**< Supported 64K SRAM.                   */
     SYS_DEV_SRAM_128K          = 0x01,    /**< Supported 128K SRAM.                  */
     SYS_DEV_SRAM_256K          = 0x00,    /**< Supported 256K SRAM.                  */
 } sram_size_t;
 
 /** @brief package type. */
-typedef enum
-{
+typedef enum {
     PACKAGE_NONE            = 0,    /**< Package unused. */
     PACKAGE_GR5515RGBD      = 1,    /**< BGA68 package. */
     PACKAGE_GR5515GGBD      = 2,    /**< BGA55 package. */
@@ -133,25 +131,22 @@ typedef enum
  * @{
  */
 /** @brief SDK version definition. */
-typedef struct
-{
+typedef struct {
     uint8_t  major;                         /**< Major version. */
     uint8_t  minor;                         /**< Minor version. */
     uint16_t build;                         /**< Build number. */
     uint32_t commit_id;                     /**< commit ID. */
-}sdk_version_t;
+} sdk_version_t;
 
 /** @brief Assert callbacks.*/
-typedef struct
-{
+typedef struct {
     assert_err_cb_t   assert_err_cb;    /**< Assert error type callback. */
     assert_param_cb_t assert_param_cb;  /**< Assert parameter error type callback. */
     assert_warn_cb_t  assert_warn_cb;   /**< Assert warning type callback. */
-}sys_assert_cb_t;
+} sys_assert_cb_t;
 
 /** @brief Link RX information definition. */
-typedef struct
-{
+typedef struct {
     uint32_t rx_total_cnt;     /**< Counts of RX times. */
     uint32_t rx_sync_err_cnt;  /**< Counts of RX sync error times. */
     uint32_t rx_crc_err_cnt;   /**< Counts of RX crc error times. */
@@ -162,31 +157,28 @@ typedef struct
 } link_rx_info_t;
 
 /** @brief RF trim parameter information definition. */
-typedef struct
-{
+typedef struct {
     int8_t  rssi_cali;    /**< RSSI calibration. */
     int8_t  tx_power;     /**< TX power. */
 } rf_trim_info_t;
 
 /** @brief ADC trim parameter information definition. */
-typedef struct
-{
+typedef struct {
     uint16_t adc_temp;                /**< ADC TEMP. */
     uint16_t slope_int_0p8;           /**< Internal reference 0.8v. */
-    uint16_t offset_int_0p8;          /**< Internal reference 0.8v. */ 
-    uint16_t slope_int_1p2;           /**< Internal reference 1.2v. */ 
-    uint16_t offset_int_1p2;          /**< Internal reference 1.2v. */ 
-    uint16_t slope_int_1p6;           /**< Internal reference 1.6v. */ 
-    uint16_t offset_int_1p6;          /**< Internal reference 1.6v. */ 
-    uint16_t slope_int_2p0;           /**< Internal reference 2.0v. */ 
-    uint16_t offset_int_2p0;          /**< Internal reference 2.0v. */ 
-    uint16_t slope_ext_1p0;           /**< External reference 1.0v. */ 
-    uint16_t offset_ext_1p0;          /**< External reference 1.0v. */ 
+    uint16_t offset_int_0p8;          /**< Internal reference 0.8v. */
+    uint16_t slope_int_1p2;           /**< Internal reference 1.2v. */
+    uint16_t offset_int_1p2;          /**< Internal reference 1.2v. */
+    uint16_t slope_int_1p6;           /**< Internal reference 1.6v. */
+    uint16_t offset_int_1p6;          /**< Internal reference 1.6v. */
+    uint16_t slope_int_2p0;           /**< Internal reference 2.0v. */
+    uint16_t offset_int_2p0;          /**< Internal reference 2.0v. */
+    uint16_t slope_ext_1p0;           /**< External reference 1.0v. */
+    uint16_t offset_ext_1p0;          /**< External reference 1.0v. */
 } adc_trim_info_t;
 
 /** @brief PMU trim parameter information definition. */
-typedef struct
-{
+typedef struct {
     uint8_t  io_ldo_bypass;    /**< IO LDO bypass */
     uint8_t  io_ldo_vout;      /**< IO LDO Vout. */
     uint8_t  dig_ldo_64m;      /**< DIG LDO 64m. */
@@ -501,7 +493,8 @@ uint32_t sys_us_2_lpcycles(uint32_t us);
  * The function converts a duration in lp cycles into a duration in half μs, according to the
  * low power clock frequency (32768Hz or 32000Hz).
  * @param[in]     lpcycles:    Duration in lp cycles.
- * @param[in,out] error_corr:  Insert and retrieve error created by truncating the LP Cycle Time to a half μs (in half μs).
+ * @param[in,out] error_corr:  Insert and retrieve error created by truncating the LP Cycle Time to a half μs
+ *                             (in half μs).
  *
  * @return Duration in half μs
  ****************************************************************************************
@@ -515,7 +508,7 @@ uint32_t sys_lpcycles_2_hus(uint32_t lpcycles, uint32_t *error_corr);
  *
  * @param[in] period_hus: The wake up duration of BLE when BLE is IDEL.
  *            Range 0x00000000-0xFFFFFFFF (in unit of μs).
- *                               
+ *
  * @retval SDK_SUCCESS: Operation is Success.
  *****************************************************************************************
  */
@@ -529,7 +522,7 @@ uint16_t sys_ble_heartbeat_period_set(uint32_t period_hus);
  *
  * @param[in] p_period_hus: Pointer to the wake up duration.
  *            Range 0x00000000-0xFFFFFFFF (in unit of μs).
- *                               
+ *
  * @retval SDK_SUCCESS: Operation is Success.
  *****************************************************************************************
  */

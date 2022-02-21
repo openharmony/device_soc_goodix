@@ -68,8 +68,7 @@ extern "C" {
 /**
   * @brief  CGC Bit Open and Bit Close Enumerations
   */
-typedef enum
-{
+typedef enum {
     CGC_CLK_ON  = 0U,    /**< Turn on the clock.*/
     CGC_CLK_OFF = 1U,    /**< Turn off the clock.*/
 } cgc_clk_state_t;
@@ -83,8 +82,7 @@ typedef enum
 /**
   * @brief   CGC init structure definition
   */
-typedef struct _cgc_init
-{
+typedef struct _cgc_init {
     uint32_t wfi_clk;       /**< Specifies the blocks that automatically closes the clock.
                                  This parameter can be a combination of group CGC_LL_EC_WFI_CLK0 */
 
@@ -108,14 +106,14 @@ typedef struct _cgc_init
 /** @defgroup CGC_auto_clk Automatic Turn off clocks
   * @{
   */
-#define CGC_WFI_SECU_HCLK                    ((uint32_t)0x00000001U)     /**< Hclk for all security blocks */  
-#define CGC_WFI_SIM_HCLK                     ((uint32_t)0x00000002U)     /**< Hclk for sim card interface  */  
-#define CGC_WFI_HTB_HCLK                     ((uint32_t)0x00000004U)     /**< Hclk for hopping table       */ 
-#define CGC_WFI_PWM_HCLK                     ((uint32_t)0x00000008U)     /**< Hclk for PWM                 */ 
-#define CGC_WFI_ROM_HCLK                     ((uint32_t)0x00000010U)     /**< Hclk for ROM                 */ 
-#define CGC_WFI_SNSADC_HCLK                  ((uint32_t)0x00000020U)     /**< Hclk for sense ADC           */ 
-#define CGC_WFI_GPIO_HCLK                    ((uint32_t)0x00000040U)     /**< Hclk for GPIOs               */ 
-#define CGC_WFI_DMA_HCLK                     ((uint32_t)0x00000080U)     /**< Hclk for DMA engine          */ 
+#define CGC_WFI_SECU_HCLK                    ((uint32_t)0x00000001U)     /**< Hclk for all security blocks */
+#define CGC_WFI_SIM_HCLK                     ((uint32_t)0x00000002U)     /**< Hclk for sim card interface  */
+#define CGC_WFI_HTB_HCLK                     ((uint32_t)0x00000004U)     /**< Hclk for hopping table       */
+#define CGC_WFI_PWM_HCLK                     ((uint32_t)0x00000008U)     /**< Hclk for PWM                 */
+#define CGC_WFI_ROM_HCLK                     ((uint32_t)0x00000010U)     /**< Hclk for ROM                 */
+#define CGC_WFI_SNSADC_HCLK                  ((uint32_t)0x00000020U)     /**< Hclk for sense ADC           */
+#define CGC_WFI_GPIO_HCLK                    ((uint32_t)0x00000040U)     /**< Hclk for GPIOs               */
+#define CGC_WFI_DMA_HCLK                     ((uint32_t)0x00000080U)     /**< Hclk for DMA engine          */
 #define CGC_WFI_BLE_BRG_HCLK                 ((uint32_t)0x00000100U)     /**< Hclk for BLE MCU bridge      */
 #define CGC_WFI_APB_SUB_HCLK                 ((uint32_t)0x00000200U)     /**< Hclk for APB subsystem       */
 #define CGC_WFI_SERIAL_HCLK                  ((uint32_t)0x00000400U)     /**< Hclk for serial blocks       */
@@ -129,17 +127,17 @@ typedef struct _cgc_init
 #define CGC_WFI_ALL_CLK                      ((uint32_t)0x0002FFFFU)     /**< All clocks                   */
 /** @} */
 
-/** @defgroup CGC_force_clk Force cloks off 
+/** @defgroup CGC_force_clk Force cloks off
   * @{
   */
-#define CGC_FRC_SECU_HCLK                    ((uint32_t)0x00000001U)     /**< Hclk for all security blocks */ 
-#define CGC_FRC_SIM_HCLK                     ((uint32_t)0x00000002U)     /**< Hclk for sim card interface  */  
-#define CGC_FRC_HTB_HCLK                     ((uint32_t)0x00000004U)     /**< Hclk for hopping table       */ 
-#define CGC_FRC_PWM_HCLK                     ((uint32_t)0x00000008U)     /**< Hclk for PWM                 */ 
-#define CGC_FRC_ROM_HCLK                     ((uint32_t)0x00000010U)     /**< Hclk for ROM                 */ 
-#define CGC_FRC_SNSADC_HCLK                  ((uint32_t)0x00000020U)     /**< Hclk for sense ADC           */ 
-#define CGC_FRC_GPIO_HCLK                    ((uint32_t)0x00000040U)     /**< Hclk for GPIOs               */ 
-#define CGC_FRC_DMA_HCLK                     ((uint32_t)0x00000080U)     /**< Hclk for DMA engine          */ 
+#define CGC_FRC_SECU_HCLK                    ((uint32_t)0x00000001U)     /**< Hclk for all security blocks */
+#define CGC_FRC_SIM_HCLK                     ((uint32_t)0x00000002U)     /**< Hclk for sim card interface  */
+#define CGC_FRC_HTB_HCLK                     ((uint32_t)0x00000004U)     /**< Hclk for hopping table       */
+#define CGC_FRC_PWM_HCLK                     ((uint32_t)0x00000008U)     /**< Hclk for PWM                 */
+#define CGC_FRC_ROM_HCLK                     ((uint32_t)0x00000010U)     /**< Hclk for ROM                 */
+#define CGC_FRC_SNSADC_HCLK                  ((uint32_t)0x00000020U)     /**< Hclk for sense ADC           */
+#define CGC_FRC_GPIO_HCLK                    ((uint32_t)0x00000040U)     /**< Hclk for GPIOs               */
+#define CGC_FRC_DMA_HCLK                     ((uint32_t)0x00000080U)     /**< Hclk for DMA engine          */
 #define CGC_FRC_BLE_BRG_HCLK                 ((uint32_t)0x00000100U)     /**< Hclk for BLE MCU bridge      */
 #define CGC_FRC_APB_SUB_HCLK                 ((uint32_t)0x00000200U)     /**< Hclk for APB subsystem       */
 #define CGC_FRC_SERIAL_HCLK                  ((uint32_t)0x00000400U)     /**< Hclk for serial blocks       */
@@ -343,7 +341,6 @@ void hal_cgc_config_force_clk(uint32_t blocks, cgc_clk_state_t clk_state);
  ****************************************************************************************
  */
 cgc_clk_state_t hal_cgc_get_force_clk(uint32_t block);
-
 
 /** @} */
 

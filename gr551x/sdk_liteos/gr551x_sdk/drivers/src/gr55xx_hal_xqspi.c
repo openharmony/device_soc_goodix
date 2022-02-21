@@ -46,8 +46,7 @@ extern void hal_xqspi_register_callback(hal_xqspi_callback_t *hal_xqspi_callback
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_xqspi_callback_t xqspi_callback =
-{
+static hal_xqspi_callback_t xqspi_callback = {
     .xqspi_msp_init     = hal_xqspi_msp_init,
     .xqspi_msp_deinit   = hal_xqspi_msp_deinit
 };

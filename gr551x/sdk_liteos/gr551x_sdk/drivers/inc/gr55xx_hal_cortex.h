@@ -74,40 +74,44 @@ extern "C" {
 /**
   * @brief  MPU Region initialization structure
   */
-typedef struct _mpu_region_init_t
-{
+typedef struct _mpu_region_init_t {
     uint8_t                enable;                /**< Specifies the status of the region.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Enable                 */
+                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Enable */
 
     uint8_t                number;                /**< Specifies the number of the region to protect.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Number                 */
+                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Number */
 
-    uint32_t               base_address;          /**< Specifies the base address of the region to protect.                           */
+    uint32_t               base_address;          /**< Specifies the base address of the region to protect.           */
 
     uint8_t                size;                  /**< Specifies the size of the region to protect.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Size                   */
+                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Size   */
 
     uint8_t                subregion_disable;     /**< Specifies the number of the subregion protection to disable.
-                                                       This parameter must be a number between Min_Data = 0x00 and Max_Data = 0xFF    */
+                                                       This parameter must be a number between Min_Data = 0x00 and
+                                                       Max_Data = 0xFF */
 
     uint8_t                type_tex_field;        /**< Specifies the TEX field level.
-                                                       This parameter can be a value of @ref CORTEX_MPU_TEX_Levels                    */
+                                                       This parameter can be a value of @ref CORTEX_MPU_TEX_Levels    */
 
     uint8_t                access_permission;     /**< Specifies the region access permission type.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Region_Permission_Attributes  */
+                                                       This parameter can be a value of
+                                                       @ref CORTEX_MPU_Region_Permission_Attributes */
 
     uint8_t                disable_exec;          /**< Specifies the instruction access status.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Instruction_Access            */
+                                                       This parameter can be a value of
+                                                       @ref CORTEX_MPU_Instruction_Access */
 
     uint8_t                is_shareable;          /**< Specifies the shareability status of the protected region.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Access_Shareable              */
+                                                       This parameter can be a value of
+                                                       @ref CORTEX_MPU_Access_Shareable */
 
     uint8_t                is_cacheable;          /**< Specifies the cacheable status of the region protected.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Access_Cacheable              */
+                                                       This parameter can be a value of
+                                                       @ref CORTEX_MPU_Access_Cacheable */
 
     uint8_t                is_bufferable;         /**< Specifies the bufferable status of the protected region.
-                                                       This parameter can be a value of @ref CORTEX_MPU_Access_Bufferable             */
-
+                                                       This parameter can be a value of
+                                                       @ref CORTEX_MPU_Access_Bufferable */
 } mpu_region_init_t;
 
 /** @} */
@@ -190,7 +194,7 @@ typedef struct _mpu_region_init_t
 /** @defgroup CORTEX_MPU_Access_Cacheable CORTEX MPU Instruction Access Cacheable
   * @{
   */
-#define  MPU_ACCESS_CACHEABLE         ((uint8_t)0x01U)  /**< MPU Instruction Access Cacheable    */
+#define  MPU_ACCESS_CACHEABLE         ((uint8_t)0x01U)  /**< MPU Instruction Access Cacheable     */
 #define  MPU_ACCESS_NOT_CACHEABLE     ((uint8_t)0x00U)  /**< MPU Instruction Access Not Cacheable */
 /** @} */
 
@@ -247,7 +251,7 @@ typedef struct _mpu_region_init_t
   */
 #define  MPU_REGION_NO_ACCESS      ((uint8_t)0x00U)   /**< All accesses generate a permission fault */
 #define  MPU_REGION_PRIV_RW        ((uint8_t)0x01U)   /**< Access from privileged software only */
-#define  MPU_REGION_PRIV_RW_URO    ((uint8_t)0x02U)   /**< Writes by unprivileged software generate a permission fault */
+#define  MPU_REGION_PRIV_RW_URO    ((uint8_t)0x02U)   /**< Write by unprivileged software generate a permission fault */
 #define  MPU_REGION_FULL_ACCESS    ((uint8_t)0x03U)   /**< Full access */
 #define  MPU_REGION_PRIV_RO        ((uint8_t)0x05U)   /**< Reads by privileged software only */
 #define  MPU_REGION_PRIV_RO_URO    ((uint8_t)0x06U)   /**< Read only, by privileged or unprivileged software */
@@ -502,7 +506,8 @@ void hal_nvic_set_priority_grouping(uint32_t priority_group);
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  * @param[in]  preempt_priority: The pre-emption priority for the IRQn channel.
  *         This parameter can be a value between 0 and 127 as described in the table CORTEX_NVIC_Priority_Table.
  *         A lower priority value indicates a higher priority
@@ -522,7 +527,8 @@ void hal_nvic_set_priority(IRQn_Type IRQn, uint32_t preempt_priority, uint32_t s
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  ****************************************************************************************
  */
 void hal_nvic_enable_irq(IRQn_Type IRQn);
@@ -533,7 +539,8 @@ void hal_nvic_enable_irq(IRQn_Type IRQn);
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  ****************************************************************************************
  */
 void hal_nvic_disable_irq(IRQn_Type IRQn);
@@ -605,7 +612,8 @@ uint32_t hal_nvic_get_priority_grouping(void);
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration.
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  * @param[in]   priority_group: The priority grouping bits length.
  *         This parameter can be one of the following values:
  *         @arg @ref NVIC_PRIORITYGROUP_0 0 bit  for pre-emption priority,
@@ -628,7 +636,8 @@ uint32_t hal_nvic_get_priority_grouping(void);
  * @param[in]  p_sub_priority: Pointer on the Subpriority value (starting from 0).
  ****************************************************************************************
  */
-void hal_nvic_get_priority(IRQn_Type IRQn, uint32_t priority_group, uint32_t *p_preempt_priority, uint32_t *p_sub_priority);
+void hal_nvic_get_priority(IRQn_Type IRQn, uint32_t priority_group, uint32_t *p_preempt_priority,
+                           uint32_t *p_sub_priority);
 
 /**
  ****************************************************************************************
@@ -636,7 +645,8 @@ void hal_nvic_get_priority(IRQn_Type IRQn, uint32_t priority_group, uint32_t *p_
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  ****************************************************************************************
  */
 void hal_nvic_set_pending_irq(IRQn_Type IRQn);
@@ -648,7 +658,8 @@ void hal_nvic_set_pending_irq(IRQn_Type IRQn);
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  *
  * @return status
  *             - 0  Interrupt status is not pending.
@@ -663,7 +674,8 @@ uint32_t hal_nvic_get_pending_irq(IRQn_Type IRQn);
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  ****************************************************************************************
  */
 void hal_nvic_clear_pending_irq(IRQn_Type IRQn);
@@ -674,7 +686,8 @@ void hal_nvic_clear_pending_irq(IRQn_Type IRQn);
  *
  * @param[in]  IRQn: External interrupt number.
  *         This parameter can be an enumerator of IRQn_Type enumeration
- *         (For the complete GR55xx Devices IRQ Channels list, please refer to the appropriate CMSIS device file (gr55xxxx.h))
+ *         (For the complete GR55xx Devices IRQ Channels list, please refer to the
+ *         appropriate CMSIS device file (gr55xxxx.h))
  *
  * @return status
  *             - 0  Interrupt status is not pending.

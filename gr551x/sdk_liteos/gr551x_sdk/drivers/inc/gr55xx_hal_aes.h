@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief HAL AES State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_AES_STATE_RESET         = 0x00,    /**< Peripheral not initialized                            */
     HAL_AES_STATE_READY         = 0x01,    /**< Peripheral initialized and ready for use              */
     HAL_AES_STATE_BUSY          = 0x02,    /**< Peripheral in indirect mode and busy                  */
@@ -97,8 +96,7 @@ typedef enum
 /**
   * @brief AES Init Structure definition
   */
-typedef struct _aes_init
-{
+typedef struct _aes_init {
     uint32_t  key_size;         /**< 128, 192 or 256-bits key length.
                                      This parameter can be a value of @ref AES_Key_Size */
 
@@ -115,7 +113,6 @@ typedef struct _aes_init
     uint32_t  dpa_mode;         /**< DPA Mode */
 
     uint32_t *p_seed;           /**< Random seeds */
-
 } aes_init_t;
 /** @} */
 
@@ -126,15 +123,16 @@ typedef struct _aes_init
 /**
   * @brief AES handle Structure definition
   */
-typedef struct _aes_handle
-{
+typedef struct _aes_handle {
     aes_regs_t          *p_instance;            /**< AES registers base address       */
 
     aes_init_t           init;                  /**< AES operation parameters         */
 
-    uint32_t            *p_cryp_input_buffer;   /**< Pointer to CRYP processing (encryption or decryption) input buffer  */
+    uint32_t            *p_cryp_input_buffer;   /**< Pointer to CRYP processing (encryption or decryption)
+                                                     input buffer */
 
-    uint32_t            *p_cryp_output_buffer;  /**< Pointer to CRYP processing (encryption or decryption) output buffer */
+    uint32_t            *p_cryp_output_buffer;  /**< Pointer to CRYP processing (encryption or decryption)
+                                                     output buffer */
 
     uint32_t             block_size;            /**< Data size in blocks (16 bytes per block) */
 
@@ -149,7 +147,6 @@ typedef struct _aes_handle
     uint32_t             timeout;               /**< Timeout for the AES operation    */
 	
     uint32_t             retention[18];         /**< AES important register information. */
-
 } aes_handle_t;
 /** @} */
 
@@ -166,8 +163,7 @@ typedef struct _aes_handle
 /**
   * @brief HAL AES Callback function definition
   */
-typedef struct _aes_callback
-{
+typedef struct _aes_callback {
     void (*aes_msp_init)(aes_handle_t *p_aes);                  /**< AES init MSP callback                  */
     void (*aes_msp_deinit)(aes_handle_t *p_aes);                /**< AES de-init MSP callback               */
     void (*aes_error_callback)(aes_handle_t *p_aes);            /**< AES error callback                     */
@@ -241,7 +237,8 @@ typedef struct _aes_callback
 /** @defgroup AES_Interrupt_definition AES Interrupt definition
   * @{
   */
-#define AES_IT_DONE                    ((uint32_t)0x00000001)       /**< AES Encrypted or Decrypted Data Done Interrupt source */
+#define AES_IT_DONE                    ((uint32_t)0x00000001)       /**< AES Encrypted or Decrypted Data Done
+                                                                         Interrupt source */
 /** @} */
 
 /** @defgroup AES_Timeout_definition AES Timeout definition
@@ -273,7 +270,7 @@ typedef struct _aes_callback
   * @param  __HANDLE__ Specifies the AES Handle.
   * @retval None
   */
-#define __HAL_AES_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->CTRL, AES_CTRL_ENABLE)
+#define __HAL_AES_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->CTRL, AES_CTRL_ENABLE)
 
 /** @brief  Enable the AES interrupt.
   * @param  __HANDLE__ Specifies the AES Handle.
@@ -294,7 +291,8 @@ typedef struct _aes_callback
   *            @arg @ref AES_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_AES_GET_FLAG_IT(__HANDLE__, __FLAG__)            (READ_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__)) == (__FLAG__))
+#define __HAL_AES_GET_FLAG_IT(__HANDLE__, __FLAG__) \
+    (READ_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified AES interrupt flag.
   * @param  __HANDLE__ Specifies the AES interrupt Handle.
@@ -315,7 +313,8 @@ typedef struct _aes_callback
   *            @arg @ref AES_FLAG_KEY_VALID Key valid flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_AES_GET_FLAG(__HANDLE__, __FLAG__)               ((READ_BITS((__HANDLE__)->p_instance->STATUS, (__FLAG__)) != 0) ? SET : RESET)
+#define __HAL_AES_GET_FLAG(__HANDLE__, __FLAG__) \
+    ((READ_BITS((__HANDLE__)->p_instance->STATUS, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */
 
@@ -516,7 +515,8 @@ void hal_aes_msp_deinit(aes_handle_t *p_aes);
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_ecb_encrypt(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number, uint32_t *p_cypher_data, uint32_t timeout);
+hal_status_t hal_aes_ecb_encrypt(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number,
+                                 uint32_t *p_cypher_data, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -535,7 +535,8 @@ hal_status_t hal_aes_ecb_encrypt(aes_handle_t *p_aes, uint32_t *p_plain_data, ui
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_ecb_decrypt(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number, uint32_t *p_plain_data, uint32_t timeout);
+hal_status_t hal_aes_ecb_decrypt(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number,
+                                 uint32_t *p_plain_data, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -554,7 +555,8 @@ hal_status_t hal_aes_ecb_decrypt(aes_handle_t *p_aes, uint32_t *p_cypher_data, u
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_cbc_encrypt(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number, uint32_t *p_cypher_data, uint32_t timeout);
+hal_status_t hal_aes_cbc_encrypt(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number,
+                                 uint32_t *p_cypher_data, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -573,7 +575,8 @@ hal_status_t hal_aes_cbc_encrypt(aes_handle_t *p_aes, uint32_t *p_plain_data, ui
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_cbc_decrypt(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number, uint32_t *p_plain_data, uint32_t timeout);
+hal_status_t hal_aes_cbc_decrypt(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number,
+                                 uint32_t *p_plain_data, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -591,7 +594,8 @@ hal_status_t hal_aes_cbc_decrypt(aes_handle_t *p_aes, uint32_t *p_cypher_data, u
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_ecb_encrypt_it(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number, uint32_t *p_cypher_data);
+hal_status_t hal_aes_ecb_encrypt_it(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number,
+                                    uint32_t *p_cypher_data);
 
 /**
  ****************************************************************************************
@@ -609,7 +613,8 @@ hal_status_t hal_aes_ecb_encrypt_it(aes_handle_t *p_aes, uint32_t *p_plain_data,
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_ecb_decrypt_it(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number, uint32_t *p_plain_data);
+hal_status_t hal_aes_ecb_decrypt_it(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number,
+                                    uint32_t *p_plain_data);
 
 /**
  ****************************************************************************************
@@ -627,7 +632,8 @@ hal_status_t hal_aes_ecb_decrypt_it(aes_handle_t *p_aes, uint32_t *p_cypher_data
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_cbc_encrypt_it(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number, uint32_t *p_cypher_data);
+hal_status_t hal_aes_cbc_encrypt_it(aes_handle_t *p_aes, uint32_t *p_plain_data, uint32_t number,
+                                    uint32_t *p_cypher_data);
 
 /**
  ****************************************************************************************
@@ -645,7 +651,8 @@ hal_status_t hal_aes_cbc_encrypt_it(aes_handle_t *p_aes, uint32_t *p_plain_data,
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_aes_cbc_decrypt_it(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number, uint32_t *p_plain_data);
+hal_status_t hal_aes_cbc_decrypt_it(aes_handle_t *p_aes, uint32_t *p_cypher_data, uint32_t number,
+                                    uint32_t *p_plain_data);
 
 /**
  ****************************************************************************************

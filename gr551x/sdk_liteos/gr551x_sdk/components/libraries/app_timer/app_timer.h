@@ -56,10 +56,9 @@
  * @{
  */
 /**@brief App timer trigger types. */
-typedef enum
-{
-   ATIMER_ONE_SHOT = 0x0,        /**< The timer will expire only once. */
-   ATIMER_REPEAT                 /**< The timer will restart each time it expires. */
+typedef enum {
+    ATIMER_ONE_SHOT = 0x0,        /**< The timer will expire only once. */
+    ATIMER_REPEAT                 /**< The timer will restart each time it expires. */
 } app_timer_type_t;
 /** @} */
 
@@ -76,8 +75,7 @@ typedef void (*app_timer_fun_t)(void* p_ctx);
  * @{
  */
 /**@brief App timer global variable. */
-typedef struct
-{
+typedef struct {
     uint8_t                  timer_node_used;            /**< Timer node is used or not. */
     uint8_t                  timer_node_status;          /**< Timer node status. */
     uint8_t                  next_trigger_mode;          /**< Next trigger mode. */
@@ -85,12 +83,11 @@ typedef struct
     uint32_t                 next_trigger_time;          /**< Next trigger time. */
     void*                    next_trigger_callback_var;  /**< Timer trigger callback argument. */
     app_timer_fun_t          next_trigger_callback;      /**< Timer trigger callback . */
-}app_timer_t;
+} app_timer_t;
 
 #if APP_TIMER_USE_SCHEDULER
 /**@brief Structure passed to app_scheduler. */
-typedef struct
-{
+typedef struct {
     app_timer_fun_t  timeout_handler;     /**< Timer timeout handler. */
     void            *p_ctx;               /**< Pointer to callback argument. */
 } app_timer_evt_t;
@@ -102,7 +99,7 @@ typedef struct
  * @{
  */
 /**@brief The timer node id. */
-typedef app_timer_t* app_timer_id_t; 
+typedef app_timer_t* app_timer_id_t;
 /** @} */
 
 /**
@@ -119,16 +116,16 @@ typedef app_timer_t* app_timer_id_t;
  *
  * @return the error code of this funciton
 
- * @note   After the function is executed, a new soft timer is added to the list and waits 
- *         for execution. At this point, the user can operate the app_timer_start/app_timer_stop 
- *         function to pause and restore the timer. These two functions do not delete the 
- *         timer node. If the user wants to delete a soft timer node completely, user can call 
- *         the app_timer_remove function, in which the create/remove function needs to pass in 
+ * @note   After the function is executed, a new soft timer is added to the list and waits
+ *         for execution. At this point, the user can operate the app_timer_start/app_timer_stop
+ *         function to pause and restore the timer. These two functions do not delete the
+ *         timer node. If the user wants to delete a soft timer node completely, user can call
+ *         the app_timer_remove function, in which the create/remove function needs to pass in
  *         the pointer, because these functions update the value of the pointer.
- * @note   It should be noted that the minimum delay time of this function is 10 ms. The purpose 
- *         is to enhance the execution delay of soft timer and improve the real-time performance 
+ * @note   It should be noted that the minimum delay time of this function is 10 ms. The purpose
+ *         is to enhance the execution delay of soft timer and improve the real-time performance
  *         of soft timer.
- * @note   If the return value of this function is SDK_ERR_LIST_FULL, please find the macro 
+ * @note   If the return value of this function is SDK_ERR_LIST_FULL, please find the macro
  *         TIMER_NODE_CNT in app_timer.h and modify the value.
  *****************************************************************************************
  */
@@ -164,7 +161,7 @@ sdk_err_t app_timer_start(app_timer_id_t p_timer_id, uint32_t delay, void *p_ctx
 /**
  *****************************************************************************************
  * @brief Delete a timer node from list .
- * @param[in] p_timer_id: the timer of id will be removed from timer list, and parameter 
+ * @param[in] p_timer_id: the timer of id will be removed from timer list, and parameter
  *                        will be set to NULL
  *****************************************************************************************
  */

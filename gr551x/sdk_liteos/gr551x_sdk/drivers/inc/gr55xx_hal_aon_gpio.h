@@ -68,8 +68,7 @@ extern "C" {
 /**
   * @brief  AON_GPIO  Bit SET and Bit RESET enumerations
   */
-typedef enum
-{
+typedef enum {
     AON_GPIO_PIN_RESET = 0U,          /**< AON GPIO pin low level.*/
     AON_GPIO_PIN_SET                  /**< AON GPIO pin high level.*/
 } aon_gpio_pin_state_t;
@@ -83,8 +82,7 @@ typedef enum
 /**
   * @brief   AON_GPIO init structure definition
   */
-typedef struct _aon_gpio_init
-{
+typedef struct _aon_gpio_init {
     uint32_t pin;       /**< Specifies the AON_GPIO pins to be configured.
                             This parameter can be any value of @ref AON_GPIO_Pins */
 
@@ -111,8 +109,7 @@ typedef struct _aon_gpio_init
 /**
   * @brief HAL AON_GPIO Callback function definition
   */
-typedef struct _aon_gpio_callback
-{
+typedef struct _aon_gpio_callback {
     void (*aon_gpio_callback)(uint16_t aon_gpio_pin);           /**< AON GPIO pin detection callback   */
 } aon_gpio_callback_t;
 
@@ -154,15 +151,18 @@ typedef struct _aon_gpio_callback
   *           - Y  : IT trigger detection
   * @{
   */
-#define AON_GPIO_MODE_INPUT         (LL_AON_GPIO_MODE_INPUT << 0)       /**< Input Mode                                         */
-#define AON_GPIO_MODE_OUTPUT        (LL_AON_GPIO_MODE_OUTPUT << 0)      /**< Output Mode                                        */
-#define AON_GPIO_MODE_MUX           (LL_GPIO_MODE_MUX << 0)             /**< Mux Mode                                           */
-#define AON_GPIO_MODE_IT_RISING     (LL_AON_GPIO_TRIGGER_RISING << 4)   /**< Interrupt Mode with Rising edge trigger detection  */
-#define AON_GPIO_MODE_IT_FALLING    (LL_AON_GPIO_TRIGGER_FALLING << 4)  /**< Interrupt Mode with Falling edge trigger detection */
-#define AON_GPIO_MODE_IT_HIGH       (LL_AON_GPIO_TRIGGER_HIGH << 4)     /**< Interrupt Mode with High-level trigger detection   */
-#define AON_GPIO_MODE_IT_LOW        (LL_AON_GPIO_TRIGGER_LOW << 4)      /**< Interrupt Mode with Low-level trigger detection    */
+#define AON_GPIO_MODE_INPUT         (LL_AON_GPIO_MODE_INPUT << 0)       /**< Input Mode */
+#define AON_GPIO_MODE_OUTPUT        (LL_AON_GPIO_MODE_OUTPUT << 0)      /**< Output Mode */
+#define AON_GPIO_MODE_MUX           (LL_GPIO_MODE_MUX << 0)             /**< Mux Mode */
+#define AON_GPIO_MODE_IT_RISING     (LL_AON_GPIO_TRIGGER_RISING << 4)   /**< Interrupt Mode with Rising edge
+                                                                             trigger detection */
+#define AON_GPIO_MODE_IT_FALLING    (LL_AON_GPIO_TRIGGER_FALLING << 4)  /**< Interrupt Mode with Falling edge
+                                                                             trigger detection */
+#define AON_GPIO_MODE_IT_HIGH       (LL_AON_GPIO_TRIGGER_HIGH << 4)     /**< Interrupt Mode with High-level
+                                                                             trigger detection */
+#define AON_GPIO_MODE_IT_LOW        (LL_AON_GPIO_TRIGGER_LOW << 4)      /**< Interrupt Mode with Low-level
+                                                                             trigger detection */
 /** @} */
-
 
 /** @defgroup AON_GPIO_Pull AON_GPIO pull
   * @brief AON_GPIO Pull-Up or Pull-Down activation
@@ -218,14 +218,15 @@ typedef struct _aon_gpio_callback
   * @param __ACTION__ AON GPIO pin action.
   * @retval SET (__ACTION__ is valid) or RESET (__ACTION__ is invalid)
   */
-#define IS_AON_GPIO_PIN_ACTION(__ACTION__)  (((__ACTION__) == AON_GPIO_PIN_RESET) || ((__ACTION__) == AON_GPIO_PIN_SET))
+#define IS_AON_GPIO_PIN_ACTION(__ACTION__)  (((__ACTION__) == AON_GPIO_PIN_RESET) || \
+                                             ((__ACTION__) == AON_GPIO_PIN_SET))
 
 /**
   * @brief Check if AON GPIO pins are valid.
   * @param __PIN__ AON GPIO pins.
   * @retval SET (__PIN__ is valid) or RESET (__PIN__ is invalid)
   */
-#define IS_AON_GPIO_PIN(__PIN__)    ((((__PIN__) & AON_GPIO_PIN_MASK) != 0x00U) &&\
+#define IS_AON_GPIO_PIN(__PIN__)    ((((__PIN__) & AON_GPIO_PIN_MASK) != 0x00U) && \
                                      (((__PIN__) & ~AON_GPIO_PIN_MASK) == 0x00U))
 
 /**
@@ -233,12 +234,12 @@ typedef struct _aon_gpio_callback
   * @param __MODE__ AON GPIO mode.
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
-#define IS_AON_GPIO_MODE(__MODE__)  (((__MODE__) == AON_GPIO_MODE_INPUT)              ||\
-                                     ((__MODE__) == AON_GPIO_MODE_OUTPUT)             ||\
-                                     ((__MODE__) == AON_GPIO_MODE_MUX)                   ||\
-                                     ((__MODE__) == AON_GPIO_MODE_IT_RISING)          ||\
-                                     ((__MODE__) == AON_GPIO_MODE_IT_FALLING)         ||\
-                                     ((__MODE__) == AON_GPIO_MODE_IT_HIGH)            ||\
+#define IS_AON_GPIO_MODE(__MODE__)  (((__MODE__) == AON_GPIO_MODE_INPUT)              || \
+                                     ((__MODE__) == AON_GPIO_MODE_OUTPUT)             || \
+                                     ((__MODE__) == AON_GPIO_MODE_MUX)                || \
+                                     ((__MODE__) == AON_GPIO_MODE_IT_RISING)          || \
+                                     ((__MODE__) == AON_GPIO_MODE_IT_FALLING)         || \
+                                     ((__MODE__) == AON_GPIO_MODE_IT_HIGH)            || \
                                      ((__MODE__) == AON_GPIO_MODE_IT_LOW))
 
 /**
@@ -246,7 +247,7 @@ typedef struct _aon_gpio_callback
   * @param __PULL__ AON GPIO pull type.
   * @retval SET (__PULL__ is valid) or RESET (__PULL__ is invalid)
   */
-#define IS_AON_GPIO_PULL(__PULL__)  (((__PULL__) == AON_GPIO_NOPULL)   ||\
+#define IS_AON_GPIO_PULL(__PULL__)  (((__PULL__) == AON_GPIO_NOPULL)   || \
                                      ((__PULL__) == AON_GPIO_PULLUP)   || \
                                      ((__PULL__) == AON_GPIO_PULLDOWN))
 
@@ -394,7 +395,6 @@ void hal_aon_gpio_callback(uint16_t aon_gpio_pin);
 /** @} */
 
 /** @} */
-
 
 #ifdef __cplusplus
 }

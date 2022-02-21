@@ -73,23 +73,25 @@ extern "C" {
 /**
   * @brief LL COMP init Structure definition
   */
-typedef struct _ll_comp_init
-{
+typedef struct _ll_comp_init {
     uint32_t input_source;  /**< Specifies the input source for the comparator.
                                  This parameter can be any value of @ref COMP_LL_EC_INPUT_SRC.
-
-                                 This parameter can be modified afterwards using unitary function @ref ll_comp_set_input_src(). */
+                                 This parameter can be modified afterwards using unitary function
+                                 @ref ll_comp_set_input_src(). */
 
     uint32_t ref_source;    /**< Specifies the reference source for the comparator.
                                  This parameter can be any value of @ref COMP_LL_EC_INPUT_SRC.
-
-                                 This parameter can be modified afterwards using unitary function @ref ll_comp_set_ref_src(). */
+                                 This parameter can be modified afterwards using unitary function
+                                 @ref ll_comp_set_ref_src(). */
     uint32_t ref_value;     /*!< Specifies the value of the COMP buffered reference.
-                                 If ref_source select to LL_COMP_REF_SRC_VBAT, this parameter can be a value between: 0 ~ 7.
-                                 This parameter can be modified afterwards using unitary function @ref ll_comp_set_vbatt_lvl().
-
-                                 If ref_source select to LL_COMP_REF_SRC_VREF, this parameter can be a value between: 0 ~ 63.
-                                 This parameter can be modified afterwards using unitary function @ref ll_comp_set_vref_lvl(). */
+                                 If ref_source select to LL_COMP_REF_SRC_VBAT, this parameter can be a value
+                                 between: 0 ~ 7.
+                                 This parameter can be modified afterwards using unitary function
+                                 @ref ll_comp_set_vbatt_lvl().
+                                 If ref_source select to LL_COMP_REF_SRC_VREF, this parameter can be a value
+                                 between: 0 ~ 63.
+                                 This parameter can be modified afterwards using unitary function
+                                 @ref ll_comp_set_vref_lvl(). */
 } ll_comp_init_t;
 
 /** @} */
@@ -109,23 +111,35 @@ typedef struct _ll_comp_init
 /** @defgroup COMP_LL_EC_INPUT_SRC COMP INPUT SOURCE
   * @{
   */
-#define LL_COMP_INPUT_SRC_IO0         (0UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_0 as inputs for the comparator */
-#define LL_COMP_INPUT_SRC_IO1         (1UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_1 as inputs for the comparator */
-#define LL_COMP_INPUT_SRC_IO2         (2UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_2 as inputs for the comparator */
-#define LL_COMP_INPUT_SRC_IO3         (3UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_3 as inputs for the comparator */
-#define LL_COMP_INPUT_SRC_IO4         (4UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_4 as inputs for the comparator */
+#define LL_COMP_INPUT_SRC_IO0         (0UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_0 as inputs for
+                                                                                       the comparator */
+#define LL_COMP_INPUT_SRC_IO1         (1UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_1 as inputs for
+                                                                                       the comparator */
+#define LL_COMP_INPUT_SRC_IO2         (2UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_2 as inputs for
+                                                                                       the comparator */
+#define LL_COMP_INPUT_SRC_IO3         (3UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_3 as inputs for
+                                                                                       the comparator */
+#define LL_COMP_INPUT_SRC_IO4         (4UL << AON_RF_REG_10_CHANNEL_SEL_P_Pos)    /**< Set MSIO_4 as inputs for
+                                                                                       the comparator */
 /** @} */
 
 /** @defgroup COMP_LL_EC_REF_SRC COMP REF SOURCE
   * @{
   */
-#define LL_COMP_REF_SRC_IO0           (0UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_0 as references for the comparator */
-#define LL_COMP_REF_SRC_IO1           (1UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_1 as references for the comparator */
-#define LL_COMP_REF_SRC_IO2           (2UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_2 as references for the comparator */
-#define LL_COMP_REF_SRC_IO3           (3UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_3 as references for the comparator */
-#define LL_COMP_REF_SRC_IO4           (4UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_4 as references for the comparator */
-#define LL_COMP_REF_SRC_VBAT          (6UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set VBATT as references for the comparator  */
-#define LL_COMP_REF_SRC_VREF          (7UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set VREF as references for the comparator   */
+#define LL_COMP_REF_SRC_IO0           (0UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_0 as references for
+                                                                                       the comparator */
+#define LL_COMP_REF_SRC_IO1           (1UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_1 as references for
+                                                                                       the comparator */
+#define LL_COMP_REF_SRC_IO2           (2UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_2 as references for
+                                                                                       the comparator */
+#define LL_COMP_REF_SRC_IO3           (3UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_3 as references for
+                                                                                       the comparator */
+#define LL_COMP_REF_SRC_IO4           (4UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set MSIO_4 as references for
+                                                                                       the comparator */
+#define LL_COMP_REF_SRC_VBAT          (6UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set VBATT as references for
+                                                                                       the comparator */
+#define LL_COMP_REF_SRC_VREF          (7UL << AON_RF_REG_10_CHANNEL_SEL_N_Pos)    /**< Set VREF as references for
+                                                                                       the comparator */
 /** @} */
 
 /** @} */
@@ -206,8 +220,8 @@ typedef struct _ll_comp_init
   */
 __STATIC_INLINE void ll_comp_enable(void)
 {
-	SET_BITS(AON->PWR_RET01, AON_PWR_REG01_WAKE_UP_SEL_MSIO_COMP);
-	SET_BITS(AON->RF_REG_10, AON_RF_REG_10_WAKE_COMP_EN_Msk);
+	  SET_BITS(AON->PWR_RET01, AON_PWR_REG01_WAKE_UP_SEL_MSIO_COMP);
+  	SET_BITS(AON->RF_REG_10, AON_RF_REG_10_WAKE_COMP_EN_Msk);
 }
 
 /**
@@ -222,7 +236,7 @@ __STATIC_INLINE void ll_comp_enable(void)
 __STATIC_INLINE void ll_comp_disable(void)
 {
     CLEAR_BITS(AON->RF_REG_10, AON_RF_REG_10_WAKE_COMP_EN_Msk);
-	CLEAR_BITS(AON->PWR_RET01, AON_PWR_REG01_WAKE_UP_SEL_MSIO_COMP);
+	  CLEAR_BITS(AON->PWR_RET01, AON_PWR_REG01_WAKE_UP_SEL_MSIO_COMP);
 }
 
 /**
@@ -280,7 +294,8 @@ __STATIC_INLINE void ll_comp_set_ref_src(uint32_t source)
   */
 __STATIC_INLINE void ll_comp_set_vbatt_lvl(uint32_t level)
 {
-    MODIFY_REG(AON->RF_REG_10, AON_RF_REG_10_COMP_BATT_LVL_CTRL_LV_Msk, level << AON_RF_REG_10_COMP_BATT_LVL_CTRL_LV_Pos);
+    MODIFY_REG(AON->RF_REG_10, AON_RF_REG_10_COMP_BATT_LVL_CTRL_LV_Msk, \
+               level << AON_RF_REG_10_COMP_BATT_LVL_CTRL_LV_Pos);
 }
 
 /**

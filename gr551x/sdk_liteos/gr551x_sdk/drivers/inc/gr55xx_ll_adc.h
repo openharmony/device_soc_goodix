@@ -73,38 +73,36 @@ extern "C" {
 /**
   * @brief LL ADC init Structure definition
   */
-typedef struct _ll_adc_init
-{
+typedef struct _ll_adc_init {
     uint32_t channel_p;     /**< Specifies the input source to ADC channel P.
                                  This parameter can be any value of @ref LL_ADC_EC_INPUT_SRC.
-
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_channelp(). */
+                                 This parament can be modified afterwards using unitary function
+                                 @ref ll_adc_set_channelp(). */
 
     uint32_t channel_n;     /**< Specifies the input source to ADC channel N.
                                  This parameter can be any value of @ref LL_ADC_EC_INPUT_SRC.
-
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_channeln(). */
+                                 This parament can be modified afterwards using unitary function
+                                 @ref ll_adc_set_channeln(). */
 
     uint32_t input_mode;    /**< Specifies the operation mode for the ADC sample.
                                  This parameter can be a value of @ref LL_ADC_EC_INPUT_MODE.
-
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_input_mode(). */
+                                 This parament can be modified afterwards using unitary function
+                                 @ref ll_adc_set_input_mode(). */
 
     uint32_t ref_source;    /**< Specifies the source of the ADC reference.
                                  This parameter can be a value of @ref LL_ADC_EC_REFERENCE_SRC.
-
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_ref(). */
+                                 This parament can be modified afterwards using unitary function
+                                 @ref ll_adc_set_ref(). */
 
     uint32_t ref_value;     /*!< Specifies the value of the ADC buffered reference.
                                  This parameter can be a value of @ref LL_ADC_EC_REFERENCE.
-
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_ref_value(). */
+                                 This parament can be modified afterwards using unitary function
+                                 @ref ll_adc_set_ref_value(). */
 
     uint32_t clock;         /**< Specifies the clock of ADC.
                                  This parameter can be a value of @ref LL_ADC_EC_CLK.
-
-                                 This parament can be modified afterwards using unitary function @ref ll_adc_set_clock(). */
-
+                                 This parament can be modified afterwards using unitary function
+                                 @ref ll_adc_set_clock(). */
 } ll_adc_init_t;
 
 /** @} */
@@ -165,11 +163,12 @@ typedef struct _ll_adc_init
 /** @defgroup LL_ADC_EC_REFERENCE_SRC ADC Reference Source
   * @{
   */
-#define LL_ADC_REF_SRC_BUF_INT      (0x00000000UL)                            /**< Select buffered internal reference as reference   */
-#define LL_ADC_REF_SRC_IO0          (3UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO0 as reference                         */
-#define LL_ADC_REF_SRC_IO1          (4UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO1 as reference                         */
-#define LL_ADC_REF_SRC_IO2          (5UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO2 as reference                         */
-#define LL_ADC_REF_SRC_IO3          (6UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO3 as reference                         */
+#define LL_ADC_REF_SRC_BUF_INT      (0x00000000UL)                            /**< Select buffered internal
+                                                                                   reference as reference */
+#define LL_ADC_REF_SRC_IO0          (3UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO0 as reference */
+#define LL_ADC_REF_SRC_IO1          (4UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO1 as reference */
+#define LL_ADC_REF_SRC_IO2          (5UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO2 as reference */
+#define LL_ADC_REF_SRC_IO3          (6UL << AON_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO3 as reference */
 /** @} */
 
 /** @} */
@@ -371,7 +370,8 @@ __STATIC_INLINE void ll_adc_set_clock(uint32_t clk)
   */
 __STATIC_INLINE uint32_t ll_adc_get_clock(void)
 {
-    return (uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_MSIO_PAD_CFG_1_ADC_CLK_SEL) >> AON_MSIO_PAD_CFG_1_ADC_CLK_SEL_Pos);
+    return (uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_MSIO_PAD_CFG_1_ADC_CLK_SEL) >> \
+                      AON_MSIO_PAD_CFG_1_ADC_CLK_SEL_Pos);
 }
 
 /**
@@ -873,7 +873,8 @@ __STATIC_INLINE uint32_t ll_adc_is_fifo_notempty(void)
   */
 __STATIC_INLINE uint32_t ll_adc_get_fifo_count(void)
 {
-    return (uint32_t)(READ_BITS(MCU_SUB->SENSE_ADC_STAT, MCU_SUB_SNSADC_STAT_FF_COUNT) >> MCU_SUB_SNSADC_STAT_FF_COUNT_Pos);
+    return (uint32_t)(READ_BITS(MCU_SUB->SENSE_ADC_STAT, MCU_SUB_SNSADC_STAT_FF_COUNT) >> \
+                      MCU_SUB_SNSADC_STAT_FF_COUNT_Pos);
 }
 
 /** @} */

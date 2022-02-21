@@ -46,8 +46,7 @@ extern void hal_rng_register_callback(hal_rng_callback_t *hal_rng_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_rng_callback_t rng_callback =
-{
+static hal_rng_callback_t rng_callback = {
     .rng_msp_init               = hal_rng_msp_init,
     .rng_msp_deinit             = hal_rng_msp_deinit,
     .rng_ready_data_callback    = hal_rng_ready_data_callback

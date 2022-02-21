@@ -73,29 +73,29 @@ extern "C" {
 /**
   * @brief LL DUAL TIMER init Structure definition
   */
-typedef struct _ll_dual_timer_init
-{
+typedef struct _ll_dual_timer_init {
     uint32_t prescaler;         /**< Specifies the prescaler value used to divide the TIMER clock.
                                    This parameter can be a value of @ref DUAL_TIMER_EC_LL_PRESCALER.
-
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_prescaler().   */
+                                   This feature can be modified afterwards using unitary function
+                                   @ref ll_dual_timer_set_prescaler().   */
 
     uint32_t counter_size;       /**< Specifies the prescaler value used to divide the DUAL_TIMER clock.
                                    This parameter can be a value of @ref DUAL_TIMER_EC_LL_COUNTERSIZE.
-
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_counter_size().   */
+                                   This feature can be modified afterwards using unitary function
+                                   @ref ll_dual_timer_set_counter_size().   */
 
     uint32_t counter_mode;       /**< Specifies the counter mode.
                                    This parameter can be a value of @ref DUAL_TIMER_LL_EC_COUNTERMODE.
-
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_counter_mode().   */
+                                   This feature can be modified afterwards using unitary function
+                                   @ref ll_dual_timer_set_counter_mode().   */
 
     uint32_t auto_reload;        /**< Specifies the auto reload value to be loaded into the active
                                    Auto-Reload Register at the next update event.
                                    This parameter must be a number between Min_Data=0x00000000 and Max_Data=0xFFFFFFFF.
-                                   Some timer instances may support 16 bits counters. In that case this parameter must be a number between 0x0000 and 0xFFFF.
-
-                                   This feature can be modified afterwards using unitary function @ref ll_dual_timer_set_auto_reload().   */
+                                   Some timer instances may support 16 bits counters. In that case this parameter must
+                                   be a number between 0x0000 and 0xFFFF.
+                                   This feature can be modified afterwards using unitary function
+                                   @ref ll_dual_timer_set_auto_reload().   */
 } ll_dual_timer_init_t;
 
 /** @} */
@@ -115,22 +115,25 @@ typedef struct _ll_dual_timer_init
 /** @defgroup DUAL_TIMER_LL_EC_COUNTERMODE DUAL_TIM counter mode
   * @{
   */
-#define LL_DUAL_TIMER_FREERUNNING_MODE        0x00000000U           /**< Free running mode */
-#define LL_DUAL_TIMER_PERIODIC_MODE           DUAL_TIMER_CTRL_MODE    /**< Periodic mode */
+#define LL_DUAL_TIMER_FREERUNNING_MODE        0x00000000U             /**< Free running mode */
+#define LL_DUAL_TIMER_PERIODIC_MODE           DUAL_TIMER_CTRL_MODE    /**< Periodic mode     */
 /** @} */
 
 /** @defgroup DUAL_TIMER_EC_LL_PRESCALER DUAL_TIM prescaler
   * @{
   */
-#define LL_DUAL_TIMER_PRESCALER_DIV0          0x00000000U                     /**< 0 stage  of prescale, clock is divided by 1.   */
-#define LL_DUAL_TIMER_PRESCALER_DIV16         (1UL << DUAL_TIMER_CTRL_PRE_Pos)  /**< 4 stages of prescale, clock is divided by 16.  */
-#define LL_DUAL_TIMER_PRESCALER_DIV256        (2UL << DUAL_TIMER_CTRL_PRE_Pos)  /**< 8 stages of prescale, clock is divided by 256. */
+#define LL_DUAL_TIMER_PRESCALER_DIV0          0x00000000U                       /**< 0 stage  of prescale,
+                                                                                     clock is divided by 1. */
+#define LL_DUAL_TIMER_PRESCALER_DIV16         (1UL << DUAL_TIMER_CTRL_PRE_Pos)  /**< 4 stages of prescale,
+                                                                                     clock is divided by 16. */
+#define LL_DUAL_TIMER_PRESCALER_DIV256        (2UL << DUAL_TIMER_CTRL_PRE_Pos)  /**< 8 stages of prescale,
+                                                                                     clock is divided by 256. */
 /** @} */
 
 /** @defgroup DUAL_TIMER_EC_LL_COUNTERSIZE DUAL_TIM counter size
   * @{
   */
-#define LL_DUAL_TIMER_COUNTERSIZE_16          0x00000000U         /**< Counter size 16 bits */
+#define LL_DUAL_TIMER_COUNTERSIZE_16          0x00000000U           /**< Counter size 16 bits */
 #define LL_DUAL_TIMER_COUNTERSIZE_32          DUAL_TIMER_CTRL_SIZE  /**< Counter size 32 bits */
 /** @} */
 
@@ -141,12 +144,12 @@ typedef struct _ll_dual_timer_init
 /**
   * @brief LL DUAL_TIMER InitStrcut default configuartion
   */
-#define DUAL_TIMER_DEFAULT_CONFIG                     \
-{                                                   \
-    .prescaler   = LL_DUAL_TIMER_PRESCALER_DIV0,      \
+#define DUAL_TIMER_DEFAULT_CONFIG                      \
+{                                                      \
+    .prescaler   = LL_DUAL_TIMER_PRESCALER_DIV0,       \
     .counter_size = LL_DUAL_TIMER_COUNTERSIZE_32,      \
     .counter_mode = LL_DUAL_TIMER_PERIODIC_MODE,       \
-    .auto_reload  = SystemCoreClock - 1,             \
+    .auto_reload  = SystemCoreClock - 1,               \
 }
 /** @} */
 
@@ -610,7 +613,6 @@ void ll_dual_timer_struct_init(ll_dual_timer_init_t *p_dual_timer_init);
 /** @} */
 
 /** @} */
-
 
 #endif /* DUAL_TIMER0 || DUAL_TIMER1 */
 

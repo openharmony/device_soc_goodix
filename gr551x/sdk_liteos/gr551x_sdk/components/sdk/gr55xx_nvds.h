@@ -39,11 +39,11 @@
  * @addtogroup SYSTEM
  * @{
  */
- /**
-  @addtogroup NVDS Non-Volatile Data Storage
-  @{
-  @brief Definitions and prototypes for the NVDS interface.
- */
+/**
+ @addtogroup NVDS Non-Volatile Data Storage
+ @{
+ @brief Definitions and prototypes for the NVDS interface.
+*/
 
 #ifndef __GR55XX_NVDS_H__
 #define __GR55XX_NVDS_H__
@@ -65,8 +65,7 @@
 /** @addtogroup NVDS_ENUMERATIONS Enumerations
  * @{ */
 /** @brief NVDS Returned Status. */
-enum NVDS_STATUS
-{
+enum NVDS_STATUS {
     NVDS_SUCCESS,                /**< NVDS succeeds. */
     NVDS_FAIL,                   /**< NVDS failed. */
     NVDS_TAG_NOT_EXISTED,        /**< NVDS tag does not exist. */
@@ -76,7 +75,7 @@ enum NVDS_STATUS
     NVDS_INVALID_START_ADDR,     /**< NVDS invalid start address. */
     NVDS_INVALID_SECTORS,        /**< NVDS invalid sector. */
     NVDS_COMPACT_FAILED,         /**< NVDS failed to compact sectors. */
-    NVDS_STORAGE_ACCESS_FAILED , /**< NVDS failed to access storage. */
+    NVDS_STORAGE_ACCESS_FAILED,  /**< NVDS failed to access storage. */
     NVDS_GC_COMPLETE,            /**< NVDS garbage collection complete. */
     NVDS_NOT_INIT,               /**< NVDS not initialize. */
     NVDS_POINTER_NULL            /**< NVDS or driver function repalce error: NULL. */
@@ -253,7 +252,7 @@ void local_hal_flash_set_security(bool enable);
 
 /**
  *******************************************************************************
- * @brief Write flash Memory reliably. 
+ * @brief Write flash Memory reliably.
  *
  * @note It's possible that the data was not written into Flash Memory
  *       successfully. This function reads the data from Flash Memory to check

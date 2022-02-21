@@ -45,8 +45,7 @@ extern void hal_dual_timer_register_callback(hal_dual_timer_callback_t *hal_dual
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_dual_timer_callback_t dual_tim_callback =
-{
+static hal_dual_timer_callback_t dual_tim_callback = {
     .dual_timer_msp_init                  = hal_dual_timer_base_msp_init,
     .dual_timer_msp_deinit                = hal_dual_timer_base_msp_deinit,
     .dual_timer_period_elapsed_callback   = hal_dual_timer_period_elapsed_callback

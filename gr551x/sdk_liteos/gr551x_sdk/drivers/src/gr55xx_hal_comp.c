@@ -46,8 +46,7 @@ extern void hal_comp_register_callback(comp_callback_t *comp_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static comp_callback_t comp_callback = 
-{
+static comp_callback_t comp_callback = {
     .comp_msp_init             = hal_comp_msp_init,
     .comp_msp_deinit           = hal_comp_msp_deinit,
     .comp_trigger_callback     = hal_comp_trigger_callback

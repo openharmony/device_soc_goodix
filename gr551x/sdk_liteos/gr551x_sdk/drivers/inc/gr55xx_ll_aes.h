@@ -72,9 +72,8 @@ extern "C" {
 /**
   * @brief LL AES Init Structure definition
   */
-typedef struct _ll_aes_init
-{
-    uint32_t key_size;      /**< 128, 192 or 256-bit key length.
+typedef struct _ll_aes_init {
+    uint32_t key_size;        /**< 128, 192 or 256-bit key length.
                                  This parameter can be a value of @ref AES_LL_EC_KEY_SIZE */
 
     uint32_t *p_key;          /**< Encryption/Decryption Key */
@@ -82,7 +81,6 @@ typedef struct _ll_aes_init
     uint32_t *p_init_vector;  /**< Initialization Vector used for CBC modes */
 
     uint32_t *p_seed;         /**< Random seeds */
-
 } ll_aes_init_t;
 
 /** @} */
@@ -103,40 +101,40 @@ typedef struct _ll_aes_init
   * @brief    Flag definitions which can be used with LL_AES_ReadReg function
   * @{
   */
-#define LL_AES_FLAG_DATAREADY                               AES_STATUS_READY        /**< AES result data out ready  */
-#define LL_AES_FLAG_DMA_DONE                                AES_STATUS_TRANSDONE    /**< AES dma transfer done      */
-#define LL_AES_FLAG_DMA_ERR                                 AES_STATUS_TRANSERR     /**< AES dma transfer error     */
-#define LL_AES_FLAG_KEY_VALID                               AES_STATUS_KEYVALID     /**< AES has fetched key        */
+#define LL_AES_FLAG_DATAREADY                   AES_STATUS_READY        /**< AES result data out ready  */
+#define LL_AES_FLAG_DMA_DONE                    AES_STATUS_TRANSDONE    /**< AES dma transfer done      */
+#define LL_AES_FLAG_DMA_ERR                     AES_STATUS_TRANSERR     /**< AES dma transfer error     */
+#define LL_AES_FLAG_KEY_VALID                   AES_STATUS_KEYVALID     /**< AES has fetched key        */
 /** @} */
 
 /** @defgroup AES_LL_EC_KEY_SIZE Key Size
   * @{
   */
-#define LL_AES_KEY_SIZE_128                                 0x00000000U                     /**< 128 bits */
-#define LL_AES_KEY_SIZE_192                                 (1UL << AES_CONFIG_KEYMODE_Pos) /**< 192 bits */
-#define LL_AES_KEY_SIZE_256                                 (2UL << AES_CONFIG_KEYMODE_Pos) /**< 256 bits */
+#define LL_AES_KEY_SIZE_128                    0x00000000U                     /**< 128 bits */
+#define LL_AES_KEY_SIZE_192                    (1UL << AES_CONFIG_KEYMODE_Pos) /**< 192 bits */
+#define LL_AES_KEY_SIZE_256                    (2UL << AES_CONFIG_KEYMODE_Pos) /**< 256 bits */
 /** @} */
 
 /** @defgroup AES_LL_EC_OPERATION_MODE Operation Mode
   * @{
   */
-#define LL_AES_OPERATION_MODE_ECB                            0x00000000U                     /**< Electronic codebook (ECB) mode   */
-#define LL_AES_OPERATION_MODE_CBC                            (1UL << AES_CONFIG_OPMODE_Pos)  /**< Cipher block chaining (CBC) mode */
+#define LL_AES_OPERATION_MODE_ECB              0x00000000U                     /**< Electronic codebook (ECB) mode   */
+#define LL_AES_OPERATION_MODE_CBC              (1UL << AES_CONFIG_OPMODE_Pos)  /**< Cipher block chaining (CBC) mode */
 /** @} */
 
 /** @defgroup AES_LL_EC_KEY_TYPE Key Type
   * @{
   */
-#define LL_AES_KEYTYPE_MCU                                  0x00000000U                     /**< MCU        */
-#define LL_AES_KEYTYPE_AHB                                  (1UL << AES_CONFIG_KEYTYPE_Pos) /**< AHB master */
-#define LL_AES_KEYTYPE_KRAM                                 (2UL << AES_CONFIG_KEYTYPE_Pos) /**< Key Port   */
+#define LL_AES_KEYTYPE_MCU                     0x00000000U                     /**< MCU        */
+#define LL_AES_KEYTYPE_AHB                     (1UL << AES_CONFIG_KEYTYPE_Pos) /**< AHB master */
+#define LL_AES_KEYTYPE_KRAM                    (2UL << AES_CONFIG_KEYTYPE_Pos) /**< Key Port   */
 /** @} */
 
 /** @defgroup AES_LL_EC_TRANSFER_SIZE Transfer Size
   * @{
   */
-#define LL_AES_DMA_TRANSIZE_MIN                             (1)     /**< Min size = 1 block      */
-#define LL_AES_DMA_TRANSIZE_MAX                             (2048)  /**< Max size = 2048 blocks  */
+#define LL_AES_DMA_TRANSIZE_MIN                (1)     /**< Min size = 1 block      */
+#define LL_AES_DMA_TRANSIZE_MAX                (2048)  /**< Max size = 2048 blocks  */
 /** @} */
 
 /** @} */

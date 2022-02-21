@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief  AON_WDT_Configuration init structure definition
   */
-typedef struct _aon_wdt_init
-{
+typedef struct _aon_wdt_init {
     uint32_t counter;       /**< Specifies the AON_WDT free-running downcounter value.
                                  This parameter can be a number ranging between 0x0U ~ 0xFFFFFFFFU. */
 
@@ -82,8 +81,8 @@ typedef struct _aon_wdt_init
                                  an interrupt. After counter counts down to 0, AON_WDT will then
                                  request a SoC Reset.
 
-                                 This parameter can be a number ranging between 0x0U ~ 0x1FU, and the default value is 20U. */
-
+                                 This parameter can be a number ranging between 0x0U ~ 0x1FU,
+                                 and the default value is 20U. */
 } aon_wdt_init_t;
 
 /** @} */
@@ -95,12 +94,10 @@ typedef struct _aon_wdt_init
 /**
   * @brief  AON_WDT handle Structure definition
   */
-typedef struct _aon_wdt_handle
-{
+typedef struct _aon_wdt_handle {
     aon_wdt_init_t  init;   /**< AON_WDT required parameters    */
 
     hal_lock_t      lock;   /**< AON_WDT locking object         */
-
 } aon_wdt_handle_t;
 
 /** @} */
@@ -119,8 +116,7 @@ typedef struct _aon_wdt_handle
   * @brief HAL_AON_WDT Callback function definition
   */
 
-typedef struct _aon_wdt_callback
-{
+typedef struct _aon_wdt_callback {
     void (*aon_wdt_alarm_callback)(aon_wdt_handle_t *p_aon_wdt);    /**< AON_WDT count complete callback */
 } hal_aon_wdt_callback_t;
 

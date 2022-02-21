@@ -53,16 +53,16 @@
 #define APP_ERROR_CALL_STACK_DEPTH_MAX      16                                    /**< Supported function call stack max depth, default is 16. */
 
 #if APP_ERROR_INFO_PRINT_ENABLE
-    #define APP_ERROR_INFO_PRINT(...)           printf(__VA_ARGS__);printf("\r\n");/**< Print line. */
+#define APP_ERROR_INFO_PRINT(...)           printf(__VA_ARGS__);printf("\r\n");/**< Print line. */
 #else
-    #define APP_ERROR_INFO_PRINT(...)
+#define APP_ERROR_INFO_PRINT(...)
 #endif
 
 #if APP_IS_USING_FREEROTS
-    #include "FreeRTOS.h"
-    extern uint32_t *vTaskStackAddr(void);
-    extern uint32_t  vTaskStackSize(void);
-    extern char     *vTaskName(void);
+#include "FreeRTOS.h"
+extern uint32_t *vTaskStackAddr(void);
+extern uint32_t  vTaskStackSize(void);
+extern char     *vTaskName(void);
 #endif
 
 /** @} */

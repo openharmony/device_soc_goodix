@@ -88,8 +88,7 @@
  * @{
  */
 /**@brief App error check type.*/
-typedef enum
-{
+typedef enum {
     APP_ERROR_API_RET,          /**< API return error code check failed. */
     APP_ERROR_BOOL_COMPARE,     /**< Bool value check failed. */
 } app_error_type_t;
@@ -100,11 +99,9 @@ typedef enum
  * @{
  */
 /**@brief App error info.*/
-typedef struct
-{
+typedef struct {
     app_error_type_t error_type;     /**< Error occurred type. */
-    union
-    {
+    union {
         sdk_err_t    error_code;     /**< Error code. */
         char const  *expr;           /**< Error expression. */
     } value;

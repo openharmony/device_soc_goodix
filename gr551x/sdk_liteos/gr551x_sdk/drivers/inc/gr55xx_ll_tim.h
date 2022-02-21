@@ -73,14 +73,16 @@ extern "C" {
 /**
   * @brief LL TIMER init Structure definition
   */
-typedef struct _ll_timer_init_t
-{
+typedef struct _ll_timer_init_t {
     uint32_t auto_reload;        /**< Specifies the auto reload value to be loaded into the active
                                      Auto-Reload Register at the next update event.
-                                     This parameter must be a number between Min_Data=0x00000000 and Max_Data=0xFFFFFFFF.
-                                     Some timer instances may support 32 bits counters. In that case this parameter must be a number between 0x0000 and 0xFFFFFFFF.
+                                     This parameter must be a number between Min_Data=0x00000000 and
+                                     Max_Data=0xFFFFFFFF.
+                                     Some timer instances may support 32 bits counters.
+                                     In that case this parameter must be a number between 0x0000 and 0xFFFFFFFF.
 
-                                     This feature can be modified afterwards using unitary function @ref ll_timer_set_auto_reload(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref ll_timer_set_auto_reload(). */
 } ll_timer_init_t;
 /** @} */
 

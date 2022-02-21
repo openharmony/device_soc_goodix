@@ -77,8 +77,7 @@
  *****************************************************************************************
  */
 /**@brief Assert information save. */
-struct app_asser_info_t
-{
+struct app_asser_info_t {
     char    file_name[APP_ASSERT_FILE_NAME_LEN];
     int     magic1;
     int     file_line;
@@ -96,9 +95,8 @@ struct app_asser_info_t
  */
 static struct app_asser_info_t  s_assert_info;
 
-static sys_assert_cb_t s_assert_cbs =
-{
-    .assert_err_cb   = app_assert_err_cb ,
+static sys_assert_cb_t s_assert_cbs = {
+    .assert_err_cb   = app_assert_err_cb,
     .assert_param_cb = app_assert_param_cb,
     .assert_warn_cb  = app_assert_warn_cb,
 };
@@ -121,16 +119,12 @@ static void app_assert_info_output(uint8_t assert_type)
     s_assert_info.file_name[APP_ASSERT_FILE_NAME_LEN - 1] = ' ';
     s_assert_info.expr[APP_ASSERT_FILE_NAME_LEN - 1]      = ' ';
 
-    if (APP_ASSERT_ERROR == assert_type)
-    {
+    if (APP_ASSERT_ERROR == assert_type) {
         sprintf_s(assert_info, sizeof(assert_info), "[ERROR] %s", s_assert_info.expr);
-    }
-    else if (APP_ASSERT_WARNING == assert_type)
-    {
-        sprintf_s(assert_info, sizeof(assert_info), "[WARNING] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
-    }
-    else if (APP_ASSERT_PARAM == assert_type)
-    {
+    } else if (APP_ASSERT_WARNING == assert_type) {
+        sprintf_s(assert_info, sizeof(assert_info), "[WARNING] Param0:%d,Param1:%d", s_assert_info.param0,
+                  s_assert_info.param1);
+    } else if (APP_ASSERT_PARAM == assert_type) {
         sprintf_s(assert_info, sizeof(assert_info), "[PARAM] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
     }
 
@@ -173,7 +167,7 @@ __WEAK void app_assert_warn_cb(int param0, int param1, const char *file, int lin
 
 __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int line)
 {
-    __disable_irq(); 
+    __disable_irq();
 
     uint32_t file_name_len;
 
@@ -198,7 +192,7 @@ __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int li
 
 __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
 {
-    __disable_irq(); 
+    __disable_irq();
 
     uint32_t file_name_len;
     uint32_t expre_len;
@@ -228,8 +222,7 @@ void app_assert_init(void)
 
 void app_assert_handler(const char *expr, const char *file, int line)
 {
-    if (s_assert_cbs.assert_err_cb)
-    {
+    if (s_assert_cbs.assert_err_cb) {
         s_assert_cbs.assert_err_cb(expr, file, line);
     }
 }

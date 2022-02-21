@@ -46,8 +46,7 @@ extern void hal_aon_gpio_register_callback(aon_gpio_callback_t *aon_gpio_callbac
 
 /* Private variables ---------------------------------------------------------*/
 
-static aon_gpio_callback_t aon_gpio_callback = 
-{
+static aon_gpio_callback_t aon_gpio_callback = {
     .aon_gpio_callback = hal_aon_gpio_callback,
 };
 

@@ -60,8 +60,7 @@
  *****************************************************************************************
  */
 /**@brief SDK error code information. */
-typedef struct 
-{
+typedef struct {
     sdk_err_t  error_code;
     char      *error_info;
 } error_code_info_t;
@@ -71,8 +70,7 @@ typedef struct
  *****************************************************************************************
  */
 #ifndef GR5515_E
-static error_code_info_t s_error_code_info[APP_ERROR_CODE_NB] =
-{
+static error_code_info_t s_error_code_info[APP_ERROR_CODE_NB] = {
     {SDK_SUCCESS,                              "Successful."},
     {SDK_ERR_INVALID_PARAM,                    "Invalid parameter supplied."},
     {SDK_ERR_POINTER_NULL,                     "Invalid pointer supplied."},
@@ -131,31 +129,24 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
     char s_error_print_info[APP_ERROR_INFO_LEN];
     memset(s_error_print_info, 0, APP_ERROR_INFO_LEN);
 
-    if (APP_ERROR_API_RET == p_error_info->error_type)
-    {
-        for (uint8_t i = 0; ; i++)
-        {
-            if (p_error_info->value.error_code == s_error_code_info[i].error_code)
-            {
+    if (APP_ERROR_API_RET == p_error_info->error_type) {
+        for (uint8_t i = 0; ; i++) {
+            if (p_error_info->value.error_code == s_error_code_info[i].error_code) {
                 sprintf_s(s_error_print_info, sizeof (s_error_print_info),
-                        "Error code 0x%04X: %s",
-                        p_error_info->value.error_code,
-                        s_error_code_info[i].error_info);
+                          "Error code 0x%04X: %s",
+                          p_error_info->value.error_code,
+                          s_error_code_info[i].error_info);
                 break;
-            }
-            else if (APP_ERROR_CODE_NB == i)
-            {
+            } else if (APP_ERROR_CODE_NB == i) {
                 sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
                           "Error code 0x%04X: No found information.", p_error_info->value.error_code);
                 break;
             }
         }
-    }
-    else if (APP_ERROR_BOOL_COMPARE == p_error_info->error_type)
-    {
+    } else if (APP_ERROR_BOOL_COMPARE == p_error_info->error_type) {
         sprintf_s(s_error_print_info, sizeof (s_error_print_info),
-                "(%s) is not established.",
-                p_error_info->value.expr);
+                  "(%s) is not established.",
+                  p_error_info->value.expr);
     }
 
     app_log_output(APP_LOG_LVL_ERROR,

@@ -88,19 +88,16 @@ extern "C" {
 /**
   * @brief LL PKC ECC Point Structure definition
   */
-typedef struct _ll_ecc_point
-{
+typedef struct _ll_ecc_point {
     uint32_t X[ECC_U32_LENGTH];     /**< Specifies the point in x-axis */
 
     uint32_t Y[ECC_U32_LENGTH];     /**< Specifies the point in y-axis */
-
 } ll_ecc_point_t;
 
 /**
   * @brief LL PKC ECC P-256 Elliptic Curve Init Structure definition
   */
-typedef struct _ll_ecc_curve_init
-{
+typedef struct _ll_ecc_curve_init {
     uint32_t A[ECC_U32_LENGTH];             /**< Operand A array */
     uint32_t B[ECC_U32_LENGTH];             /**< Operand B array */
 
@@ -110,23 +107,21 @@ typedef struct _ll_ecc_curve_init
 
     uint32_t N[ECC_U32_LENGTH];             /**< Prime number N array */
     uint32_t NRSquare[ECC_U32_LENGTH];      /**< R^2 mod N, where R = 2^256 */
-    uint32_t ConstN;                        /**< Montgomery multiplication constant in prime field N, ConstN = 0xee00bc4f */
+    uint32_t ConstN;                        /**< Montgomery multiplication constant in prime field N,
+                                                 ConstN = 0xee00bc4f */
 
     uint32_t H;                             /**< H */
 
     ll_ecc_point_t G;                       /**< ECC Point G */
-
 } ll_ecc_curve_init_t;
 
 /**
   * @brief LL PKC Init Structure definition
   */
-typedef struct _ll_pkc_init
-{
+typedef struct _ll_pkc_init {
     ll_ecc_curve_init_t *p_ecc_curve;     /**< Specifies the pointer to elliptic curve description */
 
     uint32_t data_bits;                 /**< Specifies the Data size: 256 ~ 2048bits        */
-
 } ll_pkc_init_t;
 
 /** @} */
@@ -147,37 +142,39 @@ typedef struct _ll_pkc_init
   * @brief    Flags defines which can be used with LL_PKC_ReadReg function
   * @{
   */
-#define LL_PKC_WORKSTAT_BUSY                                PKC_WORKSTAT_BUSY   /**< Busy flag */
+#define LL_PKC_WORKSTAT_BUSY                      PKC_WORKSTAT_BUSY   /**< Busy flag */
 /** @} */
 
 /** @defgroup PKC_LL_EC_IT IT Defines
   * @brief    Interrupt defines which can be used with LL_PKC_ReadReg and LL_PKC_WriteReg functions
   * @{
   */
-#define LL_PKC_INTEN_DONE                                   PKC_INTEN_DONE      /**< Operation Done Interrupt source              */
-#define LL_PKC_INTEN_ERR                                    PKC_INTEN_ERR       /**< Operation Error Interrupt source             */
-#define LL_PKC_INTEN_BAOVF                                  PKC_INTEN_BAOVF     /**< Big Integer Result Overflow Interrupt source */
+#define LL_PKC_INTEN_DONE                         PKC_INTEN_DONE      /**< Operation Done Interrupt source              */
+#define LL_PKC_INTEN_ERR                          PKC_INTEN_ERR       /**< Operation Error Interrupt source             */
+#define LL_PKC_INTEN_BAOVF                        PKC_INTEN_BAOVF     /**< Big Integer Result Overflow Interrupt source */
 /** @} */
 
 /** @defgroup PKC_LL_EC_BITS_LENGTH Bits Length
   * @{
   */
-#define LL_PKC_BITS_LENGTH_MIN                              (256U)   /**< Bits length min value  */
-#define LL_PKC_BITS_LENGTH_MAX                              (2048U)  /**< Bits length max value  */
-#define LL_PKC_BIGMULTI_BITS_LENGTH_MAX                     (1024U)  /**< Big number multiplication bits Length max value */
+#define LL_PKC_BITS_LENGTH_MIN                    (256U)   /**< Bits length min value  */
+#define LL_PKC_BITS_LENGTH_MAX                    (2048U)  /**< Bits length max value  */
+#define LL_PKC_BIGMULTI_BITS_LENGTH_MAX           (1024U)  /**< Big number multiplication bits Length max value */
 /** @} */
 
 /** @defgroup PKC_LL_EC_OPERATION_MODE Operation Mode
   * @{
   */
-#define LL_PKC_operation_mode_MULTIPLY                       (0x00000000U)                     /**< Multiplication operation mode              */
-#define LL_PKC_operation_mode_INVERTION                      (1UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Inversion operation mode                   */
-#define LL_PKC_operation_mode_ADD                            (2UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Addition operation mode                    */
-#define LL_PKC_operation_mode_SUB                            (3UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Subtraction operation mode                 */
-#define LL_PKC_operation_mode_COMPARE                        (4UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Comparison operation mode                  */
-#define LL_PKC_operation_mode_LEFTSHIFT                      (5UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Left Shift operation mode                  */
-#define LL_PKC_operation_mode_BIGINTEGERMULTIPLY             (6UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Big Number Multiplication operation mode   */
-#define LL_PKC_operation_mode_BIGINTEGERADD                  (7UL << PKC_SW_CTRL_OPMODE_Pos)   /**< Big Number Addition operation mode         */
+#define LL_PKC_operation_mode_MULTIPLY            (0x00000000U)                    /**< Multiplication operation mode */
+#define LL_PKC_operation_mode_INVERTION           (1UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Inversion operation mode      */
+#define LL_PKC_operation_mode_ADD                 (2UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Addition operation mode       */
+#define LL_PKC_operation_mode_SUB                 (3UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Subtraction operation mode    */
+#define LL_PKC_operation_mode_COMPARE             (4UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Comparison operation mode     */
+#define LL_PKC_operation_mode_LEFTSHIFT           (5UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Left Shift operation mode     */
+#define LL_PKC_operation_mode_BIGINTEGERMULTIPLY  (6UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Big Number Multiplication
+                                                                                        operation mode */
+#define LL_PKC_operation_mode_BIGINTEGERADD       (7UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Big Number Addition operation
+                                                                                        mode */
 /** @} */
 
 /** @defgroup PKC_LL_EC_DEFAULT_CONFIG InitStrcut default configuartion

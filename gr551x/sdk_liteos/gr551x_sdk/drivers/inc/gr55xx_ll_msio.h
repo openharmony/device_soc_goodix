@@ -73,32 +73,29 @@ extern "C" {
 /**
   * @brief LL MSIO init Structure definition
   */
-typedef struct _ll_msio_init
-{
+typedef struct _ll_msio_init {
     uint32_t pin;           /**< Specifies the MSIO pins to be MSIO_InitStructured.
                                  This parameter can be any value of @ref MSIO_LL_EC_PIN */
 
     uint32_t direction;     /**< Specifies the direction for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_DIRECTION.
-
-                                 MSIO HW MSIO_InitStructuration can be modified afterwards using unitary function @ref ll_msio_set_pin_direction(). */
+                                 MSIO HW MSIO_InitStructuration can be modified afterwards using unitary function
+                                 @ref ll_msio_set_pin_direction(). */
 
     uint32_t mode;          /**< Specifies the operating mode for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_MODE.
-
-                                 MSIO HW MSIO_InitStructuration can be modified afterwards using unitary function @ref ll_msio_set_pin_mode(). */
+                                 MSIO HW MSIO_InitStructuration can be modified afterwards using unitary function
+                                 @ref ll_msio_set_pin_mode(). */
 
     uint32_t pull;          /**< Specifies the operating Pull-up/Pull down for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_PULL.
-
-                                 MSIO HW configuration can be modified afterwards using unitary function @ref ll_msio_set_pin_pull(). */
+                                 MSIO HW configuration can be modified afterwards using unitary function
+                                 @ref ll_msio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
-                                This parameter can be a value of @ref MSIO_LL_EC_MUX.
-
-                                GPIO HW MSIO_InitStructuration can be modified afterwards using unitary function
-                                @ref ll_msio_set_pin_mux(). */
-
+                                 This parameter can be a value of @ref MSIO_LL_EC_MUX.
+                                 GPIO HW MSIO_InitStructuration can be modified afterwards using unitary function
+                                 @ref ll_msio_set_pin_mux(). */
 } ll_msio_init_t;
 
 /** @} */
@@ -259,15 +256,16 @@ __STATIC_INLINE void ll_msio_set_pin_direction(uint32_t pin_mask, uint32_t direc
 {
     uint32_t oe_mask = (pin_mask << AON_MSIO_PAD_CFG_0_OE_N_Pos) & AON_MSIO_PAD_CFG_0_OE_N;
     uint32_t ie_mask = (pin_mask << AON_MSIO_PAD_CFG_0_IE_N_Pos) & AON_MSIO_PAD_CFG_0_IE_N;
-    if (direction != LL_MSIO_DIRECTION_NONE)
-    {
-        if (direction != LL_MSIO_DIRECTION_INOUT)
-            MODIFY_REG(AON->MSIO_PAD_CFG_0, (ie_mask | oe_mask), (direction != LL_MSIO_DIRECTION_INPUT) ? ie_mask : oe_mask);
-        else
+    if (direction != LL_MSIO_DIRECTION_NONE) {
+        if (direction != LL_MSIO_DIRECTION_INOUT) {
+            MODIFY_REG(AON->MSIO_PAD_CFG_0, (ie_mask | oe_mask), \
+                       (direction != LL_MSIO_DIRECTION_INPUT) ? ie_mask : oe_mask);
+        } else {
             CLEAR_BITS(AON->MSIO_PAD_CFG_0, (ie_mask | oe_mask));
-    }
-    else
+        }
+    } else {
         SET_BITS(AON->MSIO_PAD_CFG_0, (ie_mask | oe_mask));
+    }
 }
 
 /**
@@ -297,14 +295,14 @@ __STATIC_INLINE uint32_t ll_msio_get_pin_direction(uint32_t pin)
     uint32_t oe_mask = (pin << AON_MSIO_PAD_CFG_0_OE_N_Pos) & AON_MSIO_PAD_CFG_0_OE_N;
     uint32_t ie_mask = (pin << AON_MSIO_PAD_CFG_0_IE_N_Pos) & AON_MSIO_PAD_CFG_0_IE_N;
     uint32_t mask    = READ_BITS(AON->MSIO_PAD_CFG_0, (ie_mask | oe_mask));
-    if (mask == (ie_mask | oe_mask))
+    if (mask == (ie_mask | oe_mask)) {
         return LL_MSIO_DIRECTION_NONE;
-    else
-    {
-        if (mask == 0)
+    } else {
+        if (mask == 0) {
             return LL_MSIO_DIRECTION_INOUT;
-        else
+        } else {
             return ((mask == ie_mask) ? LL_MSIO_DIRECTION_OUTPUT : LL_MSIO_DIRECTION_INPUT);
+        }
     }
 }
 
@@ -384,17 +382,14 @@ __STATIC_INLINE uint32_t ll_msio_get_pin_mode(uint32_t pin)
   */
 __STATIC_INLINE void ll_msio_set_pin_pull(uint32_t pin_mask, uint32_t pull)
 {
-    if (pull != LL_MSIO_PULL_NO)
-    {
+    if (pull != LL_MSIO_PULL_NO) {
         uint32_t rtype_mask = (pin_mask << AON_MSIO_PAD_CFG_1_RTYPE_Pos) & AON_MSIO_PAD_CFG_1_RTYPE;
         uint32_t rtype      = (pull != LL_MSIO_PULL_UP) ? 0U : rtype_mask;
         CLEAR_BITS(AON->MSIO_PAD_CFG_0, (pin_mask << AON_MSIO_PAD_CFG_0_RE_N_Pos) & AON_MSIO_PAD_CFG_0_RE_N);
         GLOBAL_EXCEPTION_DISABLE();
         MODIFY_REG(AON->MSIO_PAD_CFG_1, rtype_mask, rtype);
         GLOBAL_EXCEPTION_ENABLE();
-    }
-    else
-    {
+    } else {
         SET_BITS(AON->MSIO_PAD_CFG_0, (pin_mask << AON_MSIO_PAD_CFG_0_RE_N_Pos) & AON_MSIO_PAD_CFG_0_RE_N);
     }
 }
@@ -421,12 +416,9 @@ __STATIC_INLINE void ll_msio_set_pin_pull(uint32_t pin_mask, uint32_t pull)
   */
 __STATIC_INLINE uint32_t ll_msio_get_pin_pull(uint32_t pin)
 {
-    if (READ_BITS(AON->MSIO_PAD_CFG_0, (pin << AON_MSIO_PAD_CFG_0_RE_N_Pos) & AON_MSIO_PAD_CFG_0_RE_N))
-    {
+    if (READ_BITS(AON->MSIO_PAD_CFG_0, (pin << AON_MSIO_PAD_CFG_0_RE_N_Pos) & AON_MSIO_PAD_CFG_0_RE_N)) {
         return LL_MSIO_PULL_NO;
-    }
-    else
-    {
+    } else {
         uint32_t rtype_mask = (pin << AON_MSIO_PAD_CFG_1_RTYPE_Pos) & AON_MSIO_PAD_CFG_1_RTYPE;
         return ((READ_BITS(AON->MSIO_PAD_CFG_1, rtype_mask) != RESET) ? LL_MSIO_PULL_UP : LL_MSIO_PULL_DOWN);
     }
@@ -462,14 +454,11 @@ __STATIC_INLINE uint32_t ll_msio_get_pin_pull(uint32_t pin)
 __STATIC_INLINE void ll_msio_set_pin_mux(uint32_t pin, uint32_t mux)
 {
     uint32_t pos = POSITION_VAL(pin) << 2;
-    if(LL_MSIO_MUX_7 == mux)
-    {
+    if (LL_MSIO_MUX_7 == mux) {
         GLOBAL_EXCEPTION_DISABLE();
         CLEAR_BITS(AON->MSIO_PAD_CFG_1, pin << AON_MSIO_PAD_CFG_1_MCU_OVR_Pos);
         GLOBAL_EXCEPTION_ENABLE();
-    }
-    else
-    {
+    } else {
         MODIFY_REG(MCU_SUB->MSIO_PAD_MUX_CTL, 0xF << pos, mux << pos);
         GLOBAL_EXCEPTION_DISABLE();
         SET_BITS(AON->MSIO_PAD_CFG_1, pin << AON_MSIO_PAD_CFG_1_MCU_OVR_Pos);
@@ -503,13 +492,10 @@ __STATIC_INLINE void ll_msio_set_pin_mux(uint32_t pin, uint32_t mux)
   */
 __STATIC_INLINE uint32_t ll_msio_get_pin_mux(uint32_t pin)
 {
-    if(READ_BITS(AON->MSIO_PAD_CFG_1, pin << AON_MSIO_PAD_CFG_1_MCU_OVR_Pos))
-    {
+    if (READ_BITS(AON->MSIO_PAD_CFG_1, pin << AON_MSIO_PAD_CFG_1_MCU_OVR_Pos)) {
         uint32_t pos = POSITION_VAL(pin) << 2;
         return (READ_BITS(MCU_SUB->MSIO_PAD_MUX_CTL, 0xF << pos) >> pos);
-    }
-    else
-    {
+    } else {
         return LL_MSIO_MUX_7;
     }
 }
@@ -567,7 +553,8 @@ __STATIC_INLINE uint32_t ll_msio_is_input_pin_set(uint32_t pin_mask)
   */
 __STATIC_INLINE void ll_msio_write_output_port(uint32_t port_value)
 {
-    MODIFY_REG(AON->MSIO_PAD_CFG_0, AON_MSIO_PAD_CFG_0_IN, (port_value << AON_MSIO_PAD_CFG_0_IN_Pos) & AON_MSIO_PAD_CFG_0_IN);
+    MODIFY_REG(AON->MSIO_PAD_CFG_0, AON_MSIO_PAD_CFG_0_IN, \
+               (port_value << AON_MSIO_PAD_CFG_0_IN_Pos) & AON_MSIO_PAD_CFG_0_IN);
 }
 
 /**
@@ -666,7 +653,8 @@ __STATIC_INLINE void ll_msio_reset_output_pin(uint32_t pin_mask)
   */
 __STATIC_INLINE void ll_msio_toggle_pin(uint32_t pin_mask)
 {
-    WRITE_REG(AON->MSIO_PAD_CFG_0, (READ_REG(AON->MSIO_PAD_CFG_0) ^ ((pin_mask << AON_MSIO_PAD_CFG_0_IN_Pos) & AON_MSIO_PAD_CFG_0_IN)));
+    WRITE_REG(AON->MSIO_PAD_CFG_0, \
+              (READ_REG(AON->MSIO_PAD_CFG_0) ^ ((pin_mask << AON_MSIO_PAD_CFG_0_IN_Pos) & AON_MSIO_PAD_CFG_0_IN)));
 }
 
 /** @} */

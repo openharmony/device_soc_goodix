@@ -45,8 +45,7 @@ extern void hal_aes_register_callback(aes_callback_t *aes_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static aes_callback_t aes_callback =
-{
+static aes_callback_t aes_callback = {
     .aes_msp_init               = hal_aes_msp_init,
     .aes_msp_deinit             = hal_aes_msp_deinit,
     .aes_error_callback         = hal_aes_error_callback,
@@ -102,17 +101,20 @@ __WEAK void hal_aes_msp_deinit(aes_handle_t *p_aes)
 
 __WEAK void hal_aes_done_callback(aes_handle_t *p_aes)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_aes);
 }
 
 __WEAK void hal_aes_error_callback(aes_handle_t *p_aes)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_aes);
 }
 
 __WEAK void hal_aes_abort_cplt_callback(aes_handle_t *p_aes)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_aes);
 }
 
 #endif /* HAL_AES_MODULE_ENABLED */

@@ -73,8 +73,7 @@ extern "C" {
   * @brief HAL_GPIO Callback function definition
   */
 
-typedef struct _hal_gpio_callback
-{
+typedef struct _hal_gpio_callback {
     void (*gpio_callback)(gpio_regs_t *GPIOx, uint16_t gpio_pin);   /**< GPIO pin detection callback   */
 } hal_gpio_callback_t;
 
@@ -89,8 +88,7 @@ typedef struct _hal_gpio_callback
 /**
   * @brief  GPIO Bit SET and Bit RESET Enumerations
   */
-typedef enum
-{
+typedef enum {
     GPIO_PIN_RESET = 0U,    /**< GPIO pin low level.*/
     GPIO_PIN_SET            /**< GPIO pin high level.*/
 } gpio_pin_state_t;
@@ -105,8 +103,7 @@ typedef enum
 /**
   * @brief   GPIO init structure definition
   */
-typedef struct _gpio_init
-{
+typedef struct _gpio_init {
     uint32_t pin;       /**< Specifies the GPIO pins to be configured.
                              This parameter can be any value of @ref GPIO_pins */
 
@@ -163,13 +160,17 @@ typedef struct _gpio_init
   *           - Y  : IT trigger detection
   * @{
   */
-#define GPIO_MODE_INPUT                         (LL_GPIO_MODE_INPUT << 0)       /**< Input Mode                                         */
-#define GPIO_MODE_OUTPUT                        (LL_GPIO_MODE_OUTPUT << 0)      /**< Output Mode                                        */
-#define GPIO_MODE_MUX                           (LL_GPIO_MODE_MUX << 0)         /**< Mux Mode                                           */
-#define GPIO_MODE_IT_RISING                     (LL_GPIO_TRIGGER_RISING << 4)   /**< Interrupt Mode with Rising edge trigger detection  */
-#define GPIO_MODE_IT_FALLING                    (LL_GPIO_TRIGGER_FALLING << 4)  /**< Interrupt Mode with Falling edge trigger detection */
-#define GPIO_MODE_IT_HIGH                       (LL_GPIO_TRIGGER_HIGH << 4)     /**< Interrupt Mode with High-level trigger detection   */
-#define GPIO_MODE_IT_LOW                        (LL_GPIO_TRIGGER_LOW << 4)      /**< Interrupt Mode with Low-level trigger detection    */
+#define GPIO_MODE_INPUT                         (LL_GPIO_MODE_INPUT << 0)       /**< Input Mode */
+#define GPIO_MODE_OUTPUT                        (LL_GPIO_MODE_OUTPUT << 0)      /**< Output Mode */
+#define GPIO_MODE_MUX                           (LL_GPIO_MODE_MUX << 0)         /**< Mux Mode */
+#define GPIO_MODE_IT_RISING                     (LL_GPIO_TRIGGER_RISING << 4)   /**< Interrupt Mode with Rising edge
+                                                                                     trigger detection */
+#define GPIO_MODE_IT_FALLING                    (LL_GPIO_TRIGGER_FALLING << 4)  /**< Interrupt Mode with Falling edge
+                                                                                     trigger detection */
+#define GPIO_MODE_IT_HIGH                       (LL_GPIO_TRIGGER_HIGH << 4)     /**< Interrupt Mode with High-level
+                                                                                     trigger detection */
+#define GPIO_MODE_IT_LOW                        (LL_GPIO_TRIGGER_LOW << 4)      /**< Interrupt Mode with Low-level
+                                                                                     trigger detection */
 /** @} */
 
 /** @defgroup GPIO_pull GPIO pull
@@ -188,7 +189,7 @@ typedef struct _gpio_init
 {                                                \
     .pin        = GPIO_PIN_ALL,                  \
     .mode       = GPIO_MODE_INPUT,               \
-    .pull       = GPIO_PULLDOWN,                \
+    .pull       = GPIO_PULLDOWN,                 \
     .mux        = GPIO_PIN_MUX_GPIO,             \
 }
 
@@ -236,7 +237,7 @@ typedef struct _gpio_init
   * @param __PIN__ GPIO pins.
   * @retval SET (__PIN__ is valid) or RESET (__PIN__ is invalid)
   */
-#define IS_GPIO_PIN(__PIN__)        ((((__PIN__) & GPIO_PIN_MASK) != 0x00U) &&\
+#define IS_GPIO_PIN(__PIN__)        ((((__PIN__) & GPIO_PIN_MASK) != 0x00U) && \
                                      (((__PIN__) & ~GPIO_PIN_MASK) == 0x00U))
 
 /**
@@ -244,12 +245,12 @@ typedef struct _gpio_init
   * @param __MODE__ GPIO mode.
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
-#define IS_GPIO_MODE(__MODE__)      (((__MODE__) == GPIO_MODE_INPUT)              ||\
-                                     ((__MODE__) == GPIO_MODE_OUTPUT)             ||\
-                                     ((__MODE__) == GPIO_MODE_MUX)                ||\
-                                     ((__MODE__) == GPIO_MODE_IT_RISING)          ||\
-                                     ((__MODE__) == GPIO_MODE_IT_FALLING)         ||\
-                                     ((__MODE__) == GPIO_MODE_IT_HIGH)            ||\
+#define IS_GPIO_MODE(__MODE__)      (((__MODE__) == GPIO_MODE_INPUT)              || \
+                                     ((__MODE__) == GPIO_MODE_OUTPUT)             || \
+                                     ((__MODE__) == GPIO_MODE_MUX)                || \
+                                     ((__MODE__) == GPIO_MODE_IT_RISING)          || \
+                                     ((__MODE__) == GPIO_MODE_IT_FALLING)         || \
+                                     ((__MODE__) == GPIO_MODE_IT_HIGH)            || \
                                      ((__MODE__) == GPIO_MODE_IT_LOW))
 
 /**
@@ -257,7 +258,7 @@ typedef struct _gpio_init
   * @param __PULL__ GPIO pull type.
   * @retval SET (__PULL__ is valid) or RESET (__PULL__ is invalid)
   */
-#define IS_GPIO_PULL(__PULL__)      (((__PULL__) == GPIO_NOPULL)   ||\
+#define IS_GPIO_PULL(__PULL__)      (((__PULL__) == GPIO_NOPULL)   || \
                                      ((__PULL__) == GPIO_PULLUP)   || \
                                      ((__PULL__) == GPIO_PULLDOWN))
 

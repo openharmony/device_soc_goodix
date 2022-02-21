@@ -116,7 +116,7 @@ void app_assert_err_cb(const char *expr, const char *file, int line);
 
 /** @} */
 
-#endif 
+#endif
 
 
 

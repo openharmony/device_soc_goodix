@@ -73,13 +73,11 @@ extern "C" {
 /**
   * @brief HAL ADC State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_ADC_STATE_RESET        = 0x00,    /**< Peripheral not initialized                          */
     HAL_ADC_STATE_READY        = 0x01,    /**< Peripheral initialized and ready for use            */
     HAL_ADC_STATE_BUSY         = 0x02,    /**< An internal process is ongoing                      */
     HAL_ADC_STATE_ERROR        = 0x04     /**< Peripheral in error                                 */
-
 } hal_adc_state_t;
 
 /** @} */
@@ -107,8 +105,7 @@ typedef ll_adc_init_t       adc_init_t;
 /**
   * @brief ADC handle Structure definition
   */
-typedef struct _adc_handle
-{
+typedef struct _adc_handle {
     adc_init_t              init;           /**< ADC configuration parameters      */
 
     uint16_t               *p_buffer;       /**< Pointer to ADC conversion buffer  */
@@ -126,7 +123,6 @@ typedef struct _adc_handle
     __IO uint32_t           error_code;     /**< ADC error code                    */
 
     uint32_t                retention[2];   /**< ADC important register information. */
-
 } adc_handle_t;
 /** @} */
 
@@ -143,8 +139,7 @@ typedef struct _adc_handle
 /**
   * @brief HAL ADC Callback function definition
   */
-typedef struct _adc_callback
-{
+typedef struct _adc_callback {
     void (*adc_msp_init)(adc_handle_t *p_adc);                  /**< ADC init MSP callback                  */
     void (*adc_msp_deinit)(adc_handle_t *p_adc);                /**< ADC de-init MSP callback               */
     void (*adc_conv_cplt_callback)(adc_handle_t *p_adc);        /**< ADC conversion completed callback      */
@@ -279,12 +274,13 @@ typedef struct _adc_callback
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval None
   */
-#define __HAL_ADC_FLUSH_FIFO(__HANDLE__)                       do {                                 \
-                                                                   while(ll_adc_is_fifo_notempty()) \
-                                                                   {                                \
-                                                                       ll_adc_read_fifo();          \
-                                                                   }                                \
-                                                               } while(0)
+#define __HAL_ADC_FLUSH_FIFO(__HANDLE__)                       \
+do {                                                           \
+    while (ll_adc_is_fifo_notempty())                          \
+    {                                                          \
+        ll_adc_read_fifo();                                    \
+    }                                                          \
+} while (0)
 
 /** @} */
 
@@ -593,7 +589,6 @@ hal_status_t hal_adc_resume_reg(adc_handle_t *p_adc);
 /** @} */
 
 /** @} */
-
 
 #ifdef __cplusplus
 }

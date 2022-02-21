@@ -73,114 +73,135 @@ extern "C" {
 /**
   * @brief LL SPIM init structures definition
   */
-typedef struct _ll_spim_init_t
-{
+typedef struct _ll_spim_init_t {
     uint32_t transfer_direction;    /**< Specifies the SPI unidirectional or bidirectional data mode.
                                          This parameter can be a value of @ref SPI_LL_EC_TRANSFER_MODE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_transfer_direction().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_transfer_direction().   */
 
     uint32_t data_size;             /**< Specifies the SPI data size.
                                          This parameter can be a value of @ref SPI_LL_EC_DATASIZE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_data_size().   */
 
     uint32_t clock_polarity;        /**< Specifies the serial clock steady state.
                                          This parameter can be a value of @ref SPI_LL_EC_POLARITY.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_clock_polarity().   */
 
     uint32_t clock_phase;           /**< Specifies the clock active edge for the bit capture.
                                          This parameter can be a value of @ref SPI_LL_EC_PHASE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_clock_phase().   */
 
     uint32_t slave_select;          /**< Specifies the SPI slave select.
                                          This parameter can be a value of @ref SPI_LL_EC_SLAVESELECT.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_enable_ss().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_enable_ss().   */
 
-    uint32_t baud_rate;             /**< Specifies the BaudRate prescaler value which will be used to configure the transmit and receive SCK clock.
-                                         This parameter can be one even value between 2 and 65534, if the value is 0, the SCLK is disable.
-                                         @note The communication clock is derived from the master clock. The slave clock does not need to be set.
+    uint32_t baud_rate;             /**< Specifies the BaudRate prescaler value which will be used to
+                                         configure the transmit and receive SCK clock.
+                                         This parameter can be one even value between 2 and 65534,
+                                         if the value is 0, the SCLK is disable.
+                                         @note The communication clock is derived from the master clock.
+                                         The slave clock does not need to be set.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_baud_rate_prescaler().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_baud_rate_prescaler().   */
 } ll_spim_init_t;
 
 /**
   * @brief  SPIS init structures definition
   */
-typedef struct _ll_spis_init_t
-{
+typedef struct _ll_spis_init_t {
     uint32_t data_size;             /**< Specifies the SPI data width.
                                          This parameter can be a value of @ref SPI_LL_EC_DATASIZE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_data_size().   */
 
     uint32_t clock_polarity;        /**< Specifies the serial clock steady state.
                                          This parameter can be a value of @ref SPI_LL_EC_POLARITY.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().   */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_clock_polarity().   */
 
     uint32_t clock_phase;           /**< Specifies the clock active edge for the bit capture.
                                          This parameter can be a value of @ref SPI_LL_EC_PHASE.
 
-                                         This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().   */
-
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_spi_set_clock_phase().   */
 } ll_spis_init_t;
 
 /**
   * @brief  QSPI init structures definition
   */
-typedef struct _ll_qspi_init_t
-{
+typedef struct _ll_qspi_init_t {
     uint32_t transfer_direction;        /**< Specifies the QSPI transfer or receive mode.
                                              This parameter can be a value of @ref SPI_LL_EC_TRANSFER_MODE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_transfer_direction().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_transfer_direction().   */
 
     uint32_t instruction_size;          /**< Specifies the QSPI instruction width.
                                              This parameter can be a value of @ref SPI_LL_EC_INSTRUCTIONSIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_instruction_size().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_instruction_size().   */
 
     uint32_t address_size;              /**< Specifies the QSPI address width.
                                              This parameter can be a value of @ref SPI_LL_EC_ADDRESSSIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_address_size().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_address_size().   */
 
     uint32_t inst_addr_transfer_format; /**< Specifies the QSPI instruction and address transfer format.
                                              This parameter can be a value of @ref SPI_LL_EC_ADDRINSTTRNASFERFORMAT.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_add_inst_transfer_format().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_add_inst_transfer_format().   */
 
     uint32_t wait_cycles;               /**< Specifies the QSPI dummy clock.
                                              This parameter can be one of the following values: 0 ~ 31.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_wait_cycles().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_wait_cycles().   */
 
     uint32_t data_size;                 /**< Specifies the SPI data width.
                                              This parameter can be a value of @ref SPI_LL_EC_DATASIZE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_data_size().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_data_size().   */
 
     uint32_t clock_polarity;            /**< Specifies the serial clock steady state.
                                              This parameter can be a value of @ref SPI_LL_EC_POLARITY.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_polarity().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_clock_polarity().   */
 
     uint32_t clock_phase;               /**< Specifies the clock active edge for the bit capture.
                                              This parameter can be a value of @ref SPI_LL_EC_PHASE.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_clock_phase().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_clock_phase().   */
 
-    uint32_t baud_rate;                 /**< Specifies the BaudRate prescaler value which will be used to configure the transmit and receive SCK clock.
-                                             This parameter can be one even value between 2 and 65534, if the value is 0, the SCLK is disable.
-                                             @note The communication clock is derived from the master clock. The slave clock does not need to be set.
+    uint32_t baud_rate;                 /**< Specifies the BaudRate prescaler value which will be used to
+                                             configure the transmit and receive SCK clock.
+                                             This parameter can be one even value between 2 and 65534,
+                                             if the value is 0, the SCLK is disable.
+                                             @note The communication clock is derived from the master clock.
+                                             The slave clock does not need to be set.
 
-                                             This feature can be modified afterwards using unitary function @ref ll_spi_set_baud_rate_prescaler().   */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_spi_set_baud_rate_prescaler().   */
 
-    uint32_t rx_sample_delay;           /**< Specifies the RX sample delay. It is used to delay the sample of the RX input port.
+    uint32_t rx_sample_delay;           /**< Specifies the RX sample delay.
+                                             It is used to delay the sample of the RX input port.
                                              This parameter can be a number between 0 and 0x7 */
 } ll_qspi_init_t;
 
@@ -215,26 +236,26 @@ typedef struct _ll_qspi_init_t
   * @brief    Interrupt definitions which can be used with LL_SPI_ReadReg and  LL_SPI_WriteReg functions
   * @{
   */
-#define LL_SSI_IM_MST                       SSI_INTMASK_MSTIM           /**< Multi-Master Contention Interrupt enable   */
-#define LL_SSI_IM_RXF                       SSI_INTMASK_RXFIM           /**< Receive FIFO Full Interrupt enable         */
-#define LL_SSI_IM_RXO                       SSI_INTMASK_RXOIM           /**< Receive FIFO Overflow Interrupt  enable    */
-#define LL_SSI_IM_RXU                       SSI_INTMASK_RXUIM           /**< Receive FIFO Underflow Interrupt  enable   */
-#define LL_SSI_IM_TXO                       SSI_INTMASK_TXOIM           /**< Transmit FIFO Overflow Interrupt  enable   */
-#define LL_SSI_IM_TXE                       SSI_INTMASK_TXEIM           /**< Transmit FIFO Empty Interrupt  enable      */
+#define LL_SSI_IM_MST                       SSI_INTMASK_MSTIM         /**< Multi-Master Contention Interrupt enable   */
+#define LL_SSI_IM_RXF                       SSI_INTMASK_RXFIM         /**< Receive FIFO Full Interrupt enable         */
+#define LL_SSI_IM_RXO                       SSI_INTMASK_RXOIM         /**< Receive FIFO Overflow Interrupt  enable    */
+#define LL_SSI_IM_RXU                       SSI_INTMASK_RXUIM         /**< Receive FIFO Underflow Interrupt  enable   */
+#define LL_SSI_IM_TXO                       SSI_INTMASK_TXOIM         /**< Transmit FIFO Overflow Interrupt  enable   */
+#define LL_SSI_IM_TXE                       SSI_INTMASK_TXEIM         /**< Transmit FIFO Empty Interrupt  enable      */
 
-#define LL_SSI_IS_MST                       SSI_INTSTAT_MSTIS           /**< Multi-Master Contention Interrupt flag     */
-#define LL_SSI_IS_RXF                       SSI_INTSTAT_RXFIS           /**< Receive FIFO Full Interrupt flag           */
-#define LL_SSI_IS_RXO                       SSI_INTSTAT_RXOIS           /**< Receive FIFO Overflow Interrupt  flag      */
-#define LL_SSI_IS_RXU                       SSI_INTSTAT_RXUIS           /**< Receive FIFO Underflow Interrupt  flag     */
-#define LL_SSI_IS_TXO                       SSI_INTSTAT_TXOIS           /**< Transmit FIFO Overflow Interrupt  flag     */
-#define LL_SSI_IS_TXE                       SSI_INTSTAT_TXEIS           /**< Transmit FIFO Empty Interrupt  flag        */
+#define LL_SSI_IS_MST                       SSI_INTSTAT_MSTIS         /**< Multi-Master Contention Interrupt flag     */
+#define LL_SSI_IS_RXF                       SSI_INTSTAT_RXFIS         /**< Receive FIFO Full Interrupt flag           */
+#define LL_SSI_IS_RXO                       SSI_INTSTAT_RXOIS         /**< Receive FIFO Overflow Interrupt  flag      */
+#define LL_SSI_IS_RXU                       SSI_INTSTAT_RXUIS         /**< Receive FIFO Underflow Interrupt  flag     */
+#define LL_SSI_IS_TXO                       SSI_INTSTAT_TXOIS         /**< Transmit FIFO Overflow Interrupt  flag     */
+#define LL_SSI_IS_TXE                       SSI_INTSTAT_TXEIS         /**< Transmit FIFO Empty Interrupt  flag        */
 
-#define LL_SSI_RIS_MST                      SSI_RAW_INTSTAT_MSTIR       /**< Multi-Master Contention RAW Interrupt flag */
-#define LL_SSI_RIS_RXF                      SSI_RAW_INTSTAT_RXFIR       /**< Receive FIFO Full RAW Interrupt flag       */
-#define LL_SSI_RIS_RXO                      SSI_RAW_INTSTAT_RXOIR       /**< Receive FIFO Overflow RAW Interrupt  flag  */
-#define LL_SSI_RIS_RXU                      SSI_RAW_INTSTAT_RXUIR       /**< Receive FIFO Underflow RAW Interrupt  flag */
-#define LL_SSI_RIS_TXO                      SSI_RAW_INTSTAT_TXOIR       /**< Transmit FIFO Overflow RAW Interrupt  flag */
-#define LL_SSI_RIS_TXE                      SSI_RAW_INTSTAT_TXEIR       /**< Transmit FIFO Empty RAW Interrupt  flag    */
+#define LL_SSI_RIS_MST                      SSI_RAW_INTSTAT_MSTIR     /**< Multi-Master Contention RAW Interrupt flag */
+#define LL_SSI_RIS_RXF                      SSI_RAW_INTSTAT_RXFIR     /**< Receive FIFO Full RAW Interrupt flag       */
+#define LL_SSI_RIS_RXO                      SSI_RAW_INTSTAT_RXOIR     /**< Receive FIFO Overflow RAW Interrupt  flag  */
+#define LL_SSI_RIS_RXU                      SSI_RAW_INTSTAT_RXUIR     /**< Receive FIFO Underflow RAW Interrupt  flag */
+#define LL_SSI_RIS_TXO                      SSI_RAW_INTSTAT_TXOIR     /**< Transmit FIFO Overflow RAW Interrupt  flag */
+#define LL_SSI_RIS_TXE                      SSI_RAW_INTSTAT_TXEIR     /**< Transmit FIFO Empty RAW Interrupt  flag    */
 /** @} */
 
 /** @defgroup SPI_LL_EC_SPIFRAMEFORMAT SPI Frame Format
@@ -282,52 +303,77 @@ typedef struct _ll_qspi_init_t
 /** @defgroup SPI_LL_EC_MICROWIRECOMMANDSIZE MicroWire CommandSize
   * @{
   */
-#define LL_SSI_MW_CMDSIZE_1BIT              0x00000000UL                    /**< CMD length for Microwire transfer:  1 bits */
-#define LL_SSI_MW_CMDSIZE_2BIT              (1UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  2 bits */
-#define LL_SSI_MW_CMDSIZE_3BIT              (2UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  3 bits */
-#define LL_SSI_MW_CMDSIZE_4BIT              (3UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  4 bits */
-#define LL_SSI_MW_CMDSIZE_5BIT              (4UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  5 bits */
-#define LL_SSI_MW_CMDSIZE_6BIT              (5UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  6 bits */
-#define LL_SSI_MW_CMDSIZE_7BIT              (6UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  7 bits */
-#define LL_SSI_MW_CMDSIZE_8BIT              (7UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  8 bits */
-#define LL_SSI_MW_CMDSIZE_9BIT              (8UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer:  9 bits */
-#define LL_SSI_MW_CMDSIZE_10BIT             (9UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire transfer: 10 bits */
-#define LL_SSI_MW_CMDSIZE_11BIT             (10UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire transfer: 11 bits */
-#define LL_SSI_MW_CMDSIZE_12BIT             (11UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire transfer: 12 bits */
-#define LL_SSI_MW_CMDSIZE_13BIT             (12UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire transfer: 13 bits */
-#define LL_SSI_MW_CMDSIZE_14BIT             (13UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire transfer: 14 bits */
-#define LL_SSI_MW_CMDSIZE_15BIT             (14UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire transfer: 15 bits */
-#define LL_SSI_MW_CMDSIZE_16BIT             (15UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire transfer: 16 bits */
+#define LL_SSI_MW_CMDSIZE_1BIT              0x00000000UL                    /**< CMD length for Microwire
+                                                                                 transfer:  1 bits */
+#define LL_SSI_MW_CMDSIZE_2BIT              (1UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  2 bits */
+#define LL_SSI_MW_CMDSIZE_3BIT              (2UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  3 bits */
+#define LL_SSI_MW_CMDSIZE_4BIT              (3UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  4 bits */
+#define LL_SSI_MW_CMDSIZE_5BIT              (4UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  5 bits */
+#define LL_SSI_MW_CMDSIZE_6BIT              (5UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  6 bits */
+#define LL_SSI_MW_CMDSIZE_7BIT              (6UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  7 bits */
+#define LL_SSI_MW_CMDSIZE_8BIT              (7UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  8 bits */
+#define LL_SSI_MW_CMDSIZE_9BIT              (8UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer:  9 bits */
+#define LL_SSI_MW_CMDSIZE_10BIT             (9UL << SSI_CTRL0_CFS_Pos)      /**< CMD length for Microwire
+                                                                                 transfer: 10 bits */
+#define LL_SSI_MW_CMDSIZE_11BIT             (10UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire
+                                                                                 transfer: 11 bits */
+#define LL_SSI_MW_CMDSIZE_12BIT             (11UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire
+                                                                                 transfer: 12 bits */
+#define LL_SSI_MW_CMDSIZE_13BIT             (12UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire
+                                                                                 transfer: 13 bits */
+#define LL_SSI_MW_CMDSIZE_14BIT             (13UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire
+                                                                                 transfer: 14 bits */
+#define LL_SSI_MW_CMDSIZE_15BIT             (14UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire
+                                                                                 transfer: 15 bits */
+#define LL_SSI_MW_CMDSIZE_16BIT             (15UL << SSI_CTRL0_CFS_Pos)     /**< CMD length for Microwire
+                                                                                 transfer: 16 bits */
 /** @} */
 
 /** @defgroup SPI_LL_EC_TEST_MODE Test Mode
   * @{
   */
-#define LL_SSI_NORMAL_MODE                  0x00000000UL                    /**< Normal mode for SPI transfer                           */
-#define LL_SSI_TEST_MODE                    (1UL << SSI_CTRL0_SRL_Pos)      /**< Test mode for SPI transfer: Rx and Tx connected inside */
+#define LL_SSI_NORMAL_MODE                  0x00000000UL                    /**< Normal mode for SPI transfer */
+#define LL_SSI_TEST_MODE                    (1UL << SSI_CTRL0_SRL_Pos)      /**< Test mode for SPI transfer:
+                                                                                 Rx and Tx connected inside   */
 /** @} */
 
 /** @defgroup SPI_LL_EC_SLAVEOUT_ENABLE Slave Out Enable
   * @{
   */
-#define LL_SSI_SLAVE_OUTDIS                 0x00000000UL                    /**< Output enable for SPI transfer as slave    */
-#define LL_SSI_SLAVE_OUTEN                  (1UL << SSI_CTRL0_SLVOE_Pos)    /**< Output disable for SPI transfer as slave   */
+#define LL_SSI_SLAVE_OUTDIS                 0x00000000UL                    /**< Output enable for SPI transfer
+                                                                                 as slave */
+#define LL_SSI_SLAVE_OUTEN                  (1UL << SSI_CTRL0_SLVOE_Pos)    /**< Output disable for SPI transfer
+                                                                                 as slave */
 /** @} */
 
 /** @defgroup SPI_LL_EC_TRANSFER_MODE Transfer Mode
   * @{
   */
-#define LL_SSI_FULL_DUPLEX                  0x00000000UL                    /**< Full-Duplex mode. Rx and Tx transfer on 2 lines */
-#define LL_SSI_SIMPLEX_TX                   (1UL << SSI_CTRL0_TMOD_Pos)     /**< Simplex Tx mode.  Tx transfer only on 1 line    */
-#define LL_SSI_SIMPLEX_RX                   (2UL << SSI_CTRL0_TMOD_Pos)     /**< Simplex Rx mode.  Rx transfer only on 1 line    */
-#define LL_SSI_READ_EEPROM                  (3UL << SSI_CTRL0_TMOD_Pos)     /**< Read EEPROM mode.  Rx transfer only on 1 line   */
+#define LL_SSI_FULL_DUPLEX                  0x00000000UL                    /**< Full-Duplex mode.
+                                                                                 Rx and Tx transfer on 2 lines */
+#define LL_SSI_SIMPLEX_TX                   (1UL << SSI_CTRL0_TMOD_Pos)     /**< Simplex Tx mode.
+                                                                                 Tx transfer only on 1 line    */
+#define LL_SSI_SIMPLEX_RX                   (2UL << SSI_CTRL0_TMOD_Pos)     /**< Simplex Rx mode.
+                                                                                 Rx transfer only on 1 line    */
+#define LL_SSI_READ_EEPROM                  (3UL << SSI_CTRL0_TMOD_Pos)     /**< Read EEPROM mode.
+                                                                                 Rx transfer only on 1 line    */
 /** @} */
 
 /** @defgroup SPI_LL_EC_PHASE Clock Phase
   * @{
   */
-#define LL_SSI_SCPHA_1EDGE                  0x00000000UL                    /**< First clock transition is the first data capture edge  */
-#define LL_SSI_SCPHA_2EDGE                  (1UL << SSI_CTRL0_SCPHA_Pos)    /**< Second clock transition is the first data capture edge */
+#define LL_SSI_SCPHA_1EDGE                  0x00000000UL                    /**< First clock transition is
+                                                                                 the first data capture edge */
+#define LL_SSI_SCPHA_2EDGE                  (1UL << SSI_CTRL0_SCPHA_Pos)    /**< Second clock transition is
+                                                                                 the first data capture edge */
 /** @} */
 
 /** @defgroup SPI_LL_EC_POLARITY Clock Polarity
@@ -361,8 +407,8 @@ typedef struct _ll_qspi_init_t
 /** @defgroup SPI_LL_EC_SLAVESELECT Slave Select
   * @{
   */
-#define LL_SSI_SLAVE1                       SSI_SE_SLAVE1               /**< Enable slave1 select pin for SPI transfer  */
-#define LL_SSI_SLAVE0                       SSI_SE_SLAVE0               /**< Enable slave0 select pin for SPI transfer  */
+#define LL_SSI_SLAVE1                       SSI_SE_SLAVE1              /**< Enable slave1 select pin for SPI transfer */
+#define LL_SSI_SLAVE0                       SSI_SE_SLAVE0              /**< Enable slave0 select pin for SPI transfer */
 /** @} */
 
 /** @defgroup SPI_LL_EC_DMA DMA Defines
@@ -378,39 +424,63 @@ typedef struct _ll_qspi_init_t
 /** @defgroup SPI_LL_EC_INSTRUCTIONSIZE QSPI Instruction Size
   * @{
   */
-#define LL_SSI_INSTSIZE_0BIT                0x00000000UL                        /**< Instruction length for QSPI transfer:  0 bits */
-#define LL_SSI_INSTSIZE_4BIT                (1UL << SSI_SCTRL0_INSTL_Pos)       /**< Instructoin length for QSPI transfer:  4 bits */
-#define LL_SSI_INSTSIZE_8BIT                (2UL << SSI_SCTRL0_INSTL_Pos)       /**< Instructoin length for QSPI transfer:  8 bits */
-#define LL_SSI_INSTSIZE_16BIT               (3UL << SSI_SCTRL0_INSTL_Pos)       /**< Instructoin length for QSPI transfer: 16 bits */
+#define LL_SSI_INSTSIZE_0BIT                0x00000000UL                        /**< Instruction length for QSPI
+                                                                                     transfer:  0 bits */
+#define LL_SSI_INSTSIZE_4BIT                (1UL << SSI_SCTRL0_INSTL_Pos)       /**< Instructoin length for QSPI
+                                                                                     transfer:  4 bits */
+#define LL_SSI_INSTSIZE_8BIT                (2UL << SSI_SCTRL0_INSTL_Pos)       /**< Instructoin length for QSPI
+                                                                                     transfer:  8 bits */
+#define LL_SSI_INSTSIZE_16BIT               (3UL << SSI_SCTRL0_INSTL_Pos)       /**< Instructoin length for QSPI
+                                                                                     transfer: 16 bits */
 /** @} */
 
 /** @defgroup SPI_LL_EC_ADDRESSSIZE QSPI Address Size
   * @{
   */
-#define LL_SSI_ADDRSIZE_0BIT                0x00000000UL                        /**< Address length for QSPI transfer:  0 bits */
-#define LL_SSI_ADDRSIZE_4BIT                (1UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer:  4 bits */
-#define LL_SSI_ADDRSIZE_8BIT                (2UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer:  8 bits */
-#define LL_SSI_ADDRSIZE_12BIT               (3UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 12 bits */
-#define LL_SSI_ADDRSIZE_16BIT               (4UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 16 bits */
-#define LL_SSI_ADDRSIZE_20BIT               (5UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 20 bits */
-#define LL_SSI_ADDRSIZE_24BIT               (6UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 24 bits */
-#define LL_SSI_ADDRSIZE_28BIT               (7UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 28 bits */
-#define LL_SSI_ADDRSIZE_32BIT               (8UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 32 bits */
-#define LL_SSI_ADDRSIZE_36BIT               (9UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI transfer: 36 bits */
-#define LL_SSI_ADDRSIZE_40BIT               (10UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI transfer: 40 bits */
-#define LL_SSI_ADDRSIZE_44BIT               (11UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI transfer: 44 bits */
-#define LL_SSI_ADDRSIZE_48BIT               (12UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI transfer: 48 bits */
-#define LL_SSI_ADDRSIZE_52BIT               (13UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI transfer: 52 bits */
-#define LL_SSI_ADDRSIZE_56BIT               (14UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI transfer: 56 bits */
-#define LL_SSI_ADDRSIZE_60BIT               (15UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI transfer: 60 bits */
+#define LL_SSI_ADDRSIZE_0BIT                0x00000000UL                        /**< Address length for QSPI
+                                                                                     transfer:  0 bits */
+#define LL_SSI_ADDRSIZE_4BIT                (1UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer:  4 bits */
+#define LL_SSI_ADDRSIZE_8BIT                (2UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer:  8 bits */
+#define LL_SSI_ADDRSIZE_12BIT               (3UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 12 bits */
+#define LL_SSI_ADDRSIZE_16BIT               (4UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 16 bits */
+#define LL_SSI_ADDRSIZE_20BIT               (5UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 20 bits */
+#define LL_SSI_ADDRSIZE_24BIT               (6UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 24 bits */
+#define LL_SSI_ADDRSIZE_28BIT               (7UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 28 bits */
+#define LL_SSI_ADDRSIZE_32BIT               (8UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 32 bits */
+#define LL_SSI_ADDRSIZE_36BIT               (9UL << SSI_SCTRL0_ADDRL_Pos)       /**< Address length for QSPI
+                                                                                     transfer: 36 bits */
+#define LL_SSI_ADDRSIZE_40BIT               (10UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI
+                                                                                     transfer: 40 bits */
+#define LL_SSI_ADDRSIZE_44BIT               (11UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI
+                                                                                     transfer: 44 bits */
+#define LL_SSI_ADDRSIZE_48BIT               (12UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI
+                                                                                     transfer: 48 bits */
+#define LL_SSI_ADDRSIZE_52BIT               (13UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI
+                                                                                     transfer: 52 bits */
+#define LL_SSI_ADDRSIZE_56BIT               (14UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI
+                                                                                     transfer: 56 bits */
+#define LL_SSI_ADDRSIZE_60BIT               (15UL << SSI_SCTRL0_ADDRL_Pos)      /**< Address length for QSPI
+                                                                                     transfer: 60 bits */
 /** @} */
 
 /** @defgroup SPI_LL_EC_ADDRINSTTRNASFERFORMAT QSPI Address and Instruction Transfer Format
   * @{
   */
-#define LL_SSI_INST_ADDR_ALL_IN_SPI         0x00000000UL                        /**< Instruction and address are sent in SPI mode */
-#define LL_SSI_INST_IN_SPI_ADDR_IN_SPIFRF   (1UL << SSI_SCTRL0_TRANSTYPE_Pos)   /**< Instruction is in sent in SPI mode and address is sent in Daul/Quad SPI mode */
-#define LL_SSI_INST_ADDR_ALL_IN_SPIFRF      (2UL << SSI_SCTRL0_TRANSTYPE_Pos)   /**< Instruction and address are sent in Daul/Quad SPI mode */
+#define LL_SSI_INST_ADDR_ALL_IN_SPI         0x00000000UL                        /**< Instruction and address are sent
+                                                                                     in SPI mode */
+#define LL_SSI_INST_IN_SPI_ADDR_IN_SPIFRF   (1UL << SSI_SCTRL0_TRANSTYPE_Pos)   /**< Instruction is in sent in SPI mode
+                                                                                     and address is sent in Daul/Quad
+                                                                                     SPI mode */
+#define LL_SSI_INST_ADDR_ALL_IN_SPIFRF      (2UL << SSI_SCTRL0_TRANSTYPE_Pos)   /**< Instruction and address are sent
+                                                                                     in Daul/Quad SPI mode */
 /** @} */
 
 /** @defgroup SPI_LL_EC_DEFAULT_CONFIG InitStrcut default configuartion
@@ -448,7 +518,7 @@ typedef struct _ll_qspi_init_t
     .transfer_direction  = LL_SSI_SIMPLEX_TX,              \
     .instruction_size    = LL_SSI_INSTSIZE_8BIT,           \
     .address_size        = LL_SSI_ADDRSIZE_24BIT,          \
-    .inst_addr_transfer_format = LL_SSI_INST_ADDR_ALL_IN_SPI,\
+    .inst_addr_transfer_format = LL_SSI_INST_ADDR_ALL_IN_SPI, \
     .wait_cycles         = 0,                              \
     .data_size           = LL_SSI_DATASIZE_8BIT,           \
     .clock_polarity      = LL_SSI_SCPOL_LOW,               \

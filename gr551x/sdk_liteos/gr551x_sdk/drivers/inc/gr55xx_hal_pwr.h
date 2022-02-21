@@ -78,7 +78,6 @@ typedef void (*pwr_slp_elapsed_handler_t)(void);
 
 /** @} */
 
-
 /** @defgroup HAL_PWR_CALLBACK_HANDLER PWR callback handle
   * @{
   */
@@ -86,8 +85,7 @@ typedef void (*pwr_slp_elapsed_handler_t)(void);
 /**
   * @brief PWR callback handle Structure definition
   */
-typedef struct _hal_pwr_handler
-{
+typedef struct _hal_pwr_handler {
     pwr_slp_elapsed_handler_t       pwr_slp_elapsed_hander;     /**< PWR sleep timer elapsed callback */
 } hal_pwr_handler_t;
 
@@ -206,7 +204,7 @@ typedef struct _hal_pwr_handler
   * @param __COND__ PWR wakeup condition.
   * @retval SET (__COND__ is valid) or RESET (__COND__ is invalid)
   */
-#define IS_PWR_WAKEUP_CONDITION(__COND__)       ((((__COND__) & PWR_WKUP_COND_ALL) != 0x00U) &&\
+#define IS_PWR_WAKEUP_CONDITION(__COND__)       ((((__COND__) & PWR_WKUP_COND_ALL) != 0x00U) && \
                                                  (((__COND__) & ~PWR_WKUP_COND_ALL) == 0x00U))
 
 /**
@@ -214,7 +212,7 @@ typedef struct _hal_pwr_handler
   * @param __PIN__ PWR external wakeup pin.
   * @retval SET (__PIN__ is valid) or RESET (__PIN__ is invalid)
   */
-#define IS_PWR_EXT_WAKEUP_PIN(__PIN__)          ((((__PIN__) & PWR_EXTWKUP_PIN_ALL) != 0x00U) &&\
+#define IS_PWR_EXT_WAKEUP_PIN(__PIN__)          ((((__PIN__) & PWR_EXTWKUP_PIN_ALL) != 0x00U) && \
                                                  (((__PIN__) & ~PWR_EXTWKUP_PIN_ALL) == 0x00U))
 
 /**
@@ -242,7 +240,7 @@ typedef struct _hal_pwr_handler
   * @param __BLOCK__ PWR memory block.
   * @retval SET (__BLOCK__ is valid) or RESET (__BLOCK__ is invalid)
   */
-#define IS_PWR_MEM_BLOCK(__BLOCK__)             ((((__BLOCK__) & PWR_MEM_ALL) != 0x00U) &&\
+#define IS_PWR_MEM_BLOCK(__BLOCK__)             ((((__BLOCK__) & PWR_MEM_ALL) != 0x00U) && \
                                                  (((__BLOCK__) & ~PWR_MEM_ALL) == 0x00U))
 
 /**
@@ -320,9 +318,12 @@ typedef struct _hal_pwr_handler
  *         @arg @ref PWR_WKUP_COND_BOD_FEDGE
  *         @arg @ref PWR_WKUP_COND_MSIO_COMP
  *         @arg @ref PWR_WKUP_COND_ALL
- * @note   When @ref PWR_WKUP_COND_EXT is set, use @ref hal_pwr_config_ext_wakeup() to configure wakeup pins and pin trigger type.
- *         When @ref PWR_WKUP_COND_TIMER is set, use @ref hal_pwr_config_timer_wakeup() to configure the time count to wakeup.
- *         When @ref PWR_WKUP_COND_ALL is set, use @ref hal_pwr_config_ext_wakeup() and @ref hal_pwr_config_timer_wakeup() to configure
+ * @note   When @ref PWR_WKUP_COND_EXT is set, use @ref hal_pwr_config_ext_wakeup() to
+ *         configure wakeup pins and pin trigger type.
+ *         When @ref PWR_WKUP_COND_TIMER is set, use @ref hal_pwr_config_timer_wakeup()
+ *         to configure the time count to wakeup.
+ *         When @ref PWR_WKUP_COND_ALL is set, use @ref hal_pwr_config_ext_wakeup() and
+ *         @ref hal_pwr_config_timer_wakeup() to configure
  *         AON timer and External AON GPIO.
  ****************************************************************************************
  */
@@ -453,7 +454,6 @@ hal_status_t hal_pwr_get_timer_current_value(uint32_t timer_type, uint32_t *p_va
  */
 void hal_pwr_sleep_timer_irq_handler(void);
 
-
 /**
  ****************************************************************************************
  * @brief  PWR Sleep Timer Elapsed callback.
@@ -464,8 +464,6 @@ void hal_pwr_sleep_timer_irq_handler(void);
  */
 void hal_pwr_sleep_timer_elapsed_callback(void);
 
-
-
 /** @} */
 
 /** @} */
@@ -473,7 +471,6 @@ void hal_pwr_sleep_timer_elapsed_callback(void);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* __GR55xx_HAL_PWR_H__ */
 

@@ -122,7 +122,7 @@ uint32_t hal_flash_write(const uint32_t addr, const uint8_t *buf, const uint32_t
 
 /**
  *******************************************************************************
- * @brief Write flash Memory reliably. 
+ * @brief Write flash Memory reliably.
  *
  * @note It's possible that the data was not written into Flash Memory
  *       successfully. This function reads the data from Flash Memory to check

@@ -73,15 +73,13 @@ extern "C" {
   * @brief HAL HMAC State enumerations definition
   * @note  HAL HMAC State value is a combination of 2 different substates: gState and RxState.
   */
-typedef enum
-{
+typedef enum {
     HAL_HMAC_STATE_RESET             = 0x00,    /**< Peripheral not initialized                            */
     HAL_HMAC_STATE_READY             = 0x01,    /**< Peripheral initialized and ready for use              */
     HAL_HMAC_STATE_BUSY              = 0x02,    /**< Peripheral in indirect mode and busy                  */
     HAL_HMAC_STATE_ERROR             = 0x03,    /**< Peripheral in error                                   */
     HAL_HMAC_STATE_TIMEOUT           = 0x04,    /**< Peripheral in timeout                                 */
     HAL_HMAC_STATE_SUSPENDED         = 0x05,    /**< Peripheral in suspended                               */
-
 } hal_hmac_state_t;
 
 /** @} */
@@ -99,9 +97,8 @@ typedef enum
 /**
   * @brief HMAC init Structure definition
   */
-typedef struct _hmac_init
-{
-    uint32_t mode;              /**< Operating mode             */
+typedef struct _hmac_init {
+    uint32_t mode;              /**< Operating mode               */
 
     uint32_t *p_key;              /**< Encryption/Decryption Key  */
 
@@ -113,7 +110,6 @@ typedef struct _hmac_init
                                      } End_private
                                      @ref HAL_HMAC_KEYTYPE_KRAM Fetch key from keyport */
     uint32_t dpa_mode;            /**< DPA Mode                   */
-
 } hmac_init_t;
 /** @} */
 
@@ -124,17 +120,16 @@ typedef struct _hmac_init
 /**
   * @brief HMAC handle Structure definition
   */
-typedef struct _hmac_handle
-{
-    hmac_regs_t           *p_instance;        /**< HMAC registers base address              */
+typedef struct _hmac_handle {
+    hmac_regs_t           *p_instance;        /**< HMAC registers base address            */
 
     hmac_init_t           init;             /**< HMAC operation parameters                */
 
-    uint32_t              *p_message;         /**< Pointer to message input buffer          */
+    uint32_t              *p_message;         /**< Pointer to message input buffer        */
 
-    uint32_t              *p_digest;          /**< Pointer to digest output buffer          */
+    uint32_t              *p_digest;          /**< Pointer to digest output buffer        */
 
-    uint32_t              block_size;       /**< Data size in blocks (64 bytes per block)  */
+    uint32_t              block_size;       /**< Data size in blocks (64 bytes per block) */
 
     uint32_t              block_count;      /**< Blocks count                             */
 
@@ -148,8 +143,7 @@ typedef struct _hmac_handle
 
     uint32_t              timeout;          /**< Timeout for the HMAC operation           */
 		
-    uint32_t              retention[17];    /**< HMAC important register information. */
-
+    uint32_t              retention[17];    /**< HMAC important register information.     */
 } hmac_handle_t;
 
 /** @} */
@@ -168,8 +162,7 @@ typedef struct _hmac_handle
   * @brief HAL_HMAC Callback function definition
   */
 
-typedef struct _hal_hmac_callback
-{
+typedef struct _hal_hmac_callback {
     void (*hmac_msp_init)(hmac_handle_t *p_hmac);               /**< HMAC init MSP callback             */
     void (*hmac_msp_deinit)(hmac_handle_t *p_hmac);             /**< HMAC de-init MSP callback          */
     void (*hmac_done_callback)(hmac_handle_t *p_hmac);          /**< HMAC digest done callback          */
@@ -233,17 +226,17 @@ typedef struct _hal_hmac_callback
 /** @defgroup HMAC_HAL_KEY_TYPE Key Type
   * @{
   */
-#define HAL_HMAC_KEYTYPE_MCU                                  LL_HMAC_KEYTYPE_MCU                      /**< Key from MCU        */
+#define HAL_HMAC_KEYTYPE_MCU            LL_HMAC_KEYTYPE_MCU                      /**< Key from MCU        */
 /* { Start_private */
-#define HAL_HMAC_KEYTYPE_AHB                                  LL_HMAC_KEYTYPE_AHB                      /**< Key from AHB master */
+#define HAL_HMAC_KEYTYPE_AHB            LL_HMAC_KEYTYPE_AHB                      /**< Key from AHB master */
 /* } End_private   */
-#define HAL_HMAC_KEYTYPE_KRAM                                 LL_HMAC_KEYTYPE_KRAM                     /**< Key from Key Port   */
+#define HAL_HMAC_KEYTYPE_KRAM           LL_HMAC_KEYTYPE_KRAM                     /**< Key from Key Port   */
 /** @} */
 
 /** @defgroup HMAC_Interrupt_definition HMAC Interrupt_definition
   * @{
   */
-#define HMAC_IT_DONE                    ((uint32_t)0x00000001)          /**< Operation Done Interrupt source              */
+#define HMAC_IT_DONE                    ((uint32_t)0x00000001)          /**< Operation Done Interrupt source */
 /** @} */
 
 /** @defgroup HMAC_Timeout_definition HMAC Timeout_definition
@@ -263,31 +256,31 @@ typedef struct _hal_hmac_callback
   * @param  __HANDLE__ HMAC handle.
   * @retval None
   */
-#define __HAL_HMAC_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_HMAC_STATE_RESET)
+#define __HAL_HMAC_RESET_HANDLE_STATE(__HANDLE__)         ((__HANDLE__)->state = HAL_HMAC_STATE_RESET)
 
 /** @brief  Enable the specified HMAC peripheral.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
+#define __HAL_HMAC_ENABLE(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
 
 /** @brief  Disable the specified HMAC peripheral.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
+#define __HAL_HMAC_DISABLE(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
 
 /** @brief  Enable the HMAC interrupt.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_ENABLE_IT(__HANDLE__)                        ll_hmac_enable_it_done((__HANDLE__)->p_instance)
+#define __HAL_HMAC_ENABLE_IT(__HANDLE__)                  ll_hmac_enable_it_done((__HANDLE__)->p_instance)
 
 /** @brief  Disable the HMAC interrupt.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_DISABLE_IT(__HANDLE__)                       ll_hmac_disable_it_done((__HANDLE__)->p_instance)
+#define __HAL_HMAC_DISABLE_IT(__HANDLE__)                 ll_hmac_disable_it_done((__HANDLE__)->p_instance)
 
 /** @brief  Check whether the specified HMAC interrupt flag is set or not.
   * @param  __HANDLE__  Specifies the HMAC Handle.
@@ -296,7 +289,8 @@ typedef struct _hal_hmac_callback
   *            @arg @ref HMAC_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_HMAC_GET_FLAG_IT(__HANDLE__, __FLAG__)            (READ_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__)) == (__FLAG__))
+#define __HAL_HMAC_GET_FLAG_IT(__HANDLE__, __FLAG__) \
+    (READ_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified HMAC interrupt flag.
   * @param  __HANDLE__  Specifies the HMAC interrupt Handle.
@@ -305,7 +299,7 @@ typedef struct _hal_hmac_callback
   *            @arg @ref HMAC_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval None
   */
-#define __HAL_HMAC_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)          SET_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__))
+#define __HAL_HMAC_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)    SET_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__))
 
 /** @brief  Check whether the specified HMAC flag is set or not.
   * @param  __HANDLE__  Specifies the HMAC Handle.
@@ -318,7 +312,8 @@ typedef struct _hal_hmac_callback
   *            @arg @ref HMAC_FLAG_KEY_VALID Key valid flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_HMAC_GET_FLAG(__HANDLE__, __FLAG__)               ((READ_BITS((__HANDLE__)->p_instance->STATUS, (__FLAG__)) != 0) ? SET : RESET)
+#define __HAL_HMAC_GET_FLAG(__HANDLE__, __FLAG__) \
+    ((READ_BITS((__HANDLE__)->p_instance->STATUS, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */
 
@@ -360,7 +355,8 @@ typedef struct _hal_hmac_callback
  ****************************************************************************************
  * @brief  Initialize the HMAC according to the specified parameters
  *         in the hmac_init_t and initialize the associated handle.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -372,7 +368,8 @@ hal_status_t hal_hmac_init(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  De-initialize the HMAC peripheral.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -386,7 +383,8 @@ hal_status_t hal_hmac_deinit(hmac_handle_t *p_hmac);
  * @brief  Initialize the HMAC MSP.
  * @note   This function should not be modified. When the callback is needed,
             the hal_hmac_msp_deinit can be implemented in the user file.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  ****************************************************************************************
  */
 void hal_hmac_msp_init(hmac_handle_t *p_hmac);
@@ -396,7 +394,8 @@ void hal_hmac_msp_init(hmac_handle_t *p_hmac);
  * @brief  De-initialize the HMAC MSP.
  * @note   This function should not be modified. When the callback is needed,
             the HAL_HMAC_MspDeInit can be implemented in the user file.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  ****************************************************************************************
  */
 void hal_hmac_msp_deinit(hmac_handle_t *p_hmac);
@@ -445,7 +444,8 @@ void hal_hmac_msp_deinit(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  xxx in blocking mode in SHA/HMAC mode.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @param[in]  p_message: Pointer to message buffer
  * @param[in]  number: Amount of data
  * @param[out] p_digest: Pointer to digest buffer
@@ -456,12 +456,14 @@ void hal_hmac_msp_deinit(hmac_handle_t *p_hmac);
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_hmac_sha256_digest(hmac_handle_t *p_hmac, uint32_t *p_message, uint32_t number, uint32_t *p_digest, uint32_t timeout);
+hal_status_t hal_hmac_sha256_digest(hmac_handle_t *p_hmac, uint32_t *p_message, uint32_t number,
+                                    uint32_t *p_digest, uint32_t timeout);
 
 /**
  ****************************************************************************************
  * @brief  xxx in non-blocking mode with interrupt in SHA/HMAC mode.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @param[in]  p_message: Pointer to message buffer
  * @param[in]  number: Amount of data
  * @param[out] p_digest: Pointer to digest buffer
@@ -476,7 +478,8 @@ hal_status_t hal_hmac_sha256_digest_it(hmac_handle_t *p_hmac, uint32_t *p_messag
 /**
  ****************************************************************************************
  * @brief  xxx in non-blocking mode with DMA in SHA/HMAC mode.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @param[in]  p_message: Pointer to massage buffer
  * @param[in]  number: Amount of data
  * @param[out] p_digest: Pointer to digest buffer
@@ -486,7 +489,8 @@ hal_status_t hal_hmac_sha256_digest_it(hmac_handle_t *p_hmac, uint32_t *p_messag
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_hmac_sha256_digest_dma(hmac_handle_t *p_hmac, uint32_t *p_message, uint32_t number, uint32_t *p_digest);
+hal_status_t hal_hmac_sha256_digest_dma(hmac_handle_t *p_hmac, uint32_t *p_message,
+                                        uint32_t number, uint32_t *p_digest);
 
 /** @} */
 
@@ -498,7 +502,8 @@ hal_status_t hal_hmac_sha256_digest_dma(hmac_handle_t *p_hmac, uint32_t *p_messa
 /**
  ****************************************************************************************
  * @brief  Handle HMAC interrupt request.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  ****************************************************************************************
  */
 void hal_hmac_irq_handler(hmac_handle_t *p_hmac);
@@ -506,7 +511,8 @@ void hal_hmac_irq_handler(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  Digest Done callback.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  ****************************************************************************************
  */
 void hal_hmac_done_callback(hmac_handle_t *p_hmac);
@@ -514,7 +520,8 @@ void hal_hmac_done_callback(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  HMAC error callback.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  ****************************************************************************************
  */
 void hal_hmac_error_callback(hmac_handle_t *p_hmac);
@@ -540,7 +547,8 @@ void hal_hmac_error_callback(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  Return the HMAC handle state.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @retval ::HAL_HMAC_STATE_RESET: Peripheral not initialized.
  * @retval ::HAL_HMAC_STATE_READY: Peripheral initialized and ready for use.
  * @retval ::HAL_HMAC_STATE_BUSY: Peripheral in indirect mode and busy.
@@ -554,7 +562,8 @@ hal_hmac_state_t hal_hmac_get_state(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  Return the HMAC error code.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @return HMAC error code in bitmap format
  ****************************************************************************************
  */
@@ -563,7 +572,8 @@ uint32_t hal_hmac_get_error(hmac_handle_t *p_hmac);
 /**
  ****************************************************************************************
  * @brief  Set the HMAC internal process timeout value.
- * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_hmac: Pointer to a HMAC handle which contains the configuration information
+ *             for the specified HMAC module.
  * @param[in]  timeout: Internal process timeout value.
  ****************************************************************************************
  */
@@ -596,7 +606,6 @@ hal_status_t hal_hmac_suspend_reg(hmac_handle_t *p_hmac);
  ****************************************************************************************
  */
 hal_status_t hal_hmac_resume_reg(hmac_handle_t *p_hmac);
-
 
 /** @} */
 

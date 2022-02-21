@@ -33,8 +33,16 @@
 /*----------------------------------------------------------------------------
   WEAK Functions
  *----------------------------------------------------------------------------*/
-__WEAK void sdk_init (void) {}
-__WEAK void rom_init (void) {}
+__WEAK void sdk_init (void)
+{
+    /* Prevent unused argument(s) compilation warning */
+    return;
+}
+__WEAK void rom_init (void)
+{
+    /* Prevent unused argument(s) compilation warning */
+    return;
+}
 
 /*----------------------------------------------------------------------------
   Define clocks

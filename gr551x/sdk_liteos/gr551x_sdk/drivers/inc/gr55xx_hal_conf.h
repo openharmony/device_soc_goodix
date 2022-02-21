@@ -39,6 +39,58 @@
 #ifndef __GR55xx_HAL_CONF_H__
 #define __GR55xx_HAL_CONF_H__
 
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+
+/* ########################## Module Selection ############################## */
+/**
+  * @brief This is the list of modules to be used in the HAL driver
+  */
+#define HAL_MODULE_ENABLED              /**< Enable HAL module driver          */
+#define HAL_ADC_MODULE_ENABLED          /**< Enable ADC HAL module driver      */
+#define HAL_AON_GPIO_MODULE_ENABLED     /**< Enable AON GPIO HAL module driver */
+#define HAL_CORTEX_MODULE_ENABLED       /**< Enable CORTEX HAL module driver   */
+#define HAL_DMA_MODULE_ENABLED          /**< Enable DMA HAL module driver      */
+#define HAL_DUAL_TIMER_MODULE_ENABLED   /**< Enable DUAL TIM module driver     */
+#define HAL_EXFLASH_MODULE_ENABLED      /**< Enable EXFLASH module driver      */
+#define HAL_GPIO_MODULE_ENABLED         /**< Enable GPIO module driver         */
+#define HAL_I2C_MODULE_ENABLED          /**< Enable I2C module driver          */
+#define HAL_MSIO_MODULE_ENABLED         /**< Enable MSIO module driver         */
+#define HAL_PKC_MODULE_ENABLED          /**< Enable PKC module driver          */
+#define HAL_PWM_MODULE_ENABLED          /**< Enable PWM module driver          */
+#define HAL_PWR_MODULE_ENABLED          /**< Enable PWR module driver          */
+#define HAL_QSPI_MODULE_ENABLED         /**< Enable QSPI module driver         */
+#define HAL_SPI_MODULE_ENABLED          /**< Enable SPI module driver          */
+#define HAL_TIMER_MODULE_ENABLED        /**< Enable TIM module driver          */
+#define HAL_UART_MODULE_ENABLED         /**< Enable UART module driver         */
+#define HAL_WDT_MODULE_ENABLED          /**< Enable WDT module driver          */
+#define HAL_XQSPI_MODULE_ENABLED        /**< Enable XQSPI module driver        */
+#define HAL_AON_WDT_MODULE_ENABLED      /**< Enable AON WDT module driver      */
+#define HAL_CALENDAR_MODULE_ENABLED     /**< Enable CALENDAR module driver     */
+#define HAL_HMAC_MODULE_ENABLED         /**< Enable HMAC module driver         */
+#define HAL_I2S_MODULE_ENABLED          /**< Enable I2S module driver          */
+#define HAL_AES_MODULE_ENABLED          /**< Enable AES module driver          */
+#define HAL_EFUSE_MODULE_ENABLED        /**< Enable EFUSE module driver        */
+#define HAL_ISO7816_MODULE_ENABLED      /**< Enable ISO7816 module driver      */
+#define HAL_CGC_MODULE_ENABLED          /**< Enable CGC module driver          */
+#define HAL_RNG_MODULE_ENABLED          /**< Enable RNG module driver          */
+#define HAL_COMP_MODULE_ENABLED         /**< Enable COMP module driver         */
+
+/* ########################### System Configuration ######################### */
+/**
+  * @brief This is the HAL system configuration section
+  */
+#define  TICK_INT_PRIORITY   ((uint32_t)(1U<<(__NVIC_PRIO_BITS - 4)) - 1U) /*!< tick interrupt priority
+                                                                                (lowest by default)
+                                                                                by group priority 4. */
+#define  USE_RTOS            0U                                            /*!< use rtos */
+
+/* ########################## Assert Selection ############################## */
+/**
+  * @brief Uncomment the line below to expanse the "gr_assert_param" macro in the
+  *        HAL drivers code
+  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx.h"
 /**
@@ -163,57 +215,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/
-
-/* ########################## Module Selection ############################## */
-/**
-  * @brief This is the list of modules to be used in the HAL driver
-  */
-#define HAL_MODULE_ENABLED              /**< Enable HAL module driver          */ 
-#define HAL_ADC_MODULE_ENABLED          /**< Enable ADC HAL module driver      */ 
-#define HAL_AON_GPIO_MODULE_ENABLED     /**< Enable AON GPIO HAL module driver */ 
-#define HAL_CORTEX_MODULE_ENABLED       /**< Enable CORTEX HAL module driver   */ 
-#define HAL_DMA_MODULE_ENABLED          /**< Enable DMA HAL module driver      */ 
-#define HAL_DUAL_TIMER_MODULE_ENABLED   /**< Enable DUAL TIM module driver     */
-#define HAL_EXFLASH_MODULE_ENABLED      /**< Enable EXFLASH module driver      */
-#define HAL_GPIO_MODULE_ENABLED         /**< Enable GPIO module driver         */
-#define HAL_I2C_MODULE_ENABLED          /**< Enable I2C module driver          */
-#define HAL_MSIO_MODULE_ENABLED         /**< Enable MSIO module driver         */
-#define HAL_PKC_MODULE_ENABLED          /**< Enable PKC module driver          */
-#define HAL_PWM_MODULE_ENABLED          /**< Enable PWM module driver          */
-#define HAL_PWR_MODULE_ENABLED          /**< Enable PWR module driver          */
-#define HAL_QSPI_MODULE_ENABLED         /**< Enable QSPI module driver         */
-#define HAL_SPI_MODULE_ENABLED          /**< Enable SPI module driver          */
-#define HAL_TIMER_MODULE_ENABLED        /**< Enable TIM module driver          */
-#define HAL_UART_MODULE_ENABLED         /**< Enable UART module driver         */
-#define HAL_WDT_MODULE_ENABLED          /**< Enable WDT module driver          */
-#define HAL_XQSPI_MODULE_ENABLED        /**< Enable XQSPI module driver        */
-#define HAL_AON_WDT_MODULE_ENABLED      /**< Enable AON WDT module driver      */
-#define HAL_CALENDAR_MODULE_ENABLED     /**< Enable CALENDAR module driver     */
-#define HAL_HMAC_MODULE_ENABLED         /**< Enable HMAC module driver         */
-#define HAL_I2S_MODULE_ENABLED          /**< Enable I2S module driver          */
-#define HAL_AES_MODULE_ENABLED          /**< Enable AES module driver          */
-#define HAL_EFUSE_MODULE_ENABLED        /**< Enable EFUSE module driver        */
-#define HAL_ISO7816_MODULE_ENABLED      /**< Enable ISO7816 module driver      */
-#define HAL_CGC_MODULE_ENABLED          /**< Enable CGC module driver          */
-#define HAL_RNG_MODULE_ENABLED          /**< Enable RNG module driver          */
-#define HAL_COMP_MODULE_ENABLED         /**< Enable COMP module driver         */
-
-/* ########################### System Configuration ######################### */
-/**
-  * @brief This is the HAL system configuration section
-  */
-#define  TICK_INT_PRIORITY            ((uint32_t)(1U<<(__NVIC_PRIO_BITS - 4)) - 1U) /*!< tick interrupt priority (lowest by default) by group priority 4. */
-#define  USE_RTOS                     0U                                            /*!< use rtos */
-
-/* ########################## Assert Selection ############################## */
-/**
-  * @brief Uncomment the line below to expanse the "gr_assert_param" macro in the
-  *        HAL drivers code
-  */
-/* #define USE_FULL_ASSERT    1U */
 
 /* Exported macro ------------------------------------------------------------*/
 #ifdef  USE_FULL_ASSERT

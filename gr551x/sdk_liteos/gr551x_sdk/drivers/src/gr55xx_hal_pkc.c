@@ -34,8 +34,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "gr55xx_hal.h"
 #include <string.h>
+#include "gr55xx_hal.h"
 
 #if defined(HAL_PKC_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
 
@@ -47,8 +47,7 @@ extern void hal_pkc_register_callback(hal_pkc_callback_t *hal_pkc_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_pkc_callback_t pkc_callback =
-{
+static hal_pkc_callback_t pkc_callback = {
     .pkc_msp_init               = hal_pkc_msp_init,
     .pkc_msp_deinit             = hal_pkc_msp_deinit,
     .pkc_done_callback          = hal_pkc_done_callback,
@@ -105,22 +104,26 @@ __WEAK void hal_pkc_msp_deinit(pkc_handle_t *p_pkc)
 
 __WEAK void hal_pkc_done_callback(pkc_handle_t *p_pkc)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_pkc);
 }
 
 __WEAK void hal_pkc_error_callback(pkc_handle_t *p_pkc)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_pkc);
 }
 
 __WEAK void hal_pkc_overflow_callback(pkc_handle_t *p_pkc)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_pkc);
 }
 
 __WEAK void hal_pkc_abort_cplt_callback(pkc_handle_t *p_pkc)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_pkc);
 }
 
 #endif /* HAL_PKC_MODULE_ENABLED */

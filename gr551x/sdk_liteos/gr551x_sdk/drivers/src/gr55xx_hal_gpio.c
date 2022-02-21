@@ -46,8 +46,7 @@ extern void hal_gpio_register_callback(hal_gpio_callback_t *callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_gpio_callback_t gpio_callback =
-{
+static hal_gpio_callback_t gpio_callback = {
     .gpio_callback = hal_gpio_exti_callback,
 };
 

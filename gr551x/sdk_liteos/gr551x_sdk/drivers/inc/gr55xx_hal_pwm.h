@@ -3,7 +3,7 @@
  *
  * @file    gr55xx_hal_pwm.h
  * @author  BLE Driver Team
- * @brief   Header file containing functions prototypes of PWM HAL library. 
+ * @brief   Header file containing functions prototypes of PWM HAL library.
  *
  ****************************************************************************************
  * @attention
@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief HAL PWM State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_PWM_STATE_RESET             = 0x00,    /**< Peripheral is not initialized or disabled   */
     HAL_PWM_STATE_READY             = 0x01,    /**< Peripheral is initialized and ready for use */
     HAL_PWM_STATE_BUSY              = 0x02,    /**< An internal process is ongoing              */
@@ -88,8 +87,7 @@ typedef enum
 /**
   * @brief HAL PWM active channel Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_PWM_ACTIVE_CHANNEL_A        = 0x01,    /**< The active channel is A     */
     HAL_PWM_ACTIVE_CHANNEL_B        = 0x02,    /**< The active channel is B     */
     HAL_PWM_ACTIVE_CHANNEL_C        = 0x04,    /**< The active channel is C     */
@@ -111,21 +109,18 @@ typedef enum
 /**
   * @brief PWM Channel init Structure definition
   */
-typedef struct
-{
+typedef struct {
     uint8_t duty;               /**< Specifies the duty in PWM output mode.
                                      This parameter must be a number between 0 ~ 100. */
 
     uint8_t drive_polarity;     /**< Specifies the drive polarity in PWM output mode.
                                      This parameter can be a value of @ref PWM_Drive_Polarity. */
-
 } pwm_channel_init_t;
 
 /**
   * @brief PWM init Structure definition
   */
-typedef struct
-{
+typedef struct {
     uint32_t mode;                      /**< Specifies the PWM output mode state.
                                              This parameter can be a value of @ref PWM_Mode */
 
@@ -146,7 +141,6 @@ typedef struct
     pwm_channel_init_t channel_b;       /**< Specifies the configuration parameters of channel B. */
 
     pwm_channel_init_t channel_c;       /**< Specifies the configuration parameters of channel C. */
-
 } pwm_init_t;
 /** @} */
 
@@ -157,8 +151,7 @@ typedef struct
 /**
   * @brief PWM handle Structure definition
   */
-typedef struct
-{
+typedef struct {
     pwm_regs_t                *p_instance;      /**< Register base address        */
 
     pwm_init_t                init;           /**< Required parameters for PWM Base */
@@ -170,7 +163,6 @@ typedef struct
     __IO hal_pwm_state_t      state;          /**< PWM operation state          */
 
     uint32_t                  retention[11];  /**< PWM important register information. */
-
 } pwm_handle_t;
 
 /** @} */
@@ -189,8 +181,7 @@ typedef struct
   * @brief HAL_PWM Callback function definition
   */
 
-typedef struct _hal_pwm_callback
-{
+typedef struct _hal_pwm_callback {
     void (*pwm_msp_init)(pwm_handle_t *p_pwm);      /**< PWM init MSP callback                  */
     void (*pwm_msp_deinit)(pwm_handle_t *p_pwm);    /**< PWM de-init MSP callback               */
 } hal_pwm_callback_t;
@@ -240,31 +231,31 @@ typedef struct _hal_pwm_callback
   * @param  __HANDLE__ PWM handle.
   * @retval None
   */
-#define __HAL_PWM_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_PWM_STATE_RESET)
+#define __HAL_PWM_RESET_HANDLE_STATE(__HANDLE__)           ((__HANDLE__)->state = HAL_PWM_STATE_RESET)
 
 /** @brief  Enable the specified PWM peripheral.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
+#define __HAL_PWM_ENABLE(__HANDLE__)                       SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
 
 /** @brief  Disable the specified PWM peripheral.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
+#define __HAL_PWM_DISABLE(__HANDLE__)                      CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
 
 /** @brief  Enable PWM breath mode.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_ENABLE_BREATH(__HANDLE__)                    SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
+#define __HAL_PWM_ENABLE_BREATH(__HANDLE__)                SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
 
 /** @brief  Disable PWM breath mode.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_DISABLE_BREATH(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
+#define __HAL_PWM_DISABLE_BREATH(__HANDLE__)               CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
 
 /** @} */
 
@@ -470,7 +461,8 @@ hal_status_t hal_pwm_resume_reg(pwm_handle_t *p_pwm);
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_pwm_config_channel(pwm_handle_t *p_pwm, pwm_channel_init_t *p_config, hal_pwm_active_channel_t channel);
+hal_status_t hal_pwm_config_channel(pwm_handle_t *p_pwm, pwm_channel_init_t *p_config,
+                                    hal_pwm_active_channel_t channel);
 
 /** @} */
 

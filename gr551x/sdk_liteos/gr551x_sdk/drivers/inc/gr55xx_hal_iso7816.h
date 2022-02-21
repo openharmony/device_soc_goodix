@@ -71,8 +71,7 @@ extern "C" {
 /**
   * @brief HAL ISO7816 State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_ISO7816_STATE_RESET             = 0x00U,    /**< Peripheral not initialized                          */
     HAL_ISO7816_STATE_READY             = 0x20U,    /**< Peripheral initialized and ready for use            */
     HAL_ISO7816_STATE_BUSY              = 0x24U,    /**< An internal process is ongoing                      */
@@ -97,13 +96,13 @@ typedef enum
 /**
   * @brief ISO7816_init_structure ISO7816 init structure definition
   */
-typedef struct
-{
+typedef struct {
     uint32_t clk_div;                 /*!< clk_div is used for dividing the system clock,
                                            and ISO7816 output clock is equal to (system clock)/(clk_div+1). */
     uint32_t wait_time;               /*!< Specifies the guard time value in terms of number of baud clocks */
     uint16_t guard_time;              /*!< Specifies the maximum card response time (leading edge to leading edge) */
-    uint8_t  detect_coding;           /*!< Specifies whether automatically detect coding convention during ATR receiption. */
+    uint8_t  detect_coding;           /*!< Specifies whether automatically detect coding convention during
+                                           ATR receiption. */
 } iso7816_init_t;
 /** @} */
 /** @} */
@@ -133,8 +132,7 @@ typedef struct
 /**
   * @brief ISO7816 handle Structure definition
   */
-typedef struct _iso7816_handle_t
-{
+typedef struct _iso7816_handle_t {
     iso7816_regs_t              *p_instance;        /**< ISO7816 registers base address           */
     iso7816_init_t              init;               /**< ISO7816 configuration parameters         */
     uint8_t                     *p_tx_rx_buffer;    /**< Pointer to ISO7816 Tx&Rx transfer Buffer */
@@ -167,17 +165,18 @@ typedef struct _iso7816_handle_t
   * @brief HAL_ISO7816 Callback function definition
   */
 
-typedef struct _iso7816_callback
-{
-    void (*iso7816_msp_init)(iso7816_handle_t *p_iso7816);                  /**< ISO7816 init MSP callback                      */
-    void (*iso7816_msp_deinit)(iso7816_handle_t *p_iso7816);                /**< ISO7816 de-init MSP callback                   */
-    void (*iso7816_error_callback)(iso7816_handle_t *p_iso7816);            /**< ISO7816 error callback                         */
-    void (*iso7816_abort_cplt_callback)(iso7816_handle_t *p_iso7816);       /**< ISO7816 abort completed callback               */
-    void (*iso7816_presence_callback)(iso7816_handle_t *p_iso7816);         /**< ISO7816 card presence state changed callback   */
-    void (*iso7816_atr_cplt_callback)(iso7816_handle_t *p_iso7816);          /**< ISO7816 reseive atr completed callback        */
-    void (*iso7816_tx_cplt_callback)(iso7816_handle_t *p_iso7816);          /**< ISO7816 rx transfer completed callback         */
-    void (*iso7816_rx_cplt_callback)(iso7816_handle_t *p_iso7816);          /**< ISO7816 tx transfer completed callback         */
-    void (*iso7816_tx_rx_cplt_callback)(iso7816_handle_t *p_iso7816);       /**< ISO7816 tx/rx transfer completed callback      */
+typedef struct _iso7816_callback {
+    void (*iso7816_msp_init)(iso7816_handle_t *p_iso7816);                /**< ISO7816 init MSP callback */
+    void (*iso7816_msp_deinit)(iso7816_handle_t *p_iso7816);              /**< ISO7816 de-init MSP callback */
+    void (*iso7816_error_callback)(iso7816_handle_t *p_iso7816);          /**< ISO7816 error callback */
+    void (*iso7816_abort_cplt_callback)(iso7816_handle_t *p_iso7816);     /**< ISO7816 abort completed callback */
+    void (*iso7816_presence_callback)(iso7816_handle_t *p_iso7816);       /**< ISO7816 card presence state
+                                                                               changed callback */
+    void (*iso7816_atr_cplt_callback)(iso7816_handle_t *p_iso7816);       /**< ISO7816 reseive atr completed callback */
+    void (*iso7816_tx_cplt_callback)(iso7816_handle_t *p_iso7816);        /**< ISO7816 rx transfer completed callback */
+    void (*iso7816_rx_cplt_callback)(iso7816_handle_t *p_iso7816);        /**< ISO7816 tx transfer completed callback */
+    void (*iso7816_tx_rx_cplt_callback)(iso7816_handle_t *p_iso7816);     /**< ISO7816 tx/rx transfer
+                                                                               completed callback */
 } iso7816_callback_t;
 
 /** @} */
@@ -197,14 +196,14 @@ typedef struct _iso7816_callback
 /** @defgroup ISO7816_ACTION Action state
   * @{
   */
-#define HAL_ISO7816_ACTION_NONE             LL_ISO7816_ACTION_NONE           /**< Do Nothing.                        */
-#define HAL_ISO7816_ACTION_OFF              LL_ISO7816_ACTION_OFF            /**< Switch Off.                        */
-#define HAL_ISO7816_ACTION_STOPCLK          LL_ISO7816_ACTION_STOPCLK        /**< Stop the clock.                    */
-#define HAL_ISO7816_ACTION_ON               LL_ISO7816_ACTION_ON             /**< Switch on and receive ATR.         */
-#define HAL_ISO7816_ACTION_WARMRST          LL_ISO7816_ACTION_WARMRST        /**< Trigger warm reset and receive ATR. */
-#define HAL_ISO7816_ACTION_RX               LL_ISO7816_ACTION_RX             /**< Receive.                           */
-#define HAL_ISO7816_ACTION_TX               LL_ISO7816_ACTION_TX             /**< Transmit.                          */
-#define HAL_ISO7816_ACTION_TXRX             LL_ISO7816_ACTION_TXRX           /**< Transmit, followed by RX.          */
+#define HAL_ISO7816_ACTION_NONE             LL_ISO7816_ACTION_NONE          /**< Do Nothing.                         */
+#define HAL_ISO7816_ACTION_OFF              LL_ISO7816_ACTION_OFF           /**< Switch Off.                         */
+#define HAL_ISO7816_ACTION_STOPCLK          LL_ISO7816_ACTION_STOPCLK       /**< Stop the clock.                     */
+#define HAL_ISO7816_ACTION_ON               LL_ISO7816_ACTION_ON            /**< Switch on and receive ATR.          */
+#define HAL_ISO7816_ACTION_WARMRST          LL_ISO7816_ACTION_WARMRST       /**< Trigger warm reset and receive ATR. */
+#define HAL_ISO7816_ACTION_RX               LL_ISO7816_ACTION_RX            /**< Receive.                            */
+#define HAL_ISO7816_ACTION_TX               LL_ISO7816_ACTION_TX            /**< Transmit.                           */
+#define HAL_ISO7816_ACTION_TXRX             LL_ISO7816_ACTION_TXRX          /**< Transmit, followed by RX.           */
 /** @} */
 
 /** @defgroup ISO7816_Interrupt_definition ISO7816 Interrupt Definition
@@ -286,7 +285,8 @@ typedef struct _iso7816_callback
   *            @arg @ref HAL_ISO7816_INTR_DONE Done error interrupt
   * @retval None
   */
-#define __HAL_ISO7816_ENABLE_IT(__HANDLE__, __INTERRUPT__)         SET_BITS((__HANDLE__)->p_instance->INT_MASK, (__INTERRUPT__))
+#define __HAL_ISO7816_ENABLE_IT(__HANDLE__, __INTERRUPT__) \
+    SET_BITS((__HANDLE__)->p_instance->INT_MASK, (__INTERRUPT__))
 
 /** @brief  Disable the specified ISO7816 interrupts.
   * @param  __HANDLE__      Specifies the ISO7816 handle.
@@ -301,7 +301,8 @@ typedef struct _iso7816_callback
   *            @arg @ref HAL_ISO7816_INTR_DONE Done error interrupt
   * @retval None
   */
-#define __HAL_ISO7816_DISABLE_IT(__HANDLE__, __INTERRUPT__)        CLEAR_BITS((__HANDLE__)->p_instance->INT_MASK, (__INTERRUPT__))
+#define __HAL_ISO7816_DISABLE_IT(__HANDLE__, __INTERRUPT__) \
+    CLEAR_BITS((__HANDLE__)->p_instance->INT_MASK, (__INTERRUPT__))
 
 /** @brief  Get the ISO7816 interrupt flags.
   * @param  __ISO7816_REGS      ISO7816 Register.
@@ -319,7 +320,8 @@ typedef struct _iso7816_callback
 /**
  * @brief Transimit data in blocking mode
  *
- * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information
+ *                  for the specified ISO7816.
  * @param tx_size Bytes of data to transmit
  * @param timeout Timeout duration
  * @retval ::HAL_OK: Operation is OK.
@@ -332,7 +334,8 @@ hal_status_t hal_iso7816_transmit(iso7816_handle_t *p_iso7816, uint16_t tx_size,
 /**
  * @brief Receive data in blocking mode
  *
- * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information
+ *                  for the specified ISO7816.
  * @param rx_size Bytes of data to receive
  * @param timeout Timeout duration
  * @retval ::HAL_OK: Operation is OK.
@@ -345,7 +348,8 @@ hal_status_t hal_iso7816_receive(iso7816_handle_t *p_iso7816, uint16_t rx_size, 
 /**
  * @brief Transimit and receive data in blocking mode
  *
- * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information
+ *                  for the specified ISO7816.
  * @param tx_size Bytes of data to transmit
  * @param rx_size Bytes of data to receive
  * @param timeout Timeout duration
@@ -354,12 +358,14 @@ hal_status_t hal_iso7816_receive(iso7816_handle_t *p_iso7816, uint16_t rx_size, 
  * @retval ::HAL_BUSY: Driver is busy.
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  */
-hal_status_t hal_iso7816_transmit_receive(iso7816_handle_t *p_iso7816, uint16_t tx_size,uint16_t rx_size, uint32_t timeout);
+hal_status_t hal_iso7816_transmit_receive(iso7816_handle_t *p_iso7816, uint16_t tx_size, uint16_t rx_size,
+                                          uint32_t timeout);
 
 /**
  * @brief Transimit data in non-blocking mode with Interrupt
  *
- * @param p_iso7816  Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param p_iso7816  Pointer to an ISO7816 handle which contains the configuration information
+ *                   for the specified ISO7816.
  * @param tx_size Bytes of data to transmit
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -371,7 +377,8 @@ hal_status_t hal_iso7816_transmit_it(iso7816_handle_t *p_iso7816, uint16_t tx_si
 /**
  * @brief Receive data in non-blocking mode with Interrupt
  *
- * @param p_iso7816  Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param p_iso7816  Pointer to an ISO7816 handle which contains the configuration information
+ *                   for the specified ISO7816.
  * @param rx_size Bytes of data to receive
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -383,8 +390,9 @@ hal_status_t hal_iso7816_receive_it(iso7816_handle_t *p_iso7816, uint16_t rx_siz
 /**
  * @brief Transimit and receive data in non-blocking mode with Interrupt
  *
- * @param p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
- * @param tx_size:   Bytes of data to transfer. 
+ * @param p_iso7816: Pointer to an ISO7816 handle which contains the configuration information
+ *                   for the specified ISO7816.
+ * @param tx_size:   Bytes of data to transfer.
  * @param rx_size:   Bytes of data to receive.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -397,7 +405,8 @@ hal_status_t hal_iso7816_transmit_receive_it(iso7816_handle_t *p_iso7816, uint16
 /**
  * @brief Transfer Abort functions
  *
- * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param p_iso7816 Pointer to an ISO7816 handle which contains the configuration information
+ *                  for the specified ISO7816.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -438,7 +447,8 @@ hal_status_t hal_iso7816_deinit(iso7816_handle_t *p_iso7816);
  * @brief Initialize the ISO7816 MSP.
  * @note  This function should not be modified. When the callback is needed,
  *            the hal_iso7816_msp_init could be implemented in the user file.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_msp_init(iso7816_handle_t *p_iso7816);
@@ -448,14 +458,16 @@ void hal_iso7816_msp_init(iso7816_handle_t *p_iso7816);
  * @brief De-initialize the ISO7816 MSP.
  * @note  This function should not be modified. When the callback is needed,
  *            the hal_iso7816_msp_deinit could be implemented in the user file.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_msp_deinit(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  Handle ISO7816 interrupt request.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_irq_handler(iso7816_handle_t *p_iso7816);
@@ -464,7 +476,8 @@ void hal_iso7816_irq_handler(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  Card presence state changed callback.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816 module.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_presence_callback(iso7816_handle_t *p_iso7816);
@@ -472,7 +485,8 @@ void hal_iso7816_presence_callback(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  Receive ART completed callback.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816 module.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_atr_cplt_callback(iso7816_handle_t *p_iso7816);
@@ -480,7 +494,8 @@ void hal_iso7816_atr_cplt_callback(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  Rx Transfer completed callback.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816 module.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_rx_cplt_callback(iso7816_handle_t *p_iso7816);
@@ -488,7 +503,8 @@ void hal_iso7816_rx_cplt_callback(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  Tx Transfer completed callback.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816 module.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_tx_cplt_callback(iso7816_handle_t *p_iso7816);
@@ -496,7 +512,8 @@ void hal_iso7816_tx_cplt_callback(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  Tx and Rx Transfer completed callback.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816 module.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_tx_rx_cplt_callback(iso7816_handle_t *p_iso7816);
@@ -504,7 +521,8 @@ void hal_iso7816_tx_rx_cplt_callback(iso7816_handle_t *p_iso7816);
 /**
  ****************************************************************************************
  * @brief  ISO7816 error callback.
- * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration information for the specified ISO7816 module.
+ * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
+ *                        information for the specified ISO7816.
  ****************************************************************************************
  */
 void hal_iso7816_error_callback(iso7816_handle_t *p_iso7816);
@@ -617,9 +635,7 @@ hal_status_t hal_iso7816_suspend_reg(iso7816_handle_t *p_iso7816);
  */
 hal_status_t hal_iso7816_resume_reg(iso7816_handle_t *p_iso7816);
 
-
 /** @} */
-
 
 #ifdef __cplusplus
 }

@@ -53,8 +53,8 @@
 #define __GR55xx_HAL_DEF__
 
 /* Includes ------------------------------------------------------------------*/
-#include "gr55xx.h"
 #include <stdio.h>
+#include "gr55xx.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,8 +66,7 @@ extern "C" {
 /**
   * @brief  HAL Status structures definition
   */
-typedef enum
-{
+typedef enum {
     HAL_OK       = 0x00U,    /**< Operation is OK. */
     HAL_ERROR    = 0x01U,    /**< Parameter error or operation is not supported. */
     HAL_BUSY     = 0x02U,    /**< Driver is busy. */
@@ -77,8 +76,7 @@ typedef enum
 /**
   * @brief  HAL Lock structures definition
   */
-typedef enum
-{
+typedef enum {
     HAL_UNLOCKED = 0x00U,    /**< Object is unlocked. */
     HAL_LOCKED   = 0x01      /**< Object is locked. */
 } hal_lock_t;
@@ -118,10 +116,10 @@ typedef enum
   * @retval None
   */
 #define __HAL_LINKDMA(__HANDLE__, __PPP_DMA_FIELD_, __DMA_HANDLE_)                 \
-                        do{                                                        \
-                              (__HANDLE__)->__PPP_DMA_FIELD_ = &(__DMA_HANDLE_);   \
-                              (__DMA_HANDLE_).p_parent = (__HANDLE__);               \
-                          } while(0U)
+do {                                                                               \
+    (__HANDLE__)->__PPP_DMA_FIELD_ = &(__DMA_HANDLE_);                             \
+    (__DMA_HANDLE_).p_parent = (__HANDLE__);                                       \
+} while (0U)
 
 /** @brief Reset the Handle's State field.
   * @param __HANDLE__ specifies the Peripheral Handle.
@@ -149,16 +147,16 @@ typedef enum
   * @retval HAL_BUSY If handle is locked.
   */
 #define __HAL_LOCK(__HANDLE__)                                              \
-                                do{                                         \
-                                    if((__HANDLE__)->lock == HAL_LOCKED)    \
-                                    {                                       \
-                                       return HAL_BUSY;                     \
-                                    }                                       \
-                                    else                                    \
-                                    {                                       \
-                                       (__HANDLE__)->lock = HAL_LOCKED;     \
-                                    }                                       \
-                                  }while (0U)
+do {                                                                        \
+    if((__HANDLE__)->lock == HAL_LOCKED)                                    \
+    {                                                                       \
+        return HAL_BUSY;                                                    \
+    }                                                                       \
+    else                                                                    \
+    {                                                                       \
+        (__HANDLE__)->lock = HAL_LOCKED;                                    \
+    }                                                                       \
+} while (0U)
 
 /**
   * @brief  Unlock peripheral handle.
@@ -166,9 +164,10 @@ typedef enum
   * @retval None
   */
 #define __HAL_UNLOCK(__HANDLE__)                                            \
-                                  do{                                       \
-                                      (__HANDLE__)->lock = HAL_UNLOCKED;    \
-                                    }while (0U)
+do {                                                                        \
+    (__HANDLE__)->lock = HAL_UNLOCKED;                                      \
+} while (0U)
+
 #endif /* USE_RTOS */
 
 
@@ -182,7 +181,8 @@ typedef enum
 #endif /* __GNUC__ */
 
 
-/* Macro to get variable aligned on 4-bytes, for __ICCARM__ the directive "#pragma data_alignment=4" must be used instead */
+/* Macro to get variable aligned on 4-bytes, for __ICCARM__ the directive "#pragma data_alignment=4"
+   must be used instead                                                                              */
 #if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
 #ifndef __ALIGN_END
 #define __ALIGN_END    __attribute__((aligned(4)))

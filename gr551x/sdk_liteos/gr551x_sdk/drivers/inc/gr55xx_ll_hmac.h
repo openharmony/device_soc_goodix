@@ -72,12 +72,10 @@ extern "C" {
 /**
   * @brief LL HMAC Init Structure definition
   */
-typedef struct _ll_hmac_init_t
-{
+typedef struct _ll_hmac_init_t {
     uint32_t *p_key;         /**< Key         */
 
     uint32_t *p_hash;        /**< HASH value  */
-
 } ll_hmac_init_t;
 
 /** @} */
@@ -98,41 +96,41 @@ typedef struct _ll_hmac_init_t
   * @brief    Flags definitions which can be used with LL_HMAC_ReadReg function
   * @{
   */
-#define LL_HMAC_FLAG_DATAREADY_SHA                           HMAC_STATUS_DATAREADY_SHA      /**< HMAC data ready(SHA mode)   */
-#define LL_HMAC_FLAG_DATAREADY_HMAC                          HMAC_STATUS_DATAREADY_HMAC     /**< HMAC data ready(HAMC mode)  */
-#define LL_HMAC_FLAG_DMA_MESSAGEDONE                         HMAC_STATUS_MESSAGEDONE_DMA    /**< HMAC dma message done       */
-#define LL_HMAC_FLAG_DMA_DONE                                HMAC_STATUS_TRANSDONE_DMA      /**< HMAC dma transfer done      */
-#define LL_HMAC_FLAG_DMA_ERR                                 HMAC_STATUS_TRANSERR_DMA       /**< HMAC dma transfer error     */
-#define LL_HMAC_FLAG_KEY_VALID                               HMAC_STATUS_KEYVALID           /**< HMAC has fetched key        */
+#define LL_HMAC_FLAG_DATAREADY_SHA                   HMAC_STATUS_DATAREADY_SHA      /**< HMAC data ready(SHA mode)   */
+#define LL_HMAC_FLAG_DATAREADY_HMAC                  HMAC_STATUS_DATAREADY_HMAC     /**< HMAC data ready(HAMC mode)  */
+#define LL_HMAC_FLAG_DMA_MESSAGEDONE                 HMAC_STATUS_MESSAGEDONE_DMA    /**< HMAC dma message done       */
+#define LL_HMAC_FLAG_DMA_DONE                        HMAC_STATUS_TRANSDONE_DMA      /**< HMAC dma transfer done      */
+#define LL_HMAC_FLAG_DMA_ERR                         HMAC_STATUS_TRANSERR_DMA       /**< HMAC dma transfer error     */
+#define LL_HMAC_FLAG_KEY_VALID                       HMAC_STATUS_KEYVALID           /**< HMAC has fetched key        */
 /** @} */
 
 /** @defgroup HMAC_LL_EC_HASH_MODE Hash Mode
   * @{
   */
-#define LL_HMAC_HASH_STANDARD                                0x00000000U                            /**< Standard Mode */
-#define LL_HMAC_HASH_USER                                    (1UL << HMAC_CONFIG_ENABLE_USERHASH)   /**< User Mode     */
+#define LL_HMAC_HASH_STANDARD                        0x00000000U                            /**< Standard Mode */
+#define LL_HMAC_HASH_USER                            (1UL << HMAC_CONFIG_ENABLE_USERHASH)   /**< User Mode     */
 /** @} */
 
 /** @defgroup HMAC_LL_EC_CALCULATE_TYPE Calculate Type
   * @{
   */
-#define LL_HMAC_CALCULATETYPE_HMAC                           0x00000000U                            /**< HMAC mode */
-#define LL_HMAC_CALCULATETYPE_SHA                            (1UL << HMAC_CONFIG_CALCTYPE_Pos)      /**< SHA  moe  */
+#define LL_HMAC_CALCULATETYPE_HMAC                   0x00000000U                            /**< HMAC mode */
+#define LL_HMAC_CALCULATETYPE_SHA                    (1UL << HMAC_CONFIG_CALCTYPE_Pos)      /**< SHA  moe  */
 /** @} */
 
 /** @defgroup HMAC_LL_EC_KEY_TYPE Key Type
   * @{
   */
-#define LL_HMAC_KEYTYPE_MCU                                  0x00000000U                            /**< MCU        */
-#define LL_HMAC_KEYTYPE_AHB                                  (1UL << HMAC_CONFIG_KEYTYPE_Pos)       /**< AHB master */
-#define LL_HMAC_KEYTYPE_KRAM                                 (2UL << HMAC_CONFIG_KEYTYPE_Pos)       /**< Key Port   */
+#define LL_HMAC_KEYTYPE_MCU                          0x00000000U                            /**< MCU        */
+#define LL_HMAC_KEYTYPE_AHB                          (1UL << HMAC_CONFIG_KEYTYPE_Pos)       /**< AHB master */
+#define LL_HMAC_KEYTYPE_KRAM                         (2UL << HMAC_CONFIG_KEYTYPE_Pos)       /**< Key Port   */
 /** @} */
 
 /** @defgroup HMAC_LL_EC_TRANSFER_SIZE Transfer Size
   * @{
   */
-#define LL_HMAC_DMA_TRANSIZE_MIN                             (1)     /**< Min size = 1 block      */
-#define LL_HMAC_DMA_TRANSIZE_MAX                             (512)   /**< Min size = 512 blocks   */
+#define LL_HMAC_DMA_TRANSIZE_MIN                     (1)     /**< Min size = 1 block      */
+#define LL_HMAC_DMA_TRANSIZE_MAX                     (512)   /**< Min size = 512 blocks   */
 /** @} */
 
 /** @} */

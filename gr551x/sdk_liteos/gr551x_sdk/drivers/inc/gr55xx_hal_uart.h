@@ -73,8 +73,7 @@ extern "C" {
   * @brief HAL UART State enumerations definition
   * @note  HAL UART State value is a combination of 2 different substates: gState and RxState.
   */
-typedef enum
-{
+typedef enum {
     HAL_UART_STATE_RESET     = 0x00U,  /**< Peripheral is not initialized.
                                             Value is allowed for gState and RxState */
 
@@ -98,7 +97,6 @@ typedef enum
 
     HAL_UART_STATE_ERROR     = 0x70U   /**< Error.
                                             Value is allowed for gState only */
-
 } hal_uart_state_t;
 
 /** @} */
@@ -116,8 +114,7 @@ typedef enum
 /**
   * @brief UART init structure definition
   */
-typedef struct _uart_init
-{
+typedef struct _uart_init {
     uint32_t baud_rate;         /**< This member configures the UART communication baud rate. */
 
     uint32_t data_bits;         /**< Specifies the number of data bits transmitted or received in a frame.
@@ -138,7 +135,6 @@ typedef struct _uart_init
                                      hal_uart_rx_cplt_callback(). Note that the rx_timeout_mode only works
                                      in interrupt mode.
                                      This parameter can be a value of @ref UART_Receiver_TimeOut. */
-
 } uart_init_t;
 /** @} */
 
@@ -149,8 +145,7 @@ typedef struct _uart_init
 /**
   * @brief UART handle Structure definition
   */
-typedef struct _uart_handle
-{
+typedef struct _uart_handle {
     uart_regs_t           *p_instance;        /**< UART registers base address        */
 
     uart_init_t           init;             /**< UART communication parameters      */
@@ -203,8 +198,7 @@ typedef struct _uart_handle
   * @brief HAL_UART Callback function definition
   */
 
-typedef struct _hal_uart_callback
-{
+typedef struct _hal_uart_callback {
     void (*uart_msp_init)(uart_handle_t *p_uart);               /**< UART init MSP callback                     */
     void (*uart_msp_deinit)(uart_handle_t *p_uart);             /**< UART de-init MSP callback                  */
     void (*uart_tx_cplt_callback)(uart_handle_t *p_uart);       /**< UART tx transfer completed callback        */
@@ -272,7 +266,7 @@ typedef struct _hal_uart_callback
   * @{
   */
 #define UART_HWCONTROL_NONE                 LL_UART_HWCONTROL_NONE      /**< No hardware control       */
-#define UART_HWCONTROL_RTS_CTS              LL_UART_HWCONTROL_RTS_CTS   /**< Auto RTS and CTS hardware flow control       */
+#define UART_HWCONTROL_RTS_CTS              LL_UART_HWCONTROL_RTS_CTS   /**< Auto RTS and CTS hardware flow control */
 /** @} */
 
 /** @defgroup UART_Receiver_TimeOut UART Receiver TimeOut
@@ -288,7 +282,8 @@ typedef struct _hal_uart_callback
 #define UART_IT_MS                          LL_UART_IER_MS      /**< Enable Modem Status Interrupt */
 #define UART_IT_RLS                         LL_UART_IER_RLS     /**< Enable Receiver Line Status Interrupt */
 #define UART_IT_THRE                        LL_UART_IER_THRE    /**< Enable Transmit Holding Register Empty Interrupt */
-#define UART_IT_RDA                         LL_UART_IER_RDA     /**< Enable Received Data Available Interrupt and Character Timeout Interrupt */
+#define UART_IT_RDA                         LL_UART_IER_RDA     /**< Enable Received Data Available Interrupt and
+                                                                     Character Timeout Interrupt */
 /** @} */
 
 /** @defgroup UART_Request_Parameters UART Request Parameters
@@ -308,7 +303,8 @@ typedef struct _hal_uart_callback
 /** @defgroup UART_Line_Error_Mask UART Line Error Flag Mask
   * @{
   */
-#define UART_LINE_ERROR_MASK                (LL_UART_LSR_PE | LL_UART_LSR_OE | LL_UART_LSR_FE | LL_UART_LSR_BI) /**< UART interruptions flags mask */
+#define UART_LINE_ERROR_MASK                (LL_UART_LSR_PE | LL_UART_LSR_OE | \
+                                             LL_UART_LSR_FE | LL_UART_LSR_BI) /**< UART interruptions flags mask */
 /** @} */
 
 /** @defgroup UART_Retention_Length UART Retention Register Length
@@ -335,10 +331,10 @@ typedef struct _hal_uart_callback
   * @retval None
   */
 #define __HAL_UART_RESET_HANDLE_STATE(__HANDLE__)       \
-    do{                                                 \
-        (__HANDLE__)->g_state = HAL_UART_STATE_RESET;   \
-        (__HANDLE__)->rx_state = HAL_UART_STATE_RESET;  \
-    } while(0U)
+do {                                                    \
+    (__HANDLE__)->g_state = HAL_UART_STATE_RESET;       \
+    (__HANDLE__)->rx_state = HAL_UART_STATE_RESET;      \
+} while (0U)
 
 /** @brief  Enable the specified UART interrupt.
   * @param  __HANDLE__    Specifies the UART Handle.
@@ -351,11 +347,11 @@ typedef struct _hal_uart_callback
   * @retval None
   */
 #define __HAL_UART_ENABLE_IT(__HANDLE__, __INTERRUPT__)                 \
-    do {                                                                \
-        GLOBAL_EXCEPTION_DISABLE();                                     \
-        ll_uart_enable_it((__HANDLE__)->p_instance, (__INTERRUPT__));   \
-        GLOBAL_EXCEPTION_ENABLE();                                      \
-    } while(0U)
+do {                                                                    \
+    GLOBAL_EXCEPTION_DISABLE();                                         \
+    ll_uart_enable_it((__HANDLE__)->p_instance, (__INTERRUPT__));       \
+    GLOBAL_EXCEPTION_ENABLE();                                          \
+} while (0U)
 
 /** @brief  Disable the specified UART interrupt.
   * @param  __HANDLE__    Specifies the UART Handle.
@@ -368,11 +364,11 @@ typedef struct _hal_uart_callback
   * @retval None
   */
 #define __HAL_UART_DISABLE_IT(__HANDLE__, __INTERRUPT__)                \
-    do {                                                                \
-        GLOBAL_EXCEPTION_DISABLE();                                     \
-        ll_uart_disable_it((__HANDLE__)->p_instance, (__INTERRUPT__));  \
-        GLOBAL_EXCEPTION_ENABLE();                                      \
-    } while(0)
+do {                                                                    \
+    GLOBAL_EXCEPTION_DISABLE();                                         \
+    ll_uart_disable_it((__HANDLE__)->p_instance, (__INTERRUPT__));      \
+    GLOBAL_EXCEPTION_ENABLE();                                          \
+} while (0)
 
 /** @brief  Flush the UART FIFO and treat FIFO as empty.
   * @param  __HANDLE__ Specifies the UART Handle.
@@ -433,7 +429,7 @@ typedef struct _hal_uart_callback
   * @param __CONTROL__ UART hardware flow control.
   * @retval SET (__CONTROL__ is valid) or RESET (__CONTROL__ is invalid)
   */
-#define IS_UART_HARDWARE_FLOW_CONTROL(__CONTROL__)\
+#define IS_UART_HARDWARE_FLOW_CONTROL(__CONTROL__) \
                                    (((__CONTROL__) == UART_HWCONTROL_NONE) || \
                                     ((__CONTROL__) == UART_HWCONTROL_RTS_CTS)
 /** @} */
@@ -592,14 +588,15 @@ void hal_uart_msp_deinit(uart_handle_t *p_uart);
 
     (#) In Non-Blocking mode transfers, possible errors are split into 2 categories.
         Errors are handled as follows :
-        (++) Error is considered as Recoverable and non blocking. Transfer could go till end, but error severity is
-             to be evaluated by user : this concerns Frame Error, Parity Error or Noise Error in Interrupt mode reception .
-             Received character is then retrieved and stored in Rx buffer, Error code is set to allow user to identify error type,
-             and hal_uart_error_callback() user callback is executed. Transfer is kept ongoing on UART side.
+        (++) Error is considered as Recoverable and non blocking. Transfer could go till end, but error severity is to
+             be evaluated by user : this concerns Frame Error, Parity Error or Noise Error in Interrupt mode reception.
+             Received character is then retrieved and stored in Rx buffer, Error code is set to allow user to identify
+             error type, and hal_uart_error_callback() user callback is executed. Transfer is kept ongoing on UART side.
              If user wants to abort it, Abort services should be called by user.
         (++) Error is considered as Blocking : Transfer could not be completed properly and is aborted.
              This concerns Overrun Error In Interrupt mode reception and all errors in DMA mode.
-             Error code is set to allow user to identify error type, and hal_uart_error_callback() user callback is executed.
+             Error code is set to allow user to identify error type, and hal_uart_error_callback() user
+             callback is executed.
 
     -@- In the Half duplex communication, it is forbidden to run the transmit
         and receive process in parallel, the UART state hal_uart_state_busy_tx_rx can't be useful.

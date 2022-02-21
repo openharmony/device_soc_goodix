@@ -68,8 +68,7 @@ extern "C" {
 /**
   * @brief  MSIO Bit SET and Bit RESET enumerations
   */
-typedef enum
-{
+typedef enum {
     MSIO_PIN_RESET = 0U,          /**< MSIO pin low level. */
     MSIO_PIN_SET                  /**< MSIO pin high level.*/
 } msio_pin_state_t;
@@ -83,8 +82,7 @@ typedef enum
 /**
   * @brief   MSIO init structure definition
   */
-typedef struct _msio_init
-{
+typedef struct _msio_init {
     uint32_t pin;       /**< Specifies the MSIO pins to be configured.
                             This parameter can be any value of @ref MSIO_pins */
 
@@ -321,7 +319,6 @@ void hal_msio_toggle_pin(uint16_t msio_pin);
 /** @} */
 
 /** @} */
-
 
 #ifdef __cplusplus
 }
