@@ -51,7 +51,7 @@
 #if ENABLE_BACKTRACE_FEA
 
 #if __STDC_VERSION__ < 199901L
-    #error "must be C99 or higher. try to add '-std=c99' to compile parameters"
+#error "must be C99 or higher. try to add '-std=c99' to compile parameters"
 #endif
 
 /*
@@ -66,13 +66,13 @@
 #endif
 
 #ifdef ENV_USE_FREERTOS
-    #include "FreeRTOS.h"
-    #include "task.h"
-    #define APP_IS_USING_FREEROTS 1
+#include "FreeRTOS.h"
+#include "task.h"
+#define APP_IS_USING_FREEROTS 1
 #endif
 
 #ifndef SYS_FAULT_TRACE_MODE
-    #define SYS_FAULT_TRACE_MODE 1
+#define SYS_FAULT_TRACE_MODE 1
 #endif
 
 #define NVDS_FAULT_INFO_LEN_MAX (1024)
@@ -103,68 +103,67 @@ void __fault_trace_nvds_save_flush(void)
 }
 
 #if SYS_FAULT_TRACE_MODE == 1    // only UART Print
-    #define __FAULT_TRACE_OUTPUT_PREPARE()     
-    #define __FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format,##__VA_ARGS__)
-    #define __FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush()
+#define __FAULT_TRACE_OUTPUT_PREPARE()
+#define __FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format,##__VA_ARGS__)
+#define __FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush()
 #elif SYS_FAULT_TRACE_MODE == 2  // only Save to NVDS
-    #define __FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();__fault_trace_nvds_save_prepare()
-    #define __FAULT_TRACE_OUTPUT(format, ...)  __fault_trace_nvds_add(format,##__VA_ARGS__);__fault_trace_nvds_add("\r\n")
-    #define __FAULT_TRACE_OUTPUT_FLUSH()       __fault_trace_nvds_save_flush()
+#define __FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();__fault_trace_nvds_save_prepare()
+#define __FAULT_TRACE_OUTPUT(format, ...)  __fault_trace_nvds_add(format,##__VA_ARGS__);__fault_trace_nvds_add("\r\n")
+#define __FAULT_TRACE_OUTPUT_FLUSH()       __fault_trace_nvds_save_flush()
 #elif SYS_FAULT_TRACE_MODE == 3  // UART Print and Save to NVDS
-    #define __FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();__fault_trace_nvds_save_prepare()
-    #define __FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format,##__VA_ARGS__); \
+#define __FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();__fault_trace_nvds_save_prepare()
+#define __FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format,##__VA_ARGS__); \
                                                __fault_trace_nvds_add(format,##__VA_ARGS__);__fault_trace_nvds_add("\r\n")
-    #define __FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush(); \
+#define __FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush(); \
                                                __fault_trace_nvds_save_flush()
 #else
-    #define __FAULT_TRACE_OUTPUT_PREPARE()     
-    #define __FAULT_TRACE_OUTPUT(...)
-    #define __FAULT_TRACE_OUTPUT_FLUSH()
+#define __FAULT_TRACE_OUTPUT_PREPARE()
+#define __FAULT_TRACE_OUTPUT(...)
+#define __FAULT_TRACE_OUTPUT_FLUSH()
 #endif
 
 #if defined(__CC_ARM)
-    #define CSTACK_BLOCK_NAME               ARM_LIB_STACKHEAP     /**< C stack block name: ARM_LIB_STACKHEAP. */
-    #define CODE_SECTION_NAME               FLASH_CODE            /**< Code section name: ER_FLASH. */
+#define CSTACK_BLOCK_NAME               ARM_LIB_STACKHEAP     /**< C stack block name: ARM_LIB_STACKHEAP. */
+#define CODE_SECTION_NAME               FLASH_CODE            /**< Code section name: ER_FLASH. */
 
-    #define SECTION_START(_name_)           _name_##$$Base
-    #define SECTION_END(_name_)             _name_##$$Limit
-    #define IMAGE_SECTION_START(_name_)     Image$$##_name_##$$Base
-    #define IMAGE_SECTION_END(_name_)       Image$$##_name_##$$ZI$$Limit
-    #define CSTACK_BLOCK_START(_name_)      IMAGE_SECTION_START(_name_)
-    #define CSTACK_BLOCK_END(_name_)        IMAGE_SECTION_END(_name_)
-    #define CODE_SECTION_START(_name_)      IMAGE_SECTION_START(_name_)
-    #define CODE_SECTION_END(_name_)        IMAGE_SECTION_END(_name_)
+#define SECTION_START(_name_)           _name_##$$Base
+#define SECTION_END(_name_)             _name_##$$Limit
+#define IMAGE_SECTION_START(_name_)     Image$$##_name_##$$Base
+#define IMAGE_SECTION_END(_name_)       Image$$##_name_##$$ZI$$Limit
+#define CSTACK_BLOCK_START(_name_)      IMAGE_SECTION_START(_name_)
+#define CSTACK_BLOCK_END(_name_)        IMAGE_SECTION_END(_name_)
+#define CODE_SECTION_START(_name_)      IMAGE_SECTION_START(_name_)
+#define CODE_SECTION_END(_name_)        IMAGE_SECTION_END(_name_)
 
-    extern const int CSTACK_BLOCK_START(CSTACK_BLOCK_NAME);
-    extern const int CSTACK_BLOCK_END(CSTACK_BLOCK_NAME);
-    extern const int CODE_SECTION_START(CODE_SECTION_NAME);
-    extern const int CODE_SECTION_END(CODE_SECTION_NAME);
+extern const int CSTACK_BLOCK_START(CSTACK_BLOCK_NAME);
+extern const int CSTACK_BLOCK_END(CSTACK_BLOCK_NAME);
+extern const int CODE_SECTION_START(CODE_SECTION_NAME);
+extern const int CODE_SECTION_END(CODE_SECTION_NAME);
 #elif defined(__ICCARM__)
-    #define CSTACK_BLOCK_NAME          "CSTACK"              /**< C stack block name, default is 'CSTACK'. */
-    #define CODE_SECTION_NAME          ".text"               /**< Code section name, default is '.text'. */
+#define CSTACK_BLOCK_NAME          "CSTACK"              /**< C stack block name, default is 'CSTACK'. */
+#define CODE_SECTION_NAME          ".text"               /**< Code section name, default is '.text'. */
 
-    #pragma section = CMB_CSTACK_BLOCK_NAME
-    #pragma section = CMB_CODE_SECTION_NAME
+#pragma section = CMB_CSTACK_BLOCK_NAME
+#pragma section = CMB_CODE_SECTION_NAME
 #elif defined(__GNUC__)
-    #define CSTACK_BLOCK_START         _sstack               /**< C stack block start address, defined on linker script file, default is _sstack. */
-    #define CSTACK_BLOCK_END           _estack               /**< C stack block end address, defined on linker script file, default is _estack. */
-    #define CODE_SECTION_START         _stext                /**< code section start address, defined on linker script file, default is _stext. */
-    #define CODE_SECTION_END           _etext                /**< code section end address, defined on linker script file, default is _etext. */
+#define CSTACK_BLOCK_START         _sstack               /**< C stack block start address, defined on linker script file, default is _sstack. */
+#define CSTACK_BLOCK_END           _estack               /**< C stack block end address, defined on linker script file, default is _estack. */
+#define CODE_SECTION_START         _stext                /**< code section start address, defined on linker script file, default is _stext. */
+#define CODE_SECTION_END           _etext                /**< code section end address, defined on linker script file, default is _etext. */
 
-    extern const int CSTACK_BLOCK_START;
-    extern const int CSTACK_BLOCK_END;
-    extern const int CODE_SECTION_START;
-    extern const int CODE_SECTION_END;
+extern const int CSTACK_BLOCK_START;
+extern const int CSTACK_BLOCK_END;
+extern const int CODE_SECTION_START;
+extern const int CODE_SECTION_END;
 #else
-    #error "not supported compiler"
+#error "not supported compiler"
 #endif
 
 /*
  * STRUCTURE
  *****************************************************************************************
  */
-typedef struct
-{
+typedef struct {
     uint32_t code_start_addr;
     uint32_t code_end_addr;
 } code_section_info_t;
@@ -173,8 +172,7 @@ typedef struct
  * ENUMERATION
  *****************************************************************************************
  */
-enum
-{
+enum {
     CB_PRINT_ASSERT_ON_THREAD,
     CB_PRINT_ASSERT_ON_HANDLER,
     CB_PRINT_THREAD_STACK_INFO,
@@ -217,44 +215,43 @@ enum
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
-static const char * const s_print_info[] =
-{
-        [CB_PRINT_ASSERT_ON_THREAD]      = "Assert on thread %s",
-        [CB_PRINT_ASSERT_ON_HANDLER]     = "Assert on interrupt or bare metal(no OS) environment",
-        [CB_PRINT_THREAD_STACK_INFO]     = "=== Thread stack information ===",
-        [CB_PRINT_MAIN_STACK_INFO]       = "==== Main stack information ====",
-        [CB_PRINT_THREAD_STACK_OVERFLOW] = "Error: Thread stack(%08x) was overflow",
-        [CB_PRINT_MAIN_STACK_OVERFLOW]   = "Error: Main stack(%08x) was overflow",
-        [CB_PRINT_CALL_STACK_INFO]       = "Call stack info : %.*s",
-        [CB_PRINT_CALL_STACK_ERR]        = "Dump call stack has an error",
-        [CB_PRINT_FAULT_ON_THREAD]       = "Fault on thread %s",
-        [CB_PRINT_FAULT_ON_HANDLER]      = "Fault on interrupt or bare metal(no OS) environment",
-        [CB_PRINT_REGS_TITLE]            = "==== Registers information =====",
-        [CB_PRINT_HFSR_VECTBL]           = "Hard fault is caused by failed vector fetch",
-        [CB_PRINT_MFSR_IACCVIOL]         = "Memory management: instruction access violation",
-        [CB_PRINT_MFSR_DACCVIOL]         = "Memory management: data access violation",
-        [CB_PRINT_MFSR_MUNSTKERR]        = "Memory management: unstacking error",
-        [CB_PRINT_MFSR_MSTKERR]          = "Memory management: stacking error",
-        [CB_PRINT_MFSR_MLSPERR]          = "Memory management: floating-point lazy state preservation",
-        [CB_PRINT_BFSR_IBUSERR]          = "Bus fault: instruction access violation",
-        [CB_PRINT_BFSR_PRECISERR]        = "Bus fault: precise data access violation",
-        [CB_PRINT_BFSR_IMPREISERR]       = "Bus fault: imprecise data access violation",
-        [CB_PRINT_BFSR_UNSTKERR]         = "Bus fault: unstacking error",
-        [CB_PRINT_BFSR_STKERR]           = "Bus fault: stacking error",
-        [CB_PRINT_BFSR_LSPERR]           = "Bus fault: floating-point lazy state preservation",
-        [CB_PRINT_UFSR_UNDEFINSTR]       = "Usage fault: attempts to execute an undefined instruction",
-        [CB_PRINT_UFSR_INVSTATE]         = "Usage fault: attempts to switch to an invalid state (e.g., ARM)",
-        [CB_PRINT_UFSR_INVPC]            = "Usage fault: attempts to do an exception with a bad value in the EXC_RETURN number",
-        [CB_PRINT_UFSR_NOCP]             = "Usage fault: attempts to execute a coprocessor instruction",
-        [CB_PRINT_UFSR_UNALIGNED]        = "Usage fault: indicates that an unaligned access fault has taken place",
-        [CB_PRINT_UFSR_DIVBYZERO0]       = "Usage fault: Indicates a divide by zero has taken place (can be set only if DIV_0_TRP is set)",
-        [CB_PRINT_DFSR_HALTED]           = "Debug fault: halt requested in NVIC",
-        [CB_PRINT_DFSR_BKPT]             = "Debug fault: BKPT instruction executed",
-        [CB_PRINT_DFSR_DWTTRAP]          = "Debug fault: DWT match occurred",
-        [CB_PRINT_DFSR_VCATCH]           = "Debug fault: Vector fetch occurred",
-        [CB_PRINT_DFSR_EXTERNAL]         = "Debug fault: EDBGRQ signal asserted",
-        [CB_PRINT_MMAR]                  = "The memory management fault occurred address is %08x",
-        [CB_PRINT_BFAR]                  = "The bus fault occurred address is %08x",
+static const char * const s_print_info[] = {
+    [CB_PRINT_ASSERT_ON_THREAD]      = "Assert on thread %s",
+    [CB_PRINT_ASSERT_ON_HANDLER]     = "Assert on interrupt or bare metal(no OS) environment",
+    [CB_PRINT_THREAD_STACK_INFO]     = "=== Thread stack information ===",
+    [CB_PRINT_MAIN_STACK_INFO]       = "==== Main stack information ====",
+    [CB_PRINT_THREAD_STACK_OVERFLOW] = "Error: Thread stack(%08x) was overflow",
+    [CB_PRINT_MAIN_STACK_OVERFLOW]   = "Error: Main stack(%08x) was overflow",
+    [CB_PRINT_CALL_STACK_INFO]       = "Call stack info : %.*s",
+    [CB_PRINT_CALL_STACK_ERR]        = "Dump call stack has an error",
+    [CB_PRINT_FAULT_ON_THREAD]       = "Fault on thread %s",
+    [CB_PRINT_FAULT_ON_HANDLER]      = "Fault on interrupt or bare metal(no OS) environment",
+    [CB_PRINT_REGS_TITLE]            = "==== Registers information =====",
+    [CB_PRINT_HFSR_VECTBL]           = "Hard fault is caused by failed vector fetch",
+    [CB_PRINT_MFSR_IACCVIOL]         = "Memory management: instruction access violation",
+    [CB_PRINT_MFSR_DACCVIOL]         = "Memory management: data access violation",
+    [CB_PRINT_MFSR_MUNSTKERR]        = "Memory management: unstacking error",
+    [CB_PRINT_MFSR_MSTKERR]          = "Memory management: stacking error",
+    [CB_PRINT_MFSR_MLSPERR]          = "Memory management: floating-point lazy state preservation",
+    [CB_PRINT_BFSR_IBUSERR]          = "Bus fault: instruction access violation",
+    [CB_PRINT_BFSR_PRECISERR]        = "Bus fault: precise data access violation",
+    [CB_PRINT_BFSR_IMPREISERR]       = "Bus fault: imprecise data access violation",
+    [CB_PRINT_BFSR_UNSTKERR]         = "Bus fault: unstacking error",
+    [CB_PRINT_BFSR_STKERR]           = "Bus fault: stacking error",
+    [CB_PRINT_BFSR_LSPERR]           = "Bus fault: floating-point lazy state preservation",
+    [CB_PRINT_UFSR_UNDEFINSTR]       = "Usage fault: attempts to execute an undefined instruction",
+    [CB_PRINT_UFSR_INVSTATE]         = "Usage fault: attempts to switch to an invalid state (e.g., ARM)",
+    [CB_PRINT_UFSR_INVPC]            = "Usage fault: attempts to do an exception with a bad value in the EXC_RETURN number",
+    [CB_PRINT_UFSR_NOCP]             = "Usage fault: attempts to execute a coprocessor instruction",
+    [CB_PRINT_UFSR_UNALIGNED]        = "Usage fault: indicates that an unaligned access fault has taken place",
+    [CB_PRINT_UFSR_DIVBYZERO0]       = "Usage fault: Indicates a divide by zero has taken place (can be set only if DIV_0_TRP is set)",
+    [CB_PRINT_DFSR_HALTED]           = "Debug fault: halt requested in NVIC",
+    [CB_PRINT_DFSR_BKPT]             = "Debug fault: BKPT instruction executed",
+    [CB_PRINT_DFSR_DWTTRAP]          = "Debug fault: DWT match occurred",
+    [CB_PRINT_DFSR_VCATCH]           = "Debug fault: Vector fetch occurred",
+    [CB_PRINT_DFSR_EXTERNAL]         = "Debug fault: EDBGRQ signal asserted",
+    [CB_PRINT_MMAR]                  = "The memory management fault occurred address is %08x",
+    [CB_PRINT_BFAR]                  = "The bus fault occurred address is %08x",
 };
 
 static uint32_t s_main_stack_start_addr       = 0;
@@ -277,45 +274,45 @@ static code_section_info_t s_code_section_infos[FAULT_CODE_SECTON_CNT_MAX];
 /**@brief Include or export for supported cb_psp_get and cb_sp_get function */
 #if APP_IS_USING_FREEROTS
 #if defined(__CC_ARM)
-    static __inline __asm uint32_t cb_psp_get(void)
-    {
-        mrs r0, psp
-        bx lr
-    }
-    static __inline __asm uint32_t cb_sp_get(void)
-    {
-        mov r0, sp
-        bx lr
-    }
+static __inline __asm uint32_t cb_psp_get(void)
+{
+    mrs r0, psp
+    bx lr
+}
+static __inline __asm uint32_t cb_sp_get(void)
+{
+    mov r0, sp
+    bx lr
+}
 #elif defined(__ICCARM__)
 // IAR iccarm specific functions Close Raw Asm Code Warning.
 #pragma diag_suppress=Pe940
-    static uint32_t cb_psp_get(void)
-    {
-      __asm("mrs r0, psp");
-      __asm("bx lr");
-    }
-    static uint32_t cb_sp_get(void)
-    {
-      __asm("mov r0, sp");
-      __asm("bx lr");
-    }
+static uint32_t cb_psp_get(void)
+{
+    __asm("mrs r0, psp");
+    __asm("bx lr");
+}
+static uint32_t cb_sp_get(void)
+{
+    __asm("mov r0, sp");
+    __asm("bx lr");
+}
 #pragma diag_default=Pe940
 #elif defined(__GNUC__)
-    __attribute__( ( always_inline ) ) static inline uint32_t cb_psp_get(void)
-    {
-        register uint32_t result;
-        __asm volatile ("MRS %0, psp\n" : "=r" (result) );
-        return(result);
-    }
-    __attribute__( ( always_inline ) ) static inline uint32_t cb_sp_get(void)
-    {
-        register uint32_t result;
-        __asm volatile ("MOV %0, sp\n" : "=r" (result) );
-        return(result);
-    }
+__attribute__( ( always_inline ) ) static inline uint32_t cb_psp_get(void)
+{
+    register uint32_t result;
+    __asm volatile ("MRS %0, psp\n" : "=r" (result) );
+    return(result);
+}
+__attribute__( ( always_inline ) ) static inline uint32_t cb_sp_get(void)
+{
+    register uint32_t result;
+    __asm volatile ("MOV %0, sp\n" : "=r" (result) );
+    return(result);
+}
 #else
-    #error "not supported compiler"
+#error "not supported compiler"
 #endif
 #endif
 
@@ -331,9 +328,6 @@ static code_section_info_t s_code_section_infos[FAULT_CODE_SECTON_CNT_MAX];
  */
 static void cb_cur_thread_stack_info_get(uint32_t sp, uint32_t *p_start_addr, uint32_t *p_stack_size)
 {
-//    APP_ASSERT_CHECK(p_start_addr);
-//    APP_ASSERT_CHECK(p_stack_size);
-
     *p_start_addr = (uint32_t)vTaskStackAddr();
     *p_stack_size = vTaskStackSize() * sizeof( StackType_t );
 }
@@ -361,40 +355,27 @@ static const char *cb_cur_thread_name_get(void)
  */
 static void cb_stack_info_dump(uint32_t stack_start_addr, uint32_t stack_size, uint32_t *p_stack)
 {
-    if (s_is_stack_overflow)
-    {
-        if (s_is_on_thread_before_fault)
-        {
+    if (s_is_stack_overflow) {
+        if (s_is_on_thread_before_fault) {
             __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_THREAD_STACK_OVERFLOW], p_stack);
-        }
-        else
-        {
+        } else {
             __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MAIN_STACK_OVERFLOW], p_stack);
         }
 
-        if ((uint32_t)p_stack < stack_start_addr)
-        {
+        if ((uint32_t)p_stack < stack_start_addr) {
             p_stack = (uint32_t *)stack_start_addr;
-        } 
-        else if ((uint32_t) p_stack > stack_start_addr + stack_size)
-        {
+        } else if ((uint32_t) p_stack > stack_start_addr + stack_size) {
             p_stack = (uint32_t *)(stack_start_addr + stack_size);
         }
-    }
-    else
-    {
-        if (s_is_on_thread_before_fault)
-        {
+    } else {
+        if (s_is_on_thread_before_fault) {
             __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_THREAD_STACK_INFO]);
-        }
-        else
-        {
+        } else {
             __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MAIN_STACK_INFO]);
         }
     }
 
-    for (; (uint32_t)p_stack < stack_start_addr + stack_size; p_stack++)
-    {
+    for (; (uint32_t)p_stack < stack_start_addr + stack_size; p_stack++) {
         __FAULT_TRACE_OUTPUT("  addr: %08x    data: %08x", p_stack, *p_stack);
         app_log_flush();
     }
@@ -412,158 +393,125 @@ static void cb_fault_diagnosis(void)
 {
     __FAULT_TRACE_OUTPUT("Fault reason:");
 
-    if (s_regs.hfsr.bits.VECTBL)
-    {
+    if (s_regs.hfsr.bits.VECTBL) {
         __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_HFSR_VECTBL]);
     }
 
-    if (s_regs.hfsr.bits.FORCED)
-    {
+    if (s_regs.hfsr.bits.FORCED) {
         // Memory Management Fault.
-        if (s_regs.mfsr.value)
-        {
-            if (s_regs.mfsr.bits.IACCVIOL)
-            {
+        if (s_regs.mfsr.value) {
+            if (s_regs.mfsr.bits.IACCVIOL) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_IACCVIOL]);
             }
 
-            if (s_regs.mfsr.bits.DACCVIOL)
-            {
+            if (s_regs.mfsr.bits.DACCVIOL) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_DACCVIOL]);
             }
 
-            if (s_regs.mfsr.bits.MUNSTKERR)
-            {
+            if (s_regs.mfsr.bits.MUNSTKERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MUNSTKERR]);
             }
 
-            if (s_regs.mfsr.bits.MSTKERR)
-            {
+            if (s_regs.mfsr.bits.MSTKERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MSTKERR]);
             }
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
-            if (s_regs.mfsr.bits.MLSPERR)
-            {
+            if (s_regs.mfsr.bits.MLSPERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MLSPERR]);
             }
 #endif
 
-            if (s_regs.mfsr.bits.MMARVALID)
-            {
-                if (s_regs.mfsr.bits.IACCVIOL || s_regs.mfsr.bits.DACCVIOL)
-                {
+            if (s_regs.mfsr.bits.MMARVALID) {
+                if (s_regs.mfsr.bits.IACCVIOL || s_regs.mfsr.bits.DACCVIOL) {
                     __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MMAR], s_regs.mmar);
                 }
             }
         }
 
         // Bus Fault
-        if (s_regs.bfsr.value)
-        {
-            if (s_regs.bfsr.bits.IBUSERR)
-            {
+        if (s_regs.bfsr.value) {
+            if (s_regs.bfsr.bits.IBUSERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IBUSERR]);
             }
 
-            if (s_regs.bfsr.bits.PRECISERR)
-            {
+            if (s_regs.bfsr.bits.PRECISERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_PRECISERR]);
             }
 
-            if (s_regs.bfsr.bits.IMPREISERR)
-            {
+            if (s_regs.bfsr.bits.IMPREISERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IMPREISERR]);
             }
 
-            if (s_regs.bfsr.bits.UNSTKERR)
-            {
+            if (s_regs.bfsr.bits.UNSTKERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_UNSTKERR]);
             }
 
-            if (s_regs.bfsr.bits.STKERR)
-            {
+            if (s_regs.bfsr.bits.STKERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_STKERR]);
             }
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
-            if (s_regs.bfsr.bits.LSPERR)
-            {
+            if (s_regs.bfsr.bits.LSPERR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_LSPERR]);
             }
 #endif
 
-            if (s_regs.bfsr.bits.BFARVALID)
-            {
-                if (s_regs.bfsr.bits.PRECISERR)
-                {
+            if (s_regs.bfsr.bits.BFARVALID) {
+                if (s_regs.bfsr.bits.PRECISERR) {
                     __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFAR], s_regs.bfar);
                 }
             }
         }
 
         // Usage Fault
-        if (s_regs.ufsr.value)
-        {
-            if (s_regs.ufsr.bits.UNDEFINSTR)
-            {
+        if (s_regs.ufsr.value) {
+            if (s_regs.ufsr.bits.UNDEFINSTR) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNDEFINSTR]);
             }
 
-            if (s_regs.ufsr.bits.INVSTATE)
-            {
+            if (s_regs.ufsr.bits.INVSTATE) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVSTATE]);
             }
 
-            if (s_regs.ufsr.bits.INVPC)
-            {
+            if (s_regs.ufsr.bits.INVPC) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVPC]);
             }
 
-            if (s_regs.ufsr.bits.NOCP)
-            {
+            if (s_regs.ufsr.bits.NOCP) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_NOCP]);
             }
 
-            if (s_regs.ufsr.bits.UNALIGNED)
-            {
+            if (s_regs.ufsr.bits.UNALIGNED) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNALIGNED]);
             }
 
-            if (s_regs.ufsr.bits.DIVBYZERO0)
-            {
+            if (s_regs.ufsr.bits.DIVBYZERO0) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_DIVBYZERO0]);
             }
         }
     }
 
     // Debug Fault
-    if (s_regs.hfsr.bits.DEBUGEVT)
-    {
-        if (s_regs.dfsr.value)
-        {
-            if (s_regs.dfsr.bits.HALTED)
-            {
+    if (s_regs.hfsr.bits.DEBUGEVT) {
+        if (s_regs.dfsr.value) {
+            if (s_regs.dfsr.bits.HALTED) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_HALTED]);
             }
 
-            if (s_regs.dfsr.bits.BKPT)
-            {
+            if (s_regs.dfsr.bits.BKPT) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_BKPT]);
             }
 
-            if (s_regs.dfsr.bits.DWTTRAP)
-            {
+            if (s_regs.dfsr.bits.DWTTRAP) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_DWTTRAP]);
             }
 
-            if (s_regs.dfsr.bits.VCATCH)
-            {
+            if (s_regs.dfsr.bits.VCATCH) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_VCATCH]);
             }
 
-            if (s_regs.dfsr.bits.EXTERNAL)
-            {
+            if (s_regs.dfsr.bits.EXTERNAL) {
                 __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_EXTERNAL]);
             }
         }
@@ -602,23 +550,19 @@ static uint32_t cb_backtrace_call_stack(uint32_t *p_buffer, uint32_t size, uint3
 
     bool is_regs_saved_lr_valid = false;
 
-    if (s_is_on_fault)
-    {
-        if (!s_is_stack_overflow)
-        {
+    if (s_is_on_fault) {
+        if (!s_is_stack_overflow) {
             // First depth is PC
             p_buffer[depth++] = s_regs.saved.pc;
 
             // Second depth is from LR, so need decrease a word to PC
             pc = s_regs.saved.lr - sizeof(uint32_t);
 
-            for (i = 0; i < s_code_section_count; i++)
-            {
+            for (i = 0; i < s_code_section_count; i++) {
                 if ((pc >= s_code_section_infos[i].code_start_addr) && \
-                    (pc <= s_code_section_infos[i].code_end_addr) && \
-                    (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
-                    (depth < size))
-                {
+                        (pc <= s_code_section_infos[i].code_end_addr) && \
+                        (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
+                        (depth < size)) {
                     p_buffer[depth++] = pc;
                     is_regs_saved_lr_valid = true;
                 }
@@ -627,56 +571,43 @@ static uint32_t cb_backtrace_call_stack(uint32_t *p_buffer, uint32_t size, uint3
 
 #if APP_IS_USING_FREEROTS
         // Program is running on thread before fault.
-        if (s_is_on_thread_before_fault)
-        {
+        if (s_is_on_thread_before_fault) {
             cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
         }
-    } 
-    else 
-    {
+    } else {
         // OS environment.
-        if (cb_sp_get() == cb_psp_get())
-        {
+        if (cb_sp_get() == cb_psp_get()) {
             cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
         }
 #endif
 
     }
 
-    if (s_is_stack_overflow)
-    {
-        if (sp < stack_start_addr)
-        {
+    if (s_is_stack_overflow) {
+        if (sp < stack_start_addr) {
             sp = stack_start_addr;
-        }
-        else if (sp > stack_start_addr + stack_size)
-        {
+        } else if (sp > stack_start_addr + stack_size) {
             sp = stack_start_addr + stack_size;
         }
     }
 
     // Copy called function address.
-    for (; sp < stack_start_addr + stack_size; sp += sizeof(uint32_t))
-    {
+    for (; sp < stack_start_addr + stack_size; sp += sizeof(uint32_t)) {
         // The *sp value may be LR, so need decrease a word to PC.
         pc = *((uint32_t *)sp) - sizeof(uint32_t);
 
         // The Cortex-M using thumb instruction, so the pc must be an odd number.
-        if (pc % 2 == 0)
-        {
+        if (pc % 2 == 0) {
             continue;
         }
 
-        for (i = 0; i < s_code_section_count; i++)
-        {
+        for (i = 0; i < s_code_section_count; i++) {
             if ((pc >= s_code_section_infos[i].code_start_addr) && \
-                (pc <= s_code_section_infos[i].code_end_addr) && \
-                (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
-                (depth < size))
-            {
+                    (pc <= s_code_section_infos[i].code_end_addr) && \
+                    (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
+                    (depth < size)) {
                 // The second depth function may be already saved, so need ignore repeat.
-                if ((depth == 2) && is_regs_saved_lr_valid && (pc == p_buffer[1]))
-                {
+                if ((depth == 2) && is_regs_saved_lr_valid && (pc == p_buffer[1])) {
                     continue;
                 }
                 p_buffer[depth++] = pc;
@@ -702,22 +633,16 @@ static void cb_call_stack_print(uint32_t sp)
 
     cur_depth = cb_backtrace_call_stack(call_stack_buf, APP_ERROR_CALL_STACK_DEPTH_MAX, sp);
 
-    for (i = 0; i < cur_depth; i++)
-    {
-//        sprintf(s_call_stack_info + i * (8 + 1), "%08lx", call_stack_buf[i]);
-//        s_call_stack_info[i * (8 + 1) + 8] = ' ';
+    for (i = 0; i < cur_depth; i++) {
         sprintf_s(s_call_stack_info + i * (8 + 3), NVDS_FAULT_INFO_LEN_MAX, "%08lx", call_stack_buf[i]);
         s_call_stack_info[i * (8 + 3) + 8] = '<';
         s_call_stack_info[i * (8 + 3) + 9] = '-';
         s_call_stack_info[i * (8 + 3) + 10] = '-';
     }
 
-    if (cur_depth)
-    {
+    if (cur_depth) {
         __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_CALL_STACK_INFO], cur_depth * (8 + 3), s_call_stack_info);
-    }
-    else
-    {
+    } else {
         __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_CALL_STACK_ERR]);
     }
 }
@@ -733,9 +658,8 @@ static void cb_call_stack_print(uint32_t sp)
  *****************************************************************************************
  */
 bool cortex_backtrace_code_section_add(uint32_t code_start_addr, uint32_t code_end_addr)
-{ 
-    if (FAULT_CODE_SECTON_CNT_MAX > s_code_section_count)
-    {
+{
+    if (FAULT_CODE_SECTON_CNT_MAX > s_code_section_count) {
         return false;
     }
 
@@ -779,19 +703,13 @@ void cortex_backtrace_fault_handler(uint32_t fault_handler_lr, uint32_t fault_ha
     s_code_section_count += 2;
 #endif
 
-//    #if SYS_FAULT_TRACE_MODE
-//        hardfault_trace_handler(fault_handler_lr, fault_handler_sp);
-//    #endif
 #if defined(__CC_ARM)
     s_main_stack_start_addr = (uint32_t)&CSTACK_BLOCK_START(CSTACK_BLOCK_NAME);
     s_main_stack_size       = (uint32_t)&CSTACK_BLOCK_END(CSTACK_BLOCK_NAME) - s_main_stack_start_addr;
-//    s_code_start_addr       = (uint32_t)&CODE_SECTION_START(CODE_SECTION_NAME);
-//    s_code_size             = (uint32_t)&CODE_SECTION_END(CODE_SECTION_NAME) - s_code_start_addr;
     uint32_t i_code_start_addr             = 0;
     uint32_t i_code_size                   = 0;
     i_code_start_addr       = (uint32_t)&CODE_SECTION_START(CODE_SECTION_NAME);
     i_code_size             = (uint32_t)&CODE_SECTION_END(CODE_SECTION_NAME) - i_code_start_addr;
-//    printf("\r\ni_code_start_addr=0X%x,i_code_size=%d\r\n",i_code_start_addr,i_code_size);
     s_code_section_infos[s_code_section_count    ].code_start_addr = (uint32_t)&CODE_SECTION_START(CODE_SECTION_NAME);
     s_code_section_infos[s_code_section_count    ].code_end_addr   = (uint32_t)&CODE_SECTION_END(CODE_SECTION_NAME);
     s_code_section_count +=1;
@@ -799,15 +717,11 @@ void cortex_backtrace_fault_handler(uint32_t fault_handler_lr, uint32_t fault_ha
 #elif defined(__ICCARM__)
     uint32_t s_main_stack_start_addr = (uint32_t)__section_begin(CSTACK_BLOCK_NAME);
     uint32_t s_main_stack_size       = (uint32_t)__section_end(CSTACK_BLOCK_NAME) - s_main_stack_start_addr;
-//    uint32_t s_code_start_addr       = (uint32_t)__section_begin(CODE_SECTION_NAME);
-//    uint32_t s_code_size             = (uint32_t)__section_end(CODE_SECTION_NAME) - s_code_start_addr;
 #elif defined(__GNUC__)
     uint32_t s_main_stack_start_addr = (uint32_t)(&CSTACK_BLOCK_START);
     uint32_t s_main_stack_size       = (uint32_t)(&CSTACK_BLOCK_END) - s_main_stack_start_addr;
-//    uint32_t s_code_start_addr       = (uint32_t)(&CODE_SECTION_START);
-//    uint32_t s_code_size             = (uint32_t)(&CODE_SECTION_END) - s_code_start_addr;
 #else
-    #error "not supported compiler"
+#error "not supported compiler"
 #endif
 
     uint32_t    stack_pointer   = fault_handler_sp;
@@ -820,28 +734,23 @@ void cortex_backtrace_fault_handler(uint32_t fault_handler_lr, uint32_t fault_ha
 #endif
 
     // Only call once
-//    APP_ASSERT_CHECK(!s_is_on_fault);
-
     s_is_on_fault = true;
 
 #if APP_IS_USING_FREEROTS
     s_is_on_thread_before_fault = fault_handler_lr & (1UL << 2);
 
     // Check which stack was used before (MSP or PSP).
-    if (s_is_on_thread_before_fault)
-    {
+    if (s_is_on_thread_before_fault) {
         __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_FAULT_ON_THREAD],
                              cb_cur_thread_name_get() ? cb_cur_thread_name_get() : "NO_NAME");
 
         stack_pointer   = cb_psp_get();
         saved_regs_addr = stack_pointer;
-        
+
 #if APP_ERROR_DUMP_STACK_INFO_ENABLE
         cb_cur_thread_stack_info_get(stack_pointer, &stack_start_addr, &stack_size);
 #endif
-    }
-    else
-    {
+    } else {
         __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_FAULT_ON_HANDLER]);
     }
 #else
@@ -857,17 +766,14 @@ void cortex_backtrace_fault_handler(uint32_t fault_handler_lr, uint32_t fault_ha
 
 #if APP_ERROR_DUMP_STACK_INFO_ENABLE
     // Check stack overflow.
-    if (stack_pointer < stack_start_addr || stack_pointer > stack_start_addr + stack_size)
-    {
+    if (stack_pointer < stack_start_addr || stack_pointer > stack_start_addr + stack_size) {
         s_is_stack_overflow = true;
     }
 
     // Dump stack information.
-//    cb_stack_info_dump(stack_start_addr, stack_size, (uint32_t *)stack_pointer);
 #endif
 
-    if (!s_is_stack_overflow)
-    {
+    if (!s_is_stack_overflow) {
         // Dump register.
         __FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_REGS_TITLE]);
 

@@ -73,8 +73,7 @@ extern "C" {
 /**
   * @brief LL RNG Init Structure definition
   */
-typedef struct _ll_rng_init
-{
+typedef struct _ll_rng_init {
     uint32_t seed;            /**< Specifies the seed source for the LFSR.
                                  This parameter can be a value of @ref RNG_LL_EC_SEED_SOURCE */
 
@@ -89,7 +88,6 @@ typedef struct _ll_rng_init
 
     uint32_t interrupt;       /**< Specifies interrupt configuration for the RNG.
                                  This parameter can be a value of @ref RNG_LL_EC_IT */
-
 } ll_rng_init_t;
 
 /** @} */
@@ -107,10 +105,11 @@ typedef struct _ll_rng_init
 /** @defgroup RNG_LL_EC_SEED_SOURCE LFSR seed source
   * @{
   */
-#define LL_RNG_SEED_FR0_S0                 (4UL << RNG_CONFIG_LFSR_SEED_SEL_Pos)  /**< LFSR seed is from the switching oscillator s0. */
-#define LL_RNG_SEED_USER                   (6UL << RNG_CONFIG_LFSR_SEED_SEL_Pos)  /**< LFSR seed is configured by users. */
+#define LL_RNG_SEED_FR0_S0                 (4UL << RNG_CONFIG_LFSR_SEED_SEL_Pos)  /**< LFSR seed is from the
+                                                                                       switching oscillator s0. */
+#define LL_RNG_SEED_USER                   (6UL << RNG_CONFIG_LFSR_SEED_SEL_Pos)  /**< LFSR seed is configured
+                                                                                       by users. */
 /** @} */
-
 
 /** @defgroup RNG_LL_EC_LFSR_MODE LFSR configuration mode
   * @{
@@ -138,8 +137,10 @@ typedef struct _ll_rng_init
 /** @defgroup RNG_LL_EC_OUTPUT_MODE RNG Output mode
   * @{
   */
-#define LL_RNG_OUTPUT_FR0_S0               (4UL << RNG_CONFIG_OUT_MODE_Pos)       /**< Digital RNG direct output, ring oscillator s0. */
-#define LL_RNG_OUTPUT_CYCLIC_PARITY        (6UL << RNG_CONFIG_OUT_MODE_Pos)       /**< LFSR and RNG cyclic sampling and parity generation. */
+#define LL_RNG_OUTPUT_FR0_S0               (4UL << RNG_CONFIG_OUT_MODE_Pos)       /**< Digital RNG direct output,
+                                                                                       ring oscillator s0. */
+#define LL_RNG_OUTPUT_CYCLIC_PARITY        (6UL << RNG_CONFIG_OUT_MODE_Pos)       /**< LFSR and RNG cyclic sampling
+                                                                                       and parity generation. */
 #define LL_RNG_OUTPUT_CYCLIC               (7UL << RNG_CONFIG_OUT_MODE_Pos)       /**< LFSR and RNG cyclic sampling. */
 #define LL_RNG_OUTPUT_LFSR_RNG             (8UL << RNG_CONFIG_OUT_MODE_Pos)       /**< LFSR ⊕ RNG. */
 #define LL_RNG_OUTPUT_LFSR                 (9UL << RNG_CONFIG_OUT_MODE_Pos)       /**< LFSR direct output. */
@@ -176,7 +177,6 @@ typedef struct _ll_rng_init
 
 /** @} */
 /** @} */
-
 
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup RNG_LL_Exported_Functions Functions

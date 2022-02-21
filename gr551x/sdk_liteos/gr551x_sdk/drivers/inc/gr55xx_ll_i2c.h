@@ -73,19 +73,20 @@ extern "C" {
 /**
   * @brief LL I2C init Structure definition
   */
-typedef struct _ll_i2c_init
-{
+typedef struct _ll_i2c_init {
     uint32_t speed;               /**< Specifies the transfer speed. See @ref I2C_LL_EC_SPEED. */
 
     uint32_t own_address;         /**< Specifies the device own address.
                                      This parameter must be a value between Min_Data = 0x00 and Max_Data = 0x3FF
 
-                                     This feature can be modified afterwards using unitary function @ref ll_i2c_set_own_address(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref ll_i2c_set_own_address(). */
 
     uint32_t own_addr_size;       /**< Specifies the device own address 1 size (7-bit or 10-bit).
                                      This parameter can be a value of @ref I2C_LL_EC_OWNADDRESS
 
-                                     This feature can be modified afterwards using unitary function @ref ll_i2c_set_own_address(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref ll_i2c_set_own_address(). */
 } ll_i2c_init_t;
 
 /** @} */
@@ -123,22 +124,34 @@ typedef struct _ll_i2c_init
 
 #define LL_I2C_ABRT_TX_FLUSH_CNT            I2C_TX_ABRT_SRC_TX_FLUSH_CNT    /**< Transfer abort detected by master */
 #define LL_I2C_ABRT_USER_ABRT               I2C_TX_ABRT_SRC_USER_ABRT       /**< Transfer abort detected by master */
-#define LL_I2C_ABRT_SLVRD_INTX              I2C_TX_ABRT_SRC_SLVRD_INTX      /**< Slave trying to transmit to remote master in read mode */
-#define LL_I2C_ABRT_SLV_ARBLOST             I2C_TX_ABRT_SRC_SLV_ARBLOST     /**< Slave lost arbitration to remote master */
-#define LL_I2C_ABRT_SLVFLUSH_TXFIFO         I2C_TX_ABRT_SRC_SLVFLUSH_TXFIFO /**< Slave flushes existing data in TX-FIFO upon getting read command */
-#define LL_I2C_ABRT_ARB_LOST                I2C_TX_ABRT_SRC_ARB_LOST        /**< Master or Slave Transmitter lost arbitration */
-#define LL_I2C_ABRT_MST_DIS                 I2C_TX_ABRT_SRC_MST_DIS         /**< User intitating master operation when MASTER disabled */
-#define LL_I2C_ABRT_10B_RD_NORSTRT          I2C_TX_ABRT_SRC_10B_RD_NORSTRT  /**< Master trying to read in 10-Bit addressing mode when RESTART disabled */
-#define LL_I2C_ABRT_SBYTE_NORSTRT           I2C_TX_ABRT_SRC_SBYTE_NORSTRT   /**< User trying to send START byte when RESTART disabled */
-#define LL_I2C_ABRT_HS_NORSTRT              I2C_TX_ABRT_SRC_HS_NORSTRT      /**< User trying to swidth Master to HS mode when RESTART disabled */
+#define LL_I2C_ABRT_SLVRD_INTX              I2C_TX_ABRT_SRC_SLVRD_INTX      /**< Slave trying to transmit to
+                                                                                 remote master in read mode */
+#define LL_I2C_ABRT_SLV_ARBLOST             I2C_TX_ABRT_SRC_SLV_ARBLOST     /**< Slave lost arbitration to
+                                                                                 remote master */
+#define LL_I2C_ABRT_SLVFLUSH_TXFIFO         I2C_TX_ABRT_SRC_SLVFLUSH_TXFIFO /**< Slave flushes existing data 
+                                                                                 in TX-FIFO upon getting read command */
+#define LL_I2C_ABRT_ARB_LOST                I2C_TX_ABRT_SRC_ARB_LOST        /**< Master or Slave Transmitter
+                                                                                 lost arbitration */
+#define LL_I2C_ABRT_MST_DIS                 I2C_TX_ABRT_SRC_MST_DIS         /**< User intitating master operation
+                                                                                 when MASTER disabled */
+#define LL_I2C_ABRT_10B_RD_NORSTRT          I2C_TX_ABRT_SRC_10B_RD_NORSTRT  /**< Master trying to read in 10-Bit
+                                                                                 addressing mode when RESTART disable */
+#define LL_I2C_ABRT_SBYTE_NORSTRT           I2C_TX_ABRT_SRC_SBYTE_NORSTRT   /**< User trying to send START byte
+                                                                                 when RESTART disabled */
+#define LL_I2C_ABRT_HS_NORSTRT              I2C_TX_ABRT_SRC_HS_NORSTRT      /**< User trying to swidth Master to HS mode
+                                                                                 when RESTART disabled */
 #define LL_I2C_ABRT_SBYTE_ACKDET            I2C_TX_ABRT_SRC_SBYTE_ACKDET    /**< ACK detected for START byte */
 #define LL_I2C_ABRT_HS_ACKDET               I2C_TX_ABRT_SRC_HS_ACKDET       /**< HS Master code is ACKed in HS Mode */
 #define LL_I2C_ABRT_GCALL_READ              I2C_TX_ABRT_SRC_GCALL_READ      /**< GCALL is followed by read from bus */
 #define LL_I2C_ABRT_GCALL_NOACK             I2C_TX_ABRT_SRC_GCALL_NOACK     /**< GCALL is not ACKed by any slave */
-#define LL_I2C_ABRT_TXDATA_NOACK            I2C_TX_ABRT_SRC_TXDATA_NOACK    /**< Transmitted data is not ACKed by addressed slave */
-#define LL_I2C_ABRT_10ADDR2_NOACK           I2C_TX_ABRT_SRC_10ADDR2_NOACK   /**< Byte 2 of 10-Bit Address is not ACKed by any slave */
-#define LL_I2C_ABRT_10ADDR1_NOACK           I2C_TX_ABRT_SRC_10ADDR1_NOACK   /**< Byte 1 of 10-Bit Address is not ACKed by any slave */
-#define LL_I2C_ABRT_7B_ADDR_NOACK           I2C_TX_ABRT_SRC_7B_ADDR_NOACK   /**< 7Bit Address is not ACKed by any slave */
+#define LL_I2C_ABRT_TXDATA_NOACK            I2C_TX_ABRT_SRC_TXDATA_NOACK    /**< Transmitted data is not ACKed
+                                                                                 by addressed slave */
+#define LL_I2C_ABRT_10ADDR2_NOACK           I2C_TX_ABRT_SRC_10ADDR2_NOACK   /**< Byte 2 of 10-Bit Address is not ACKed
+                                                                                 by any slave */
+#define LL_I2C_ABRT_10ADDR1_NOACK           I2C_TX_ABRT_SRC_10ADDR1_NOACK   /**< Byte 1 of 10-Bit Address is not ACKed
+                                                                                 by any slave */
+#define LL_I2C_ABRT_7B_ADDR_NOACK           I2C_TX_ABRT_SRC_7B_ADDR_NOACK   /**< 7Bit Address is not ACKed
+                                                                                 by any slave */
 /** @} */
 
 /** @defgroup I2C_LL_EC_IT IT Defines
@@ -191,8 +204,10 @@ typedef struct _ll_i2c_init
 /** @defgroup I2C_LL_EC_SPEED_MODE Transfer Speed Mode
   * @{
   */
-#define LL_I2C_SPEED_MODE_STANDARD          I2C_CON_SPEED_STANDARD  /**< Standard Speed mode(0 to 100 Kb/s) of operation. */
-#define LL_I2C_SPEED_MODE_FAST              I2C_CON_SPEED_FAST      /**< Fast (鈮?400 Kb/s) or Fast Plus mode (鈮?1000 螝b/s) of operation. */
+#define LL_I2C_SPEED_MODE_STANDARD          I2C_CON_SPEED_STANDARD  /**< Standard Speed mode (0 to 100 Kb/s)
+                                                                         of operation. */
+#define LL_I2C_SPEED_MODE_FAST              I2C_CON_SPEED_FAST      /**< Fast (鈮?400 Kb/s) or
+                                                                         Fast Plus mode (鈮?1000 螝b/s) of operation. */
 #define LL_I2C_SPEED_MODE_HIGH              I2C_CON_SPEED_HIGH      /**< High Speed mode (鈮?3.4 Mb/s) of operation. */
 /** @} */
 
@@ -209,8 +224,10 @@ typedef struct _ll_i2c_init
   * @{
   */
 #define LL_I2C_DIRECTION_NONE               0x00000000U                         /**< No transfer request by master. */
-#define LL_I2C_DIRECTION_WRITE              I2C_INTR_RX_FULL                    /**< Write transfer request by master, slave enters receiver mode.  */
-#define LL_I2C_DIRECTION_READ               I2C_INTR_RD_REQ                     /**< Read transfer request by master, slave enters transmitter mode.*/
+#define LL_I2C_DIRECTION_WRITE              I2C_INTR_RX_FULL                    /**< Write transfer request by master,
+                                                                                     slave enters receiver mode.  */
+#define LL_I2C_DIRECTION_READ               I2C_INTR_RD_REQ                     /**< Read transfer request by master,
+                                                                                     slave enters transmitter mode. */
 #define LL_I2C_DIRECTION_ERROR              I2C_INTR_RX_FULL | I2C_INTR_RD_REQ  /**< Transfer request error. */
 /** @} */
 
@@ -306,7 +323,8 @@ typedef struct _ll_i2c_init
   *         @arg @ref LL_I2C_SPEED_MODE_HIGH
   */
 #define __LL_I2C_CONVERT_SPEED_MODE(__SPEED__)      ((__SPEED__ <= LL_I2C_SPEED_100K) ? LL_I2C_SPEED_MODE_STANDARD : \
-                                                     ((__SPEED__ <= LL_I2C_SPEED_1000K) ? LL_I2C_SPEED_MODE_FAST : LL_I2C_SPEED_MODE_HIGH))
+                                                     ((__SPEED__ <= LL_I2C_SPEED_1000K) ? LL_I2C_SPEED_MODE_FAST : \
+                                                     LL_I2C_SPEED_MODE_HIGH))
 /** @} */
 
 /** @} */
@@ -1281,7 +1299,8 @@ __STATIC_INLINE uint32_t ll_i2c_get_abort_source(i2c_regs_t *I2Cx)
   */
 __STATIC_INLINE uint32_t ll_i2c_get_tx_flush_count(i2c_regs_t *I2Cx)
 {
-    return (uint32_t)(READ_BITS(I2Cx->TX_ABRT_SOURCE, I2C_TX_ABRT_SRC_TX_FLUSH_CNT) >> I2C_TX_ABRT_SRC_TX_FLUSH_CNT_Pos);
+    return (uint32_t)(READ_BITS(I2Cx->TX_ABRT_SOURCE,
+                      I2C_TX_ABRT_SRC_TX_FLUSH_CNT) >> I2C_TX_ABRT_SRC_TX_FLUSH_CNT_Pos);
 }
 
 /** @} */

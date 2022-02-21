@@ -73,20 +73,21 @@ extern "C" {
 /**
   * @brief LL GPIO init configuration definition
   */
-typedef struct _ll_gpio_init
-{
+typedef struct _ll_gpio_init {
     uint32_t pin;           /*!< Specifies the GPIO pins to be GPIO_InitStructured.
                                 This parameter can be any value of @ref GPIO_LL_EC_PIN */
 
     uint32_t mode;          /*!< Specifies the operating mode for the selected pins.
                                 This parameter can be a value of @ref GPIO_LL_EC_MODE.
 
-                                GPIO HW GPIO_InitStructuration can be modified afterwards using unitary function @ref ll_gpio_set_pin_mode(). */
+                                GPIO HW GPIO_InitStructuration can be modified afterwards using unitary function
+                                @ref ll_gpio_set_pin_mode(). */
 
     uint32_t pull;          /*!< Specifies the operating Pull-up/Pull down for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_PULL.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref ll_gpio_set_pin_pull(). */
+                              GPIO HW configuration can be modified afterwards using unitary function
+                              @ref ll_gpio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                 This parameter can be a value of @ref GPIO_LL_EC_MUX.
@@ -96,7 +97,6 @@ typedef struct _ll_gpio_init
 
     uint32_t trigger;        /*!< Specifies the trigger signal active edge.
                                 This parameter can be a value of @ref GPIO_LL_EC_TRIGGER. */
-
 } ll_gpio_init_t;
 
 /** @} */
@@ -321,12 +321,9 @@ typedef struct _ll_gpio_init
   */
 __STATIC_INLINE void ll_gpio_set_pin_mode(gpio_regs_t *GPIOx, uint32_t pin_mask, uint32_t mode)
 {
-    if (mode == LL_GPIO_MODE_OUTPUT)
-    {
+    if (mode == LL_GPIO_MODE_OUTPUT) {
         WRITE_REG(GPIOx->OUTENSET, pin_mask);
-    }
-    else if(mode == LL_GPIO_MODE_INPUT)
-    {
+    } else if (mode == LL_GPIO_MODE_INPUT) {
         WRITE_REG(GPIOx->OUTENCLR, pin_mask);
     }
 }

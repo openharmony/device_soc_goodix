@@ -72,14 +72,12 @@ extern "C" {
 /**
   * @brief HAL PKC State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_PKC_STATE_RESET             = 0x00,    /**< Peripheral not initialized                            */
     HAL_PKC_STATE_READY             = 0x01,    /**< Peripheral initialized and ready for use              */
     HAL_PKC_STATE_BUSY              = 0x02,    /**< Peripheral in indirect mode and busy                  */
     HAL_PKC_STATE_ERROR             = 0x04,    /**< Peripheral in error                                   */
     HAL_PKC_STATE_TIMEOUT           = 0x08,    /**< Peripheral in timeout                                 */
-
 } hal_pkc_state_t;
 
 /** @} */
@@ -107,18 +105,17 @@ typedef struct _ll_ecc_curve_init ecc_curve_init_t;
 /**
   * @brief PKC Init Structure definition
   */
-typedef struct
-{
-    ecc_curve_init_t *p_ecc_curve;            /**< Specifies the pointer to elliptic curve description */
+typedef struct {
+    ecc_curve_init_t *p_ecc_curve;          /**< Specifies the pointer to elliptic curve description */
 
     uint32_t data_bits;                     /**< Specifies the Data size: 256 ~ 2048 bits            */
 
-    uint32_t secure_mode;                   /**< Specifies the Secure Mode. It indicates that DPA-resistance software algorithm
-                                                 and hardware measures are applied at a cost of about 35%- 50% performance loss.
+    uint32_t secure_mode;                   /**< Specifies the Secure Mode. It indicates that DPA-resistance software
+                                                 algorithm and hardware measures are applied at a cost of about
+                                                 35%- 50% performance loss.
                                                  This parameter can be a value of @ref PKC_Secure_Mode. */
 
     uint32_t (*random_func)(void);          /**< Specifies the function to generate random number.   */
-
 } pkc_init_t;
 
 /** @} */
@@ -130,8 +127,7 @@ typedef struct
 /**
   * @brief PKC handle Structure definition
   */
-typedef struct _pkc_handle
-{
+typedef struct _pkc_handle {
     pkc_regs_t              *p_instance;      /**< PKC registers base address       */
 
     pkc_init_t              init;           /**< PKC operation parameters         */
@@ -162,8 +158,7 @@ typedef struct _pkc_handle
   * @brief PKC ECC Point Multiplication expression input
   * @note  Result = K * Point
   */
-typedef struct _pkc_ecc_point_multi
-{
+typedef struct _pkc_ecc_point_multi {
     uint32_t *p_K;                            /**< Pointer to operand K */
     ecc_point_t *p_ecc_point;                 /**< Pointer to ECC Point */
 } pkc_ecc_point_multi_t;
@@ -172,8 +167,7 @@ typedef struct _pkc_ecc_point_multi
   * @brief PKC RSA Modular Exponentiation expression input
   * @note  Result = A^B mod P
   */
-typedef struct _pkc_rsa_modular_exponent
-{
+typedef struct _pkc_rsa_modular_exponent {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_B;                            /**< Pointer to operand B */
     uint32_t *p_P;                            /**< Pointer to prime number P */
@@ -185,8 +179,7 @@ typedef struct _pkc_rsa_modular_exponent
   * @brief PKC Modular Addition expression input
   * @note  Result = (A + B) mod P
   */
-typedef struct _pkc_modular_add
-{
+typedef struct _pkc_modular_add {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_B;                            /**< Pointer to operand B */
     uint32_t *p_P;                            /**< Pointer to prime number P */
@@ -196,8 +189,7 @@ typedef struct _pkc_modular_add
   * @brief PKC Modular Subtraction expression input
   * @note  Result = (A - B) mod P
   */
-typedef struct _pkc_modular_sub
-{
+typedef struct _pkc_modular_sub {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_B;                            /**< Pointer to operand B */
     uint32_t *p_P;                            /**< Pointer to prime number P */
@@ -207,8 +199,7 @@ typedef struct _pkc_modular_sub
   * @brief PKC Modular Left Shift expression input
   * @note  Result = (A << ShiftBits) mod P
   */
-typedef struct _pkc_modular_shift
-{
+typedef struct _pkc_modular_shift {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t shift_bits;                    /**< Pointer to operand A */
     uint32_t *p_P;                            /**< Pointer to prime number P */
@@ -218,8 +209,7 @@ typedef struct _pkc_modular_shift
   * @brief PKC Modular Comparison expression input
   * @note  Result = A mod P
   */
-typedef struct _pkc_modular_compare
-{
+typedef struct _pkc_modular_compare {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_P;                            /**< Pointer to prime number P */
 } pkc_modular_compare_t;
@@ -228,8 +218,7 @@ typedef struct _pkc_modular_compare
   * @brief PKC Montgomery Modular Multiplication expression input
   * @note  Result = A * B * R^(-1) mod P, where R = 2^DataBits
   */
-typedef struct _pkc_montgomery_multi
-{
+typedef struct _pkc_montgomery_multi {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_B;                            /**< Pointer to operand B */
     uint32_t *p_P;                            /**< Pointer to prime number P */
@@ -241,8 +230,7 @@ typedef struct _pkc_montgomery_multi
   * @brief PKC Montgomery Inversion expression input
   * @note  Result = A^(-1) * 2^(K) mod P
   */
-typedef struct _pkc_montgomery_inversion
-{
+typedef struct _pkc_montgomery_inversion {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_P;                            /**< Pointer to prime number P */
     uint32_t ConstP;                          /**< Montgomery multiplication constant for P,
@@ -253,8 +241,7 @@ typedef struct _pkc_montgomery_inversion
   * @brief PKC Big Number Multiplication expression input
   * @note  Result = A * B, up to 1024 bits
   */
-typedef struct _pkc_big_number_multi
-{
+typedef struct _pkc_big_number_multi {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_B;                            /**< Pointer to operand B */
 } pkc_big_number_multi_t;
@@ -263,8 +250,7 @@ typedef struct _pkc_big_number_multi
   * @brief PKC Big Number Addition expression input
   * @note  Result = A + B, up to 2048 bits
   */
-typedef struct _pkc_big_number_add
-{
+typedef struct _pkc_big_number_add {
     uint32_t *p_A;                            /**< Pointer to operand A */
     uint32_t *p_B;                            /**< Pointer to operand B */
 } pkc_big_number_add_t;
@@ -285,8 +271,7 @@ typedef struct _pkc_big_number_add
   * @brief HAL_PKC Callback function definition
   */
 
-typedef struct _hal_pkc_callback
-{
+typedef struct _hal_pkc_callback {
     void (*pkc_msp_init)(pkc_handle_t *p_pkc);              /**< PKC init MSP callback                  */
     void (*pkc_msp_deinit)(pkc_handle_t *p_pkc);            /**< PKC de-init MSP callback               */
     void (*pkc_done_callback)(pkc_handle_t *p_pkc);         /**< PKC calculate done callback            */
@@ -330,14 +315,16 @@ typedef struct _hal_pkc_callback
 /** @defgroup PKC_Operation_Mode PKC Operation Mode
   * @{
   */
-#define PKC_OPERATION_MODE_MULTI       LL_PKC_operation_mode_MULTIPLY            /**< Multiplication operation mode              */
-#define PKC_OPERATION_MODE_INVER       LL_PKC_operation_mode_INVERTION           /**< Inversion operation mode                   */
-#define PKC_OPERATION_MODE_ADD         LL_PKC_operation_mode_ADD                 /**< Addition operation mode                    */
-#define PKC_OPERATION_MODE_SUB         LL_PKC_operation_mode_SUB                 /**< Subtraction operation mode                 */
-#define PKC_OPERATION_MODE_CMP         LL_PKC_operation_mode_COMPARE             /**< Comparison operation mode                  */
-#define PKC_OPERATION_MODE_LSHIFT      LL_PKC_operation_mode_LEFTSHIFT           /**< Left Shift operation mode                  */
-#define PKC_OPERATION_MODE_BIGMULTI    LL_PKC_operation_mode_BIGINTEGERMULTIPLY  /**< Big Number Multiplication operation mode   */
-#define PKC_OPERATION_MODE_BIGADD      LL_PKC_operation_mode_BIGINTEGERADD       /**< Big Number Addition operation mode         */
+#define PKC_OPERATION_MODE_MULTI       LL_PKC_operation_mode_MULTIPLY            /**< Multiplication operation mode */
+#define PKC_OPERATION_MODE_INVER       LL_PKC_operation_mode_INVERTION           /**< Inversion operation mode      */
+#define PKC_OPERATION_MODE_ADD         LL_PKC_operation_mode_ADD                 /**< Addition operation mode       */
+#define PKC_OPERATION_MODE_SUB         LL_PKC_operation_mode_SUB                 /**< Subtraction operation mode    */
+#define PKC_OPERATION_MODE_CMP         LL_PKC_operation_mode_COMPARE             /**< Comparison operation mode     */
+#define PKC_OPERATION_MODE_LSHIFT      LL_PKC_operation_mode_LEFTSHIFT           /**< Left Shift operation mode     */
+#define PKC_OPERATION_MODE_BIGMULTI    LL_PKC_operation_mode_BIGINTEGERMULTIPLY  /**< Big Number Multiplication
+                                                                                      operation mode */
+#define PKC_OPERATION_MODE_BIGADD      LL_PKC_operation_mode_BIGINTEGERADD       /**< Big Number Addition
+                                                                                      operation mode */
 /** @} */
 
 /** @defgroup PKC_Bits_Length PKC Bits Length
@@ -345,7 +332,8 @@ typedef struct _hal_pkc_callback
   */
 #define PKC_BITS_LENGTH_MIN            LL_PKC_BITS_LENGTH_MIN           /**< Min value of bits length  */
 #define PKC_BITS_LENGTH_MAX            LL_PKC_BITS_LENGTH_MAX           /**< Max value of bits length  */
-#define PKC_BIGMULTI_BITS_LENGTH_MAX   LL_PKC_BIGMULTI_BITS_LENGTH_MAX  /**< Max value of big number multiplication bits length */
+#define PKC_BIGMULTI_BITS_LENGTH_MAX   LL_PKC_BIGMULTI_BITS_LENGTH_MAX  /**< Max value of big number multiplication
+                                                                             bits length */
 /** @} */
 
 /** @defgroup PKC_Flags PKC Flags
@@ -385,8 +373,12 @@ typedef struct _hal_pkc_callback
   * @param  __HANDLE__ PKC handle.
   * @retval None
   */
-#define __HAL_PKC_RESET(__HANDLE__)                            CLEAR_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_SWRST); \
-                                                               SET_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_SWRST)
+#define __HAL_PKC_RESET(__HANDLE__)                             \
+do {                                                            \
+    CLEAR_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_SWRST); \
+    SET_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_SWRST);   \
+} while (0)
+
 
 /** @brief  Enable the specified PKC peripheral.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -409,7 +401,7 @@ typedef struct _hal_pkc_callback
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval None
   */
-#define __HAL_PKC_ENABLE_IT(__HANDLE__, __INTERRUPT__)         SET_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
+#define __HAL_PKC_ENABLE_IT(__HANDLE__, __INTERRUPT__)        SET_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
 
 /** @brief  Disable the specified PKC interrupts.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -420,7 +412,7 @@ typedef struct _hal_pkc_callback
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval None
   */
-#define __HAL_PKC_DISABLE_IT(__HANDLE__, __INTERRUPT__)        CLEAR_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
+#define __HAL_PKC_DISABLE_IT(__HANDLE__, __INTERRUPT__)     CLEAR_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
 
 /** @brief  Check whether the specified PKC interrupt flag is set or not.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -431,7 +423,8 @@ typedef struct _hal_pkc_callback
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_PKC_GET_FLAG_IT(__HANDLE__, __FLAG__)            (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__FLAG__)) == (__FLAG__))
+#define __HAL_PKC_GET_FLAG_IT(__HANDLE__, __FLAG__) \
+    (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified PKC interrupt flag.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -451,7 +444,8 @@ typedef struct _hal_pkc_callback
   *            @arg @ref PKC_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_PKC_GET_FLAG(__HANDLE__, __FLAG__)               ((READ_BITS((__HANDLE__)->p_instance->WORKSTAT, (__FLAG__)) != 0) ? SET : RESET)
+#define __HAL_PKC_GET_FLAG(__HANDLE__, __FLAG__) \
+    ((READ_BITS((__HANDLE__)->p_instance->WORKSTAT, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */
 
@@ -464,13 +458,14 @@ typedef struct _hal_pkc_callback
   * @param  __BITS__ PKC Bits Length.
   * @retval SET (__BITS__ is valid) or RESET (__BITS__ is invalid)
   */
-#define IS_PKC_BITS_LENGTH(__BITS__)            (((__BITS__) >= PKC_BITS_LENGTH_MIN) && ((__BITS__) <= PKC_BITS_LENGTH_MAX))
+#define IS_PKC_BITS_LENGTH(__BITS__)        (((__BITS__) >= PKC_BITS_LENGTH_MIN) && ((__BITS__) <= PKC_BITS_LENGTH_MAX))
 
 /** @brief  Check if PKC Big Number Multiplication Bits Length is valid.
   * @param  __BITS__ PKC Big Number Multiplication Bits Length.
   * @retval SET (__BITS__ is valid) or RESET (__BITS__ is invalid)
   */
-#define IS_PKC_BIGMULTI_BITS_LENGTH(__BITS__)   (((__BITS__) >= PKC_BITS_LENGTH_MIN) && ((__BITS__) <= PKC_BIGMULTI_BITS_LENGTH_MAX))
+#define IS_PKC_BIGMULTI_BITS_LENGTH(__BITS__) \
+    (((__BITS__) >= PKC_BITS_LENGTH_MIN) && ((__BITS__) <= PKC_BIGMULTI_BITS_LENGTH_MAX))
 
 /** @brief  Check if PKC Secure Mode is valid.
   * @param  __MODE__ PKC Secure Mode.
@@ -495,8 +490,6 @@ typedef struct _hal_pkc_callback
 /** @} */
 
 /** @} */
-
-
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_PKC_DRIVER_FUNCTIONS Functions

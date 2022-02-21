@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief HAL COMP State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_COMP_STATE_RESET        = 0x00,    /**< Peripheral not initialized                          */
     HAL_COMP_STATE_READY        = 0x01,    /**< Peripheral initialized and ready for use            */
     HAL_COMP_STATE_BUSY         = 0x02,    /**< An internal process is ongoing                      */
@@ -105,8 +104,7 @@ typedef ll_comp_init_t       comp_init_t;
 /**
   * @brief COMP handle Structure definition
   */
-typedef struct _comp_handle
-{
+typedef struct _comp_handle {
     comp_init_t             init;           /**< COMP configuration parameters      */
 
     __IO hal_lock_t         lock;           /**< Locking object                    */
@@ -116,7 +114,6 @@ typedef struct _comp_handle
     __IO uint32_t           error_code;     /**< COMP error code                    */
 
     uint32_t                retention[1];   /**< COMP important register information. */
-
 } comp_handle_t;
 /** @} */
 
@@ -133,8 +130,7 @@ typedef struct _comp_handle
 /**
   * @brief HAL COMP Callback function definition
   */
-typedef struct _comp_callback
-{
+typedef struct _comp_callback {
     void (*comp_msp_init)(comp_handle_t *p_comp);           /**< COMP init MSP callback                  */
     void (*comp_msp_deinit)(comp_handle_t *p_comp);         /**< COMP de-init MSP callback               */
     void (*comp_trigger_callback)(comp_handle_t *p_comp);   /**< COMP comparator callback                     */
@@ -143,7 +139,6 @@ typedef struct _comp_callback
 /** @} */
 
 /** @} */
-
 
 /**
   * @defgroup  HAL_COMP_MACRO Defines
@@ -432,8 +427,6 @@ hal_status_t hal_comp_resume_reg(comp_handle_t *p_comp);
 /** @} */
 
 /** @} */
-
-
 
 #ifdef __cplusplus
 }

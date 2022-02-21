@@ -50,8 +50,7 @@ extern hal_status_t hal_xqspi_init_ext_rom(xqspi_handle_t *p_xqspi);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_exflash_callback_t exflash_callback =
-{
+static hal_exflash_callback_t exflash_callback = {
     .exflash_msp_init       = hal_exflash_msp_init,
     .exflash_msp_deinit     = hal_exflash_msp_deinit
 };
@@ -74,7 +73,7 @@ hal_status_t hal_exflash_deinit(exflash_handle_t *p_exflash)
 {
     hal_exflash_register_callback(&exflash_callback);
 
-    hal_status_t ret;   
+    hal_status_t ret;
     GLOBAL_EXCEPTION_DISABLE();
     ret = hal_exflash_deinit_ext(p_exflash);
     GLOBAL_EXCEPTION_ENABLE();
@@ -114,9 +113,9 @@ SECTION_RAM_CODE hal_status_t hal_xqspi_init_ext(xqspi_handle_t *p_xqspi)
 hal_status_t hal_exflash_read(exflash_handle_t *p_exflash, uint32_t addr, uint8_t *p_data, uint32_t size)
 {
 #if (ENCRYPT_ENABLE || (CHIP_TYPE == 1) || (EXT_EXFLASH_ENABLE == 1))
-    return hal_exflash_read_patch(p_exflash, addr, p_data, size); 
+    return hal_exflash_read_patch(p_exflash, addr, p_data, size);
 #else
-    return hal_exflash_read_rom(p_exflash, addr, p_data, size); 
+    return hal_exflash_read_rom(p_exflash, addr, p_data, size);
 #endif
 }
 

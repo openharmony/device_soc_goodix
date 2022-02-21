@@ -46,8 +46,7 @@ extern void hal_register_callback(hal_callback_t *hal_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_callback_t hal_callback = 
-{
+static hal_callback_t hal_callback = {
     .msp_init       = hal_msp_init,
     .msp_deinit     = hal_msp_deinit
 };

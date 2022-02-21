@@ -46,15 +46,16 @@
  ****************************************************************************************
  */
 
-void htole16(void *buf, uint16_t x)
+void htole16(uint8_t *buf, uint16_t x)
 {
     uint8_t *u8ptr;
+
     u8ptr = buf;
     u8ptr[0] = (uint8_t) x;
     u8ptr[1] = (uint8_t)(x >> 8);
 }
 
-void htole32(void *buf, uint32_t x)
+void htole32(uint8_t *buf, uint32_t x)
 {
     uint8_t *u8ptr;
     u8ptr = buf;
@@ -64,7 +65,7 @@ void htole32(void *buf, uint32_t x)
     u8ptr[3] = (uint8_t)(x >> 24);
 }
 
-void htole64(void *buf, uint64_t x)
+void htole64(uint8_t *buf, uint64_t x)
 {
     uint8_t *u8ptr;
     u8ptr = buf;
@@ -78,7 +79,7 @@ void htole64(void *buf, uint64_t x)
     u8ptr[7] = (uint8_t)(x >> 56);
 }
 
-uint16_t le16toh(const void *buf)
+uint16_t le16toh(const uint8_t *buf)
 {
     const uint8_t *u8ptr;
     uint16_t x;
@@ -88,7 +89,7 @@ uint16_t le16toh(const void *buf)
     return x;
 }
 
-uint32_t le32toh(const void *buf)
+uint32_t le32toh(const uint8_t *buf)
 {
     const uint8_t *u8ptr;
     uint32_t x;
@@ -100,7 +101,7 @@ uint32_t le32toh(const void *buf)
     return x;
 }
 
-uint64_t le64toh(const void *buf)
+uint64_t le64toh(const uint8_t *buf)
 {
     const uint8_t *u8ptr;
     uint64_t x;
@@ -116,7 +117,7 @@ uint64_t le64toh(const void *buf)
     return x;
 }
 
-void htobe16(void *buf, uint16_t x)
+void htobe16(uint8_t *buf, uint16_t x)
 {
     uint8_t *u8ptr;
     u8ptr = buf;
@@ -124,7 +125,7 @@ void htobe16(void *buf, uint16_t x)
     u8ptr[1] = (uint8_t) x;
 }
 
-void htobe32(void *buf, uint32_t x)
+void htobe32(uint8_t *buf, uint32_t x)
 {
     uint8_t *u8ptr;
     u8ptr = buf;
@@ -134,7 +135,7 @@ void htobe32(void *buf, uint32_t x)
     u8ptr[3] = (uint8_t) x;
 }
 
-void htobe64(void *buf, uint64_t x)
+void htobe64(uint8_t *buf, uint64_t x)
 {
     uint8_t *u8ptr;
     u8ptr = buf;
@@ -148,7 +149,7 @@ void htobe64(void *buf, uint64_t x)
     u8ptr[7] = (uint8_t) x;
 }
 
-uint16_t be16toh(const void *buf)
+uint16_t be16toh(const uint8_t *buf)
 {
     const uint8_t *u8ptr;
     uint16_t x;
@@ -158,7 +159,7 @@ uint16_t be16toh(const void *buf)
     return x;
 }
 
-uint32_t be32toh(const void *buf)
+uint32_t be32toh(const uint8_t *buf)
 {
     const uint8_t *u8ptr;
     uint32_t x;
@@ -170,7 +171,7 @@ uint32_t be32toh(const void *buf)
     return x;
 }
 
-uint64_t be64toh(const void *buf)
+uint64_t be64toh(const uint8_t *buf)
 {
     const uint8_t *u8ptr;
     uint64_t x;

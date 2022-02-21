@@ -75,25 +75,28 @@ extern "C" {
   * @brief    Operation defines which can be used with LL_EFUSE_WriteReg function
   * @{
   */
-#define LL_EFUSE_WRITE_KEYRAM               EFUSE_OPER_WRITE_KEYRAM         /**< Read fwkay and rootkey from eFuse, and write to keyram  */
-#define LL_EFUSE_READ_TRIM                  EFUSE_OPER_READ_TRIM            /**< Read analog trim from eFuse                             */
-#define LL_EFUSE_CRC_CHECK                  EFUSE_OPER_CRC_CHECK            /**< Read the special eFuse addr, and calculate CRC value    */
-#define LL_EFUSE_INIT_CHECK                 EFUSE_OPER_INIT_CHECK           /**< Read the whole eFuse value, and check this value with 0 */
-#define LL_EFUSE_TEST_READ                  EFUSE_OPER_RD_TEST_MODE         /**< Read eFuse test mode from eFuse                         */
+#define LL_EFUSE_WRITE_KEYRAM               EFUSE_OPER_WRITE_KEYRAM         /**< Read fwkay and rootkey from eFuse,
+                                                                                 and write to keyram */
+#define LL_EFUSE_READ_TRIM                  EFUSE_OPER_READ_TRIM            /**< Read analog trim from eFuse */
+#define LL_EFUSE_CRC_CHECK                  EFUSE_OPER_CRC_CHECK            /**< Read the special eFuse addr,
+                                                                                 and calculate CRC value */
+#define LL_EFUSE_INIT_CHECK                 EFUSE_OPER_INIT_CHECK           /**< Read the whole eFuse value,
+                                                                                 and check this value with 0 */
+#define LL_EFUSE_TEST_READ                  EFUSE_OPER_RD_TEST_MODE         /**< Read eFuse test mode from eFuse */
 /** @} */
 
 /** @defgroup EFUSE_LL_EC_GET_FLAG Get Flags Defines
   * @brief    Flags defines which can be used with LL_EFUSE_ReadReg function
   * @{
   */
-#define LL_EFUSE_WRITE_KEYRAM_BUSY          EFUSE_STATUS_WRITE_KEYRAM_BUSY      /**< Write keyram operation is in processing  */
-#define LL_EFUSE_READ_TRIM_DONE             EFUSE_STATUS_READ_TRIM_DONE         /**< Read trim from eFuse has done            */
-#define LL_EFUSE_CRC_CHECK_DONE             EFUSE_STATUS_CRC_CHECK_DONE         /**< eFuse CRC check done                     */
-#define LL_EFUSE_CRC_CHECK_SUCCESS          EFUSE_STATUS_TRIM_CRC_SUCCESS       /**< CRC check success                        */
-#define LL_EFUSE_INIT_CHECK_DONE            EFUSE_STATUS_INIT_DONE              /**< eFuse initial value check done           */
-#define LL_EFUSE_INIT_CHECK_SUCCESS         EFUSE_STATUS_INIT_SUCCESS           /**< eFuse initial value check success        */
-#define LL_EFUSE_WRITE_DONE                 EFUSE_STATUS_WRITE_DONE             /**< eFuse one word write done                */
-#define LL_EFUSE_TEST_DONE                  EFUSE_STATUS_TEST_MODE_DONE         /**< Read from eFuse has done in test mode    */
+#define LL_EFUSE_WRITE_KEYRAM_BUSY     EFUSE_STATUS_WRITE_KEYRAM_BUSY   /**< Write keyram operation is in processing  */
+#define LL_EFUSE_READ_TRIM_DONE        EFUSE_STATUS_READ_TRIM_DONE      /**< Read trim from eFuse has done            */
+#define LL_EFUSE_CRC_CHECK_DONE        EFUSE_STATUS_CRC_CHECK_DONE      /**< eFuse CRC check done                     */
+#define LL_EFUSE_CRC_CHECK_SUCCESS     EFUSE_STATUS_TRIM_CRC_SUCCESS    /**< CRC check success                        */
+#define LL_EFUSE_INIT_CHECK_DONE       EFUSE_STATUS_INIT_DONE           /**< eFuse initial value check done           */
+#define LL_EFUSE_INIT_CHECK_SUCCESS    EFUSE_STATUS_INIT_SUCCESS        /**< eFuse initial value check success        */
+#define LL_EFUSE_WRITE_DONE            EFUSE_STATUS_WRITE_DONE          /**< eFuse one word write done                */
+#define LL_EFUSE_TEST_DONE             EFUSE_STATUS_TEST_MODE_DONE      /**< Read from eFuse has done in test mode    */
 /** @} */
 
 /** @defgroup EFUSE_LL_EC_GET_CTL_FLAG Get Power Controller Flags Defines
@@ -101,7 +104,7 @@ extern "C" {
   * @{
   */
 #define LL_EFUSE_PWR_CTL_EN_DONE          MCU_SUB_EFUSE_PWR_CTL0_EN_DONE        /**< eFuse power enable done  */
-#define LL_EFUSE_PWR_CTL_DIS_DONE         MCU_SUB_EFUSE_PWR_CTL0_DIS_DONE       /**< eFuse power disable done            */
+#define LL_EFUSE_PWR_CTL_DIS_DONE         MCU_SUB_EFUSE_PWR_CTL0_DIS_DONE       /**< eFuse power disable done */
 /** @} */
 
 /** @} */
@@ -598,7 +601,8 @@ __STATIC_INLINE void ll_efuse_disable_power(efuse_regs_t *EFUSEx)
   *
   * @retval None
   */
-__STATIC_INLINE void ll_efuse_set_controller_power_timing(efuse_regs_t *EFUSEx, uint16_t vddq_0, uint16_t vddq_1, uint16_t vddq_2)
+__STATIC_INLINE void ll_efuse_set_controller_power_timing(efuse_regs_t *EFUSEx, uint16_t vddq_0,
+                                                          uint16_t vddq_1, uint16_t vddq_2)
 {
     WRITE_REG(MCU_SUB->EFUSE_PWR_DELTA[0], vddq_0 + (vddq_1 << 16));
     WRITE_REG(MCU_SUB->EFUSE_PWR_DELTA[1], vddq_2);
@@ -668,8 +672,6 @@ __STATIC_INLINE uint32_t ll_efuse_is_controller_power_flag(efuse_regs_t *EFUSEx,
 {
     return (READ_BITS(MCU_SUB->EFUSE_PWR_CTRL[1], flag) == (flag));
 }
-
-
 
 /** @} */
 

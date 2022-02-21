@@ -45,8 +45,7 @@ extern void hal_efuse_register_callback(hal_efuse_callback_t *hal_efuse_callback
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_efuse_callback_t efuse_callback =
-{
+static hal_efuse_callback_t efuse_callback = {
     .efuse_msp_init     = hal_efuse_msp_init,
     .efuse_msp_deinit   = hal_efuse_msp_deinit
 };

@@ -73,31 +73,30 @@ extern "C" {
 /**
   * @brief LL UART init Structure definition
   */
-typedef struct _ll_uart_init_t
-{
+typedef struct _ll_uart_init_t {
     uint32_t baud_rate;                 /**< This field defines expected Usart communication baud rate.
-
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_baud_rate(). */
+                                           This feature can be modified afterwards using unitary function
+                                           @ref ll_uart_set_baud_rate(). */
 
     uint32_t data_bits;                 /**< Specifies the number of data bits transmitted or received in a frame.
                                            This parameter can be a value of @ref UART_LL_EC_DATABITS.
-
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_data_bits_length(). */
+                                           This feature can be modified afterwards using unitary function
+                                           @ref ll_uart_set_data_bits_length(). */
 
     uint32_t stop_bits;                 /**< Specifies the number of stop bits transmitted.
                                            This parameter can be a value of @ref UART_LL_EC_STOPBITS.
-
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_stop_bits_length(). */
+                                           This feature can be modified afterwards using unitary function
+                                           @ref ll_uart_set_stop_bits_length(). */
 
     uint32_t parity;                    /**< Specifies the parity mode.
                                            This parameter can be a value of @ref UART_LL_EC_PARITY.
-
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_parity(). */
+                                           This feature can be modified afterwards using unitary function
+                                           @ref ll_uart_set_parity(). */
 
     uint32_t hw_flow_ctrl;              /**< Specifies whether the hardware flow control mode is enabled or disabled.
                                            This parameter can be a value of @ref UART_LL_EC_HWCONTROL.
-
-                                           This feature can be modified afterwards using unitary function @ref ll_uart_set_hw_flow_ctrl(). */
+                                           This feature can be modified afterwards using unitary function
+                                           @ref ll_uart_set_hw_flow_ctrl(). */
 } ll_uart_init_t;
 
 /** @} */
@@ -144,28 +143,40 @@ typedef struct _ll_uart_init_t
   * @{
   */
 #define LL_UART_IER_MS                      UART_IER_EDSSI                      /**< Enable Modem Status Interrupt */
-#define LL_UART_IER_RLS                     UART_IER_ERLS                       /**< Enable Receiver Line Status Interrupt */
-#define LL_UART_IER_THRE                    (UART_IER_ETBEI | UART_IER_PTIME)   /**< Enable Transmit Holding Register Empty Interrupt */
-#define LL_UART_IER_RDA                     UART_IER_ERBFI                      /**< Enable Received Data Available Interrupt and Character Timeout Interrupt */
+#define LL_UART_IER_RLS                     UART_IER_ERLS                       /**< Enable Receiver Line Status
+                                                                                     Interrupt */
+#define LL_UART_IER_THRE                    (UART_IER_ETBEI | UART_IER_PTIME)   /**< Enable Transmit Holding Register
+                                                                                     Empty Interrupt */
+#define LL_UART_IER_RDA                     UART_IER_ERBFI                      /**< Enable Received Data Available
+                                                                                     Interrupt and Character Timeout
+                                                                                     Interrupt */
 /** @} */
 
 /** @defgroup UART_LL_EC_PARITY Parity Control
   * @{
   */
 #define LL_UART_PARITY_NONE                 UART_LCR_PARITY_NONE    /**< Parity control disabled */
-#define LL_UART_PARITY_ODD                  UART_LCR_PARITY_ODD     /**< Parity control enabled and Odd Parity is selected */
-#define LL_UART_PARITY_EVEN                 UART_LCR_PARITY_EVEN    /**< Parity control enabled and Even Parity is selected */
-#define LL_UART_PARITY_SP0                  UART_LCR_PARITY_SP0     /**< Parity control enabled and Stick Parity 0 is selected */
-#define LL_UART_PARITY_SP1                  UART_LCR_PARITY_SP1     /**< Parity control enabled and Stick  Parity 1 is selected */
+#define LL_UART_PARITY_ODD                  UART_LCR_PARITY_ODD     /**< Parity control enabled and
+                                                                         Odd Parity is selected */
+#define LL_UART_PARITY_EVEN                 UART_LCR_PARITY_EVEN    /**< Parity control enabled and
+                                                                         Even Parity is selected */
+#define LL_UART_PARITY_SP0                  UART_LCR_PARITY_SP0     /**< Parity control enabled and
+                                                                         Stick Parity 0 is selected */
+#define LL_UART_PARITY_SP1                  UART_LCR_PARITY_SP1     /**< Parity control enabled and
+                                                                         Stick  Parity 1 is selected */
 /** @} */
 
 /** @defgroup UART_LL_EC_DATABITS Data Bits
   * @{
   */
-#define LL_UART_DATABITS_5B                 UART_LCR_DLS_5          /**< 5 bits word length : Start bit, 5 data bits, n stop bits */
-#define LL_UART_DATABITS_6B                 UART_LCR_DLS_6          /**< 6 bits word length : Start bit, 6 data bits, n stop bits */
-#define LL_UART_DATABITS_7B                 UART_LCR_DLS_7          /**< 7 bits word length : Start bit, 7 data bits, n stop bits */
-#define LL_UART_DATABITS_8B                 UART_LCR_DLS_8          /**< 8 bits word length : Start bit, 8 data bits, n stop bits */
+#define LL_UART_DATABITS_5B                 UART_LCR_DLS_5          /**< 5 bits word length : Start bit,
+                                                                         5 data bits, n stop bits */
+#define LL_UART_DATABITS_6B                 UART_LCR_DLS_6          /**< 6 bits word length : Start bit,
+                                                                         6 data bits, n stop bits */
+#define LL_UART_DATABITS_7B                 UART_LCR_DLS_7          /**< 7 bits word length : Start bit,
+                                                                         7 data bits, n stop bits */
+#define LL_UART_DATABITS_8B                 UART_LCR_DLS_8          /**< 8 bits word length : Start bit,
+                                                                         8 data bits, n stop bits */
 /** @} */
 
 /** @defgroup UART_LL_EC_STOPBITS Stop Bits
@@ -179,8 +190,10 @@ typedef struct _ll_uart_init_t
 /** @defgroup UART_LL_EC_HWCONTROL Hardware Flow Control
   * @{
   */
-#define LL_UART_HWCONTROL_NONE              0x00000000U                     /**< CTS and RTS hardware flow control disabled */
-#define LL_UART_HWCONTROL_RTS_CTS           (UART_MCR_AFCE | UART_MCR_RTS)  /**< CTS and RTS hardware flow control enabled */
+#define LL_UART_HWCONTROL_NONE              0x00000000U                     /**< CTS and RTS hardware flow
+                                                                                 control disabled */
+#define LL_UART_HWCONTROL_RTS_CTS           (UART_MCR_AFCE | UART_MCR_RTS)  /**< CTS and RTS hardware flow
+                                                                                 control enabled */
 /** @} */
 
 /** @defgroup UART_LL_EC_TX_FIFO_TH TX FIFO Threshold
@@ -327,7 +340,8 @@ __STATIC_INLINE void ll_uart_set_baud_rate(uart_regs_t *UARTx, uint32_t peripher
 
 /**
   * @brief  Return current Baud Rate value
-  * @note   In case of non-initialized or invalid value stored in DLL,DLH and DLF register, the value 0 will be returned..
+  * @note   In case of non-initialized or invalid value stored in DLL, DLH and DLF register,
+  *         the value 0 will be returned.
   *
   *  Register|BitsName
   *  --------|--------
@@ -347,8 +361,7 @@ __STATIC_INLINE uint32_t ll_uart_get_baud_rate(uart_regs_t *UARTx, uint32_t peri
     uartdiv = UARTx->RBR_DLL_THR.DLL | (UARTx->DLH_IER.DLH << 8);
     CLEAR_BITS(UARTx->LCR, UART_LCR_DLAB);
 
-    if ((uartdiv != 0) && (UARTx->DLF != 0x0U))
-    {
+    if ((uartdiv != 0) && (UARTx->DLF != 0x0U)) {
         baud = peripheral_clock / (16 * uartdiv + UARTx->DLF);
     }
 

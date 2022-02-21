@@ -67,7 +67,8 @@
 /**
 ****************************************************************************************
 * @brief  Initialization of the Profile module.
-* @note   This function performs all the initializations of the Profile module, and it will be automatically called after the ble_server_prf_add() or ble_client_prf_add() function.
+* @note   This function performs all the initializations of the Profile module, and it will be automatically
+*         called after the ble_server_prf_add() or ble_client_prf_add() function.
 *         - Creation of database (if it's a service) and ble_gatts_srvc_db_create should be called.
 *         - Allocation of profile-required memory.
 *
@@ -94,15 +95,14 @@ typedef void (*prf_on_connect_func_t)(uint8_t conn_idx);
  ****************************************************************************************
  */
 typedef void (*prf_on_disconnect_func_t)(uint8_t conn_idx, uint8_t reason);
- 
- /** @addtogroup BLE_PRF_MANAGER_STRUCTURES Structures
- * @{ */
- /**
- * @brief Profile manager callbacks.
- */
-/** @} */ 
-typedef struct
-{
+
+/** @addtogroup BLE_PRF_MANAGER_STRUCTURES Structures
+* @{ */
+/**
+* @brief Profile manager callbacks.
+*/
+/** @} */
+typedef struct {
     prf_init_func_t          init;              /**< Initialization callback. See @ref prf_init_func_t. */
     prf_on_connect_func_t    on_connect;        /**< Connection callback. See @ref prf_on_connect_func_t. */
     prf_on_disconnect_func_t on_disconnect;     /**< Disconnection callback. See @ref prf_on_disconnect_func_t. */
@@ -124,16 +124,14 @@ typedef struct
 /**
  * @brief GATT read request struct.
  */
-typedef struct
-{
+typedef struct {
     uint16_t handle;                       /**< Handle of the attribute to be read. */
 } gatts_read_req_cb_t;
 
 /**
  * @brief GATT write request struct.
  */
-typedef struct
-{
+typedef struct {
     uint16_t handle;                       /**< Handle of the attribute to be written. */
     uint16_t offset;                       /**< Offset at which the data has to be written. */
     uint16_t length;                       /**< Data length to be written. */
@@ -143,16 +141,14 @@ typedef struct
 /**
  * @brief GATT prepare write request struct.
  */
-typedef struct
-{
+typedef struct {
     uint16_t handle;                       /**< Handle of the attribute for whose value is requested. */
 } gatts_prep_write_req_cb_t;
 
 /**
  * @brief GATTS Operation Complete event structure.
  */
-typedef struct
-{   
+typedef struct {
     gatt_evt_type_t type;               /**< Notification or indication event type. */
     uint16_t        handle;             /**< Handle of the write operation, or notification/indication operation. */
 } ble_gatts_ntf_ind_t;
@@ -160,25 +156,27 @@ typedef struct
 /**
  * @brief GATT server callback function in relation to a profile.
  */
-typedef struct
-{
-    void (*app_gatts_read_cb)(uint8_t conidx, const gatts_read_req_cb_t *p_read_req);                   /**< Read attribute value callback which is used when value is present in user space. 
-                                                                                                             Function @ref ble_gatts_read_cfm should be called to send attribute value to stack.*/
-    void (*app_gatts_write_cb)(uint8_t conidx, const gatts_write_req_cb_t *p_write_req);                /**< Write attribute value callback. 
-                                                                                                             Function @ref ble_gatts_write_cfm should be called to send write attribute value status to stack no matter the value is in user's zone or BLE stack.*/
-    void (*app_gatts_prep_write_cb)(uint8_t conidx, const gatts_prep_write_req_cb_t *p_prep_req);       /**< Prepare write value callback function. 
-                                                                                                             Function @ref ble_gatts_prepare_write_cfm should be called to send prepare write attribute value status to stack no matter the value is in user's zone or BLE stack.*/
-    void (*app_gatts_ntf_ind_cb)(uint8_t conidx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind); /**< Notification or indication callback function. */
-
-    void (*app_gatts_cccd_set_cb)(uint8_t conidx, uint16_t handle, uint16_t cccd_val);                   /**< Set CCCD value callback is called when connected with peer device. If bonded, recovery CCCD; otherwise, set default value(0x0000) for CCCD. */ 
-                                                                                                                                                                               
+typedef struct {
+    /**< Read attribute value callback which is used when value is present in user space.
+         Function @ref ble_gatts_read_cfm should be called to send attribute value to stack.*/
+    void (*app_gatts_read_cb)(uint8_t conidx, const gatts_read_req_cb_t *p_read_req);
+    /**< Write attribute value callback. Function @ref ble_gatts_write_cfm should be called to
+         send write attribute value status to stack no matter the value is in user's zone or BLE stack.*/
+    void (*app_gatts_write_cb)(uint8_t conidx, const gatts_write_req_cb_t *p_write_req);
+    /**< Prepare write value callback function.Function @ref ble_gatts_prepare_write_cfm should be called to
+         send prepare write attribute value status to stack no matter the value is in user's zone or BLE stack.*/
+    void (*app_gatts_prep_write_cb)(uint8_t conidx, const gatts_prep_write_req_cb_t *p_prep_req);
+    /**< Notification or indication callback function. */
+    void (*app_gatts_ntf_ind_cb)(uint8_t conidx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind);
+    /**< Set CCCD value callback is called when connected with peer device. If bonded, recovery CCCD;
+         otherwise, set default value(0x0000) for CCCD. */
+    void (*app_gatts_cccd_set_cb)(uint8_t conidx, uint16_t handle, uint16_t cccd_val);
 } gatts_prf_cbs_t;
 
 /**
  * @brief Profile server register information structure.
  */
-typedef struct
-{
+typedef struct {
     uint16_t max_connection_nb;              /**< Maximum connections the profile supports. */
     ble_prf_manager_cbs_t* manager_cbs;      /**< Profile manager callbacks. */
     gatts_prf_cbs_t *gatts_prf_cbs;          /**< GATT server callback function in relation to the specific profile. */
@@ -191,15 +189,18 @@ typedef struct
 
 /**
  ****************************************************************************************
- * @brief Add a server profile by providing its detailed information, including manager callback functions and GATT server callback functions.
+ * @brief Add a server profile by providing its detailed information, including manager callback functions and
+ *        GATT server callback functions.
  *        This API should be called in application initialization function.
  *
  * @param[in] p_server_prf_info: Pointer to the prf_info. See @ref prf_server_info_t.
  *
- * @note If there are several profiles which need to be added, this function should be called corresponding times. 
+ * @note If there are several profiles which need to be added, this function should be called corresponding times.
  *
- * @retval ::SDK_SUCCESS: The profile info is recorded successfully, and the database will be created in profile initialization callback function.
- * @retval ::SDK_ERR_POINTER_NULL: The parameter prf_info is NULL, or input parameters that prf_info points to are invalid.
+ * @retval ::SDK_SUCCESS: The profile info is recorded successfully, and the database will be created in profile
+ *           initialization callback function.
+ * @retval ::SDK_ERR_POINTER_NULL: The parameter prf_info is NULL, or input parameters that prf_info points
+ *           to are invalid.
  * @retval ::SDK_ERR_NO_RESOURCES: The profile number is up to the maximum number the system can support.
  ****************************************************************************************
  */
@@ -222,66 +223,85 @@ uint16_t ble_server_prf_add(const prf_server_info_t *p_server_prf_info);
 /**
  * @brief GATTC profile register to peer event info structure.
  */
-typedef struct
-{
+typedef struct {
     uint16_t start_hdl;     /**< Attribute start handle. */
     uint16_t end_hdl;       /**< Attribute end handle. */
-}gattc_prf_reg_peer_evt_t;
+} gattc_prf_reg_peer_evt_t;
 
 /**
  * @brief GATTC profile register enumeration.
  */
-typedef enum
-{
-    GATTC_EVT_REGISTER,   /**< GATT client event register. */ 
+typedef enum {
+    GATTC_EVT_REGISTER,   /**< GATT client event register. */
     GATTC_EVT_UNREGISTER, /**< GATT client event unregister. */
-}gattc_prf_reg_evt_t;
+} gattc_prf_reg_evt_t;
 
 
 /** @brief GATTC Profile callback Structures. */
-typedef struct
-{
-    void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t * p_prim_srvc_disc);                /**< Primary Service Discovery Response callback. */
-    void (*app_gattc_inc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_incl_disc_t * p_inc_srvc_disc);             /**< Relationship Discovery Response callback. */
-    void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_disc_t * p_char_disc);                     /**< Characteristic Discovery Response callback. */
-    void (*app_gattc_char_desc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_desc_disc_t *p_char_desc_disc);       /**< Descriptor Discovery Response callback. */
-    void (*app_gattc_read_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp);                             /**< Read Response callback. */
-    void (*app_gattc_write_cb)(uint8_t conn_idx, uint8_t status, uint16_t handle);                                                   /**< Write complete callback. */
-    void (*app_gattc_ntf_ind_cb)(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);                                            /**< Handle Value Notification/Indication Event callback. */
-    void (*app_gattc_srvc_browse_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);                /**< Service found callback during browsing procedure. */
-    void (*app_gattc_prf_reg_cb)(uint8_t conn_idx, uint8_t status, gattc_prf_reg_evt_t reg_evt);                                     /**< GATT client event register complete callback. */
+typedef struct {
+    /**< Primary Service Discovery Response callback. */
+    void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status,
+                                   const ble_gattc_srvc_disc_t * p_prim_srvc_disc);
+    /**< Relationship Discovery Response callback. */
+    void (*app_gattc_inc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status,
+                                       const ble_gattc_incl_disc_t * p_inc_srvc_disc);
+    /**< Characteristic Discovery Response callback. */
+    void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status,
+                                   const ble_gattc_char_disc_t * p_char_disc);
+    /**< Descriptor Discovery Response callback. */
+    void (*app_gattc_char_desc_disc_cb)(uint8_t conn_idx, uint8_t status,
+                                        const ble_gattc_char_desc_disc_t *p_char_desc_disc);
+    /**< Read Response callback. */
+    void (*app_gattc_read_cb)(uint8_t conn_idx, uint8_t status,
+                              const ble_gattc_read_rsp_t *p_read_rsp);
+    /**< Write complete callback. */
+    void (*app_gattc_write_cb)(uint8_t conn_idx, uint8_t status,
+                               uint16_t handle);
+    /**< Handle Value Notification/Indication Event callback. */
+    void (*app_gattc_ntf_ind_cb)(uint8_t conn_idx,
+                                 const ble_gattc_ntf_ind_t
+                                 *p_ntf_ind);
+    /**< Service found callback during browsing procedure. */
+    void (*app_gattc_srvc_browse_cb)(uint8_t conn_idx, uint8_t status,
+                                     const ble_gattc_browse_srvc_t *p_browse_srvc);
+    /**< GATT client event register complete callback. */
+    void (*app_gattc_prf_reg_cb)(uint8_t conn_idx, uint8_t status,
+                                 gattc_prf_reg_evt_t reg_evt);
 } gattc_prf_cbs_t;
 
 /**
  * @brief Profile client register information structure.
  */
-typedef struct
-{
+typedef struct {
     uint16_t              max_connection_nb;    /**< Maximum connections the profile supports. */
     ble_prf_manager_cbs_t *manager_cbs;         /**< Profile manager callbacks. */
-    gattc_prf_cbs_t       *gattc_prf_cbs;       /**< GATT client callback function in relation to the specific profile. */
+    gattc_prf_cbs_t       *gattc_prf_cbs;       /**< GATT client callback function in relation to
+                                                     the specific profile. */
 } prf_client_info_t;
 
 /** @} */
 
 
 /**
-  @addtogroup BLE_PRF_CLIENT_FUNCTIONS Functions 
+  @addtogroup BLE_PRF_CLIENT_FUNCTIONS Functions
   @{
   @brief  Definitions and prototypes for Profile Client interface.
  */
 /**
  ****************************************************************************************
- * @brief Add a client profile by providing its detail information, including manager callback functions and GATT client callback functions.
+ * @brief Add a client profile by providing its detail information,
+ *        including manager callback functions and GATT client callback functions.
  *        This API should be called in application initialization function.
  *
  * @param[in]  p_client_prf_info: Pointer to the p_client_prf_info. See @ref prf_client_info_t.
  * @param[out] p_client_prf_id:  Pointer to the client profile id.
  *
- * @note If there are several profiles which need to be added, this function should be called corresponding times. 
+ * @note If there are several profiles which need to be added, this function should be called corresponding times.
  *
- * @retval ::SDK_SUCCESS: The profile info is recorded successfully, and the profile ENV will be initialized in profile initialization callback function.
- * @retval ::SDK_ERR_POINTER_NULL: The parameter p_client_prf_info or p_client_prf_id is NULL, or input parameters that prf_info points to are invalid.
+ * @retval ::SDK_SUCCESS: The profile info is recorded successfully, and the profile ENV will be
+ *           initialized in profile initialization callback function.
+ * @retval ::SDK_ERR_POINTER_NULL: The parameter p_client_prf_info or p_client_prf_id is NULL,
+ *           or input parameters that prf_info points to are invalid.
  * @retval ::SDK_ERR_NO_RESOURCES: The profile number is up to the maximum number the system can support.
  ****************************************************************************************
  */
@@ -292,18 +312,20 @@ uint16_t ble_client_prf_add(const prf_client_info_t *p_client_prf_info, uint8_t 
  ****************************************************************************************
  * @brief Profile client Browse Specific Primary Service information on remote GATT server.
  *
- * @note This discovery automatically searches for Primary Services, Included Services, Characteristics and Descriptors of each service.
+ * @note This discovery automatically searches for Primary Services, Included Services,
+ *       Characteristics and Descriptors of each service.
  *       To discover one or more services only, use ble_gattc_primary_services_discover() instead.
  *       This discovery is able to search a specific Primary Service.
  *       If p_srvc_uuid is NULL, the invalid pointer error code will be returned immediately.
  *
- * @note Function callback @ref gattc_prf_cbs_t::app_gattc_srvc_browse_cb will be called for all attributes of each service found.
- *       After completed service handle range registeration for receiving peer device indication/notification will be executed internally.
- *       Because secondary service can't be browsed, so handle range registeration for receiving peer device indication/notification to this client
- *       profile may be necessary. App can call function ble_gattc_prf_evt_handle_register for registeration, it depends on user app.
- *       If user don't call this function, user shall call ble_gattc_prf_evt_handle_register to register handle range for receiving 
- *       peer device indication/notification in specific client profile callback.
- *       
+ * @note Function callback @ref gattc_prf_cbs_t::app_gattc_srvc_browse_cb will be called for all attributes
+ *       of each service found. After completed service handle range registeration for receiving peer device
+ *       indication/notification will be executed internally. Because secondary service can't be browsed,
+ *       so handle range registeration for receiving peer device indication/notification to this client
+ *       profile may be necessary. App can call function ble_gattc_prf_evt_handle_register for registeration,
+ *       it depends on user app. If user don't call this function, user shall call ble_gattc_prf_evt_handle_register to
+ *       register handle range for receiving peer device indication/notification in specific client profile callback.
+ *
  *
  * @param[in] prf_id:          Profile id.
  * @param[in] conn_idx:        Current connection index.
@@ -322,7 +344,7 @@ uint16_t ble_gattc_prf_services_browse(uint8_t prf_id, uint8_t conn_idx, const b
  ****************************************************************************************
  * @brief Profile client Discover Primary Services on remote GATT server.
  *
- * @note Function callback @ref gattc_prf_cbs_t::app_gattc_srvc_disc_cb will be called for service(s) found. 
+ * @note Function callback @ref gattc_prf_cbs_t::app_gattc_srvc_disc_cb will be called for service(s) found.
  *       If p_srvc_uuid is NULL, the invalid pointer error code will be returned immediately.
  *
  * @param[in] prf_id:          Profile id.
@@ -342,7 +364,8 @@ uint16_t ble_gattc_prf_primary_services_discover(uint8_t prf_id, uint8_t conn_id
  ****************************************************************************************
  * @brief Profile client Discover Included Services on remote GATT server.
  *
- * @note Function callback @ref gattc_prf_cbs_t::app_gattc_inc_srvc_disc_cb will be called for Included Service(s) found.
+ * @note Function callback @ref gattc_prf_cbs_t::app_gattc_inc_srvc_disc_cb will be called
+ *       for Included Service(s) found.
  *
  * @param[in] prf_id:       Profile id.
  * @param[in] conn_idx:     Current connection index.
@@ -355,13 +378,14 @@ uint16_t ble_gattc_prf_primary_services_discover(uint8_t prf_id, uint8_t conn_id
  * @retval ::SDK_ERR_NO_RESOURCES: Not enough resources.
  ****************************************************************************************
  */
-uint16_t ble_gattc_prf_included_services_discover(uint8_t prf_id, uint8_t conn_idx, uint16_t start_hdl, uint16_t end_hdl);
+uint16_t ble_gattc_prf_included_services_discover(uint8_t prf_id, uint8_t conn_idx, uint16_t start_hdl,
+        uint16_t end_hdl);
 
 /**
  ****************************************************************************************
  * @brief Profile client Discover Characteristics on remote GATT server.
- * @note Function callback @ref gattc_prf_cbs_t::app_gattc_char_disc_cb will be called for Characteristic Declaration(s) found.
- *       If p_disc_char is NULL, the invalid pointer error code will be returned immediately.
+ * @note Function callback @ref gattc_prf_cbs_t::app_gattc_char_disc_cb will be called for Characteristic\
+ *       Declaration(s) found. If p_disc_char is NULL, the invalid pointer error code will be returned immediately.
  *
  * @param[in] prf_id:         Profile id.
  * @param[in] conn_idx:       Current connection index.
@@ -380,8 +404,9 @@ uint16_t ble_gattc_prf_char_discover(uint8_t prf_id, uint8_t conn_idx, gattc_dis
  ****************************************************************************************
  * @brief Profile client Discover Characteristics Descriptors on remote GATT server.
  *
- * @note Function callback @ref gattc_prf_cbs_t::app_gattc_char_desc_disc_cb will be called for Characteristic Descriptor(s) found.      
- * If the last Descriptor has not been reached, this function must be called again with an updated handle range to continue the discovery.
+ * @note Function callback @ref gattc_prf_cbs_t::app_gattc_char_desc_disc_cb will be called for
+ *       Characteristic Descriptor(s) found. If the last Descriptor has not been reached, this function must be called
+ *       again with an updated handle range to continue the discovery.
  *
  * @param[in] prf_id:       Profile id.
  * @param[in] conn_idx:     Current connection index.
@@ -497,7 +522,7 @@ uint16_t ble_gattc_prf_write(uint8_t prf_id, uint8_t conn_idx, gattc_write_attr_
  * @retval ::SDK_ERR_NO_RESOURCES: Not enough resources.
  ****************************************************************************************
  */
- uint16_t ble_gattc_prf_write_prepare(uint8_t prf_id, uint8_t conn_idx, gattc_write_attr_value_t *p_write_attr_value);
+uint16_t ble_gattc_prf_write_prepare(uint8_t prf_id, uint8_t conn_idx, gattc_write_attr_value_t *p_write_attr_value);
 
 /**
  ****************************************************************************************
@@ -523,8 +548,8 @@ uint16_t ble_gattc_prf_write_execute(uint8_t prf_id, uint8_t conn_idx, bool exec
  *
  * @note If signed_write is set to false, the "Write Without Response" procedure will be used.
  *       If signed_write is set to true, the "Signed Write Without Response" procedure will be used on
- *       a link which is not encrypted.
- *       If a link is already encrypted, "Write Without Response" procedure shall be used instead of "Signed Write Without Response".
+ *       a link which is not encrypted. If a link is already encrypted, "Write Without Response"
+ *       procedure shall be used instead of "Signed Write Without Response".
  * @note Once completed @ref gattc_prf_cbs_t::app_gattc_write_cb will be called.
  *
  * @param[in] prf_id:            Profile id.
@@ -565,8 +590,8 @@ uint16_t ble_gattc_prf_indicate_cfm(uint8_t prf_id, uint8_t conn_idx, uint16_t h
  *
  * @note Registration to peer device events (Indication/Notification) for specific client profile.
  *       Once completed @ref gattc_prf_cbs_t::app_gattc_prf_reg_cb with type: @ref GATTC_EVT_UNREGISTER will be called.
- *       If user don't call ble_gattc_prf_services_browse, user shall call this function to register handle range for receiving 
- *       peer device indication/notification in specific client profile callback.
+ *       If user don't call ble_gattc_prf_services_browse, user shall call this function to register handle range
+ *       for receiving peer device indication/notification in specific client profile callback.
  *
  * @param[in] prf_id:       Profile id.
  * @param[in] conn_idx:     Current connection index.

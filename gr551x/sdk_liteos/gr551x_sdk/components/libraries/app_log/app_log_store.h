@@ -68,9 +68,8 @@ typedef void (*app_log_store_dump_cb_t)(uint8_t *p_data, uint16_t len);
  * @defgroup APP_LOG_STORE_STRUCT Structures
  * @{
  */
- /**@brief The date and time structure. The packed size is 7 bytes. */
-typedef struct
-{
+/**@brief The date and time structure. The packed size is 7 bytes. */
+typedef struct {
     uint16_t year;              /**< Year time element. */
     uint8_t  month;             /**< Month time element. */
     uint8_t  day;               /**< Day time element. */
@@ -81,8 +80,7 @@ typedef struct
 } app_log_store_time_t;
 
 /**@brief App log store operation functions. */
-typedef struct
-{
+typedef struct {
     bool     (*flash_init)(void);                                                          /**< Flash init. */
     bool     (*flash_erase)(const uint32_t addr, const uint32_t size);                     /**< Flash erase. */
     uint32_t (*flash_read)(const uint32_t addr, uint8_t *buf, const uint32_t size);        /**< Flash read. */
@@ -91,8 +89,7 @@ typedef struct
 } app_log_store_op_t;
 
 /**@brief App log store init stucture. */
-typedef struct
-{
+typedef struct {
     uint16_t   nv_tag;        /**< NVDS Tag for app log store env. */
     uint32_t   db_addr;       /**< Start address of app log db flash. */
     uint32_t   db_size;       /**< Size of app log db flash. */

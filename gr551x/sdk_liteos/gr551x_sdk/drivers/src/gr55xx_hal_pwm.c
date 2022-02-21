@@ -45,8 +45,7 @@ extern void hal_pwm_register_callback(hal_pwm_callback_t *hal_pwm_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_pwm_callback_t pwm_callback =
-{
+static hal_pwm_callback_t pwm_callback = {
     .pwm_msp_init   = hal_pwm_msp_init,
     .pwm_msp_deinit = hal_pwm_msp_deinit
 };

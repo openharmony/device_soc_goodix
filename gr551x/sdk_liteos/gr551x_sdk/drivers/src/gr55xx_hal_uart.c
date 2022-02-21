@@ -46,8 +46,7 @@ extern void hal_uart_register_callback(hal_uart_callback_t *hal_uart_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_uart_callback_t uart_callback =
-{
+static hal_uart_callback_t uart_callback = {
     .uart_msp_init                  = hal_uart_msp_init,
     .uart_msp_deinit                = hal_uart_msp_deinit,
     .uart_tx_cplt_callback          = hal_uart_tx_cplt_callback,

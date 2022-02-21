@@ -46,8 +46,7 @@ extern void hal_wdt_register_callback(hal_wdt_callback_t *hal_wdt_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_wdt_callback_t wdt_callback =
-{
+static hal_wdt_callback_t wdt_callback = {
     .wdt_msp_init                   = hal_wdt_msp_init,
     .wdt_msp_deinit                 = hal_wdt_msp_deinit,
     .wdt_period_elapsed_callback    = hal_wdt_period_elapsed_callback

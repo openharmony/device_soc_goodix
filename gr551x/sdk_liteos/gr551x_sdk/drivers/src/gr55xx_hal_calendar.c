@@ -47,8 +47,7 @@ extern void hal_calendar_register_callback(hal_calendar_callback_t *hal_calendar
 
 /* Private variables -------------------------------------------------------*/
 
-static hal_calendar_callback_t calendar_callback = 
-{
+static hal_calendar_callback_t calendar_callback = {
     .calendar_alarm_callback = hal_calendar_alarm_callback,
     .calendar_tick_callback  = hal_calendar_tick_callback,
     .calendar_overflow_callback = hal_calendar_overflow_callback,

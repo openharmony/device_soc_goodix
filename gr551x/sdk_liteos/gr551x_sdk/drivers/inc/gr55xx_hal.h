@@ -74,8 +74,7 @@ extern "C" {
   * @brief HAL_HAL Callback function definition
   */
 
-typedef struct _hal_callback
-{
+typedef struct _hal_callback {
     void (*msp_init)(void);         /**< HAL init MSP callback                  */
     void (*msp_deinit)(void);       /**< HAL de-init MSP callback               */
 } hal_callback_t;
@@ -98,7 +97,7 @@ typedef struct _hal_callback
 /** @brief compare if a > b
  *  @sa CO_MAX
  */
-#define CO_MAX(a,b) ((a) > (b) ? (a) : (b))
+#define CO_MAX(a, b)                      ((a) > (b) ? (a) : (b))
 
 /** @brief Disable BLE_IRQn and BLESLP_IRQn.
  *  @sa BLE_INT_DISABLE
@@ -113,7 +112,7 @@ do {                                                                            
         NVIC_DisableIRQ(BLE_IRQn);                                                                   \
         NVIC_DisableIRQ(BLESLP_IRQn);                                                                \
     }                                                                                                \
-    __set_PRIMASK(__ble_l_irq_rest);
+    __set_PRIMASK(__ble_l_irq_rest)
 
 /** @brief Restore BLE_IRQn and BLESLP_IRQn.
  *  @sa BLE_INT_RESTORE
@@ -127,7 +126,7 @@ do {                                                                            
         NVIC_EnableIRQ(BLESLP_IRQn);                                                                 \
     }                                                                                                \
     __set_PRIMASK(__ble_l_irq_rest);                                                                 \
-} while(0)
+} while (0)
 
 #ifdef GR5515_E
 /** @brief Disable interrupts globally in the system.
@@ -144,7 +143,7 @@ do {                                                       \
 #define GLOBAL_INT_RESTORE()                               \
     extern void global_int_enable(uint32_t mask);          \
     global_int_enable(__res_mask);                         \
-} while(0)
+} while (0)
 #else
 /** @brief Disable interrupts globally in the system.
  * This macro must be used in conjunction with the @ref GLOBAL_INT_RESTORE macro
@@ -157,7 +156,7 @@ do {                                                                         \
     volatile uint32_t __nvic_iser1 = 0xFFFFFFFF;                             \
     volatile uint32_t __ret_pri = __get_PRIMASK();                           \
     __set_PRIMASK(1);                                                        \
-    if( (NVIC->ICER[0] != 0xFFFFFFFF) ||  (NVIC->ICER[1] != 0xFFFFFFFF) )    \
+    if ( (NVIC->ICER[0] != 0xFFFFFFFF) ||  (NVIC->ICER[1] != 0xFFFFFFFF) )   \
     {                                                                        \
         __nvic_iser0 = NVIC->ISER[0];                                        \
         __nvic_iser1 = NVIC->ISER[1];                                        \
@@ -166,7 +165,7 @@ do {                                                                         \
     }                                                                        \
     __set_PRIMASK(__ret_pri);                                                \
     __DSB();                                                                 \
-    __ISB();                                                                 \
+    __ISB()
 
 /** @brief Restore external interrupts(Exception Type: 16~255) from the previous disable.
  *  @sa GLOBAL_INT_RESTORE
@@ -174,13 +173,13 @@ do {                                                                         \
 #define GLOBAL_INT_RESTORE()                                                 \
     __ret_pri = __get_PRIMASK();                                             \
     __set_PRIMASK(1);                                                        \
-    if( (__nvic_iser0 != 0xFFFFFFFF) || (__nvic_iser1 != 0xFFFFFFFF) )       \
+    if ( (__nvic_iser0 != 0xFFFFFFFF) || (__nvic_iser1 != 0xFFFFFFFF) )      \
     {                                                                        \
         NVIC->ISER[0] = __nvic_iser0;                                        \
         NVIC->ISER[1] = __nvic_iser1;                                        \
     }                                                                        \
     __set_PRIMASK(__ret_pri);                                                \
-} while(0)
+} while (0)
 #endif
 
 /** @brief Disable external interrupts with a priority lower than IRQn_Type in the system.
@@ -192,14 +191,14 @@ do {                                                                         \
 do {                                                         \
     uint32_t __l_irq_rest = __get_BASEPRI();                 \
     __set_BASEPRI(NVIC_GetPriority(IRQn_Type) +              \
-                 (1 << (NVIC_GetPriorityGrouping() + 1)));   \
+                 (1 << (NVIC_GetPriorityGrouping() + 1)))
 
 /** @brief Restore external interrupts(apart from the BLE) from the previous disable.
  *  @sa EXP_BLE_INT_RESTORE
  */
 #define LOCAL_INT_RESTORE()                                  \
     __set_BASEPRI(__l_irq_rest);                             \
-} while(0)
+} while (0)
 
 
 /** @brief Check if the program is running on the FPGA platform.

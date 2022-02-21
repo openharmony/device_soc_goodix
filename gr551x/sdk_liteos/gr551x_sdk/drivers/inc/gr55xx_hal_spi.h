@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief HAL SPI State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_SPI_STATE_RESET        = 0x00,    /**< Peripheral not initialized                          */
     HAL_SPI_STATE_READY        = 0x01,    /**< Peripheral initialized and ready for use            */
     HAL_SPI_STATE_BUSY         = 0x02,    /**< An internal process is ongoing                      */
@@ -82,7 +81,6 @@ typedef enum
     HAL_SPI_STATE_BUSY_TX_RX   = 0x32,    /**< Data Transmission and Reception process is ongoing  */
     HAL_SPI_STATE_ABORT        = 0x08,    /**< Peripheral with abort request ongoing               */
     HAL_SPI_STATE_ERROR        = 0x04     /**< Peripheral in error                                 */
-
 } hal_spi_state_t;
 
 /** @} */
@@ -100,8 +98,7 @@ typedef enum
 /**
   * @brief SPI init Structure definition
   */
-typedef struct _spi_init
-{
+typedef struct _spi_init {
     uint32_t data_size;             /**< Specifies the SPI data size.
                                          This parameter can be a value of @ref SPI_Data_Size */
 
@@ -131,8 +128,7 @@ typedef struct _spi_init
 /**
   * @brief SPI handle Structure definition
   */
-typedef struct _spi_handle
-{
+typedef struct _spi_handle {
     ssi_regs_t              *p_instance;        /**< SPI registers base address        */
 
     spi_init_t              init;               /**< SPI communication parameters      */
@@ -189,8 +185,7 @@ typedef struct _spi_handle
   * @brief HAL_SPI Callback function definition
   */
 
-typedef struct _hal_spi_callback
-{
+typedef struct _hal_spi_callback {
     void (*spi_msp_init)(spi_handle_t *p_spi);              /**< SPI init MSP callback                      */
     void (*spi_msp_deinit)(spi_handle_t *p_spi);            /**< SPI de-init MSP callback                   */
     void (*spi_error_callback)(spi_handle_t *p_spi);        /**< SPI error callback                         */
@@ -355,7 +350,7 @@ typedef struct _hal_spi_callback
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
+#define __HAL_SPI_DISABLE(__HANDLE__)                         CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
 
 /** @brief  Enable the SPI DMA TX Request.
   * @param  __HANDLE__ Specifies the SPI Handle.
@@ -373,13 +368,13 @@ typedef struct _hal_spi_callback
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_DISABLE_DMATX(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
+#define __HAL_SPI_DISABLE_DMATX(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
 
 /** @brief  Disable the SPI DMA RX Request.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_DISABLE_DMARX(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
+#define __HAL_SPI_DISABLE_DMARX(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
 
 /** @brief  Enable the specified SPI interrupts.
   * @param  __HANDLE__      Specifies the SPI Handle.
@@ -393,7 +388,7 @@ typedef struct _hal_spi_callback
   *            @arg @ref SPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_SPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)         SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+#define __HAL_SPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)      SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
 
 /** @brief  Disable the specified SPI interrupts.
   * @param  __HANDLE__      Specifies the SPI handle.
@@ -407,7 +402,7 @@ typedef struct _hal_spi_callback
   *            @arg @ref SPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_SPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)        CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+#define __HAL_SPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)   CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
 
 /** @brief  Check whether the specified SPI interrupt source is enabled or not.
   * @param  __HANDLE__      Specifies the SPI Handle.
@@ -421,7 +416,8 @@ typedef struct _hal_spi_callback
   *            @arg @ref SPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval The new state of __IT__ (TRUE or FALSE).
   */
-#define __HAL_SPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)     (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__INTERRUPT__)) == (__INTERRUPT__))
+#define __HAL_SPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) \
+    (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__INTERRUPT__)) == (__INTERRUPT__))
 
 /** @brief  Check whether the specified SPI flag is set or not.
   * @param  __HANDLE__  Specifies the SPI Handle.
@@ -436,7 +432,8 @@ typedef struct _hal_spi_callback
   *            @arg @ref SPI_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_SPI_GET_FLAG(__HANDLE__, __FLAG__)               ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
+#define __HAL_SPI_GET_FLAG(__HANDLE__, __FLAG__) \
+    ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @brief  Clear the specified SPI flag.
   * @param  __HANDLE__  Specifies the SPI Handle.
@@ -566,7 +563,7 @@ typedef struct _hal_spi_callback
  ****************************************************************************************
  * @brief  Initialize the SPI according to the specified parameters
  *         in the spi_init_t and initialize the associated handle.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -578,7 +575,7 @@ hal_status_t hal_spi_init(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  De-initialize the SPI peripheral.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -592,7 +589,7 @@ hal_status_t hal_spi_deinit(spi_handle_t *p_spi);
  * @brief  Initialize the SPI MSP.
  * @note   This function should not be modified. When the callback is needed,
             the hal_spi_msp_deinit can be implemented in the user file.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_msp_init(spi_handle_t *p_spi);
@@ -602,7 +599,7 @@ void hal_spi_msp_init(spi_handle_t *p_spi);
  * @brief  De-initialize the SPI MSP.
  * @note   This function should not be modified. When the callback is needed,
             the hal_spi_msp_deinit can be implemented in the user file.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_msp_deinit(spi_handle_t *p_spi);
@@ -631,8 +628,8 @@ void hal_spi_msp_deinit(spi_handle_t *p_spi);
             The end of the data processing will be indicated through the
             dedicated SPI IRQ when using Interrupt mode or the DMA IRQ when
             using DMA mode.
-            The hal_spi_tx_cplt_callback(), hal_spi_rx_cplt_callback() and hal_spi_txrx_cplt_callback() user callbacks
-            will be executed respectively at the end of the transmit or Receive process
+            The hal_spi_tx_cplt_callback(), hal_spi_rx_cplt_callback() and hal_spi_txrx_cplt_callback() 
+            user callbacks will be executed respectively at the end of the transmit or Receive process
             The hal_spi_error_callback() user callback will be executed when a communication error is detected.
 
     (#) APIs provided for these 2 transfer modes (Blocking mode or Non blocking mode using either Interrupt or DMA)
@@ -645,7 +642,7 @@ void hal_spi_msp_deinit(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Transmit an amount of data in blocking mode.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes
  * @param[in]  timeout: Timeout duration
@@ -660,7 +657,7 @@ hal_status_t hal_spi_transmit(spi_handle_t *p_spi, uint8_t *p_data, uint32_t len
 /**
  ****************************************************************************************
  * @brief  Receive an amount of data in blocking mode.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be received in bytes
  * @param[in]  timeout: Timeout duration
@@ -675,7 +672,7 @@ hal_status_t hal_spi_receive(spi_handle_t *p_spi, uint8_t *p_data, uint32_t leng
 /**
  ****************************************************************************************
  * @brief  Transmit and Receive an amount of data in blocking mode.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_tx_data: Pointer to transmission data buffer
  * @param[out] p_rx_data: Pointer to reception data buffer
  * @param[in]  length: Amount of data to be sent and received in bytes
@@ -686,12 +683,13 @@ hal_status_t hal_spi_receive(spi_handle_t *p_spi, uint8_t *p_data, uint32_t leng
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_spi_transmit_receive(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t length, uint32_t timeout);
+hal_status_t hal_spi_transmit_receive(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data,
+                                      uint32_t length, uint32_t timeout);
 
 /**
  ****************************************************************************************
  * @brief  Read an amount of data from EEPROM in blocking mode.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_tx_data: Pointer to transmission data buffer
  * @param[out] p_rx_data: Pointer to reception data buffer
  * @param[in]  tx_number_data: Amount of data to be sent in bytes
@@ -703,12 +701,13 @@ hal_status_t hal_spi_transmit_receive(spi_handle_t *p_spi, uint8_t *p_tx_data, u
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_spi_read_eeprom(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_number_data, uint32_t rx_number_data, uint32_t timeout);
+hal_status_t hal_spi_read_eeprom(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data,
+                                 uint32_t tx_number_data, uint32_t rx_number_data, uint32_t timeout);
 
 /**
  ****************************************************************************************
  * @brief  Transmit an amount of data in non-blocking mode with Interrupt.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes
  * @retval ::HAL_OK: Operation is OK.
@@ -722,7 +721,7 @@ hal_status_t hal_spi_transmit_it(spi_handle_t *p_spi, uint8_t *p_data, uint32_t 
 /**
  ****************************************************************************************
  * @brief  Receive an amount of data in non-blocking mode with Interrupt.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes
  * @retval ::HAL_OK: Operation is OK.
@@ -736,7 +735,7 @@ hal_status_t hal_spi_receive_it(spi_handle_t *p_spi, uint8_t *p_data, uint32_t l
 /**
  ****************************************************************************************
  * @brief  Transmit and Receive an amount of data in non-blocking mode with Interrupt.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_tx_data: Pointer to transmission data buffer
  * @param[out] p_rx_data: Pointer to reception data buffer
  * @param[in]  length: Amount of data to be sent and received in bytes
@@ -751,7 +750,7 @@ hal_status_t hal_spi_transmit_receive_it(spi_handle_t *p_spi, uint8_t *p_tx_data
 /**
  ****************************************************************************************
  * @brief  Read an amount of data from EEPROM in non-blocking mode with Interrupt.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_tx_data: Pointer to transmission data buffer
  * @param[out] p_rx_data: Pointer to reception data buffer
  * @param[in]  tx_number_data: Amount of data to be sent in bytes
@@ -762,12 +761,13 @@ hal_status_t hal_spi_transmit_receive_it(spi_handle_t *p_spi, uint8_t *p_tx_data
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_spi_read_eeprom_it(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_number_data, uint32_t rx_number_data);
+hal_status_t hal_spi_read_eeprom_it(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data,
+                                    uint32_t tx_number_data, uint32_t rx_number_data);
 
 /**
  ****************************************************************************************
  * @brief  Transmit an amount of data in non-blocking mode with DMA.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes,  ranging between 0 and 4095.
  * @retval ::HAL_OK: Operation is OK.
@@ -782,7 +782,7 @@ hal_status_t hal_spi_transmit_dma(spi_handle_t *p_spi, uint8_t *p_data, uint32_t
  ****************************************************************************************
  * @brief  Receive an amount of data in non-blocking mode with DMA.
  * @note   In case of MASTER mode and SPI_DIRECTION_2LINES direction, p_dmatx shall be defined.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes,  ranging between 0 and 4095.
  * @retval ::HAL_OK: Operation is OK.
@@ -796,7 +796,7 @@ hal_status_t hal_spi_receive_dma(spi_handle_t *p_spi, uint8_t *p_data, uint32_t 
 /**
  ****************************************************************************************
  * @brief  Transmit and Receive an amount of data in non-blocking mode with DMA.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_tx_data: Pointer to transmission data buffer
  * @param[out] p_rx_data: Pointer to reception data buffer
  * @param[in]  length: Amount of data to be sent in bytes,  ranging between 0 and 4095.
@@ -811,7 +811,7 @@ hal_status_t hal_spi_transmit_receive_dma(spi_handle_t *p_spi, uint8_t *p_tx_dat
 /**
  ****************************************************************************************
  * @brief  Read an amount of data from EEPROM in non-blocking mode with DMA.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  p_tx_data: Pointer to transmission data buffer
  * @param[out] p_rx_data: Pointer to reception data buffer
  * @param[in]  tx_number_data: Amount of data to be sent in bytes
@@ -822,7 +822,8 @@ hal_status_t hal_spi_transmit_receive_dma(spi_handle_t *p_spi, uint8_t *p_tx_dat
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_spi_read_eeprom_dma(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_number_data, uint32_t rx_number_data);
+hal_status_t hal_spi_read_eeprom_dma(spi_handle_t *p_spi, uint8_t *p_tx_data, uint8_t *p_rx_data,
+                                     uint32_t tx_number_data, uint32_t rx_number_data);
 
 /**
  ****************************************************************************************
@@ -876,7 +877,7 @@ hal_status_t hal_spi_abort_it(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Handle SPI interrupt request.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_irq_handler(spi_handle_t *p_spi);
@@ -884,7 +885,7 @@ void hal_spi_irq_handler(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Tx Transfer completed callback.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_tx_cplt_callback(spi_handle_t *p_spi);
@@ -892,7 +893,7 @@ void hal_spi_tx_cplt_callback(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Rx Transfer completed callback.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_rx_cplt_callback(spi_handle_t *p_spi);
@@ -900,7 +901,7 @@ void hal_spi_rx_cplt_callback(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Tx and Rx Transfer completed callback.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_tx_rx_cplt_callback(spi_handle_t *p_spi);
@@ -908,7 +909,7 @@ void hal_spi_tx_rx_cplt_callback(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  SPI error callback.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  ****************************************************************************************
  */
 void hal_spi_error_callback(spi_handle_t *p_spi);
@@ -946,7 +947,7 @@ void hal_spi_abort_cplt_callback(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Return the SPI handle state.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @retval ::HAL_SPI_STATE_RESET: Peripheral not initialized.
  * @retval ::HAL_SPI_STATE_READY: Peripheral initialized and ready for use.
  * @retval ::HAL_SPI_STATE_BUSY: An internal process is ongoing. 
@@ -962,7 +963,7 @@ hal_spi_state_t hal_spi_get_state(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Return the SPI error code.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @return SPI error code in bitmap format
  ****************************************************************************************
  */
@@ -971,7 +972,7 @@ uint32_t hal_spi_get_error(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Set the SPI internal process timeout value.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  timeout: Internal process timeout value.
  ****************************************************************************************
  */
@@ -980,7 +981,7 @@ void hal_spi_set_timeout(spi_handle_t *p_spi, uint32_t timeout);
 /**
  ****************************************************************************************
  * @brief  Set the TX FIFO threshold.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  threshold: TX FIFO threshold value ranging bwtween 0x0U ~ 0x7U.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -993,7 +994,7 @@ hal_status_t hal_spi_set_tx_fifo_threshold(spi_handle_t *p_spi, uint32_t thresho
 /**
  ****************************************************************************************
  * @brief  Set the RX FIFO threshold.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @param[in]  threshold: RX FIFO threshold value ranging bwtween 0x0U ~ 0x7U.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -1006,7 +1007,7 @@ hal_status_t hal_spi_set_rx_fifo_threshold(spi_handle_t *p_spi, uint32_t thresho
 /**
  ****************************************************************************************
  * @brief  Get the TX FIFO threshold.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @return TX FIFO threshold
  ****************************************************************************************
  */
@@ -1015,7 +1016,7 @@ uint32_t hal_spi_get_tx_fifo_threshold(spi_handle_t *p_spi);
 /**
  ****************************************************************************************
  * @brief  Get the RX FIFO threshold.
- * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI module.
+ * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @return RX FIFO threshold
  ****************************************************************************************
  */
@@ -1047,7 +1048,6 @@ hal_status_t hal_spi_suspend_reg(spi_handle_t *p_spi);
  ****************************************************************************************
  */
 hal_status_t hal_spi_resume_reg(spi_handle_t *p_spi);
-
 
 /** @} */
 

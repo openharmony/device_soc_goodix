@@ -73,12 +73,12 @@ extern "C" {
 /** @defgroup CALENDAR_LL_EC_CLOCK_DIV Clock divider
   * @{
   */
-#define LL_CALENDAR_DIV_NONE            ((uint32_t)0x00U)                                       /**< Select RTC clock     */
-#define LL_CALENDAR_DIV_32              ((uint32_t)0x01U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/32 divider  */
-#define LL_CALENDAR_DIV_64              ((uint32_t)0x02U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/64 divider  */
-#define LL_CALENDAR_DIV_128             ((uint32_t)0x03U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/128 divider */
-#define LL_CALENDAR_DIV_256             ((uint32_t)0x04U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/256 divider */
-#define LL_CALENDAR_NO_CLOCK            ((uint32_t)0x05U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select no clock      */
+#define LL_CALENDAR_DIV_NONE       ((uint32_t)0x00U)                                       /**< Select RTC clock     */
+#define LL_CALENDAR_DIV_32         ((uint32_t)0x01U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/32 divider  */
+#define LL_CALENDAR_DIV_64         ((uint32_t)0x02U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/64 divider  */
+#define LL_CALENDAR_DIV_128        ((uint32_t)0x03U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/128 divider */
+#define LL_CALENDAR_DIV_256        ((uint32_t)0x04U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select 1/256 divider */
+#define LL_CALENDAR_NO_CLOCK       ((uint32_t)0x05U << AON_CALENDAR_TIMER_CTL_CLK_SEL_Pos) /**< Select no clock      */
 /** @} */
 
 /** @} */
@@ -215,7 +215,8 @@ __STATIC_INLINE uint32_t ll_calendar_get_alarm(void)
   */
 __STATIC_INLINE uint32_t ll_calendar_get_wrapcnt(void)
 {
-    return (uint32_t)(READ_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_WRAP_CNT) >> AON_CALENDAR_TIMER_CTL_WRAP_CNT_Pos);
+    return (uint32_t)(READ_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_WRAP_CNT) >> \
+                      AON_CALENDAR_TIMER_CTL_WRAP_CNT_Pos);
 }
 
 /**
@@ -278,7 +279,8 @@ __STATIC_INLINE void ll_calendar_it_disable_alarm(void)
   */
 __STATIC_INLINE uint32_t ll_calendar_it_is_enabled_alarm(void)
 {
-    return (READ_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_ALARM_INT_EN) == (AON_CALENDAR_TIMER_CTL_ALARM_INT_EN));
+    return (READ_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_ALARM_INT_EN) == \
+            (AON_CALENDAR_TIMER_CTL_ALARM_INT_EN));
 }
 
 /**
@@ -320,7 +322,8 @@ __STATIC_INLINE void ll_calendar_it_disable_wrap(void)
   */
 __STATIC_INLINE uint32_t ll_calendar_it_is_enabled_wrap(void)
 {
-    return (READ_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_WRAP_INT_EN) == (AON_CALENDAR_TIMER_CTL_WRAP_INT_EN));
+    return (READ_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_WRAP_INT_EN) == \
+            (AON_CALENDAR_TIMER_CTL_WRAP_INT_EN));
 }
 
 /** @} */
@@ -342,7 +345,8 @@ __STATIC_INLINE uint32_t ll_calendar_it_is_enabled_wrap(void)
   */
 __STATIC_INLINE uint32_t ll_calendar_is_active_flag_alarm(void)
 {
-    return (uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_CALENDAR_TIMER_ALARM) == AON_SLP_EVENT_CALENDAR_TIMER_ALARM);
+    return (uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_CALENDAR_TIMER_ALARM) == \
+                      AON_SLP_EVENT_CALENDAR_TIMER_ALARM);
 }
 
 /**
@@ -358,7 +362,8 @@ __STATIC_INLINE uint32_t ll_calendar_is_active_flag_alarm(void)
   */
 __STATIC_INLINE uint32_t ll_calendar_is_active_flag_wrap(void)
 {
-    return (uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_CALENDAR_TIMER_WRAP) == AON_SLP_EVENT_CALENDAR_TIMER_WRAP);
+    return (uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_CALENDAR_TIMER_WRAP) == \
+                      AON_SLP_EVENT_CALENDAR_TIMER_WRAP);
 }
 
 /**

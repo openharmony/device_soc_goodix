@@ -3,7 +3,7 @@
  *
  * @file    gr55xx_hal_dma.h
  * @author  BLE Driver Team
- * @brief   Header file containing functions prototypes of DMA HAL library. 
+ * @brief   Header file containing functions prototypes of DMA HAL library.
  *
  ****************************************************************************************
  * @attention
@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief  HAL DMA State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_DMA_STATE_RESET             = 0x00U,  /**< DMA not yet initialized or disabled */
     HAL_DMA_STATE_READY             = 0x01U,  /**< DMA process success and ready for use   */
     HAL_DMA_STATE_BUSY              = 0x02U,  /**< DMA process is ongoing              */
@@ -89,8 +88,7 @@ typedef enum
 /**
   * @brief  HAL DMA Channel Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     DMA_Channel0 = 0U,      /**< Channel 0     */
     DMA_Channel1 = 1U,      /**< Channel 1     */
     DMA_Channel2 = 2U,      /**< Channel 2     */
@@ -109,8 +107,7 @@ typedef enum
 /**
   * @brief  HAL DMA Callback ID Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_DMA_XFER_TFR_CB_ID           = 0x00,    /**< Full transfer     */
     HAL_DMA_XFER_BLK_CB_ID           = 0x01,    /**< Block transfer    */
     HAL_DMA_XFER_ERROR_CB_ID         = 0x02,    /**< Error             */
@@ -133,8 +130,7 @@ typedef enum
 /**
   * @brief  DMA Configuration Structure definition
   */
-typedef struct _dma_init
-{
+typedef struct _dma_init {
     uint32_t src_request;               /**< Specifies the source request selected for the specified channel.
                                              This parameter can be a value of @ref DMA_request */
 
@@ -145,10 +141,12 @@ typedef struct _dma_init
                                              from memory to memory or from peripheral to memory.
                                              This parameter can be a value of @ref DMA_Data_transfer_direction */
 
-    uint32_t src_increment;             /**< Specifies whether the srouce address register should be incremented or decrement or not.
+    uint32_t src_increment;             /**< Specifies whether the srouce address register should be incremented
+                                             or decrement or not.
                                              This parameter can be a value of @ref DMA_Source_incremented_mode */
 
-    uint32_t dst_increment;             /**< Specifies whether the destination address register should be incremented or decrement or not.
+    uint32_t dst_increment;             /**< Specifies whether the destination address register should be incremented
+                                             or decrement or not.
                                              This parameter can be a value of @ref DMA_Destination_incremented_mode */
 
     uint32_t src_data_alignment;        /**< Specifies the source data width.
@@ -175,8 +173,7 @@ typedef struct _dma_init
 /**
   * @brief  DMA handle Structure definition
   */
-typedef struct _dma_handle
-{
+typedef struct _dma_handle {
     dma_channel_t           channel;                                              /**< DMA Channel Number                  */
 
     dma_init_t              init;                                                 /**< DMA communication parameters        */
@@ -397,7 +394,7 @@ typedef struct _dma_handle
   */
 #define IS_DMA_DESTINATION_DATA_SIZE(__SIZE__)  (((__SIZE__) == DMA_DDATAALIGN_BYTE)     || \
                                                  ((__SIZE__) == DMA_DDATAALIGN_HALFWORD) || \
-                                                 ((__SIZE__) == DMA_DDATAALIGN_WORD ))
+                                                 ((__SIZE__) == DMA_DDATAALIGN_WORD))
 
 /** @brief  Check if DMA mode is valid.
   * @param  __MODE__ DMA mode.
@@ -448,7 +445,8 @@ typedef struct _dma_handle
  * @brief  Initialize the DMA according to the specified
  *         parameters in the dma_init_t and initialize the associated handle.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -462,7 +460,8 @@ hal_status_t hal_dma_init(dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  De-initialize the DMA peripheral.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -498,7 +497,8 @@ hal_status_t hal_dma_deinit (dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  Start the DMA Transfer.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @param[in]  src_address: The source memory Buffer address
  * @param[in]  dst_address: The destination memory Buffer address
  * @param[in]  data_length: The length of data to be transferred from source to destination, ranging between 0 and 4095.
@@ -515,10 +515,11 @@ hal_status_t hal_dma_start (dma_handle_t *p_dma, uint32_t src_address, uint32_t 
  ****************************************************************************************
  * @brief  Start the DMA Transfer with interrupt enabled.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @param[in]  src_address: The source memory Buffer address
  * @param[in]  dst_address: The destination memory Buffer address
- * @param[in]  data_length: The length of data to be transferred from source to destination,  ranging between 0 and 4095.
+ * @param[in]  data_length: The length of data to be transferred from source to destination, ranging between 0 and 4095.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -532,7 +533,8 @@ hal_status_t hal_dma_start_it(dma_handle_t *p_dma, uint32_t src_address, uint32_
  ****************************************************************************************
  * @brief  Abort the DMA Transfer.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -546,7 +548,8 @@ hal_status_t hal_dma_abort(dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  Aborts the DMA Transfer in Interrupt mode.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -560,7 +563,8 @@ hal_status_t hal_dma_abort_it(dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  Polling for transfer complete.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @param[in]  timeout: Timeout duration.
  *
  * @retval ::HAL_OK: Operation is OK.
@@ -582,7 +586,8 @@ hal_status_t hal_dma_poll_for_transfer(dma_handle_t *p_dma, uint32_t timeout);
  ****************************************************************************************
  * @brief  Handle DMA interrupt request.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the
+ *                    configuration information for the specified DMA Channel.
  ****************************************************************************************
  */
 void hal_dma_irq_handler(dma_handle_t *p_dma);
@@ -591,13 +596,14 @@ void hal_dma_irq_handler(dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  Register callbacks
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @param[in]  id: User Callback identifer. This parameter can be one of the following values:
  *         @arg @ref HAL_DMA_XFER_TFR_CB_ID
  *         @arg @ref HAL_DMA_XFER_BLK_CB_ID
  *         @arg @ref HAL_DMA_XFER_ERROR_CB_ID
  *         @arg @ref HAL_DMA_XFER_ABORT_CB_ID
- * @param[in]  callback: Pointer to private callbacsk function which has pointer to a dma_handle_t structure as parameter.
+ * @param[in]  callback: Pointer to private callback function which has pointer to dma_handle_t structure as parameter.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -605,13 +611,15 @@ void hal_dma_irq_handler(dma_handle_t *p_dma);
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  ****************************************************************************************
  */
-hal_status_t hal_dma_register_callback(dma_handle_t *p_dma, hal_dma_callback_id_t id, void (* callback)( dma_handle_t * p_dma));
+hal_status_t hal_dma_register_callback(dma_handle_t *p_dma, hal_dma_callback_id_t id,
+                                       void (* callback)(dma_handle_t * p_dma));
 
 /**
  ****************************************************************************************
  * @brief  UnRegister callbacks
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @param[in]  id: User Callback identifer. This parameter can be a combiantion of the following values:
  *         @arg @ref HAL_DMA_XFER_TFR_CB_ID
  *         @arg @ref HAL_DMA_XFER_BLK_CB_ID
@@ -649,7 +657,8 @@ hal_status_t hal_dma_unregister_callback(dma_handle_t *p_dma, hal_dma_callback_i
  ****************************************************************************************
  * @brief  Return the DMA hande state.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  *
  * @retval ::HAL_DMA_STATE_RESET: DMA not yet initialized or disabled.
  * @retval ::HAL_DMA_STATE_READY: DMA process succeeded and ready for use.
@@ -664,7 +673,8 @@ hal_dma_state_t hal_dma_get_state(dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  Return the DMA error code.
  *
- * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration information for the specified DMA Channel.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  *
  * @return DMA Error Code
  ****************************************************************************************
@@ -674,8 +684,8 @@ uint32_t hal_dma_get_error(dma_handle_t *p_dma);
 /**
  ****************************************************************************************
  * @brief  Suspend some registers related to DMA configuration before sleep.
- * @param[in] p_dma: Pointer to a DMA handle which contains the configuration
- *                 information for the specified DMA module.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -688,8 +698,8 @@ hal_status_t hal_dma_suspend_reg(dma_handle_t *p_dma);
  ****************************************************************************************
  * @brief  Restore some registers related to DMA configuration after sleep.
  *         This function must be used in conjunction with the hal_dma_resume_reg().
- * @param[in] p_dma: Pointer to a DMA handle which contains the configuration
- *                 information for the specified DMA module.
+ * @param[in]  p_dma: Pointer to a DMA handle which contains the configuration
+ *                    information for the specified DMA Channel.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.

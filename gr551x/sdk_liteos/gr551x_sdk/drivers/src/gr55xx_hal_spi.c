@@ -46,8 +46,7 @@ extern void hal_spi_register_callback(hal_spi_callback_t *hal_spi_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_spi_callback_t spi_callback =
-{
+static hal_spi_callback_t spi_callback = {
     .spi_msp_init               = hal_spi_msp_init,
     .spi_msp_deinit             = hal_spi_msp_deinit,
     .spi_error_callback         = hal_spi_error_callback,
@@ -105,27 +104,32 @@ __WEAK void hal_spi_msp_deinit(spi_handle_t *p_spi)
 
 __WEAK void hal_spi_error_callback(spi_handle_t *p_spi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_spi);
 }
 
 __WEAK void hal_spi_abort_cplt_callback(spi_handle_t *p_spi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_spi);
 }
 
 __WEAK void hal_spi_rx_cplt_callback(spi_handle_t *p_spi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_spi);
 }
 
 __WEAK void hal_spi_tx_cplt_callback(spi_handle_t *p_spi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_spi);
 }
 
 __WEAK void hal_spi_tx_rx_cplt_callback(spi_handle_t *p_spi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_spi);
 }
 
 #endif /* HAL_SPI_MODULE_ENABLED */

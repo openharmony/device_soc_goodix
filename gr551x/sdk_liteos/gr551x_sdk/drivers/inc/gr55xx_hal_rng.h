@@ -72,11 +72,10 @@ extern "C" {
 /**
   * @brief HAL RNG State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_RNG_STATE_RESET     = 0x00,      /**< RNG not initialized or disabled yet */
     HAL_RNG_STATE_READY     = 0x01,      /**< RNG initialized and ready for use   */
-    HAL_RNG_STATE_BUSY      = 0x02,      /**< RNG internal process is ongoing     */ 
+    HAL_RNG_STATE_BUSY      = 0x02,      /**< RNG internal process is ongoing     */
     HAL_RNG_STATE_TIMEOUT   = 0x03,      /**< RNG timeout state                   */
     HAL_RNG_STATE_ERROR     = 0x04       /**< RNG error state                     */
 } hal_rng_state_t;
@@ -96,20 +95,18 @@ typedef enum
 /**
   * @brief  RNG init structure definition
   */
-typedef struct _rng_init
-{
+typedef struct _rng_init {
     uint32_t seed_mode;       /**< Specifies the seed source for the LFSR.
-                                 This parameter can be a value of @ref RNG_SEED_SOURCE */
+                                   This parameter can be a value of @ref RNG_SEED_SOURCE */
 
     uint32_t lfsr_mode;       /**< Specifies the configuration mode for the LFSR.
-                                 This parameter can be a value of @ref RNG_LFSR_MODE */
+                                   This parameter can be a value of @ref RNG_LFSR_MODE */
 
     uint32_t out_mode;        /**< Specifies the Output mode for the RNG.
-                                 This parameter can be a value of @ref RNG_OUTPUT_MODE */
+                                   This parameter can be a value of @ref RNG_OUTPUT_MODE */
 
     uint32_t post_mode;       /**< Specifies post-process configuration for the RNG.
-                                 This parameter can be a value of @ref RNG_POST_PRO */
-
+                                   This parameter can be a value of @ref RNG_POST_PRO */
 } rng_init_t;
 
 /** @} */
@@ -121,8 +118,7 @@ typedef struct _rng_init
 /**
   * @brief  RNG handle Structure definition
   */
-typedef struct _rng_handle
-{
+typedef struct _rng_handle {
     rng_regs_t           *p_instance;    /**< Register base address      */
 
     rng_init_t            init;          /**< RNG required parameters    */
@@ -152,8 +148,7 @@ typedef struct _rng_handle
   * @brief HAL_RNG Callback function definition
   */
 
-typedef struct _hal_rng_callback
-{
+typedef struct _hal_rng_callback {
     void (*rng_msp_init)(rng_handle_t *p_rng);                                  /**< RNG init MSP callback      */
     void (*rng_msp_deinit)(rng_handle_t *p_rng);                                /**< RNG de-init MSP callback   */
     void (*rng_ready_data_callback)(rng_handle_t *p_rng, uint32_t random32bit); /**< RNG data ready callback    */
@@ -200,8 +195,10 @@ typedef struct _hal_rng_callback
 /** @defgroup RNG_OUTPUT_MODE RNG Output mode
   * @{
   */
-#define RNG_OUTPUT_FR0_S0               LL_RNG_OUTPUT_FR0_S0          /**< Digital RNG direct output, for ring oscillator S0 LFSR seed. */
-#define RNG_OUTPUT_CYCLIC_PARITY        LL_RNG_OUTPUT_CYCLIC_PARITY   /**< LFSR and RNG cyclic sampling and parity generation. */
+#define RNG_OUTPUT_FR0_S0               LL_RNG_OUTPUT_FR0_S0          /**< Digital RNG direct output,
+                                                                           for ring oscillator S0 LFSR seed. */
+#define RNG_OUTPUT_CYCLIC_PARITY        LL_RNG_OUTPUT_CYCLIC_PARITY   /**< LFSR and RNG cyclic sampling and
+                                                                           parity generation. */
 #define RNG_OUTPUT_CYCLIC               LL_RNG_OUTPUT_CYCLIC          /**< LFSR and RNG cyclic sampling. */
 #define RNG_OUTPUT_LFSR_RNG             LL_RNG_OUTPUT_LFSR_RNG        /**< LFSR ⊕ RNG. */
 #define RNG_OUTPUT_LFSR                 LL_RNG_OUTPUT_LFSR            /**< LFSR direct output. */
@@ -285,7 +282,6 @@ void hal_rng_msp_deinit(rng_handle_t *p_rng);
 
 /** @} */
 
-
 /** @addtogroup RNG_Exported_Functions_Group2 Peripheral Control functions
  *  @brief    Peripheral Control functions
  *
@@ -302,15 +298,14 @@ void hal_rng_msp_deinit(rng_handle_t *p_rng);
   * @{
   */
 
-
 /**
  ****************************************************************************************
  * @brief  Generate a 32-bit random number.
  * @param[in]  p_rng: Pointer to a RNG handle which contains the configuration
  *               information for the specified RNG module.
- * @param[in]  p_seed: user configured seeds. the seed is valid when seed_mode member of 
+ * @param[in]  p_seed: user configured seeds. the seed is valid when seed_mode member of
  *               rng_init_t is configured as RNG_SEED_USER. If 59-bit random number is
- *               selected, the seed need to provide [0~58] bit spaces. If 128-bit random 
+ *               selected, the seed need to provide [0~58] bit spaces. If 128-bit random
  *               number is selected, the seed need to provide [0~127] bit spaces.
  * @param[out] p_random32bit: Pointer to generated random number variable if successful.
  * @retval ::HAL_OK: Operation is OK.
@@ -326,9 +321,9 @@ hal_status_t hal_rng_generate_random_number(rng_handle_t *p_rng, uint16_t *p_see
  * @brief  Generate a 32-bit random number in interrupt mode.
  * @param[in]  p_rng: Pointer to a RNG handle which contains the configuration
  *               information for the specified RNG module.
- * @param[in]  p_seed: user configured seeds. the seed is valid when seed_mode member of 
+ * @param[in]  p_seed: user configured seeds. the seed is valid when seed_mode member of
  *               rng_init_t is configured as RNG_SEED_USER. If 59-bit random number is
- *               selected, the seed need to provide [0~58] bit spaces. If 128-bit random 
+ *               selected, the seed need to provide [0~58] bit spaces. If 128-bit random
  *               number is selected, the seed need to provide [0~127] bit spaces.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -393,7 +388,8 @@ void hal_rng_ready_data_callback(rng_handle_t *p_rng, uint32_t random32bit);
 /**
  ****************************************************************************************
  * @brief  Return the RNG handle state.
- * @param[in]  p_rng: Pointer to a RNG handle which contains the configuration information for the specified HMAC module.
+ * @param[in]  p_rng: Pointer to a RNG handle which contains the configuration information
+ *                    for the specified HMAC module.
  * @retval ::HAL_RNG_STATE_RESET: Peripheral not initialized.
  * @retval ::HAL_RNG_STATE_READY: Peripheral initialized and ready for use.
  * @retval ::HAL_RNG_STATE_BUSY: Peripheral in indirect mode and busy.
@@ -430,11 +426,9 @@ hal_status_t hal_rng_suspend_reg(rng_handle_t *p_rng);
  */
 hal_status_t hal_rng_resume_reg(rng_handle_t *p_rng);
 
-
 /** @} */
 
 /** @} */
-
 
 #ifdef __cplusplus
 }

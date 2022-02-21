@@ -71,8 +71,7 @@ extern "C" {
 /**
   * @brief HAL CALENDAR State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_CALENDAR_STATE_RESET             = 0x00,    /**< Peripheral not initialized                            */
     HAL_CALENDAR_STATE_READY             = 0x01,    /**< Peripheral initialized and ready for use              */
     HAL_CALENDAR_STATE_ERROR             = 0x04     /**< Peripheral in error                                   */
@@ -92,8 +91,7 @@ typedef enum
 /**
   * @brief  CALENDAR_Time calendar time structure definition
   */
-typedef struct _calendar_time
-{
+typedef struct _calendar_time {
     uint8_t sec;                    /**< Specifies the Calendar time seconds.
                                          This parameter must be a number between min_value = 0 and max_value = 59. */
 
@@ -113,17 +111,16 @@ typedef struct _calendar_time
                                          This parameter must be a number between min_value = 10 and max_value = 99. */
 
     uint8_t week;                   /**< Specifies the Calendar weekday.
-                                         This parameter must be a number between min_value = 0 and max_value = 6.  */
+                                         This parameter must be a number between min_value = 0 and max_value = 6.   */
 
     uint16_t ms;                    /**< Specifies the Calendar time milliseconds.
-                                        This parameter must be a number between min_value = 0 and max_value = 999. */
+                                         This parameter must be a number between min_value = 0 and max_value = 999. */
 } calendar_time_t;
 
 /**
   * @brief  CALENDAR_Alarm calendar alarm structure definition
   */
-typedef struct _calendar_alarm
-{
+typedef struct _calendar_alarm {
     uint8_t min;                    /**< Specifies the alarm time minutes.
                                          This parameter must be a number between min_value = 0 and max_value = 59. */
 
@@ -131,12 +128,13 @@ typedef struct _calendar_alarm
                                          This parameter must be a number between min_value = 0 and max_value = 23. */
 
     uint8_t alarm_sel;              /**< Specifies the alarm is on date or weekday.
-                                                 This parameter can be a value of @ref CALENDAR_ALARM_SEL. */
+                                         This parameter can be a value of @ref CALENDAR_ALARM_SEL. */
 
     uint8_t alarm_date_week_mask;   /**< Specifies the alarm date/weekday.
-                                                 If the alarm date is selected, this parameter must be set to a value in the 1 ~ 31 range.
-                                                 If the alarm weekday is selected, this parameter must be a value of @ref CALENDAR_ALARM_WEEKDAY. */
-
+                                         If the alarm date is selected, this parameter must be set to a value
+                                         in the 1 ~ 31 range.
+                                         If the alarm weekday is selected, this parameter must be a value of
+                                         @ref CALENDAR_ALARM_WEEKDAY. */
 } calendar_alarm_t;
 
 /** @} */
@@ -148,8 +146,7 @@ typedef struct _calendar_alarm
 /**
   * @brief  CALENDAR handle Structure definition
   */
-typedef struct _calendar_handle
-{
+typedef struct _calendar_handle {
     calendar_time_t     time_init;      /**< Specifies the Calendar inital time. */
 
     calendar_alarm_t    alarm;          /**< Specifies the Calendar date alarm. */
@@ -170,8 +167,8 @@ typedef struct _calendar_handle
 } calendar_handle_t;
 
 /** @} */
-/** @} */
 
+/** @} */
 
 /** @addtogroup HAL_CALENDAR_CALLBACK_STRUCTURES Callback Structures
   * @{
@@ -185,17 +182,15 @@ typedef struct _calendar_handle
   * @brief HAL_CALENDAR Callback function definition
   */
 
-typedef struct _hal_calendar_callback
-{
+typedef struct _hal_calendar_callback {
     void (*calendar_alarm_callback)(calendar_handle_t *p_calendar);     /**< CALENDAR date count complete callback */
     void (*calendar_tick_callback)(calendar_handle_t *p_calendar);      /**< CALENDAR tick count complete callback */
-    void (*calendar_overflow_callback)(calendar_handle_t *p_calendar);  /**< CALENDAR count overflow callback */
+    void (*calendar_overflow_callback)(calendar_handle_t *p_calendar);  /**< CALENDAR count overflow callback      */
 } hal_calendar_callback_t;
 
 /** @} */
 
 /** @} */
-
 
 /**
   * @defgroup  HAL_CALENDAR_MACRO Defines
@@ -245,7 +240,8 @@ typedef struct _hal_calendar_callback
   */
 #define CALENDAR_ALARM_DISABLE_DATE         (1UL)       /**< Disable date alarm */
 #define CALENDAR_ALARM_DISABLE_TICK         (2UL)       /**< Disable tick alarm */
-#define CALENDAR_ALARM_DISABLE_ALL          ((CALENDAR_ALARM_DISABLE_DATE) | CALENDAR_ALARM_DISABLE_TICK)       /**< Disable all alarm */
+#define CALENDAR_ALARM_DISABLE_ALL          ((CALENDAR_ALARM_DISABLE_DATE) | \
+                                             CALENDAR_ALARM_DISABLE_TICK)       /**< Disable all alarm */
 /** @} */
 
 /** @} */
@@ -263,7 +259,7 @@ typedef struct _hal_calendar_callback
 /** @brief  Disable the specified CALENDAR peripheral.
   * @retval None
   */
-#define __HAL_CALENDAR_DISABLE()                            CLEAR_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_EN)
+#define __HAL_CALENDAR_DISABLE()                          CLEAR_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_EN)
 
 /** @brief  Enable the specified CALENDAR interrupts.
   * @param  __INTERRUPT__ Specifies the interrupt source to enable.
@@ -362,7 +358,7 @@ typedef struct _hal_calendar_callback
 
 /**
  ****************************************************************************************
- * @brief  Initialize the CALENDAR according to the specified parameters in the 
+ * @brief  Initialize the CALENDAR according to the specified parameters in the
  *         calendar_init_t of  associated handle.
  *
  * @param[in]  p_calendar: Pointer to a CALENDAR handle which contains the configuration

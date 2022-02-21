@@ -35,10 +35,10 @@
  *****************************************************************************************
  */
 
- /**
- * @addtogroup BLE
- * @{
- */
+/**
+* @addtogroup BLE
+* @{
+*/
 
 /**
  @addtogroup BLE_COMMEN BLE Common
@@ -60,26 +60,24 @@
 #include "ble_prf.h"
 #include "ble_sec.h"
 
-#include <stdio.h> 
+#include <stdio.h>
 
 /** @addtogroup BLE_COMMEN_ENUM Enumerations
  * @{
  */
 /**
- * @brief RF TX mode. 
+ * @brief RF TX mode.
  */
-typedef enum
-{
+typedef enum {
     BLE_RF_TX_MODE_INVALID = 0,
     BLE_RF_TX_MODE_LP_MODE = 1,
     BLE_RF_TX_MODE_ULP_MODE = 2,
 } ble_rf_tx_mode_t;
 
 /**
- * @brief The resistance value (ohm) of the RF match circuit. 
+ * @brief The resistance value (ohm) of the RF match circuit.
  */
-typedef enum
-{
+typedef enum {
     BLE_RF_MATCH_CIRCUIT_25OHM = 25,
     BLE_RF_MATCH_CIRCUIT_100OHM = 100,
 } ble_rf_match_circuit_t;
@@ -90,20 +88,19 @@ typedef enum
  * @{
  */
 /** @brief The app callbacks for GAP, GATT, SM and L2CAP. */
-typedef struct
-{
-    app_ble_init_cmp_cb_t        app_ble_init_cmp_callback;         /**< Callback function for BLE initialization completed */
+typedef struct {
+    app_ble_init_cmp_cb_t
+    app_ble_init_cmp_callback;         /**< Callback function for BLE initialization completed */
     gap_cb_fun_t                *app_gap_callbacks;                 /**< Callback function for GAP */
     const gatt_common_cb_fun_t  *app_gatt_common_callback;          /**< Callback function for GATT common */
     const gattc_cb_fun_t        *app_gattc_callback;                /**< Callback function for GATT Client */
     sec_cb_fun_t                *app_sec_callback;                  /**< Callback function for SM*/
-}app_callback_t;
+} app_callback_t;
 
 /** @brief The table contains the pointers to four arrays which are used
  * as heap memory by BLE stack in ROM. The size of four arrays depends on
  * the number of connections and the number of attributes of profiles. */
-typedef struct 
-{
+typedef struct {
     uint32_t  *env_ret;         /**< Pointer to the array for environment heap */
     uint32_t  *db_ret;          /**< Pointer to the array for ATT DB heap */
     uint32_t  *msg_ret;         /**< Pointer to the array for message heap */
@@ -118,17 +115,16 @@ typedef struct
     uint32_t   bm_size;         /**< The size of the array for bond manager heap */
     uint8_t   *conn_buf;        /**< Pointer to the array for connection heap */
     uint32_t   conn_size;       /**< The size of the array for connection heap */
-}stack_heaps_table_t;
+} stack_heaps_table_t;
 
 /** @brief The function pointers for HCI UART. */
-typedef struct
-{
-    void (*init)(void);                                                                             /**< Initialize UART. */
-    void (*flow_on)(void);                                                                          /**< Flow control on. */
-    bool (*flow_off)(void);                                                                         /**< Flow control off. */
-    void (*finish_transfers)(void);                                                                 /**< Finish the current transferring. */
-    void (*read)(uint8_t *bufptr, uint32_t size, void (*callback) (void*, uint8_t), void* dummy);   /**< Read data. */
-    void (*write)(uint8_t *bufptr, uint32_t size, void (*callback) (void*, uint8_t), void* dummy);  /**< Write data. */
+typedef struct {
+    void (*init)(void);                                                       /**< Initialize UART. */
+    void (*flow_on)(void);                                                    /**< Flow control on. */
+    bool (*flow_off)(void);                                                   /**< Flow control off. */
+    void (*finish_transfers)(void);                                           /**< Finish the current transferring. */
+    void (*read)(uint8_t *bufptr, uint32_t size, void (*callback) (void*, uint8_t), void* dummy);  /**< Read data. */
+    void (*write)(uint8_t *bufptr, uint32_t size, void (*callback) (void*, uint8_t), void* dummy); /**< Write data. */
 } hci_uart_call_t;
 /** @} */
 
@@ -264,10 +260,10 @@ uint16_t ble_sync_source_destroy(void);
  *                                        BLE_RF_TX_MODE_LP_MODE: LP mode.
  *                                        BLE_RF_TX_MODE_ULP_MODE: ULP mode.
  *                                        Others: invalid mode.
- *                               
+ *
  * @note  This function should be called before BLE stack init.
  *
- * @return        SDK_SUCCESS: Successfully set Tx mode.   
+ * @return        SDK_SUCCESS: Successfully set Tx mode.
  *                SDK_ERR_DISALLOWED: Failed to set Tx mode.
  *****************************************************************************************
  */
@@ -283,7 +279,7 @@ uint8_t ble_rf_tx_mode_set(ble_rf_tx_mode_t e_rf_tx_mode);
  *****************************************************************************************
  */
 ble_rf_tx_mode_t ble_rf_tx_mode_get(void);
- 
+
 /**
  *****************************************************************************************
  * @brief Set the resistance value of the RF match circuit (unit: ohm).

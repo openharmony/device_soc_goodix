@@ -45,8 +45,7 @@ extern void hal_hmac_register_callback(hal_hmac_callback_t *hal_hmac_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_hmac_callback_t hmac_callback =
-{
+static hal_hmac_callback_t hmac_callback = {
     .hmac_msp_init              = hal_hmac_msp_init,
     .hmac_msp_deinit            = hal_hmac_msp_deinit,
     .hmac_done_callback         = hal_hmac_done_callback,
@@ -102,17 +101,20 @@ __WEAK void hal_hmac_msp_deinit(hmac_handle_t *p_hmac)
 
 __WEAK void hal_hmac_done_callback(hmac_handle_t *p_hmac)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_hmac);
 }
 
 __WEAK void hal_hmac_error_callback(hmac_handle_t *p_hmac)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_hmac);
 }
 
 __WEAK void hal_hmac_abort_cplt_callback(hmac_handle_t *p_hmac)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_hmac);
 }
 
 #endif /* HAL_HMAC_MODULE_ENABLED */

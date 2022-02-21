@@ -46,8 +46,7 @@ extern void hal_qspi_register_callback(hal_qspi_callback_t *hal_qspi_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_qspi_callback_t qspi_callback =
-{
+static hal_qspi_callback_t qspi_callback = {
     .qspi_msp_init                  = hal_qspi_msp_init,
     .qspi_msp_deinit                = hal_qspi_msp_deinit,
     .qspi_error_callback            = hal_qspi_error_callback,
@@ -105,27 +104,32 @@ __WEAK void hal_qspi_msp_deinit(qspi_handle_t *p_qspi)
 
 __WEAK void hal_qspi_error_callback(qspi_handle_t *p_qspi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_qspi);
 }
 
 __WEAK void hal_qspi_abort_cplt_callback(qspi_handle_t *p_qspi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_qspi);
 }
 
 __WEAK void hal_qspi_fifo_threshold_callback(qspi_handle_t *p_qspi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_qspi);
 }
 
 __WEAK void hal_qspi_rx_cplt_callback(qspi_handle_t *p_qspi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_qspi);
 }
 
 __WEAK void hal_qspi_tx_cplt_callback(qspi_handle_t *p_qspi)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_qspi);
 }
 
 #endif /* HAL_QSPI_MODULE_ENABLED */

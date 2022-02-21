@@ -76,9 +76,9 @@ extern "C" {
 /** @defgroup PWR_LL_PC_EXT_WAKEUP_CTL_LSB  External Wakeup Control Low Significant Bit Defines
   * @{
   */
-#define LL_PWR_EXTWKUP_TYPE_LSB             (0x01U <<  AON_EXT_WKUP_CTL_TYPE_Pos)   /**< External wakeup level type */
-#define LL_PWR_EXTWKUP_INVERT_LSB           (0x01U <<  AON_EXT_WKUP_CTL_INVERT_Pos) /**< External wakeup level invert */
-#define LL_PWR_EXTWKUP_SRC_EN_LSB           (0x01U <<  AON_EXT_WKUP_CTL_SRC_EN_Pos) /**< External wakeup source enable */
+#define LL_PWR_EXTWKUP_TYPE_LSB            (0x01U <<  AON_EXT_WKUP_CTL_TYPE_Pos)   /**< External wakeup level type   */
+#define LL_PWR_EXTWKUP_INVERT_LSB          (0x01U <<  AON_EXT_WKUP_CTL_INVERT_Pos) /**< External wakeup level invert */
+#define LL_PWR_EXTWKUP_SRC_EN_LSB          (0x01U <<  AON_EXT_WKUP_CTL_SRC_EN_Pos) /**< External wakeup source enable */
 /** @} */
 
 /** @} */
@@ -111,13 +111,13 @@ extern "C" {
 /** @defgroup PWR_LL_EC_WAKEUP_COND  Wakeup Condition
   * @{
   */
-#define LL_PWR_WKUP_COND_EXT                AON_PWR_REG01_WAKE_UP_SEL_EXTWKUP       /**< External wakeup: AON_GPIO   */
-#define LL_PWR_WKUP_COND_TIMER              AON_PWR_REG01_WAKE_UP_SEL_TIMER         /**< AON Timer wakeup            */
-#define LL_PWR_WKUP_COND_BLE                AON_PWR_REG01_WAKE_UP_SEL_BLE           /**< BLE wakeup                  */
-#define LL_PWR_WKUP_COND_CALENDAR           AON_PWR_REG01_WAKE_UP_SEL_CALENDAR      /**< Calendar wakeup             */
-#define LL_PWR_WKUP_COND_BOD_FEDGE          AON_PWR_REG01_WAKE_UP_SEL_PMU_BOD_FEDGE /**< PMU Bod falling edge wakeup */
-#define LL_PWR_WKUP_COND_MSIO_COMP          AON_PWR_REG01_WAKE_UP_SEL_MSIO_COMP     /**< Msio comparator wakeup      */
-#define LL_PWR_WKUP_COND_ALL                AON_PWR_REG01_WAKE_UP_SEL               /**< All wakeup sources mask     */
+#define LL_PWR_WKUP_COND_EXT               AON_PWR_REG01_WAKE_UP_SEL_EXTWKUP       /**< External wakeup: AON_GPIO   */
+#define LL_PWR_WKUP_COND_TIMER             AON_PWR_REG01_WAKE_UP_SEL_TIMER         /**< AON Timer wakeup            */
+#define LL_PWR_WKUP_COND_BLE               AON_PWR_REG01_WAKE_UP_SEL_BLE           /**< BLE wakeup                  */
+#define LL_PWR_WKUP_COND_CALENDAR          AON_PWR_REG01_WAKE_UP_SEL_CALENDAR      /**< Calendar wakeup             */
+#define LL_PWR_WKUP_COND_BOD_FEDGE         AON_PWR_REG01_WAKE_UP_SEL_PMU_BOD_FEDGE /**< PMU Bod falling edge wakeup */
+#define LL_PWR_WKUP_COND_MSIO_COMP         AON_PWR_REG01_WAKE_UP_SEL_MSIO_COMP     /**< Msio comparator wakeup      */
+#define LL_PWR_WKUP_COND_ALL               AON_PWR_REG01_WAKE_UP_SEL               /**< All wakeup sources mask     */
 /** @} */
 
 
@@ -125,20 +125,20 @@ extern "C" {
  *  @note     Only available on GR5515_C and later version
   * @{
   */
-#define LL_PWR_WKUP_EVENT_BLE               AON_SLP_EVENT_SMCOSCEN              /**< BLE Timer wakeup event             */
-#define LL_PWR_WKUP_EVENT_TIMER             AON_SLP_EVENT_TIMER                 /**< AON Timer wakeup event             */
-#define LL_PWR_WKUP_EVENT_EXT               AON_SLP_EVENT_EXTWKUP               /**< External wakeup event: AON_GPIO    */
-#define LL_PWR_WKUP_EVENT_BOD_FEDGE         AON_SLP_EVENT_PMU_BOD_FEDGE         /**< PMU Bod wakeup event               */
-#define LL_PWR_WKUP_EVENT_MSIO_COMP         AON_SLP_EVENT_PMU_MSIO_COMP         /**< Msio comparator wakeup event       */
-#define LL_PWR_WKUP_EVENT_WDT               AON_SLP_EVENT_WDT_REBOOT            /**< AON WDT wakeup event               */
-#define LL_PWR_WKUP_EVENT_CALENDAR          AON_SLP_EVENT_CALENDAR_TIMER_ALARM  /**< Calendar wakeup event              */
-#define LL_PWR_WKUP_EVENT_ALL               (AON_SLP_EVENT_SMCOSCEN      | \
-                                             AON_SLP_EVENT_TIMER         | \
-                                             AON_SLP_EVENT_EXTWKUP       | \
-                                             AON_SLP_EVENT_PMU_BOD_FEDGE | \
-                                             AON_SLP_EVENT_PMU_MSIO_COMP | \
-                                             AON_SLP_EVENT_WDT_REBOOT    | \
-                                             AON_SLP_EVENT_CALENDAR_TIMER_ALARM) /**< All event mask  */
+#define LL_PWR_WKUP_EVENT_BLE              AON_SLP_EVENT_SMCOSCEN             /**< BLE Timer wakeup event             */
+#define LL_PWR_WKUP_EVENT_TIMER            AON_SLP_EVENT_TIMER                /**< AON Timer wakeup event             */
+#define LL_PWR_WKUP_EVENT_EXT              AON_SLP_EVENT_EXTWKUP              /**< External wakeup event: AON_GPIO    */
+#define LL_PWR_WKUP_EVENT_BOD_FEDGE        AON_SLP_EVENT_PMU_BOD_FEDGE        /**< PMU Bod wakeup event               */
+#define LL_PWR_WKUP_EVENT_MSIO_COMP        AON_SLP_EVENT_PMU_MSIO_COMP        /**< Msio comparator wakeup event       */
+#define LL_PWR_WKUP_EVENT_WDT              AON_SLP_EVENT_WDT_REBOOT           /**< AON WDT wakeup event               */
+#define LL_PWR_WKUP_EVENT_CALENDAR         AON_SLP_EVENT_CALENDAR_TIMER_ALARM /**< Calendar wakeup event              */
+#define LL_PWR_WKUP_EVENT_ALL              (AON_SLP_EVENT_SMCOSCEN      | \
+                                            AON_SLP_EVENT_TIMER         | \
+                                            AON_SLP_EVENT_EXTWKUP       | \
+                                            AON_SLP_EVENT_PMU_BOD_FEDGE | \
+                                            AON_SLP_EVENT_PMU_MSIO_COMP | \
+                                            AON_SLP_EVENT_WDT_REBOOT    | \
+                                            AON_SLP_EVENT_CALENDAR_TIMER_ALARM) /**< All event mask  */
 /** @} */
 
 /** @defgroup PWR_LL_EC_EXTWAKEUP_PIN  External Wakeup Pins
@@ -158,32 +158,45 @@ extern "C" {
 /** @defgroup PWR_LL_EC_EXTWAKEUP_TYPE  External Wakeup Type
   * @{
   */
-#define LL_PWR_EXTWKUP_TYPE_LOW            (LL_PWR_EXTWKUP_INVERT_LSB | LL_PWR_EXTWKUP_TYPE_LSB | LL_PWR_EXTWKUP_SRC_EN_LSB)  /**< Low level wakeup */
-#define LL_PWR_EXTWKUP_TYPE_HIGH           (LL_PWR_EXTWKUP_TYPE_LSB | LL_PWR_EXTWKUP_SRC_EN_LSB)      /**< High level wakeup */
-#define LL_PWR_EXTWKUP_TYPE_RISING         (0x00000000U)                                                    /**< Rising edge wakeup */
-#define LL_PWR_EXTWKUP_TYPE_FALLING        (LL_PWR_EXTWKUP_INVERT_LSB | LL_PWR_EXTWKUP_SRC_EN_LSB)    /**< Falling edge wakeup */
+#define LL_PWR_EXTWKUP_TYPE_LOW            (LL_PWR_EXTWKUP_INVERT_LSB | LL_PWR_EXTWKUP_TYPE_LSB | \
+                                            LL_PWR_EXTWKUP_SRC_EN_LSB)                /**< Low level wakeup    */
+#define LL_PWR_EXTWKUP_TYPE_HIGH           (LL_PWR_EXTWKUP_TYPE_LSB | \
+                                            LL_PWR_EXTWKUP_SRC_EN_LSB)                /**< High level wakeup   */
+#define LL_PWR_EXTWKUP_TYPE_RISING         (0x00000000U)                              /**< Rising edge wakeup  */
+#define LL_PWR_EXTWKUP_TYPE_FALLING        (LL_PWR_EXTWKUP_INVERT_LSB | \
+                                            LL_PWR_EXTWKUP_SRC_EN_LSB)                /**< Falling edge wakeup */
 /** @} */
 
 /** @defgroup PWR_LL_EC_PSC_CMD  Power State Control Commands
  * @{
  */
-#define LL_PWR_CMD_LOOPBACK                 AON_PSC_CMD_OPC_OPCODE_LOOPBACK         /**< Reserved command 0                         */
-#define LL_PWR_CMD_EF_DIR_ON                AON_PSC_CMD_OPC_OPCODE_EF_DIR_ON        /**< Reserved command 1                         */
-#define LL_PWR_CMD_32_TIMER_LD              AON_PSC_CMD_OPC_OPCODE_32_TIMER_LD      /**< Load sleep timer command                   */
-#define LL_PWR_CMD_DEEP_SLEEP               AON_PSC_CMD_OPC_OPCODE_DEEP_SLEEP       /**< Enter Deep Sleep Mode command              */
-#define LL_PWR_CMD_EF_DIR_OFF               AON_PSC_CMD_OPC_OPCODE_EF_DIR_OFF       /**< Reserved command 2                         */
-#define LL_PWR_CMD_EXT_CLK                  AON_PSC_CMD_OPC_OPCODE_EXT_CLK          /**< Select external clock (xo_32KHz) command   */
-#define LL_PWR_CMD_RNG_CLK                  AON_PSC_CMD_OPC_OPCODE_RNG_CLK          /**< Select RING OSC clock command              */
-#define LL_PWR_CMD_RTC_CLK                  AON_PSC_CMD_OPC_OPCODE_RTC_CLK          /**< Select RTC clock command                   */
-#define LL_PWR_CMD_RNG2_CLK                 AON_PSC_CMD_OPC_OPCODE_RNG2_CLK         /**< Select RING OSC clock command              */
-#define LL_PWR_CMD_LD_MEM_SLP_CFG           AON_PSC_CMD_OPC_OPCODE_LD_MEM_SLP_CFG   /**< Load memory sleep settings command         */
-#define LL_PWR_CMD_LD_MEM_WKUP_CFG          AON_PSC_CMD_OPC_OPCODE_LD_MEM_WKUP_CFG  /**< Load memory wakeup settings command        */
-#define LL_PWR_CMD_DPAD_LE_HI               AON_PSC_CMD_OPC_OPCODE_DPAD_LE_HI       /**< Force dpad_le high                         */
-#define LL_PWR_CMD_DPAD_LE_LO               AON_PSC_CMD_OPC_OPCODE_DPAD_LE_LO       /**< Force dpad_le low                          */
-#define LL_PWR_CMD_SLP_TIMER_MODE_NORMAL    AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_0 /**< Enable sleep timer mode 0 command          */
-#define LL_PWR_CMD_SLP_TIMER_MODE_SINGLE    AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_1 /**< Enable sleep timer mode 1 command          */
-#define LL_PWR_CMD_SLP_TIMER_MODE_RELOAD    AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_2 /**< Enable sleep timer mode 2 command          */
-#define LL_PWR_CMD_SLP_TIMER_MODE_DISABLE   AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_3 /**< Enable sleep timer mode 3 command          */
+#define LL_PWR_CMD_LOOPBACK                 AON_PSC_CMD_OPC_OPCODE_LOOPBACK         /**< Reserved command 0 */
+#define LL_PWR_CMD_EF_DIR_ON                AON_PSC_CMD_OPC_OPCODE_EF_DIR_ON        /**< Reserved command 1 */
+#define LL_PWR_CMD_32_TIMER_LD              AON_PSC_CMD_OPC_OPCODE_32_TIMER_LD      /**< Load sleep timer command */
+#define LL_PWR_CMD_DEEP_SLEEP               AON_PSC_CMD_OPC_OPCODE_DEEP_SLEEP       /**< Enter Deep Sleep
+                                                                                         Mode command */
+#define LL_PWR_CMD_EF_DIR_OFF               AON_PSC_CMD_OPC_OPCODE_EF_DIR_OFF       /**< Reserved command 2 */
+#define LL_PWR_CMD_EXT_CLK                  AON_PSC_CMD_OPC_OPCODE_EXT_CLK          /**< Select external clock
+                                                                                         (xo_32KHz) command */
+#define LL_PWR_CMD_RNG_CLK                  AON_PSC_CMD_OPC_OPCODE_RNG_CLK          /**< Select RING OSC clock
+                                                                                         command */
+#define LL_PWR_CMD_RTC_CLK                  AON_PSC_CMD_OPC_OPCODE_RTC_CLK          /**< Select RTC clock command */
+#define LL_PWR_CMD_RNG2_CLK                 AON_PSC_CMD_OPC_OPCODE_RNG2_CLK         /**< Select RING OSC clock
+                                                                                         command */
+#define LL_PWR_CMD_LD_MEM_SLP_CFG           AON_PSC_CMD_OPC_OPCODE_LD_MEM_SLP_CFG   /**< Load memory sleep settings
+                                                                                         command */
+#define LL_PWR_CMD_LD_MEM_WKUP_CFG          AON_PSC_CMD_OPC_OPCODE_LD_MEM_WKUP_CFG  /**< Load memory wakeup settings
+                                                                                         command */
+#define LL_PWR_CMD_DPAD_LE_HI               AON_PSC_CMD_OPC_OPCODE_DPAD_LE_HI       /**< Force dpad_le high */
+#define LL_PWR_CMD_DPAD_LE_LO               AON_PSC_CMD_OPC_OPCODE_DPAD_LE_LO       /**< Force dpad_le low */
+#define LL_PWR_CMD_SLP_TIMER_MODE_NORMAL    AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_0 /**< Enable sleep timer
+                                                                                         mode 0 command */
+#define LL_PWR_CMD_SLP_TIMER_MODE_SINGLE    AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_1 /**< Enable sleep timer
+                                                                                         mode 1 command */
+#define LL_PWR_CMD_SLP_TIMER_MODE_RELOAD    AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_2 /**< Enable sleep timer
+                                                                                         mode 2 command */
+#define LL_PWR_CMD_SLP_TIMER_MODE_DISABLE   AON_PSC_CMD_OPC_OPCODE_SLP_TIMER_MODE_3 /**< Enable sleep timer
+                                                                                         mode 3 command */
 /** @} */
 
 
@@ -406,10 +419,14 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_ext_wakeup_pin(uint3
   */
 SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_set_ext_wakeup_type(uint32_t wakeup_pin, uint32_t wakeup_type)
 {
-    uint32_t invert =  ((wakeup_type & LL_PWR_EXTWKUP_INVERT_LSB) == LL_PWR_EXTWKUP_INVERT_LSB) ? (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) : 0;
-    uint32_t type =  ((wakeup_type & LL_PWR_EXTWKUP_TYPE_LSB) == LL_PWR_EXTWKUP_TYPE_LSB) ? (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos) : 0;
+    uint32_t invert = ((wakeup_type & LL_PWR_EXTWKUP_INVERT_LSB) == LL_PWR_EXTWKUP_INVERT_LSB) ? \
+                        (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) : 0;
+    uint32_t type = ((wakeup_type & LL_PWR_EXTWKUP_TYPE_LSB) == LL_PWR_EXTWKUP_TYPE_LSB) ? \
+                      (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos) : 0;
     GLOBAL_EXCEPTION_DISABLE();
-    MODIFY_REG(AON->EXT_WKUP_CTL, (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) | (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos), invert | type);
+    MODIFY_REG(AON->EXT_WKUP_CTL,
+               (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) | (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos),
+               invert | type);
     GLOBAL_EXCEPTION_ENABLE();
 }
 
@@ -438,7 +455,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_set_ext_wakeup_type(uint32_t wakeup
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_get_ext_wakeup_type(uint32_t wakeup_pin)
 {
-    return ((uint32_t)(READ_BITS(AON->EXT_WKUP_CTL, AON_EXT_WKUP_CTL_INVERT | AON_EXT_WKUP_CTL_TYPE) >> POSITION_VAL(wakeup_pin)));
+    return ((uint32_t)(READ_BITS(AON->EXT_WKUP_CTL, AON_EXT_WKUP_CTL_INVERT | AON_EXT_WKUP_CTL_TYPE) >> \
+            POSITION_VAL(wakeup_pin)));
 }
 
 /**
@@ -720,7 +738,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_comm_timer_power(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_comm_timer_power(void)
 {
-    return ((uint32_t)(READ_BITS(AON->PWR_RET01, AON_PWR_REG01_PWR_EN_PD_COMM_TIMER) == AON_PWR_REG01_PWR_EN_PD_COMM_TIMER));
+    return ((uint32_t)(READ_BITS(AON->PWR_RET01, AON_PWR_REG01_PWR_EN_PD_COMM_TIMER) == \
+            AON_PWR_REG01_PWR_EN_PD_COMM_TIMER));
 }
 
 /**
@@ -768,7 +787,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_comm_core_power(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_comm_core_power(void)
 {
-    return ((uint32_t)(READ_BITS(AON->PWR_RET01, AON_PWR_REG01_PWR_EN_PD_COMM_CORE) == AON_PWR_REG01_PWR_EN_PD_COMM_CORE));
+    return ((uint32_t)(READ_BITS(AON->PWR_RET01, AON_PWR_REG01_PWR_EN_PD_COMM_CORE) == \
+            AON_PWR_REG01_PWR_EN_PD_COMM_CORE));
 }
 
 /**
@@ -874,7 +894,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_osc_sleep(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_osc_sleep(void)
 {
-    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN) == AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN));
+    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN) == \
+            AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN));
 }
 
 /**
@@ -921,7 +942,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_radio_sleep(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_radio_sleep(void)
 {
-    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN) == AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN));
+    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN) == \
+            AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN));
 }
 
 /**
@@ -969,7 +991,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_comm_core_deep_sleep(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_comm_core_deep_sleep(void)
 {
-    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON) == AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON));
+    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON) == \
+            AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON));
 }
 
 /**
@@ -1002,7 +1025,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_enable_comm_soft_wakeup_req(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_soft_wakeup_req(void)
 {
-    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ) == AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ));
+    return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ) == \
+            AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ));
 }
 
 /**
@@ -1144,7 +1168,8 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_read_comm_wakeup_timing(void)
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_read_comm_wakeup_timing_twosc(void)
 {
-    return ((((uint32_t)READ_REG(AON->PWR_RET29) & AON_COMM_TMR_ENBPRESET_TWOSC_Msk)) >> AON_COMM_TMR_ENBPRESET_TWOSC_Pos);
+    return ((((uint32_t)READ_REG(AON->PWR_RET29) & AON_COMM_TMR_ENBPRESET_TWOSC_Msk)) >> \
+            AON_COMM_TMR_ENBPRESET_TWOSC_Pos);
 }
 
 
@@ -1173,7 +1198,8 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_read_comm_wakeup_timing_twosc(v
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_get_ext_wakeup_status(void)
 {
-    return ((uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_EXT_WKUP_STATUS) >> AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
+    return ((uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_EXT_WKUP_STATUS) >> \
+            AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
             (uint32_t)(READ_BITS(AON->EXT_WKUP_CTL, LL_PWR_EXTWKUP_PIN_ALL)));
 }
 

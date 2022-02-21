@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief HAL QSPI State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_QSPI_STATE_RESET             = 0x00,    /**< Peripheral not initialized                            */
     HAL_QSPI_STATE_READY             = 0x01,    /**< Peripheral initialized and ready for use              */
     HAL_QSPI_STATE_BUSY              = 0x02,    /**< Peripheral in indirect mode and busy                  */
@@ -81,7 +80,6 @@ typedef enum
     HAL_QSPI_STATE_BUSY_INDIRECT_RX  = 0x22,    /**< Peripheral in indirect mode with reception ongoing    */
     HAL_QSPI_STATE_ABORT             = 0x08,    /**< Peripheral with abort request ongoing                 */
     HAL_QSPI_STATE_ERROR             = 0x04     /**< Peripheral in error                                   */
-
 } hal_qspi_state_t;
 
 /** @} */
@@ -99,8 +97,7 @@ typedef enum
 /**
   * @brief QSPI init Structure definition
   */
-typedef struct _qspi_init_t
-{
+typedef struct _qspi_init_t {
     uint32_t clock_prescaler;   /**< Specifies the prescaler factor for generating clock based on the AHB clock.
                                      This parameter can be a number between 0 and 0xFFFF */
 
@@ -119,8 +116,7 @@ typedef struct _qspi_init_t
 /**
   * @brief QSPI handle Structure definition
   */
-typedef struct _qspi_handle
-{
+typedef struct _qspi_handle {
     ssi_regs_t            *p_instance;               /**< QSPI registers base address        */
 
     qspi_init_t           init;                      /**< QSPI communication parameters      */
@@ -162,12 +158,12 @@ typedef struct _qspi_handle
 /**
   * @brief QSPI command Structure definition
   */
-typedef struct _qspi_command_t
-{
+typedef struct _qspi_command_t {
     uint32_t instruction;               /**< Specifies the Instruction to be sent.
                                              This parameter can be a value (8-bit) between 0x00 and 0xFF. */
 
-    uint32_t address;                   /**< Specifies the Address to be sent (Size from 1 to 4 bytes according AddressSize).
+    uint32_t address;                   /**< Specifies the Address to be sent.
+                                             Size from 1 to 4 bytes according AddressSize.
                                              This parameter can be a value (32-bits) between 0x0 and 0xFFFFFFFF. */
 
     uint32_t instruction_size;          /**< Specifies the Instruction Size.
@@ -189,9 +185,8 @@ typedef struct _qspi_command_t
                                              This parameter can be a value of @ref QSPI_Data_Mode. */
 
     uint32_t length;                    /**< Specifies the number of data to transfer. (This is the number of bytes).
-                                             This parameter can be any value between 0 and 0xFFFFFFFF (0 means undefined length
-                                             until end of memory).  */
-
+                                             This parameter can be any value between 0 and 0xFFFFFFFF 
+                                             (0 means undefined length until end of memory). */
 } qspi_command_t;
 /** @} */
 
@@ -209,8 +204,7 @@ typedef struct _qspi_command_t
   * @brief HAL_QSPI Callback function definition
   */
 
-typedef struct _hal_qspi_callback
-{
+typedef struct _hal_qspi_callback {
     void (*qspi_msp_init)(qspi_handle_t *p_qspi);                   /**< QSPI init MSP callback                 */
     void (*qspi_msp_deinit)(qspi_handle_t *p_qspi);                 /**< QSPI de-init MSP callback              */
     void (*qspi_error_callback)(qspi_handle_t *p_qspi);             /**< QSPI error callback                    */
@@ -248,13 +242,17 @@ typedef struct _hal_qspi_callback
   * @{
   */
 #define QSPI_CLOCK_MODE_0               (LL_SSI_SCPOL_LOW | LL_SSI_SCPHA_1EDGE)   /**< Inactive state of CLK is low;
-                                                                                       CLK toggles at the start of the first data bit   */
+                                                                                       CLK toggles at the start of
+                                                                                       the first data bit  */
 #define QSPI_CLOCK_MODE_1               (LL_SSI_SCPOL_LOW | LL_SSI_SCPHA_2EDGE)   /**< Inactive state of CLK is low;
-                                                                                       CLK toggles in the middle of the first data bit  */
+                                                                                       CLK toggles in the middle of
+                                                                                       the first data bit  */
 #define QSPI_CLOCK_MODE_2               (LL_SSI_SCPOL_HIGH | LL_SSI_SCPHA_1EDGE)  /**< Inactive state of CLK is high;
-                                                                                       CLK toggles at the start of the first data bit   */
+                                                                                       CLK toggles at the start of
+                                                                                       the first data bit  */
 #define QSPI_CLOCK_MODE_3               (LL_SSI_SCPOL_HIGH | LL_SSI_SCPHA_2EDGE)  /**< Inactive state of CLK is high;
-                                                                                       CLK toggles in the middle of the first data bit  */
+                                                                                       CLK toggles in the middle of
+                                                                                       the first data bit  */
 /** @} */
 
 /** @defgroup QSPI_Data_Mode QSPI Data Mode
@@ -327,9 +325,12 @@ typedef struct _hal_qspi_callback
 /** @defgroup QSPI_Inst_Addr_Mode QSPI Instruction and Address Mode
   * @{
   */
-#define QSPI_INST_ADDR_ALL_IN_SPI       LL_SSI_INST_ADDR_ALL_IN_SPI         /**< Instruction and address are sent in SPI mode */
-#define QSPI_INST_IN_SPI_ADDR_IN_SPIFRF LL_SSI_INST_IN_SPI_ADDR_IN_SPIFRF   /**< Instruction is sent in SPI mode, and address is sent in Daul/Quad SPI mode */
-#define QSPI_INST_ADDR_ALL_IN_SPIFRF    LL_SSI_INST_ADDR_ALL_IN_SPIFRF      /**< Instruction and address are sent in Daul/Quad SPI mode */
+#define QSPI_INST_ADDR_ALL_IN_SPI       LL_SSI_INST_ADDR_ALL_IN_SPI        /**< Instruction and address are sent in
+                                                                                SPI mode */
+#define QSPI_INST_IN_SPI_ADDR_IN_SPIFRF LL_SSI_INST_IN_SPI_ADDR_IN_SPIFRF  /**< Instruction is sent in SPI mode,
+                                                                                address is sent in Daul/Quad SPI mode */
+#define QSPI_INST_ADDR_ALL_IN_SPIFRF    LL_SSI_INST_ADDR_ALL_IN_SPIFRF     /**< Instruction and address are sent in
+                                                                                Daul/Quad SPI mode */
 /** @} */
 
 /** @defgroup QSPI_Flags QSPI Flags
@@ -384,7 +385,7 @@ typedef struct _hal_qspi_callback
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
+#define __HAL_QSPI_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
 
 /** @brief  Enable the QSPI DMA TX Request.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -402,13 +403,13 @@ typedef struct _hal_qspi_callback
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_DISABLE_DMATX(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
+#define __HAL_QSPI_DISABLE_DMATX(__HANDLE__)                  CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
 
 /** @brief  Disable the QSPI DMA RX Request.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_DISABLE_DMARX(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
+#define __HAL_QSPI_DISABLE_DMARX(__HANDLE__)                  CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
 
 /** @brief  Enable the specified QSPI interrupts.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -422,7 +423,7 @@ typedef struct _hal_qspi_callback
   *            @arg @ref QSPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_QSPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)         SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+#define __HAL_QSPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)     SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
 
 /** @brief  Disable the specified QSPI interrupts.
   * @param  __HANDLE__ Specifies the QSPI handle.
@@ -436,7 +437,7 @@ typedef struct _hal_qspi_callback
   *            @arg @ref QSPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_QSPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)        CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+#define __HAL_QSPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)  CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
 
 /** @brief  Check whether the specified QSPI interrupt source is enabled or not.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -450,7 +451,8 @@ typedef struct _hal_qspi_callback
   *            @arg @ref QSPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval The new state of __IT__ (TRUE or FALSE).
   */
-#define __HAL_QSPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)     (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__INTERRUPT__)) == (__INTERRUPT__))
+#define __HAL_QSPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) \
+    (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__INTERRUPT__)) == (__INTERRUPT__))
 
 /** @brief  Check whether the specified QSPI flag is set or not.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -465,7 +467,8 @@ typedef struct _hal_qspi_callback
   *            @arg @ref QSPI_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_QSPI_GET_FLAG(__HANDLE__, __FLAG__)               ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
+#define __HAL_QSPI_GET_FLAG(__HANDLE__, __FLAG__) \
+    ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @brief  Clear the specified QSPI flag.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -594,7 +597,7 @@ typedef struct _hal_qspi_callback
  ****************************************************************************************
  * @brief  Initialize the QSPI according to the specified parameters
  *         in the qspi_init_t and initialize the associated handle.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -606,7 +609,7 @@ hal_status_t hal_qspi_init(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  De-initialize the QSPI peripheral.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -620,7 +623,7 @@ hal_status_t hal_qspi_deinit(qspi_handle_t *p_qspi);
  * @brief  Initialize the QSPI MSP.
  * @note   This function should not be modified. When the callback is needed,
  *          the hal_qspi_msp_deinit can be implemented in the user file.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_msp_init(qspi_handle_t *p_qspi);
@@ -630,7 +633,7 @@ void hal_qspi_msp_init(qspi_handle_t *p_qspi);
  * @brief  De-initialize the QSPI MSP.
  * @note   This function should not be modified. When the callback is needed,
  *          the hal_qspi_msp_deinit can be implemented in the user file.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_msp_deinit(qspi_handle_t *p_qspi);
@@ -659,8 +662,8 @@ void hal_qspi_msp_deinit(qspi_handle_t *p_qspi);
             The end of the data processing will be indicated through the
             dedicated QSPI IRQ when using Interrupt mode or the DMA IRQ when
             using DMA mode.
-            The hal_qspi_tx_cplt_callback(), hal_qspi_rx_cplt_callback() and hal_qspi_txrx_cplt_callback() user callbacks
-            will be executed respectively at the end of the transmit or Receive process.
+            The hal_qspi_tx_cplt_callback(), hal_qspi_rx_cplt_callback() and hal_qspi_txrx_cplt_callback() 
+            user callbacks will be executed respectively at the end of the transmit or Receive process.
             The hal_qspi_error_callback() user callback will be executed when a communication error is detected
 
     (#) APIs provided for these 2 transfer modes (Blocking mode or Non blocking mode using either Interrupt or DMA)
@@ -674,7 +677,7 @@ void hal_qspi_msp_deinit(qspi_handle_t *p_qspi);
  ****************************************************************************************
  * @brief  Transmit an amount of data with the specified instruction and address in blocking mode.
  * @note   This function is used only in Indirect Write Mode. Dummy cycles in command will be ignored.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  timeout: Timeout duration
@@ -690,7 +693,7 @@ hal_status_t hal_qspi_command_transmit(qspi_handle_t *p_qspi, qspi_command_t *p_
  ****************************************************************************************
  * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  timeout: Timeout duration
@@ -706,7 +709,7 @@ hal_status_t hal_qspi_command_receive(qspi_handle_t *p_qspi, qspi_command_t *p_c
  ****************************************************************************************
  * @brief  Transmit only instruction in blocking mode.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[in]  timeout: Timeout duration
  * @retval ::HAL_OK: Operation is OK.
@@ -721,7 +724,7 @@ hal_status_t hal_qspi_command(qspi_handle_t *p_qspi, qspi_command_t *p_cmd, uint
  ****************************************************************************************
  * @brief  Transmit an amount of data in blocking mode with standard SPI.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes
  * @param[in]  timeout: Timeout duration
@@ -737,7 +740,7 @@ hal_status_t hal_qspi_transmit(qspi_handle_t *p_qspi, uint8_t *p_data, uint32_t 
  ****************************************************************************************
  * @brief  Receive an amount of data in blocking mode with standard SPI.
  * @note   This function is used only in Indirect Read Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be received in bytes
  * @param[in]  timeout: Timeout duration
@@ -753,7 +756,7 @@ hal_status_t hal_qspi_receive(qspi_handle_t *p_qspi, uint8_t *p_data, uint32_t l
  ****************************************************************************************
  * @brief  Transmit an amount of data with the specified instruction and address in non-blocking mode with Interrupt.
  * @note   This function is used only in Indirect Write Mode. Dummy cycles in command will be ignored.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[in]  p_data: Pointer to data buffer
  * @retval ::HAL_OK: Operation is OK.
@@ -766,9 +769,10 @@ hal_status_t hal_qspi_command_transmit_it(qspi_handle_t *p_qspi, qspi_command_t 
 
 /**
  ****************************************************************************************
- * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in non-blocking mode with Interrupt.
+ * @brief  Receive an amount of data with the specified instruction, address and dummy cycles
+ *         in non-blocking mode with Interrupt.
  * @note   This function is used only in Indirect Read Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  * @retval ::HAL_OK: Operation is OK.
@@ -783,7 +787,7 @@ hal_status_t hal_qspi_command_receive_it(qspi_handle_t *p_qspi, qspi_command_t *
  ****************************************************************************************
  * @brief  Transmit instruction in non-blocking mode with Interrupt.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -797,7 +801,7 @@ hal_status_t hal_qspi_command_it(qspi_handle_t *p_qspi, qspi_command_t *p_cmd);
  ****************************************************************************************
  * @brief Transmit an amount of data in non-blocking mode at standard SPI with Interrupt.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes
  * @retval ::HAL_OK: Operation is OK.
@@ -812,7 +816,7 @@ hal_status_t hal_qspi_transmit_it(qspi_handle_t *p_qspi, uint8_t *p_data, uint32
  ****************************************************************************************
  * @brief Receive an amount of data in non-blocking mode at standard SPI with Interrupt.
  * @note   This function is used only in Indirect Read Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be received in bytes
  * @retval ::HAL_OK: Operation is OK.
@@ -825,9 +829,9 @@ hal_status_t hal_qspi_receive_it(qspi_handle_t *p_qspi, uint8_t *p_data, uint32_
 
 /**
  ****************************************************************************************
- * @brief  Transmit an amount of data with the specified instruction and address in non-blocking mode with DMA .
+ * @brief  Transmit an amount of data with the specified instruction and address in non-blocking mode with DMA.
  * @note   This function is used only in Indirect Write Mode. Dummy cycles in command will be ignored.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[in]  p_data: Pointer to data buffer
  * @retval ::HAL_OK: Operation is OK.
@@ -840,9 +844,10 @@ hal_status_t hal_qspi_command_transmit_dma(qspi_handle_t *p_qspi, qspi_command_t
 
 /**
  ****************************************************************************************
- * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in non-blocking mode with DMA .
+ * @brief  Receive an amount of data with the specified instruction, address and dummy cycles
+ *         in non-blocking mode with DMA.
  * @note   This function is used only in Indirect Read Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  * @retval ::HAL_OK: Operation is OK.
@@ -857,7 +862,7 @@ hal_status_t hal_qspi_command_receive_dma(qspi_handle_t *p_qspi, qspi_command_t 
  ****************************************************************************************
  * @brief  Transmit instruction in non-blocking mode with DMA.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_cmd: Pointer to a qspi_command_t structure that contains the instruction and address for data transfer.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -871,7 +876,7 @@ hal_status_t hal_qspi_command_dma(qspi_handle_t *p_qspi, qspi_command_t *p_cmd);
  ****************************************************************************************
  * @brief  Transmit an amount of data in non-blocking mode at standard SPI with DMA.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes,  ranging between 0 and 4095.
  * @retval ::HAL_OK: Operation is OK.
@@ -886,7 +891,7 @@ hal_status_t hal_qspi_transmit_dma(qspi_handle_t *p_qspi, uint8_t *p_data, uint3
  ****************************************************************************************
  * @brief  Receive an amount of data in non-blocking mode at standard SPI with DMA.
  * @note   This function is used only in Indirect Read Mode.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be received in bytes
  * @retval ::HAL_OK: Operation is OK.
@@ -900,7 +905,7 @@ hal_status_t hal_qspi_receive_dma(qspi_handle_t *p_qspi, uint8_t *p_data, uint32
 /**
  ****************************************************************************************
  * @brief  Abort the current transmission.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -912,7 +917,7 @@ hal_status_t hal_qspi_abort(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Abort the current transmission (non-blocking function)
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -931,7 +936,7 @@ hal_status_t hal_qspi_abort_it(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Handle QSPI interrupt request.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_irq_handler(qspi_handle_t *p_qspi);
@@ -939,7 +944,7 @@ void hal_qspi_irq_handler(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Tx Transfer completed callback.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_tx_cplt_callback(qspi_handle_t *p_qspi);
@@ -947,7 +952,7 @@ void hal_qspi_tx_cplt_callback(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Rx Transfer completed callback.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_rx_cplt_callback(qspi_handle_t *p_qspi);
@@ -955,7 +960,7 @@ void hal_qspi_rx_cplt_callback(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  QSPI error callback.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_error_callback(qspi_handle_t *p_qspi);
@@ -963,7 +968,7 @@ void hal_qspi_error_callback(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  QSPI Abort Complete callback.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_abort_cplt_callback(qspi_handle_t *p_qspi);
@@ -971,7 +976,7 @@ void hal_qspi_abort_cplt_callback(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  FIFO Threshold callback.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  ****************************************************************************************
  */
 void hal_qspi_fifo_threshold_callback(qspi_handle_t *p_qspi);
@@ -1001,7 +1006,7 @@ void hal_qspi_fifo_threshold_callback(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Return the QSPI handle state.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @retval ::HAL_QSPI_STATE_RESET: Peripheral not initialized.
  * @retval ::HAL_QSPI_STATE_READY: Peripheral initialized and ready for use.
  * @retval ::HAL_QSPI_STATE_BUSY: Peripheral in indirect mode and busy.
@@ -1016,7 +1021,7 @@ hal_qspi_state_t hal_qspi_get_state(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Return the QSPI error code.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @return QSPI error code in bitmap format
  ****************************************************************************************
  */
@@ -1025,7 +1030,7 @@ uint32_t hal_qspi_get_error(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Set the QSPI internal process timeout value.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  timeout: Internal process timeout value.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -1038,7 +1043,7 @@ void hal_qspi_set_timeout(qspi_handle_t *p_qspi, uint32_t timeout);
 /**
  ****************************************************************************************
  * @brief  Set the TX FIFO threshold.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  threshold: TX FIFO threshold value ranging between 0x0U and 0x7U.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -1051,7 +1056,7 @@ hal_status_t hal_qspi_set_tx_fifo_threshold(qspi_handle_t *p_qspi, uint32_t thre
 /**
  ****************************************************************************************
  * @brief  Set the RX FIFO threshold.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @param[in]  threshold: RX FIFO threshold value ranging between 0x0U and 0x7U.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -1064,7 +1069,7 @@ hal_status_t hal_qspi_set_rx_fifo_threshold(qspi_handle_t *p_qspi, uint32_t thre
 /**
  ****************************************************************************************
  * @brief  Get the TX FIFO threshold.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @return TX FIFO threshold
  ****************************************************************************************
  */
@@ -1073,7 +1078,7 @@ uint32_t hal_qspi_get_tx_fifo_threshold(qspi_handle_t *p_qspi);
 /**
  ****************************************************************************************
  * @brief  Get the RX FIFO threshold.
- * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI module.
+ * @param[in]  p_qspi: Pointer to a QSPI handle which contains the configuration information for the specified QSPI.
  * @return RX FIFO threshold
  ****************************************************************************************
  */

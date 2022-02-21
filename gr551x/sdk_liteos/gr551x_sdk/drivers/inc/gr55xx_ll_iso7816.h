@@ -70,13 +70,13 @@ extern "C" {
 /**
   * @brief ISO7816_LL_init_structure LL ISO7816 init Structure definition
   */
-typedef struct _ll_iso7816_init
-{
+typedef struct _ll_iso7816_init {
     uint32_t clk_div;                 /*!< clk_div is used for dividing the system clock,
                                            and ISO7816 output clock is equal to (system clock)/(clk_div+1). */
     uint32_t wait_time;               /*!< Specifies the guard time value in terms of number of baud clocks */
     uint16_t guard_time;              /*!< Specifies the maximum card response time (leading edge to leading edge) */
-    uint8_t  detect_coding;           /*!< Specifies whether automatically detect coding convention during ATR receiption. */
+    uint8_t  detect_coding;           /*!< Specifies whether automatically detect coding convention during ATR
+                                           receiption. */
 } ll_iso7816_init_t;
 /** @} */
 /** @} */
@@ -94,21 +94,21 @@ typedef struct _ll_iso7816_init
 /** @defgroup ISO7816_LL_EC_ACTION Action state.
   * @{
   */
-#define LL_ISO7816_ACTION_NONE              0x00000000U             /**< Do Nothing.                        */
-#define LL_ISO7816_ACTION_OFF               0x00000001U             /**< Switch Off.                        */
-#define LL_ISO7816_ACTION_STOPCLK           0x00000002U             /**< Stop the clock.                    */
-#define LL_ISO7816_ACTION_ON                0x00000003U             /**< Switch on and receive ATR.         */
-#define LL_ISO7816_ACTION_WARMRST           0x00000004U             /**< Trigger warm reset and receive ATR.*/
-#define LL_ISO7816_ACTION_RX                0x00000005U             /**< Receive.                           */
-#define LL_ISO7816_ACTION_TX                0x00000006U             /**< Transmit.                          */
-#define LL_ISO7816_ACTION_TXRX              0x00000007U             /**< Transmit, followed by RX.          */
+#define LL_ISO7816_ACTION_NONE              0x00000000U             /**< Do Nothing.                         */
+#define LL_ISO7816_ACTION_OFF               0x00000001U             /**< Switch Off.                         */
+#define LL_ISO7816_ACTION_STOPCLK           0x00000002U             /**< Stop the clock.                     */
+#define LL_ISO7816_ACTION_ON                0x00000003U             /**< Switch on and receive ATR.          */
+#define LL_ISO7816_ACTION_WARMRST           0x00000004U             /**< Trigger warm reset and receive ATR. */
+#define LL_ISO7816_ACTION_RX                0x00000005U             /**< Receive.                            */
+#define LL_ISO7816_ACTION_TX                0x00000006U             /**< Transmit.                           */
+#define LL_ISO7816_ACTION_TXRX              0x00000007U             /**< Transmit, followed by RX.           */
 /** @} */
 
 /** @defgroup ISO7816_LL_EC_IT IT Defines
   * @brief    Interrupt definitions which can be used with LL_ISO7816_ReadReg and LL_ISO7816_WriteReg functions
   * @{
   */
-#define LL_ISO7816_INTR_TEST                ISO7816_STAT_IRQ_TEST        /**< Test interrupt                     */
+#define LL_ISO7816_INTR_TEST                ISO7816_STAT_IRQ_TEST        /**< Test interrupt                    */
 #define LL_ISO7816_INTR_PRESENCE            ISO7816_STAT_IRQ_PRESENCE   /**< Source presence interrupt          */
 #define LL_ISO7816_INTR_STATE_ERR           ISO7816_STAT_IRQ_STAT_ERR   /**< Source state error interrupt       */
 #define LL_ISO7816_INTR_DMA_ERR             ISO7816_STAT_IRQ_DMA_ERR    /**< Source dma error interrupt         */
@@ -204,7 +204,6 @@ typedef struct _ll_iso7816_init
 
 /** @} */
 
-
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
@@ -240,7 +239,6 @@ __STATIC_INLINE void ll_iso7816_set_action(iso7816_regs_t *ISO7816x, uint32_t ac
 {
     WRITE_REG(ISO7816x->CTRL, action);
 }
-
 
 /**
   * @brief  Get ISO7816 states.
@@ -733,7 +731,8 @@ __STATIC_INLINE void ll_iso7816_set_base_addr(iso7816_regs_t *ISO7816x, uint32_t
   */
 __STATIC_INLINE uint32_t ll_iso7816_get_base_addr(iso7816_regs_t *ISO7816x)
 {
-    return (uint32_t)(READ_BITS(ISO7816x->START_ADDR, ISO7816_START_ADDR_BASE_ADDR) >> ISO7816_START_ADDR_BASE_ADDR_POS);
+    return (uint32_t)(READ_BITS(ISO7816x->START_ADDR, ISO7816_START_ADDR_BASE_ADDR) >> \
+                      ISO7816_START_ADDR_BASE_ADDR_POS);
 }
 
 /**
@@ -764,7 +763,8 @@ __STATIC_INLINE void ll_iso7816_set_start_addr(iso7816_regs_t *ISO7816x, uint32_
   */
 __STATIC_INLINE uint32_t ll_iso7816_get_start_addr(iso7816_regs_t *ISO7816x)
 {
-    return (uint32_t)(READ_BITS(ISO7816x->START_ADDR, ISO7816_START_ADDR_START_ADDR) >> ISO7816_START_ADDR_START_ADDR_POS);
+    return (uint32_t)(READ_BITS(ISO7816x->START_ADDR, ISO7816_START_ADDR_START_ADDR) >> \
+                      ISO7816_START_ADDR_START_ADDR_POS);
 }
 
 /**
@@ -811,7 +811,8 @@ __STATIC_INLINE void ll_iso7816_set_rx_endbyte_addr(iso7816_regs_t *ISO7816x, ui
   */
 __STATIC_INLINE uint32_t ll_iso7816_get_rx_end_addr(iso7816_regs_t *ISO7816x)
 {
-    return (uint32_t)(READ_BITS(ISO7816x->RX_END_ADDR, ISO7816_RX_END_ADDR_RX_END_ADDR) >> ISO7816_RX_END_ADDR_RX_END_ADDR_POS);
+    return (uint32_t)(READ_BITS(ISO7816x->RX_END_ADDR, ISO7816_RX_END_ADDR_RX_END_ADDR) >> \
+                      ISO7816_RX_END_ADDR_RX_END_ADDR_POS);
 }
 
 /**
@@ -919,7 +920,8 @@ __STATIC_INLINE void ll_iso7816_set_tx_end_addr(iso7816_regs_t *ISO7816x, uint32
   */
 __STATIC_INLINE uint32_t ll_iso7816_get_tx_end_addr(iso7816_regs_t *ISO7816x)
 {
-    return (uint32_t)(READ_BITS(ISO7816x->TX_END_ADDR, ISO7816_TX_END_ADDR_TX_END_ADDR) >> ISO7816_TX_END_ADDR_TX_END_ADDR_POS);
+    return (uint32_t)(READ_BITS(ISO7816x->TX_END_ADDR, ISO7816_TX_END_ADDR_TX_END_ADDR) >> \
+                      ISO7816_TX_END_ADDR_TX_END_ADDR_POS);
 }
 
 /**
@@ -1219,7 +1221,6 @@ __STATIC_INLINE void ll_iso7816_clear_flag_done(iso7816_regs_t *ISO7816x)
 }
 
 /** @} */
-
 
 /** @defgroup ISO7816_LL_Init ISO7816 Initialization and de-initialization functions
   * @{

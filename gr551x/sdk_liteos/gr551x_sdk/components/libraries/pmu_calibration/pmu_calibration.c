@@ -34,7 +34,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************************
  */
- 
+
 /*
  * INCLUDE FILES
  *****************************************************************************************
@@ -65,19 +65,14 @@ uint32_t pmu_interval_get(uint32_t is_init)
 {
     uint32_t interval = 0;
 
-    if (g_debug_temperature > 44)
-    {
+    if (g_debug_temperature > 44) {
         interval = PMU_SMALL_INTERVAL_MS;
-    }
-    else if (g_debug_temperature >= 40 && g_debug_temperature <= 44 && is_init)
-    {
+    } else if (g_debug_temperature >= 40 && g_debug_temperature <= 44 && is_init) {
         interval = PMU_SMALL_INTERVAL_MS;
-    }
-    else if (g_debug_temperature < 40)
-    {
+    } else if (g_debug_temperature < 40) {
         interval = pmu_interval_init;
     }
-    
+
     return interval;
 }
 
@@ -89,16 +84,14 @@ void pmu_timer_handler(void* p_arg)
     uint32_t interval_diff;
 
     interval_new = pmu_interval_get(0);
-    if (interval_new == 0)
-    {
+    if (interval_new == 0) {
         return;
     }
 
     interval_diff = interval_new > pmu_interval_prev ?
-                              interval_new - pmu_interval_prev: pmu_interval_prev - interval_new;
+                    interval_new - pmu_interval_prev: pmu_interval_prev - interval_new;
 
-    if (interval_diff > 2000)
-    {
+    if (interval_diff > 2000) {
 #ifdef ENV_USE_FREERTOS
         portBASE_TYPE xHigherPriorityTaskWoken;
         xTimerChangePeriodFromISR( timer_handle, interval_new, &xHigherPriorityTaskWoken);
@@ -119,8 +112,7 @@ void pmu_timer_handler(void* p_arg)
  */
 void system_pmu_calibration_init(uint32_t interval)
 {
-    if (interval)
-    {
+    if (interval) {
         uint32_t interval_new;
 #if CFG_LPCLK_INTERNAL_EN
         pmu_interval_init = interval;
@@ -130,24 +122,24 @@ void system_pmu_calibration_init(uint32_t interval)
 #endif
 
 #ifdef ENV_USE_FREERTOS
-        timer_handle = xTimerCreate(NULL, interval_new, pdTRUE, NULL, 
+        timer_handle = xTimerCreate(NULL, interval_new, pdTRUE, NULL,
 #if CFG_LPCLK_INTERNAL_EN
-                                   pmu_timer_handler
+                                    pmu_timer_handler
 #else
-                                   pmu_calibration_handler
+                                    pmu_calibration_handler
 #endif // CFG_LPCLK_INTERNAL_EN
                                    );
 
         xTaskCreate(system_pmu_calibration_task, "pmu_calibration_task", 512, NULL, configMAX_PRIORITIES - 1, NULL);
-        #else
+#else
         app_timer_delete(&s_pmu_calibration_timer_id);
-        app_timer_create(&s_pmu_calibration_timer_id, ATIMER_REPEAT, 
+        app_timer_create(&s_pmu_calibration_timer_id, ATIMER_REPEAT,
 #if CFG_LPCLK_INTERNAL_EN
                          pmu_timer_handler
 #else
                          pmu_calibration_handler
 #endif  // CFG_LPCLK_INTERNAL_EN
-                         );
+                        );
         app_timer_start(s_pmu_calibration_timer_id, interval_new, NULL);
 #endif  // ENV_USE_FREERTOS
 
@@ -161,10 +153,8 @@ void system_pmu_calibration_init(uint32_t interval)
 #ifdef ENV_USE_FREERTOS
 void system_pmu_calibration_start(void)
 {
-    if (timer_handle != NULL)
-    {
-        if(xTimerIsTimerActive(timer_handle) == pdFALSE)
-        {
+    if (timer_handle != NULL) {
+        if(xTimerIsTimerActive(timer_handle) == pdFALSE) {
             xTimerStart(timer_handle, 0);
         }
     }
@@ -181,15 +171,14 @@ static void system_pmu_calibration_task(void *p_arg)
 
 void system_pmu_calibration_stop(void)
 {
-    #ifdef ENV_USE_FREERTOS
-    if (timer_handle != NULL)
-    {
+#ifdef ENV_USE_FREERTOS
+    if (timer_handle != NULL) {
         xTimerDelete(timer_handle, 0);
         timer_handle = NULL;
     }
-    #else
+#else
     app_timer_delete(&s_pmu_calibration_timer_id);
-    #endif
+#endif
     return;
 }
 

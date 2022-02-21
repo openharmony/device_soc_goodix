@@ -46,8 +46,7 @@ extern void hal_i2s_register_callback(hal_i2s_callback_t *hal_i2s_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_i2s_callback_t i2s_callback = 
-{
+static hal_i2s_callback_t i2s_callback = {
     .i2s_msp_init            = hal_i2s_msp_init,
     .i2s_msp_deinit          = hal_i2s_msp_deinit,
     .i2s_error_callback      = hal_i2s_error_callback,
@@ -104,22 +103,26 @@ __WEAK void hal_i2s_msp_deinit(i2s_handle_t *p_i2s)
 
 __WEAK void hal_i2s_error_callback(i2s_handle_t *p_i2s)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_i2s);
 }
 
 __WEAK void hal_i2s_rx_cplt_callback(i2s_handle_t *p_i2s)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_i2s);
 }
 
 __WEAK void hal_i2s_tx_cplt_callback(i2s_handle_t *p_i2s)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_i2s);
 }
 
 __WEAK void hal_i2s_tx_rx_cplt_callback(i2s_handle_t *p_i2s)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_i2s);
 }
 
 #endif /* HAL_I2S_MODULE_ENABLED */

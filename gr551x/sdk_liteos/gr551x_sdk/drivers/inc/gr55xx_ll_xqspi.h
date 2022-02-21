@@ -73,46 +73,47 @@ extern "C" {
 /**
   * @brief  XQSPI init structures definition
   */
-typedef struct _ll_xqspi_init_t
-{
+typedef struct _ll_xqspi_init_t {
     uint32_t mode;                      /**< Specifies the work mode, XIP mode or QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_MODE. */
 
     uint32_t cache_mode;                /**< Specifies the cache mode in XIP mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_CACHE_MODE.
-
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_enable_cache(). */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_enable_cache(). */
 
     uint32_t read_cmd;                  /**< Specifies the XQSPI read command in XIP mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_XIP_READ_CMD.
-
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cmd(). */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_set_xip_cmd(). */
 
     uint32_t data_size;                 /**< Specifies the XQSPI data width, only in QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_DATASIZE.
-
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_datasize(). */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_set_qspi_datasize(). */
 
     uint32_t data_order;                /**< Specifies the XQSPI data order, MSB oe LSB, only in QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_DATAORDER.
-
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_data_order(). */
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_set_qspi_data_order(). */
 
     uint32_t clock_polarity;            /**< Specifies the serial clock steady state.
-                                             This parameter can be a value of @ref XQSPI_LL_EC_QSPI_POLARITY in XIP mode or @ref XQSPI_LL_EC_QSPI_POLARITY in QSPI mode.
-
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cpol() or @ref ll_xqspi_set_qspi_cpol(). */
+                                             This parameter can be a value of @ref XQSPI_LL_EC_QSPI_POLARITY in XIP mode
+                                             or @ref XQSPI_LL_EC_QSPI_POLARITY in QSPI mode.
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_set_xip_cpol() or @ref ll_xqspi_set_qspi_cpol(). */
 
     uint32_t clock_phase;               /**< Specifies the clock active edge for the bit capture.
-                                             This parameter can be a value of @ref XQSPI_LL_EC_QSPI_PHASE in XIP mode or @ref XQSPI_LL_EC_QSPI_PHASE in QSPI mode.
+                                             This parameter can be a value of @ref XQSPI_LL_EC_QSPI_PHASE in XIP mode
+                                             or @ref XQSPI_LL_EC_QSPI_PHASE in QSPI mode.
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_set_xip_cpha() or @ref ll_xqspi_set_qspi_cpha(). */
 
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_xip_cpha() or @ref ll_xqspi_set_qspi_cpha(). */
-
-    uint32_t baud_rate;                 /**< Specifies the BaudRate  be used to configure the transmit and receive SCK clock.
+    uint32_t baud_rate;                 /**< Specifies the BaudRate be used to configure the transmit and
+                                             receive SCK clock.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_BAUD_REAT.
-
-                                             This feature can be modified afterwards using unitary function @ref ll_xqspi_set_qspi_speed(). */
-
+                                             This feature can be modified afterwards using unitary function
+                                             @ref ll_xqspi_set_qspi_speed(). */
 } ll_xqspi_init_t;
 
 /** @} */
@@ -208,17 +209,17 @@ typedef struct _ll_xqspi_init_t
   * @brief    Interrupt defines which can be used with LL_XQSPI_ReadReg and  LL_XQSPI_WriteReg functions
   * @{
   */
-#define LL_XQSPI_QSPI_IM_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt enable            */
-#define LL_XQSPI_QSPI_IM_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt enable         */
-#define LL_XQSPI_QSPI_IM_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt enable    */
-#define LL_XQSPI_QSPI_IM_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt enable   */
-#define LL_XQSPI_QSPI_IM_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt enable       */
+#define LL_XQSPI_QSPI_IM_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt enable          */
+#define LL_XQSPI_QSPI_IM_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt enable       */
+#define LL_XQSPI_QSPI_IM_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt enable  */
+#define LL_XQSPI_QSPI_IM_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt enable */
+#define LL_XQSPI_QSPI_IM_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt enable     */
 
-#define LL_XQSPI_QSPI_IS_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt flag              */
-#define LL_XQSPI_QSPI_IS_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt flag           */
-#define LL_XQSPI_QSPI_IS_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt flag      */
-#define LL_XQSPI_QSPI_IS_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt flag     */
-#define LL_XQSPI_QSPI_IS_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt flag         */
+#define LL_XQSPI_QSPI_IS_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt flag            */
+#define LL_XQSPI_QSPI_IS_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt flag         */
+#define LL_XQSPI_QSPI_IS_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt flag    */
+#define LL_XQSPI_QSPI_IS_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt flag   */
+#define LL_XQSPI_QSPI_IS_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt flag       */
 /** @} */
 
 /** @defgroup XQSPI_LL_EC_QSPI_FIFO_WATERMARK QSPI FIFO Watermark
@@ -234,9 +235,11 @@ typedef struct _ll_xqspi_init_t
 /** @defgroup XQSPI_LL_EC_QSPI_FRAMEFORMAT QSPI Frame Format
   * @{
   */
-#define LL_XQSPI_QSPI_FRF_SPI               0x00000000UL                            /**< SPI frame format for transfer      */
-#define LL_XQSPI_QSPI_FRF_DUALSPI           (2UL << XQSPI_QSPI_AUXCTRL_QMODE_Pos)   /**< Dual-SPI frame format for transfer */
-#define LL_XQSPI_QSPI_FRF_QUADSPI           (3UL << XQSPI_QSPI_AUXCTRL_QMODE_Pos)   /**< Quad-SPI frame format for transfer */
+#define LL_XQSPI_QSPI_FRF_SPI               0x00000000UL                           /**< SPI frame format for transfer */
+#define LL_XQSPI_QSPI_FRF_DUALSPI           (2UL << XQSPI_QSPI_AUXCTRL_QMODE_Pos)  /**< Dual-SPI frame format
+                                                                                        for transfer */
+#define LL_XQSPI_QSPI_FRF_QUADSPI           (3UL << XQSPI_QSPI_AUXCTRL_QMODE_Pos)  /**< Quad-SPI frame format
+                                                                                        for transfer */
 /** @} */
 
 /** @defgroup XQSPI_LL_EC_QSPI_DATAORDER QSPI Data Order
@@ -249,14 +252,22 @@ typedef struct _ll_xqspi_init_t
 /** @defgroup XQSPI_LL_EC_QSPI_DATASIZE QSPI Datawidth
   * @{
   */
-#define LL_XQSPI_QSPI_DATASIZE_4BIT         0x00000000UL                            /**< Data length for XQSPI transfer:  4 bits */
-#define LL_XQSPI_QSPI_DATASIZE_8BIT         (1UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer:  8 bits */
-#define LL_XQSPI_QSPI_DATASIZE_12BIT        (2UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer: 12 bits */
-#define LL_XQSPI_QSPI_DATASIZE_16BIT        (3UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer: 16 bits */
-#define LL_XQSPI_QSPI_DATASIZE_20BIT        (4UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer: 20 bits */
-#define LL_XQSPI_QSPI_DATASIZE_24BIT        (5UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer: 24 bits */
-#define LL_XQSPI_QSPI_DATASIZE_28BIT        (6UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer: 28 bits */
-#define LL_XQSPI_QSPI_DATASIZE_32BIT        (7UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI transfer: 32 bits */
+#define LL_XQSPI_QSPI_DATASIZE_4BIT         0x00000000UL                            /**< Data length for XQSPI
+                                                                                         transfer:  4 bits */
+#define LL_XQSPI_QSPI_DATASIZE_8BIT         (1UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer:  8 bits */
+#define LL_XQSPI_QSPI_DATASIZE_12BIT        (2UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer: 12 bits */
+#define LL_XQSPI_QSPI_DATASIZE_16BIT        (3UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer: 16 bits */
+#define LL_XQSPI_QSPI_DATASIZE_20BIT        (4UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer: 20 bits */
+#define LL_XQSPI_QSPI_DATASIZE_24BIT        (5UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer: 24 bits */
+#define LL_XQSPI_QSPI_DATASIZE_28BIT        (6UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer: 28 bits */
+#define LL_XQSPI_QSPI_DATASIZE_32BIT        (7UL << XQSPI_QSPI_AUXCTRL_BITSIZE_Pos) /**< Data length for XQSPI
+                                                                                         transfer: 32 bits */
 /** @} */
 
 /** @defgroup XQSPI_LL_EC_QSPI_PHASE QSPI Clock Phase
@@ -2376,8 +2387,6 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_xqspi_is_enable_cache_retention(voi
 {
     return (READ_BITS(AON->PWR_RET01, AON_PWR_REG01_XF_TAG_RET) == (AON_PWR_REG01_XF_TAG_RET));
 }
-
-
 
 /** @} */
 

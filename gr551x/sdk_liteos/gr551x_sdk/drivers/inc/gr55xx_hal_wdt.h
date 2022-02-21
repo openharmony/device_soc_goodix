@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief  WDT init structure definition
   */
-typedef struct _wdt_init
-{
+typedef struct _wdt_init {
     uint32_t counter;     /**< Specifies the WDT free-running downcounter value.
                                This parameter can be a number ranging between 0x0U and 0xFFFFFFFFU. */
 
@@ -83,7 +82,6 @@ typedef struct _wdt_init
                                timeout, WDT will then request a SoC Reset.
 
                                This parameter can be a value of @ref WDT_RESET_Mode. */
-
 } wdt_init_t;
 
 /** @} */
@@ -95,14 +93,12 @@ typedef struct _wdt_init
 /**
   * @brief  WDT handle Structure definition
   */
-typedef struct _wdt_handle
-{
+typedef struct _wdt_handle {
     wdt_regs_t      *p_instance;  /**< Register base address      */
 
     wdt_init_t      init;       /**< WDT required parameters    */
 
     hal_lock_t      lock;       /**< WDT locking object         */
-
 } wdt_handle_t;
 
 /** @} */
@@ -121,8 +117,7 @@ typedef struct _wdt_handle
   * @brief HAL_WDT Callback function definition
   */
 
-typedef struct _hal_wdt_callback
-{
+typedef struct _hal_wdt_callback {
     void (*wdt_msp_init)(wdt_handle_t *p_wdt);                  /**< WDT init MSP callback              */
     void (*wdt_msp_deinit)(wdt_handle_t *p_wdt);                /**< WDT de-init MSP callback           */
     void (*wdt_period_elapsed_callback)(wdt_handle_t *p_wdt);   /**< WDT count complete callback        */

@@ -35,16 +35,16 @@
  *****************************************************************************************
  */
 
- /**
- * @addtogroup BLE
- * @{
- */
- 
-  /**
- * @addtogroup BLE_GATT Generic Attribute Profile (GATT)
- * @{
- * @brief Definitions and prototypes for the GATT interface.
- */
+/**
+* @addtogroup BLE
+* @{
+*/
+
+/**
+* @addtogroup BLE_GATT Generic Attribute Profile (GATT)
+* @{
+* @brief Definitions and prototypes for the GATT interface.
+*/
 
 /**
   @addtogroup BLE_GATTC Generic Attribute Profile (GATT) Client
@@ -69,8 +69,7 @@
 /**
  * @brief GATT Client Service Discover Attribute type IDs.
  */
-typedef enum
-{
+typedef enum {
     BLE_GATTC_BROWSE_NONE,          /**< No Attribute Information. */
     BLE_GATTC_BROWSE_INC_SRVC,      /**< Included Service information. */
     BLE_GATTC_BROWSE_ATTR_CHAR,     /**< Characteristic Declaration. */
@@ -86,8 +85,7 @@ typedef enum
 /**
  * @brief GATTC discovery characteristic structure.
  */
-typedef struct
-{
+typedef struct {
     uint16_t        start_hdl;              /**< Start handle. */
     uint16_t        end_hdl;                /**< End handle. */
     ble_uuid_t     *p_uuid;                 /**< Characteristic UUID. */
@@ -96,8 +94,7 @@ typedef struct
 /**
  * @brief GATTC read by characteristic UUID structure.
  */
-typedef struct
-{
+typedef struct {
     uint16_t        start_hdl;      /**< Start handle. */
     uint16_t        end_hdl;        /**< End handle. */
     ble_uuid_t     *p_uuid;         /**< Characteristic UUID. */
@@ -106,8 +103,7 @@ typedef struct
 /**
  * @brief GATTC write attribute value structure.
  */
-typedef struct
-{
+typedef struct {
     uint16_t        handle;         /**< Attribute handle. */
     uint16_t        offset;         /**< value offset to start with. */
     uint16_t        length;         /**< Write length. */
@@ -117,8 +113,7 @@ typedef struct
 /**
  * @brief GATTC write without response structure.
  */
-typedef struct
-{
+typedef struct {
     bool            signed_write;       /**< True if signed write should be used when possible/applicable. */
     uint16_t        handle;             /**< Attribute handle. */
     uint16_t        length;             /**< Write length. */
@@ -126,34 +121,30 @@ typedef struct
 } gattc_write_no_resp_t;
 
 /** @brief Read Multiple Handles. */
-typedef struct
-{
+typedef struct {
     uint16_t    handle;    /**< Attribute handle. */
     uint16_t    len;       /**< Known value: length of the handle (len shall not be set to 0). */
 } read_multiple_t;
 
 /** @brief GATTC Read Multiple. */
-typedef struct
-{
+typedef struct {
     uint16_t            handle_count;      /**< Handle count of the multiple attributes to be read. */
     read_multiple_t    *p_read_multiple;   /**< Pointer to the multiple attributes to be read. */
 } gattc_read_multiple_t;
 
 
 /** @brief GATTC Browse information about Characteristic. */
-typedef struct
-{
-    uint8_t     attr_type;                      /**< Attribute type. See @ref BLE_GATTC_BROWSE_ATTR_CHAR for Characteristic Declaration. */
-    uint8_t     prop;                           /**< Value property. */
-    uint16_t    handle;                         /**< Value handle. */
-    uint8_t     uuid_len;                       /**< Characteristic UUID length. */
+typedef struct {
+    uint8_t attr_type;    /**< Attribute type. See @ref BLE_GATTC_BROWSE_ATTR_CHAR for Characteristic Declaration. */
+    uint8_t     prop;     /**< Value property. */
+    uint16_t    handle;   /**< Value handle. */
+    uint8_t     uuid_len; /**< Characteristic UUID length. */
     uint8_t     uuid[BLE_ATT_UUID_128_LEN];     /**< Characteristic UUID. */
 } gattc_browse_attr_char_t;
 
 /** @brief GATTC Browse information about Included Service. */
-typedef struct
-{
-    uint8_t  attr_type;                      /**< Attribute type. See @ref BLE_GATTC_BROWSE_INC_SRVC for Included Service Information. */
+typedef struct {
+    uint8_t  attr_type;   /**< Attribute type. See @ref BLE_GATTC_BROWSE_INC_SRVC for Included Service Information. */
     uint8_t  uuid_len;                       /**< Included Service UUID length. */
     uint8_t  uuid[BLE_ATT_UUID_128_LEN];     /**< Included Service UUID. */
     uint16_t start_hdl;                      /**< Included Service start handle. */
@@ -161,38 +152,41 @@ typedef struct
 } gattc_browse_inc_srvc_t;
 
 /** @brief GATTC Browse information about Attribute. */
-typedef struct
-{
-    uint8_t  attr_type;                     /**< Attribute type. See @ref BLE_GATTC_BROWSE_ATTR_VAL for Attribute Value. See @ref BLE_GATTC_BROWSE_ATTR_DESC for Attribute Descriptor. */
-    uint8_t  uuid_len;                      /**< Attribute UUID length. */
-    uint8_t  uuid[BLE_ATT_UUID_128_LEN];    /**< Characteristic UUID or Characteristic Descriptor UUID. */
+typedef struct {
+    uint8_t  attr_type;                    /**< Attribute type. See @ref BLE_GATTC_BROWSE_ATTR_VAL for Attribute Value.
+                                                See @ref BLE_GATTC_BROWSE_ATTR_DESC for Attribute Descriptor. */
+    uint8_t  uuid_len;                     /**< Attribute UUID length. */
+    uint8_t  uuid[BLE_ATT_UUID_128_LEN];   /**< Characteristic UUID or Characteristic Descriptor UUID. */
 } gattc_browse_attr_t;
 
 /** @brief GATTC Browse attribute information. */
-union gattc_browse_attr_info
-{
-    uint8_t                  attr_type;        /**< Attribute type. See @ref gatt_attr_t. */
-    gattc_browse_attr_char_t attr_char;        /**< Information about Characteristic. When union attr_type is @ref BLE_GATTC_BROWSE_ATTR_CHAR */
-    gattc_browse_inc_srvc_t  inc_srvc;         /**< Information about Included Service. When union attr_type is @ref BLE_GATTC_BROWSE_INC_SRVC */
-    gattc_browse_attr_t      attr;             /**< Information about Attribute. When union attr_type is @ref BLE_GATTC_BROWSE_ATTR_VAL or @ref BLE_GATTC_BROWSE_ATTR_DESC. */
+union gattc_browse_attr_info {
+    uint8_t attr_type;        /**< Attribute type. See @ref gatt_attr_t. */
+    gattc_browse_attr_char_t attr_char; /**< Information about Characteristic.
+                                             When union attr_type is @ref BLE_GATTC_BROWSE_ATTR_CHAR */
+    gattc_browse_inc_srvc_t inc_srvc;   /**< Information about Included Service.
+                                             When union attr_type is @ref BLE_GATTC_BROWSE_INC_SRVC */
+    gattc_browse_attr_t attr;           /**< Information about Attribute. When union attr_type is
+                                             @ref BLE_GATTC_BROWSE_ATTR_VAL or @ref BLE_GATTC_BROWSE_ATTR_DESC. */
 };
 
 /** @brief GATTC Browse service(s) indication. */
-typedef struct
-{
+typedef struct {
     uint8_t  uuid_len;                                  /**< Service UUID length. */
     uint8_t  uuid[BLE_ATT_UUID_128_LEN];                /**< Service UUID. */
     uint16_t start_hdl;                                 /**< Service start handle. */
     uint16_t end_hdl;                                   /**< Service end handle. */
-    union gattc_browse_attr_info info[__ARRAY_EMPTY];   /**< Attribute information presented in the service(array length = end_hdl - start_hdl);
-                                                             If attr_type is equal to BLE_GATTC_BROWSE_NONE, the last attribute information has been found in previous one, although not reach the service end handle. */
+    union gattc_browse_attr_info info[__ARRAY_EMPTY];   /**< Attribute information presented in the service
+                                                             (array length = end_hdl - start_hdl);
+                                                             If attr_type is equal to BLE_GATTC_BROWSE_NONE,the last
+                                                             attribute information has been found in previous one,
+                                                             although not reach the service end handle. */
 } ble_gattc_browse_srvc_t;
 
 
 
 /** @brief GATT service. */
-typedef struct
-{
+typedef struct {
     uint16_t  start_hdl;            /**< Start handle. */
     uint16_t  end_hdl;              /**< End handle. */
     uint8_t   uuid_len;             /**< Service UUID length. */
@@ -200,8 +194,7 @@ typedef struct
 } ble_gattc_service_t;
 
 /** @brief GATT include. */
-typedef struct
-{
+typedef struct {
     uint16_t  attr_hdl;               /**< Attribute handle. */
     uint16_t  start_hdl;              /**< Start handle. */
     uint16_t  end_hdl;                /**< End handle. */
@@ -210,54 +203,47 @@ typedef struct
 } ble_gattc_include_t;
 
 /** @brief GATT characteristic. */
-typedef struct
-{
+typedef struct {
     uint16_t  handle_decl;            /**< Handle of the Characteristic Declaration. */
     uint16_t  handle_value;           /**< Handle of the Characteristic Value. */
     uint8_t   prop;                   /**< Properties. */
-    uint8_t   uuid_len;               /**< Characteristic UUID length. */    
+    uint8_t   uuid_len;               /**< Characteristic UUID length. */
     uint8_t  *p_uuid;                 /**< Characteristic UUID. */
 } ble_gattc_char_t;
 
 /** @brief GATT descriptor. */
-typedef struct
-{
+typedef struct {
     uint16_t  attr_hdl;               /**< Attribute handle. */
     uint8_t   uuid_len;               /**< Descriptor UUID length. */
     uint8_t  *p_uuid;                 /**< Descriptor UUID. */
 } ble_gattc_desc_t;
 
 /** @brief GATT service discovery. */
-typedef struct
-{
+typedef struct {
     uint16_t            count;                        /**< Service count. */
     ble_gattc_service_t services[__ARRAY_EMPTY];      /**< Service data. */
-}ble_gattc_srvc_disc_t;
+} ble_gattc_srvc_disc_t;
 
 /** @brief GATT include discovery. */
-typedef struct
-{
+typedef struct {
     uint16_t            count;                       /**< Include count. */
     ble_gattc_include_t includes[__ARRAY_EMPTY];     /**< Include data. */
-}ble_gattc_incl_disc_t;
+} ble_gattc_incl_disc_t;
 
 /** @brief GATT characteristic discovery. */
-typedef struct
-{
+typedef struct {
     uint16_t            count;                  /**< Characteristic count. */
     ble_gattc_char_t    chars[__ARRAY_EMPTY];   /**< Characteristic data. */
-}ble_gattc_char_disc_t;
+} ble_gattc_char_disc_t;
 
 /** @brief GATT characteristic descriptor discovery. */
-typedef struct
-{
+typedef struct {
     uint16_t            count;                      /**< Descriptor count. */
     ble_gattc_desc_t    char_descs[__ARRAY_EMPTY];  /**< Descriptor data. */
-}ble_gattc_char_desc_disc_t;
+} ble_gattc_char_desc_disc_t;
 
 /** @brief GATT Client Read value. */
-typedef struct
-{
+typedef struct {
     uint16_t  handle;                 /**< Attribute handle. */
     uint16_t  offset;                 /**< Offset of the attribute value. */
     uint16_t  length;                 /**< Attribute value length. */
@@ -265,23 +251,20 @@ typedef struct
 } ble_gattc_read_value_t;
 
 /** @brief GATT value Read response. */
-typedef struct
-{
+typedef struct {
     uint16_t                    count;                 /**< Value Count. */
     ble_gattc_read_value_t      vals[__ARRAY_EMPTY];   /**< Value(s) list. */
-}ble_gattc_read_rsp_t;
+} ble_gattc_read_rsp_t;
 
 
 /** @brief GATT Client Write. */
-typedef struct
-{
+typedef struct {
     uint16_t handle;            /**< Attribute handle. */
 } ble_gattc_write_t;
 
 
 /** @brief GATTC Notification and Indication value indication. */
-typedef struct
-{
+typedef struct {
     gatt_evt_type_t  type;               /**< Event type. */
     uint16_t         length;             /**< Attribute value length. */
     uint16_t         handle;             /**< Attribute handle. */
@@ -289,16 +272,25 @@ typedef struct
 } ble_gattc_ntf_ind_t;
 
 /** @brief GATTC Event callback Structures. */
-typedef struct
-{
-    void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t * p_prim_srvc_disc);                   /**< Primary Service Discovery Response callback. */
-    void (*app_gattc_inc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_incl_disc_t * p_inc_srvc_disc);                /**< Relationship Discovery Response callback. */
-    void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_disc_t * p_char_disc);                        /**< Characteristic Discovery Response callback. */
-    void (*app_gattc_char_desc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_desc_disc_t *p_char_desc_disc);          /**< Descriptor Discovery Response callback. */
-    void (*app_gattc_read_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp);                                /**< Read Response callback. */
-    void (*app_gattc_write_cb)(uint8_t conn_idx, uint8_t status, uint16_t handle);                                                      /**< Write complete callback. */
-    void (*app_gattc_ntf_ind_cb)(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);                                               /**< Handle Value Notification/Indication Event callback. */
-    void (*app_gattc_srvc_browse_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);                   /**< Service found callback during browsing procedure. */
+typedef struct {
+    /**< Primary Service Discovery Response callback. */
+    void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t * p_prim_srvc_disc);
+    /**< Relationship Discovery Response callback. */
+    void (*app_gattc_inc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status,
+                                       const ble_gattc_incl_disc_t * p_inc_srvc_disc);
+    /**< Characteristic Discovery Response callback. */
+    void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_disc_t * p_char_disc);
+    /**< Descriptor Discovery Response callback. */
+    void (*app_gattc_char_desc_disc_cb)(uint8_t conn_idx, uint8_t status,
+                                        const ble_gattc_char_desc_disc_t *p_char_desc_disc);
+    /**< Read Response callback. */
+    void (*app_gattc_read_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp);
+    /**< Write complete callback. */
+    void (*app_gattc_write_cb)(uint8_t conn_idx, uint8_t status, uint16_t handle);
+    /**< Handle Value Notification/Indication Event callback. */
+    void (*app_gattc_ntf_ind_cb)(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);
+    /**< Service found callback during browsing procedure. */
+    void (*app_gattc_srvc_browse_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);
 } gattc_cb_fun_t;
 /** @} */
 
@@ -309,7 +301,8 @@ typedef struct
  ****************************************************************************************
  * @brief Perform MTU Exchange.
  *
- * @note MTU Exchange Callback @ref gatt_common_cb_fun_t::app_gatt_mtu_exchange_cb will be called to indicate to APP once receiving the peer response.
+ * @note MTU Exchange Callback @ref gatt_common_cb_fun_t::app_gatt_mtu_exchange_cb will be called to
+ *       indicate to APP once receiving the peer response.
  *
  * @param[in] conn_idx:     Current connection index.
  *
@@ -324,12 +317,14 @@ uint16_t ble_gattc_mtu_exchange(uint8_t conn_idx);
  ****************************************************************************************
  * @brief Browse all Primary Services or specific Primary Service information on remote GATT server.
  *
- * @note This discovery automatically searches for Primary Services, Included Services, Characteristics and Descriptors of each service.
+ * @note This discovery automatically searches for Primary Services, Included Services,
+ *       Characteristics and Descriptors of each service.
  *       To discover one or more services only, use ble_gattc_primary_services_discover() instead.
  *       This discovery is able to search all Primary Services or a specific one.
  *       If srvc_uuid is NULL, all services are returned.
  *
- * @note Function callback @ref gattc_cb_fun_t::app_gattc_srvc_browse_cb will be called for all attributes of each service found.
+ * @note Function callback @ref gattc_cb_fun_t::app_gattc_srvc_browse_cb will be called for
+ *       all attributes of each service found.
  *
  * @param[in] conn_idx:        Current connection index.
  * @param[in] p_srvc_uuid:     Pointer to Service UUID. If it is NULL, all services will be returned.
@@ -345,7 +340,7 @@ uint16_t ble_gattc_services_browse(uint8_t conn_idx, const ble_uuid_t *p_srvc_uu
  ****************************************************************************************
  * @brief Discover Primary Services on remote GATT server.
  *
- * @note Function callback @ref gattc_cb_fun_t::app_gattc_srvc_disc_cb will be called for service(s) found. 
+ * @note Function callback @ref gattc_cb_fun_t::app_gattc_srvc_disc_cb will be called for service(s) found.
  *
  * @param[in] conn_idx:       Current connection index.
  * @param[in] p_srvc_uuid:    Pointer to Service UUID. If it is NULL, all Primary Services will be returned.
@@ -361,7 +356,7 @@ uint16_t ble_gattc_primary_services_discover(uint8_t conn_idx, const ble_uuid_t 
  ****************************************************************************************
  * @brief Discover Included Services on remote GATT server.
  *
- * @note Function callback @ref gattc_cb_fun_t::app_gattc_inc_srvc_disc_cb will be called for Included Service(s) found.
+ * @note Function callback @ref gattc_cb_fun_t:app_gattc_inc_srvc_disc_cb will be called for Included Service(s) found.
  * @param[in] conn_idx:     Current connection index.
  * @param[in] start_hdl:    Start handle.
  * @param[in] end_hdl:      End handle.
@@ -376,7 +371,8 @@ uint16_t ble_gattc_included_services_discover(uint8_t conn_idx, uint16_t start_h
 /**
  ****************************************************************************************
  * @brief Discover Characteristics on remote GATT server.
- * @note Function callback @ref gattc_cb_fun_t::app_gattc_char_disc_cb will be called for Characteristic Declaration(s) found.
+ * @note Function callback @ref gattc_cb_fun_t::app_gattc_char_disc_cb will be called
+ *       for Characteristic Declaration(s) found.
  * @param[in] conn_idx:       Current connection index.
  * @param[in] start_hdl:      Start handle.
  * @param[in] end_hdl:        End handle.
@@ -387,14 +383,17 @@ uint16_t ble_gattc_included_services_discover(uint8_t conn_idx, uint16_t start_h
  * @retval ::SDK_ERR_NO_RESOURCES: Not enough resources.
  ****************************************************************************************
  */
-uint16_t ble_gattc_char_discover(uint8_t conn_idx, uint16_t start_hdl, uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
+uint16_t ble_gattc_char_discover(uint8_t conn_idx, uint16_t start_hdl,
+                                            uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
 
 /**
  ****************************************************************************************
  * @brief Discover Characteristics Descriptors on remote GATT server.
  *
- * @note Function callback @ref gattc_cb_fun_t::app_gattc_char_desc_disc_cb will be called for Characteristic Descriptor(s) found.      
- * If the last Descriptor has not been reached, this function must be called again with an updated handle range to continue the discovery.
+ * @note Function callback @ref gattc_cb_fun_t::app_gattc_char_desc_disc_cb will be called
+ *       for Characteristic Descriptor(s) found.
+ *       If the last Descriptor has not been reached, this function must be called again with an updated handle
+ *       range to continue the discovery.
  *
  * @param[in] conn_idx:     Current connection index.
  * @param[in] start_hdl:    Start handle.
@@ -445,7 +444,8 @@ uint16_t ble_gattc_read(uint8_t conn_idx, uint16_t handle, uint16_t offset);
  * @retval ::SDK_ERR_NO_RESOURCES: Not enough resources.
  ****************************************************************************************
  */
-uint16_t ble_gattc_read_by_uuid(uint8_t conn_idx, uint16_t start_hdl, uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
+uint16_t ble_gattc_read_by_uuid(uint8_t conn_idx, uint16_t start_hdl,
+                                           uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
 
 /**
  ****************************************************************************************
@@ -506,7 +506,8 @@ uint16_t ble_gattc_write(uint8_t conn_idx, uint16_t handle, uint16_t offset, uin
  * @retval ::SDK_ERR_NO_RESOURCES: Not enough resources.
  ****************************************************************************************
  */
-uint16_t ble_gattc_write_prepare(uint8_t conn_idx, uint16_t handle, uint16_t offset, uint16_t length, const uint8_t *p_value);
+uint16_t ble_gattc_write_prepare(uint8_t conn_idx, uint16_t handle, uint16_t offset, uint16_t length,
+                                 const uint8_t *p_value);
 
 /**
  ****************************************************************************************
@@ -530,8 +531,8 @@ uint16_t ble_gattc_write_execute(uint8_t conn_idx, bool execute);
  *
  * @note If signed_write is set to false, the "Write Without Response" procedure will be used.
  *       If signed_write is set to true, the "Signed Write Without Response" procedure will be used on
- *       a link which is not encrypted.
- *       If a link is already encrypted, "Write Without Response" procedure shall be used instead of "Signed Write Without Response".
+ *       a link which is not encrypted. If a link is already encrypted,
+ *       "Write Without Response" procedure shall be used instead of "Signed Write Without Response".
  * @note Once completed @ref gattc_cb_fun_t::app_gattc_write_cb will be called.
  *
  * @param[in] conn_idx:         Current connection index.
@@ -546,7 +547,8 @@ uint16_t ble_gattc_write_execute(uint8_t conn_idx, bool execute);
  * @retval ::SDK_ERR_NO_RESOURCES: Not enough resources.
  ****************************************************************************************
  */
-uint16_t ble_gattc_write_no_resp(uint8_t conn_idx, bool signed_write, uint16_t handle, uint16_t length, const uint8_t *p_value);
+uint16_t ble_gattc_write_no_resp(uint8_t conn_idx, bool signed_write, uint16_t handle, uint16_t length,
+                                 const uint8_t *p_value);
 
 /**
  ****************************************************************************************

@@ -35,17 +35,17 @@
  *****************************************************************************************
  */
 
-   /**
- * @addtogroup BLE
- * @{
- * @brief Definitions and prototypes for the BLE SDK interface.
- */
- 
-  /**
- * @addtogroup BLE_LCP Light Communication Protocol (LCP)
- * @{
- * @brief Definitions and prototypes for the LCP interface.
- */
+/**
+* @addtogroup BLE
+* @{
+* @brief Definitions and prototypes for the BLE SDK interface.
+*/
+
+/**
+* @addtogroup BLE_LCP Light Communication Protocol (LCP)
+* @{
+* @brief Definitions and prototypes for the LCP interface.
+*/
 
 #ifndef _LCP_SDK_H_
 #define _LCP_SDK_H_
@@ -60,8 +60,7 @@ typedef uint16_t (*rx_handler_cb_t) (uint8_t header, uint8_t length, uint8_t *p_
 /** @addtogroup BLE_LCP_ENUMERATIONS Enumerations
  * @{ */
 /** @brief Protocol Mode. */
-enum PROTOCOL_MODE
-{
+enum PROTOCOL_MODE {
     BLE_ADV,       /**< BLE ADV mode. */
     BLE_SCAN,      /**< BLE SCAN mode. */
     LCP_TX,        /**< LCP TX mode. */
@@ -72,8 +71,7 @@ enum PROTOCOL_MODE
 /** @addtogroup BLE_LCP_STRUCTURES Structures
  * @{ */
 /** @brief LCP Parameter. */
-typedef struct
-{
+typedef struct {
     uint8_t   mode;                 /**< Set protocol mode, see @ref PROTOCOL_MODE. */
     int8_t    txpwr_dbm;            /**< The value of the tx power(range: -20-7), uint: dBm. */
     uint8_t   ch_idx;               /**< The value of the channel index(range: 0-39). */

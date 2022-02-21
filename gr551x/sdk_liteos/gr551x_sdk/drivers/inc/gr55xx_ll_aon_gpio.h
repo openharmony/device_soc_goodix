@@ -73,26 +73,24 @@ extern "C" {
 /**
   * @brief LL AON_GPIO init Structure definition
   */
-typedef struct _ll_aon_gpio_init
-{
+typedef struct _ll_aon_gpio_init {
     uint32_t pin;           /**< Specifies the AON_GPIO pins to be AON_GPIO_InitStructured.
                                  This parameter can be any value of @ref AON_GPIO_LL_EC_PIN */
 
     uint32_t mode;          /**< Specifies the operating mode for the selected pins.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_MODE.
-
-                                 AON_GPIO HW AON_GPIO_InitStructuration can be modified afterwards using unitary function @ref ll_aon_gpio_set_pin_mode(). */
+                                 AON_GPIO HW AON_GPIO_InitStructuration can be modified afterwards using unitary function
+                                 @ref ll_aon_gpio_set_pin_mode(). */
 
     uint32_t pull;          /**< Specifies the operating Pull-up/Pull down for the selected pins.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_PULL.
-
-                                 AON_GPIO HW configuration can be modified afterwards using unitary function @ref ll_aon_gpio_set_pin_pull(). */
+                                 AON_GPIO HW configuration can be modified afterwards using unitary function
+                                 @ref ll_aon_gpio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
-                                This parameter can be a value of @ref AON_GPIO_LL_EC_MUX.
-
-                                GPIO HW AON_GPIO_InitStructuration can be modified afterwards using unitary function
-                                @ref ll_aon_gpio_set_mux_pin_0_7(). */
+                                 This parameter can be a value of @ref AON_GPIO_LL_EC_MUX.
+                                 GPIO HW AON_GPIO_InitStructuration can be modified afterwards using unitary function
+                                 @ref ll_aon_gpio_set_mux_pin_0_7(). */
 
     uint32_t trigger;       /**< Specifies the trigger signal active edge.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_TRIGGER. */
@@ -411,12 +409,9 @@ __STATIC_INLINE uint32_t ll_aon_gpio_get_pin_pull(uint32_t pin)
 __STATIC_INLINE void ll_aon_gpio_set_mux_pin_0_7(uint32_t pin, uint32_t mux)
 {
     uint32_t pos = POSITION_VAL(pin) << 2;
-    if(LL_AON_GPIO_MUX_7 == mux)
-    {
+    if (LL_AON_GPIO_MUX_7 == mux) {
         CLEAR_BITS(AON->AON_PAD_CTL0, pin << AON_PAD_CTL0_MCU_OVR_Pos);
-    }
-    else
-    {
+    } else {
         MODIFY_REG(MCU_SUB->AON_PAD_MUX_CTL, 0xF << pos, mux << pos);
         SET_BITS(AON->AON_PAD_CTL0, pin << AON_PAD_CTL0_MCU_OVR_Pos);
     }
@@ -452,13 +447,10 @@ __STATIC_INLINE void ll_aon_gpio_set_mux_pin_0_7(uint32_t pin, uint32_t mux)
   */
 __STATIC_INLINE uint32_t ll_aon_gpio_get_mux_pin_0_7(uint32_t pin)
 {
-    if(READ_BITS(AON->AON_PAD_CTL0, pin << AON_PAD_CTL0_MCU_OVR_Pos))
-    {
+    if (READ_BITS(AON->AON_PAD_CTL0, pin << AON_PAD_CTL0_MCU_OVR_Pos)) {
         uint32_t pos = POSITION_VAL(pin) << 2;
         return (READ_BITS(MCU_SUB->AON_PAD_MUX_CTL, 0xF << pos) >> pos);
-    }
-    else
-    {
+    } else {
         return LL_AON_GPIO_MUX_7;
     }
 }
@@ -562,7 +554,8 @@ __STATIC_INLINE uint32_t ll_aon_gpio_is_input_pin_set(uint32_t pin_mask)
 __STATIC_INLINE void ll_aon_gpio_write_output_port(uint32_t port_value)
 {
     GLOBAL_EXCEPTION_DISABLE();
-    MODIFY_REG(AON->AON_PAD_CTL1, AON_PAD_CTL1_AON_GPO, (port_value << AON_PAD_CTL1_AON_GPO_Pos) & AON_PAD_CTL1_AON_GPO);
+    MODIFY_REG(AON->AON_PAD_CTL1, AON_PAD_CTL1_AON_GPO, \
+               (port_value << AON_PAD_CTL1_AON_GPO_Pos) & AON_PAD_CTL1_AON_GPO);
     GLOBAL_EXCEPTION_ENABLE();
 }
 
@@ -679,7 +672,8 @@ __STATIC_INLINE void ll_aon_gpio_reset_output_pin(uint32_t pin_mask)
 __STATIC_INLINE void ll_aon_gpio_toggle_pin(uint32_t pin_mask)
 {
     GLOBAL_EXCEPTION_DISABLE();
-    WRITE_REG(AON->AON_PAD_CTL1, (READ_REG(AON->AON_PAD_CTL1) ^ ((pin_mask << AON_PAD_CTL1_AON_GPO_Pos) & AON_PAD_CTL1_AON_GPO)));
+    WRITE_REG(AON->AON_PAD_CTL1, \
+              (READ_REG(AON->AON_PAD_CTL1) ^ ((pin_mask << AON_PAD_CTL1_AON_GPO_Pos) & AON_PAD_CTL1_AON_GPO)));
     GLOBAL_EXCEPTION_ENABLE();
 }
 
@@ -1002,7 +996,8 @@ __STATIC_INLINE uint32_t ll_aon_gpio_is_enabled_it(uint32_t pin_mask)
 __STATIC_INLINE uint32_t ll_aon_gpio_read_flag_it(uint32_t pin_mask)
 {
     uint32_t ext2 = READ_BITS(GPIO2->INTSTAT, pin_mask);
-    uint32_t wkup = (READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_EXT_WKUP_STATUS) >> AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
+    uint32_t wkup = (READ_BITS(AON->SLP_EVENT, \
+                     AON_SLP_EVENT_EXT_WKUP_STATUS) >> AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
                      pin_mask & READ_BITS(AON->EXT_WKUP_CTL, LL_AON_GPIO_PIN_ALL);
     return (uint32_t)(ext2 | wkup);
 }

@@ -40,7 +40,6 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_log_store.h"
 #if APP_LOG_STORE_ENABLE
 #include "utility.h"
 
@@ -63,8 +62,7 @@
  *****************************************************************************************
  */
 /**@brief App log store head info. */
-typedef struct
-{
+typedef struct {
     uint32_t magic;         /**< Magic for app log store. */
     uint32_t db_addr;       /**< Start address of app log db flash. */
     uint32_t db_size;       /**< Size of app log db flash. */
@@ -74,8 +72,7 @@ typedef struct
 } log_store_head_t;
 
 /**@brief App log store environment variable. */
-struct log_store_env_t
-{
+struct log_store_env_t {
     bool              initialized;
     uint8_t           store_status;
     log_store_head_t  store_head;
@@ -102,10 +99,8 @@ static uint32_t log_store_check_sum_calc(uint8_t *p_data, uint32_t len)
 {
     uint32_t   check_sum = 0;
 
-    if (p_data && len)
-    {
-        for (uint8_t i = 0; i < len; i++)
-        {
+    if (p_data && len) {
+        for (uint8_t i = 0; i < len; i++) {
             check_sum += p_data[i];
         }
     }
@@ -119,15 +114,13 @@ static bool log_store_head_check(log_store_head_t *p_head, uint32_t db_addr, uin
     uint8_t  *head_data = (uint8_t *)p_head;
 
     if (p_head->magic != APP_LOG_STORE_MAGIC ||
-        p_head->db_addr != db_addr           ||
-        p_head->db_size != db_size           ||
-        p_head->offset >  db_size)
-    {
+            p_head->db_addr != db_addr           ||
+            p_head->db_size != db_size           ||
+            p_head->offset >  db_size) {
         return false;
     }
 
-    if (p_head->check_sum != log_store_check_sum_calc(head_data, head_len - 2))
-    {
+    if (p_head->check_sum != log_store_check_sum_calc(head_data, head_len - 2)) {
         return false;
     }
 
@@ -141,8 +134,7 @@ static bool log_store_head_update(uint16_t nv_tag, log_store_head_t *p_head)
 
     p_head->check_sum = log_store_check_sum_calc(head_data, head_len - 2);
 
-    if (nvds_put(nv_tag, head_len, (uint8_t *)p_head))
-    {
+    if (nvds_put(nv_tag, head_len, (uint8_t *)p_head)) {
         return false;
     }
 
@@ -151,8 +143,7 @@ static bool log_store_head_update(uint16_t nv_tag, log_store_head_t *p_head)
 
 static bool log_store_time_stamp_encode(uint8_t *p_buffer, uint8_t buffer_size)
 {
-    if (APP_LOG_STORE_TIME_SIZE != buffer_size)
-    {
+    if (APP_LOG_STORE_TIME_SIZE != buffer_size) {
         return false;
     }
 
@@ -160,12 +151,12 @@ static bool log_store_time_stamp_encode(uint8_t *p_buffer, uint8_t buffer_size)
 
     s_log_store_ops.time_get(&rtc_time);
 
-    if (APP_LOG_STORE_TIME_SIZE == snprintf_s((char *)p_buffer, APP_LOG_STORE_TIME_SIZE,
-                                            APP_LOG_STORE_TIME_SIZE,
-                                            "[%04d/%02d/%02d %02d:%02d:%02d:%03d] ", 
-                                            rtc_time.year, rtc_time.month, rtc_time.day,
-                                            rtc_time.hour, rtc_time.min, rtc_time.sec, rtc_time.msec))
-    {
+    if (APP_LOG_STORE_TIME_SIZE == snprintf_s((char *)p_buffer, APP_LOG_STORE_TIME_SIZE, \
+                                              APP_LOG_STORE_TIME_SIZE, \
+                                              "[%04d/%02d/%02d %02d:%02d:%02d:%03d] ", \
+                                              rtc_time.year, rtc_time.month, rtc_time.day, \
+                                              rtc_time.hour, rtc_time.min, \
+                                              rtc_time.sec, rtc_time.msec)) {
         return true;
     }
 
@@ -178,10 +169,8 @@ static void log_store_data_flash_write(void)
     uint32_t read_len;
     uint8_t  read_buff[APP_LOG_STORE_ONECE_OP_SIZE];
 
-    if (0 == (s_log_store_env.store_head.offset % s_log_store_env.blk_size))
-    {
-        if (s_log_store_ops.flash_erase)
-        {
+    if (0 == (s_log_store_env.store_head.offset % s_log_store_env.blk_size)) {
+        if (s_log_store_ops.flash_erase) {
             s_log_store_ops.flash_erase(s_log_store_env.store_head.db_addr + s_log_store_env.store_head.offset,
                                         s_log_store_env.blk_size);
         }
@@ -189,23 +178,19 @@ static void log_store_data_flash_write(void)
 
     align_num = ALIGN_NUM(APP_LOG_STORE_ONECE_OP_SIZE, s_log_store_env.store_head.offset);
 
-    if (align_num != s_log_store_env.store_head.offset)
-    {
+    if (align_num != s_log_store_env.store_head.offset) {
         read_len = ring_buffer_read(&s_log_store_rbuf, read_buff, align_num - s_log_store_env.store_head.offset);
-    }
-    else
-    {
+    } else {
         read_len = ring_buffer_read(&s_log_store_rbuf, read_buff, APP_LOG_STORE_ONECE_OP_SIZE);
     }
 
-    if (s_log_store_ops.flash_write && read_len)
-    {
-        s_log_store_ops.flash_write(s_log_store_env.store_head.db_addr + s_log_store_env.store_head.offset, read_buff, read_len);
+    if (s_log_store_ops.flash_write && read_len) {
+        s_log_store_ops.flash_write(s_log_store_env.store_head.db_addr + s_log_store_env.store_head.offset, read_buff,
+                                    read_len);
         s_log_store_env.store_head.offset += read_len;
     }
 
-    if (s_log_store_env.store_head.offset >= s_log_store_env.store_head.db_size)
-    {
+    if (s_log_store_env.store_head.offset >= s_log_store_env.store_head.db_size) {
         s_log_store_env.store_head.offset    = 0;
         s_log_store_env.store_head.flip_over = 1;
     }
@@ -217,8 +202,7 @@ static void log_store_data_flash_write(void)
 static void log_store_to_flash(void)
 {
 #if (APP_LOG_STORE_RUN_ON_OS == 0)
-    if (s_log_store_env.store_status & APP_LOG_STORE_BUSY_BIT)
-    {
+    if (s_log_store_env.store_status & APP_LOG_STORE_BUSY_BIT) {
         return;
     }
 
@@ -238,49 +222,39 @@ static void log_dump_from_flash(void)
     uint8_t  dump_buffer[APP_LOG_STORE_ONECE_OP_SIZE];
     uint16_t dump_len;
 
-    if (s_log_store_env.store_status & APP_LOG_STORE_BUSY_BIT)
-    {
+    if (s_log_store_env.store_status & APP_LOG_STORE_BUSY_BIT) {
         return;
     }
 
     s_log_store_env.store_status |= APP_LOG_STORE_BUSY_BIT;
 
-    if (s_log_store_ops.flash_read)
-    {
+    if (s_log_store_ops.flash_read) {
         uint32_t align_num = ALIGN_NUM(APP_LOG_STORE_ONECE_OP_SIZE, s_log_store_env.store_head.offset);
 
-        if (align_num != s_log_store_env.store_head.offset && 
-            (s_log_store_dump_offset + APP_LOG_STORE_ONECE_OP_SIZE) == align_num)
-        {
+        if (align_num != s_log_store_env.store_head.offset &&
+                (s_log_store_dump_offset + APP_LOG_STORE_ONECE_OP_SIZE) == align_num) {
             dump_len = (s_log_store_env.store_head.offset + APP_LOG_STORE_ONECE_OP_SIZE - align_num);
-        }
-        else
-        {
+        } else {
             dump_len = APP_LOG_STORE_ONECE_OP_SIZE;
         }
 
         s_log_store_ops.flash_read(s_log_store_dump_offset + s_log_store_env.store_head.db_addr, dump_buffer, dump_len);
 
-        if (s_log_store_dump_cb)
-        {
+        if (s_log_store_dump_cb) {
             s_log_store_dump_cb(dump_buffer, dump_len);
         }
 
         s_log_store_dump_offset += dump_len;
 
-    }
-    else
-    {
+    } else {
         s_log_store_env.store_status &= ~APP_LOG_STORE_DUMP_BIT;
     }
 
-    if (s_log_store_env.store_head.db_size == s_log_store_dump_offset)
-    {
+    if (s_log_store_env.store_head.db_size == s_log_store_dump_offset) {
         s_log_store_dump_offset = 0;
     }
 
-    if (s_log_store_env.store_head.offset == s_log_store_dump_offset)
-    {
+    if (s_log_store_env.store_head.offset == s_log_store_dump_offset) {
         s_log_store_dump_offset = 0;
         s_log_store_env.store_status &= ~APP_LOG_STORE_DUMP_BIT;
     }
@@ -297,36 +271,32 @@ uint16_t app_log_store_init(app_log_store_info_t *p_info, app_log_store_op_t *p_
 {
     uint16_t head_len = sizeof(log_store_head_t);
 
-    if (s_log_store_env.initialized)
-    {
+    if (s_log_store_env.initialized) {
         return SDK_ERR_DISALLOWED;
     }
 
     if (NULL == p_info
-        || NULL == p_op_func
-        || NULL == p_op_func->flash_init
-        || NULL == p_op_func->flash_read
-        || NULL == p_op_func->flash_write
-        || NULL == p_op_func->flash_erase
-        || 0 == p_info->db_size
-        || 0 == p_info->blk_size
-        || 0 != (p_info->db_addr % p_info->blk_size))
-    {
+            || NULL == p_op_func
+            || NULL == p_op_func->flash_init
+            || NULL == p_op_func->flash_read
+            || NULL == p_op_func->flash_write
+            || NULL == p_op_func->flash_erase
+            || 0 == p_info->db_size
+            || 0 == p_info->blk_size
+            || 0 != (p_info->db_addr % p_info->blk_size)) {
         return SDK_ERR_INVALID_PARAM;
     }
 
     nvds_get(p_info->nv_tag, &head_len, (uint8_t *)&s_log_store_env.store_head);
 
-    if (!log_store_head_check(&s_log_store_env.store_head, p_info->db_addr, p_info->db_size))
-    {
+    if (!log_store_head_check(&s_log_store_env.store_head, p_info->db_addr, p_info->db_size)) {
         s_log_store_env.store_head.magic     = APP_LOG_STORE_MAGIC;
         s_log_store_env.store_head.db_addr   = p_info->db_addr;
         s_log_store_env.store_head.db_size   = p_info->db_size;
         s_log_store_env.store_head.offset    = 0;
         s_log_store_env.store_head.flip_over = 0;
 
-        if (!log_store_head_update(p_info->nv_tag, &s_log_store_env.store_head))
-        {
+        if (!log_store_head_update(p_info->nv_tag, &s_log_store_env.store_head)) {
             return SDK_ERR_SDK_INTERNAL;
         }
     }
@@ -349,20 +319,17 @@ uint16_t app_log_store_save(const uint8_t *p_data, const uint16_t length)
 {
     uint8_t  time_encode[APP_LOG_STORE_TIME_SIZE] = APP_LOG_STORE_TIME_DEFAULT;
 
-    if (!s_log_store_env.initialized)
-    {
+    if (!s_log_store_env.initialized) {
         return SDK_ERR_DISALLOWED;
     }
 
-    if (s_log_store_env.store_status & APP_LOG_STORE_BUSY_BIT)
-    {
+    if (s_log_store_env.store_status & APP_LOG_STORE_BUSY_BIT) {
         return SDK_ERR_BUSY;
     }
 
     s_log_store_env.store_status |= APP_LOG_STORE_BUSY_BIT;
 
-    if (s_log_store_ops.time_get)
-    {
+    if (s_log_store_ops.time_get) {
         log_store_time_stamp_encode(time_encode, APP_LOG_STORE_TIME_SIZE);
         time_encode[APP_LOG_STORE_TIME_SIZE - 1] = ' ';
     }
@@ -370,8 +337,7 @@ uint16_t app_log_store_save(const uint8_t *p_data, const uint16_t length)
     ring_buffer_write(&s_log_store_rbuf, time_encode, APP_LOG_STORE_TIME_SIZE);
     ring_buffer_write(&s_log_store_rbuf, p_data, length);
 
-    if (APP_LOG_STORE_ONECE_OP_SIZE <= ring_buffer_items_count_get(&s_log_store_rbuf))
-    {
+    if (APP_LOG_STORE_ONECE_OP_SIZE <= ring_buffer_items_count_get(&s_log_store_rbuf)) {
         s_log_store_env.store_status |= APP_LOG_STORE_SAVE_BIT;
 #if APP_LOG_STORE_RUN_ON_OS
         log_store_to_flash();
@@ -388,17 +354,14 @@ void app_log_store_flush(void)
 {
     uint32_t items_count = 0;
 
-    if (!s_log_store_env.initialized)
-    {
+    if (!s_log_store_env.initialized) {
         return;
     }
 
-    do
-    {
+    do {
         items_count = ring_buffer_items_count_get(&s_log_store_rbuf);
 
-        if (items_count)
-        {
+        if (items_count) {
             log_store_data_flash_write();
         }
     } while (items_count >= APP_LOG_STORE_ONECE_OP_SIZE);
@@ -406,18 +369,15 @@ void app_log_store_flush(void)
 
 uint16_t app_log_store_dump(app_log_store_dump_cb_t dump_cb)
 {
-    if (!s_log_store_env.initialized)
-    {
+    if (!s_log_store_env.initialized) {
         return SDK_ERR_DISALLOWED;
     }
 
-    if (s_log_store_env.store_status & APP_LOG_STORE_DUMP_BIT)
-    {
+    if (s_log_store_env.store_status & APP_LOG_STORE_DUMP_BIT) {
         return SDK_ERR_BUSY;
     }
 
-    if (NULL == dump_cb)
-    {
+    if (NULL == dump_cb) {
         return SDK_ERR_POINTER_NULL;
     }
 
@@ -425,21 +385,17 @@ uint16_t app_log_store_dump(app_log_store_dump_cb_t dump_cb)
 
     app_log_store_flush();
 
-    if (0 == s_log_store_env.store_head.flip_over && 0 == s_log_store_env.store_head.offset)
-    {
+    if (0 == s_log_store_env.store_head.flip_over && 0 == s_log_store_env.store_head.offset) {
         return SDK_SUCCESS;
     }
 
-    if (s_log_store_env.store_head.flip_over)
-    {
+    if (s_log_store_env.store_head.flip_over) {
         uint32_t align_num;
 
         align_num = ALIGN_NUM(s_log_store_env.blk_size, s_log_store_env.store_head.offset);
 
         s_log_store_dump_offset = align_num >= s_log_store_env.store_head.db_size ? 0 : align_num;
-    }
-    else
-    {
+    } else {
         s_log_store_dump_offset = 0;
     }
 
@@ -464,14 +420,12 @@ bool app_log_store_dump_ongoing(void)
 void app_log_store_schedule(void)
 {
 #if APP_LOG_STORE_RUN_ON_OS == 0
-    if (s_log_store_env.store_status & APP_LOG_STORE_SAVE_BIT)
-    {
+    if (s_log_store_env.store_status & APP_LOG_STORE_SAVE_BIT) {
         log_store_to_flash();
     }
 #endif
 
-    if (s_log_store_env.store_status & APP_LOG_STORE_DUMP_BIT)
-    {
+    if (s_log_store_env.store_status & APP_LOG_STORE_DUMP_BIT) {
         log_dump_from_flash();
     }
 }

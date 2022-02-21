@@ -73,8 +73,7 @@ extern "C" {
 /**
   * @brief LL CGC init Structure definition
   */
-typedef struct _ll_cgc_init_t
-{
+typedef struct _ll_cgc_init_t {
     uint32_t wfi_clk0;          /**< Specifies the block that automatically closes the clock.
                                     This parameter can be a combination of @ref CGC_LL_EC_WFI_CLK0. */
 
@@ -91,7 +90,7 @@ typedef struct _ll_cgc_init_t
                                     This parameter can be a combination of @ref CGC_LL_EC_FRC_CLK1. */
 
     uint32_t force_clk2;        /**< Specifies the blocks for forced turn off clock.
-                                    This parameter can be a combination of @ref CGC_LL_EC_FRC_CLK2. */         
+                                    This parameter can be a combination of @ref CGC_LL_EC_FRC_CLK2. */
 } ll_cgc_init_t;
 
 /** @} */
@@ -108,7 +107,7 @@ typedef struct _ll_cgc_init_t
   * @{
   */
 
-/** @defgroup CGC_LL_EC_WFI_CLK0 Block0 Clock During WFI 
+/** @defgroup CGC_LL_EC_WFI_CLK0 Block0 Clock During WFI
   * @{
   */
 #define LL_CGC_WFI_SECU_HCLK                    MCU_SUB_WFI_SECU_HCLK         /**< Hclk for all security blocks */
@@ -127,7 +126,7 @@ typedef struct _ll_cgc_init_t
 #define LL_CGC_WFI_ALL_HCLK0                    ((uint32_t)0x00000FFFU)       /**< All clock group 0            */
 /** @} */
 
-/** @defgroup CGC_LL_EC_WFI_CLK1 Block1 Clock During WFI 
+/** @defgroup CGC_LL_EC_WFI_CLK1 Block1 Clock During WFI
   * @{
   */
 #define LL_CGC_WFI_AON_MCUSUB_HCLK              MCU_SUB_WFI_AON_MCUSUB_HCLK   /**< Hclk for Always-on register  */
@@ -137,7 +136,7 @@ typedef struct _ll_cgc_init_t
 #define LL_CGC_WFI_ALL_HCLK1                    ((uint32_t)0x00000007U)       /**< All clock group 1            */
 /** @} */
 
-/** @defgroup CGC_LL_EC_WFI_CLK2 Block2 Clock During WFI 
+/** @defgroup CGC_LL_EC_WFI_CLK2 Block2 Clock During WFI
   * @{
   */
 #define LL_CGC_WFI_SECU_DIV4_PCLK               MCU_SUB_WFI_SECU_DIV4_PCLK    /**< Div4 clk for security blocks */
@@ -362,9 +361,9 @@ __STATIC_INLINE uint32_t ll_cgc_get_wfi_off_hclk_0(void)
   */
 __STATIC_INLINE void ll_cgc_set_wfi_off_hclk_1(uint32_t clk_mask)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     MODIFY_REG(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_MSK_HCLK_1, clk_mask);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -518,9 +517,9 @@ __STATIC_INLINE uint32_t ll_cgc_get_force_off_hclk_0(void)
   */
 __STATIC_INLINE void ll_cgc_set_force_off_hclk_1(uint32_t clk_mask)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     MODIFY_REG(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_MSK_HCLK_1, clk_mask);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -576,9 +575,9 @@ __STATIC_INLINE uint32_t ll_cgc_get_force_off_hclk_1(void)
   */
 __STATIC_INLINE void ll_cgc_set_force_off_hclk_2(uint32_t clk_mask)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     MODIFY_REG(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_MSK_HCLK_2, clk_mask);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -628,9 +627,9 @@ __STATIC_INLINE uint32_t ll_cgc_get_force_off_hclk_2(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_secu_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SECU_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -644,9 +643,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_secu_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_secu_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SECU_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -674,9 +673,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_secu_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_sim_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SIM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -690,9 +689,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_sim_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_sim_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SIM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -720,9 +719,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_sim_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_htb_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_HTB_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -736,9 +735,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_htb_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_htb_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_HTB_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -766,9 +765,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_htb_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_pwm_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_PWM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -782,9 +781,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_pwm_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_pwm_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_PWM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -812,9 +811,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_pwm_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_rom_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_ROM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -828,9 +827,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_rom_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_rom_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_ROM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -858,9 +857,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_rom_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_snsadc_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SNSADC_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -874,9 +873,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_snsadc_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_snsadc_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SNSADC_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -904,9 +903,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_snsadc_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_gpio_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+	  GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_GPIO_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+	  GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -920,9 +919,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_gpio_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_gpio_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+	  GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_GPIO_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+	  GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -950,9 +949,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_gpio_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_dma_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_DMA_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -966,9 +965,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_dma_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_dma_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_DMA_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -996,9 +995,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_dma_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_ble_brg_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_BLE_BRG_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1012,9 +1011,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_ble_brg_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_ble_brg_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_BLE_BRG_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1042,9 +1041,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_ble_brg_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_apb_sub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_APB_SUB_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1058,9 +1057,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_apb_sub_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_apb_sub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_APB_SUB_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1088,9 +1087,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_apb_sub_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_serial_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SERIAL_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1104,13 +1103,13 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_serial_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_serial_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_SERIAL_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
-  * @brief  Indicate whether the serial blocks(including I2C, UART, QSPI, I2S, SPI) automatic turn off 
+  * @brief  Indicate whether the serial blocks(including I2C, UART, QSPI, I2S, SPI) automatic turn off
   *         clock is enabled.
   *
   *  Register  | BitsName
@@ -1135,9 +1134,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_serial_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_i2s_s_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_I2S_S_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1151,9 +1150,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_i2s_s_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_i2s_s_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[0], MCU_SUB_WFI_I2S_S_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1181,9 +1180,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_i2s_s_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_aon_mcusub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_AON_MCUSUB_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1197,9 +1196,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_aon_mcusub_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_aon_mcusub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_AON_MCUSUB_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1227,9 +1226,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_aon_mcusub_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_xqspi_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_XF_XQSPI_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1243,9 +1242,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_xqspi_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_xqspi_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_XF_XQSPI_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1273,9 +1272,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_xqspi_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_sram_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_SRAM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1289,9 +1288,9 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_sram_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_sram_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_WFI_SRAM_HCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1319,9 +1318,9 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_sram_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_secu_div4_hclk(void)
 {	
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_WFI_SECU_DIV4_PCLK);
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1335,11 +1334,11 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_secu_div4_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_secu_div4_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_WFI_SECU_DIV4_PCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1368,11 +1367,11 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_secu_div4_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_wfi_off_xqspi_div4_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_WFI_XQSPI_DIV4_PCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1386,11 +1385,11 @@ __STATIC_INLINE void ll_cgc_enable_wfi_off_xqspi_div4_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_wfi_off_xqspi_div4_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_WFI_XQSPI_DIV4_PCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1418,11 +1417,11 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_xqspi_div4_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_secu_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SECU_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1436,11 +1435,11 @@ __STATIC_INLINE void ll_cgc_enable_force_off_secu_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_secu_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SECU_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1468,11 +1467,11 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_secu_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_sim_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SIM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1486,11 +1485,11 @@ __STATIC_INLINE void ll_cgc_enable_force_off_sim_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_sim_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SIM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1518,11 +1517,11 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_sim_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_htb_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_HTB_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1536,11 +1535,11 @@ __STATIC_INLINE void ll_cgc_enable_force_off_htb_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_htb_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_HTB_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1568,11 +1567,11 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_htb_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_pwm_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_PWM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1586,11 +1585,11 @@ __STATIC_INLINE void ll_cgc_enable_force_off_pwm_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_pwm_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_PWM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1618,11 +1617,11 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_pwm_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_rom_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_ROM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1636,11 +1635,11 @@ __STATIC_INLINE void ll_cgc_enable_force_off_rom_hclk(void)
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_rom_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_ROM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1662,17 +1661,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_rom_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | SNSADC_HCLK 
+  *  CG_CTRL_1 | SNSADC_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_snsadc_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SNSADC_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1680,17 +1679,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_snsadc_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | SNSADC_HCLK 
+  *  CG_CTRL_1 | SNSADC_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_snsadc_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SNSADC_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1698,7 +1697,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_snsadc_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | SNSADC_HCLK 
+  *  CG_CTRL_1 | SNSADC_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -1712,17 +1711,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_snsadc_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | GPIO_HCLK 
+  *  CG_CTRL_1 | GPIO_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_gpio_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_GPIO_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1730,17 +1729,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_gpio_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | GPIO_HCLK 
+  *  CG_CTRL_1 | GPIO_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_gpio_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_GPIO_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1748,7 +1747,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_gpio_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | GPIO_HCLK 
+  *  CG_CTRL_1 | GPIO_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -1762,17 +1761,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_gpio_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | DMA_HCLK 
+  *  CG_CTRL_1 | DMA_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_dma_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_DMA_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1780,17 +1779,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_dma_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | DMA_HCLK 
+  *  CG_CTRL_1 | DMA_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_dma_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_DMA_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1798,7 +1797,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_dma_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | DMA_HCLK 
+  *  CG_CTRL_1 | DMA_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -1812,17 +1811,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_dma_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | BLE_BRG_HCLK 
+  *  CG_CTRL_1 | BLE_BRG_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_ble_brg_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_BLE_BRG_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1830,17 +1829,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_ble_brg_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | BLE_BRG_HCLK 
+  *  CG_CTRL_1 | BLE_BRG_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_ble_brg_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_BLE_BRG_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1848,7 +1847,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_ble_brg_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | BLE_BRG_HCLK 
+  *  CG_CTRL_1 | BLE_BRG_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -1862,17 +1861,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_ble_brg_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | APB_SUB_HCLK 
+  *  CG_CTRL_1 | APB_SUB_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_apb_sub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_APB_SUB_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1880,17 +1879,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_apb_sub_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | APB_SUB_HCLK 
+  *  CG_CTRL_1 | APB_SUB_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_apb_sub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_APB_SUB_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1898,7 +1897,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_apb_sub_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | APB_SUB_HCLK 
+  *  CG_CTRL_1 | APB_SUB_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -1912,17 +1911,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_apb_sub_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | SERIAL_HCLK 
+  *  CG_CTRL_1 | SERIAL_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_serial_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SERIAL_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1930,17 +1929,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_serial_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | SERIAL_HCLK 
+  *  CG_CTRL_1 | SERIAL_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_serial_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_SERIAL_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1948,7 +1947,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_serial_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | SERIAL_HCLK 
+  *  CG_CTRL_1 | SERIAL_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -1962,17 +1961,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_serial_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | I2S_S_HCLK 
+  *  CG_CTRL_1 | I2S_S_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_i2s_s_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_I2S_S_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1980,17 +1979,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_i2s_s_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | I2S_S_HCLK 
+  *  CG_CTRL_1 | I2S_S_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_i2s_s_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[1], MCU_SUB_FORCE_I2S_S_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -1998,7 +1997,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_i2s_s_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_1 | I2S_S_HCLK 
+  *  CG_CTRL_1 | I2S_S_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2012,17 +2011,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_i2s_s_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | AON_MCUSUB_HCLK 
+  *  CG_CTRL_2 | AON_MCUSUB_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_aon_mcusub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_AON_MCUSUB_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2030,17 +2029,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_aon_mcusub_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | AON_MCUSUB_HCLK 
+  *  CG_CTRL_2 | AON_MCUSUB_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_aon_mcusub_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_AON_MCUSUB_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2048,13 +2047,14 @@ __STATIC_INLINE void ll_cgc_disable_force_off_aon_mcusub_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | AON_MCUSUB_HCLK 
+  *  CG_CTRL_2 | AON_MCUSUB_HCLK
   *
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_aon_mcusub_hclk(void)
 {
-    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_AON_MCUSUB_HCLK) == (MCU_SUB_FORCE_AON_MCUSUB_HCLK));
+    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2],
+                      MCU_SUB_FORCE_AON_MCUSUB_HCLK) == (MCU_SUB_FORCE_AON_MCUSUB_HCLK));
 }
 
 /**
@@ -2062,17 +2062,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_aon_mcusub_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | XF_XQSPI_HCLK 
+  *  CG_CTRL_2 | XF_XQSPI_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_xqspi_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_XF_XQSPI_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2080,17 +2080,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_xqspi_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | XF_XQSPI_HCLK 
+  *  CG_CTRL_2 | XF_XQSPI_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_xqspi_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_XF_XQSPI_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2098,7 +2098,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_xqspi_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | XF_XQSPI_HCLK 
+  *  CG_CTRL_2 | XF_XQSPI_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2112,17 +2112,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_xqspi_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | SRAM_HCLK 
+  *  CG_CTRL_2 | SRAM_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_sram_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_SRAM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2130,17 +2130,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_sram_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | SRAM_HCLK 
+  *  CG_CTRL_2 | SRAM_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_sram_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_SRAM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2148,7 +2148,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_sram_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  CG_CTRL_2 | SRAM_HCLK 
+  *  CG_CTRL_2 | SRAM_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2157,22 +2157,22 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_sram_hclk(void)
     return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[2], MCU_SUB_FORCE_SRAM_HCLK) == (MCU_SUB_FORCE_SRAM_HCLK));
 }
 
-/**
+/**uart0_hclk
   * @brief  Enabling force to turn off the clock for UART0.
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | UART0_HCLK 
+  *  PERIPH_GC | UART0_HCLK
   *
   * @retval None
   */
-__STATIC_INLINE void ll_cgc_enable_force_off_uart0_hclk(void)
+__STATIC_INLINE void ll_cgc_enable_force_off_(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_UART0_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2180,17 +2180,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_uart0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | UART0_HCLK 
+  *  PERIPH_GC | UART0_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_uart0_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_UART0_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2198,7 +2198,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_uart0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | UART0_HCLK 
+  *  PERIPH_GC | UART0_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2212,17 +2212,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_uart0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | UART1_HCLK 
+  *  PERIPH_GC | UART1_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_uart1_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_UART1_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2230,17 +2230,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_uart1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | UART1_HCLK 
+  *  PERIPH_GC | UART1_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_uart1_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_UART1_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2248,7 +2248,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_uart1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | UART1_HCLK 
+  *  PERIPH_GC | UART1_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2262,17 +2262,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_uart1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2C0_HCLK 
+  *  PERIPH_GC | I2C0_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_i2c0_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_I2C0_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2280,17 +2280,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_i2c0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2C0_HCLK 
+  *  PERIPH_GC | I2C0_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_i2c0_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_I2C0_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2298,7 +2298,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_i2c0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2C0_HCLK 
+  *  PERIPH_GC | I2C0_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2312,17 +2312,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_i2c0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2C1_HCLK 
+  *  PERIPH_GC | I2C1_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_i2c1_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_I2C1_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2330,17 +2330,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_i2c1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2C1_HCLK 
+  *  PERIPH_GC | I2C1_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_i2c1_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_I2C1_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2348,7 +2348,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_i2c1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2C1_HCLK 
+  *  PERIPH_GC | I2C1_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2362,17 +2362,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_i2c1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | SPIM_HCLK 
+  *  PERIPH_GC | SPIM_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_spim_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SPIM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2380,17 +2380,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_spim_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | SPIM_HCLK 
+  *  PERIPH_GC | SPIM_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_spim_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SPIM_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2398,7 +2398,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_spim_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | SPIM_HCLK 
+  *  PERIPH_GC | SPIM_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2412,17 +2412,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_spim_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | SPIS_HCLK 
+  *  PERIPH_GC | SPIS_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_spis_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SPIS_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2430,17 +2430,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_spis_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | SPIS_HCLK 
+  *  PERIPH_GC | SPIS_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_spis_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SPIS_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2448,7 +2448,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_spis_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | SPIS_HCLK 
+  *  PERIPH_GC | SPIS_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2462,17 +2462,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_spis_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | QSPI0_HCLK 
+  *  PERIPH_GC | QSPI0_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_qspi0_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_QSPI0_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2480,17 +2480,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_qspi0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | QSPI0_HCLK 
+  *  PERIPH_GC | QSPI0_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_qspi0_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_QSPI0_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2498,7 +2498,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_qspi0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | QSPI0_HCLK 
+  *  PERIPH_GC | QSPI0_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2512,17 +2512,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_qspi0_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | QSPI1_HCLK 
+  *  PERIPH_GC | QSPI1_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_qspi1_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_QSPI1_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2530,17 +2530,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_qspi1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | QSPI1_HCLK 
+  *  PERIPH_GC | QSPI1_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_qspi1_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_QSPI1_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2548,7 +2548,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_qspi1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | QSPI1_HCLK 
+  *  PERIPH_GC | QSPI1_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2562,17 +2562,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_qspi1_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2S_HCLK 
+  *  PERIPH_GC | I2S_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_i2s_m_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_I2S_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2580,17 +2580,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_i2s_m_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2S_HCLK 
+  *  PERIPH_GC | I2S_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_i2s_m_hclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_I2S_HCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2598,7 +2598,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_i2s_m_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2S_HCLK 
+  *  PERIPH_GC | I2S_HCLK
   *
   * @retval State of bit (1 or 0).
   */
@@ -2612,17 +2612,17 @@ __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_i2s_m_hclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2S_HCLK 
+  *  PERIPH_GC | I2S_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_enable_force_off_secu_div4_pclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     SET_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SECU_DIV4_PCLK);
 
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2630,17 +2630,17 @@ __STATIC_INLINE void ll_cgc_enable_force_off_secu_div4_pclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2S_HCLK 
+  *  PERIPH_GC | I2S_HCLK
   *
   * @retval None
   */
 __STATIC_INLINE void ll_cgc_disable_force_off_secu_div4_pclk(void)
 {
-	GLOBAL_EXCEPTION_DISABLE();
+    GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SECU_DIV4_PCLK);
 	
-	GLOBAL_EXCEPTION_ENABLE();
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 /**
@@ -2648,7 +2648,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_secu_div4_pclk(void)
   *
   *  Register  | BitsName
   *  ----------|--------
-  *  PERIPH_GC | I2S_HCLK 
+  *  PERIPH_GC | I2S_HCLK
   *
   * @retval State of bit (1 or 0).
   */

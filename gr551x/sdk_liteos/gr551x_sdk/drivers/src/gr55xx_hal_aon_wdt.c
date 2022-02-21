@@ -46,8 +46,7 @@ extern void hal_aon_wdt_register_callback(hal_aon_wdt_callback_t *aon_wdt_callba
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_aon_wdt_callback_t aon_wdt_callback = 
-{
+static hal_aon_wdt_callback_t aon_wdt_callback = {
     .aon_wdt_alarm_callback = hal_aon_wdt_alarm_callback,
 };
 
@@ -79,7 +78,8 @@ hal_status_t hal_aon_wdt_deinit(aon_wdt_handle_t *p_aon_wdt)
 
 __WEAK void hal_aon_wdt_alarm_callback(aon_wdt_handle_t *p_aon_wdt)
 {
-
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(p_aon_wdt);
 }
 
 #endif /* HAL_AON_WDT_MODULE_ENABLED */

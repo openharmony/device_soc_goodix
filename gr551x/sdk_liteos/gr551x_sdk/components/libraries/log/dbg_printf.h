@@ -13,8 +13,7 @@ extern "C" {
 /* The UART0/1 communication baud rate. */
 #define DBG_UART_BAUDRATE       (115200)
 
-typedef enum
-{
+typedef enum {
     DBG_PRINTF_NONE = 0,
     DBG_PRINTF_UART0,
     DBG_PRINTF_UART1,
@@ -22,7 +21,7 @@ typedef enum
     DBG_PRINTF_INT_UART1,
     DBG_PRINTF_ITM,
     DBG_PRINTF_RTT,
-}dbg_printf_mode_t;
+} dbg_printf_mode_t;
 
 void dbg_printf_set_mode(dbg_printf_mode_t mode);
 uint8_t dbg_printf_uart_callback(uart_regs_t *UARTx);

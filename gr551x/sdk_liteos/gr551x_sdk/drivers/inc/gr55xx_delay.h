@@ -47,19 +47,19 @@ extern "C" {
 #if defined ( __CC_ARM )
 
 #ifndef __STATIC_FORCEINLINE
-#define __STATIC_FORCEINLINE                   static __forceinline     /**< Static inline define */
+#define __STATIC_FORCEINLINE         static __forceinline     /**< Static inline define */
 #endif
 
 #elif defined ( __GNUC__ )
 
 #ifndef __STATIC_FORCEINLINE
-#define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline /**< Static inline define */
+#define __STATIC_FORCEINLINE         __attribute__((always_inline)) static inline /**< Static inline define */
 #endif
 
 #else
 
 #ifndef __STATIC_FORCEINLINE
-#define __STATIC_FORCEINLINE                   __STATIC_INLINE          /**< Static inline define */
+#define __STATIC_FORCEINLINE         __STATIC_INLINE          /**< Static inline define */
 #endif
 
 #endif
@@ -67,9 +67,10 @@ extern "C" {
 /**
  * @brief Function for delaying execution for number of microseconds.
  *
- * @note GR55xxx is based on ARM Cortex-M4, and this fuction is based on Data Watchpoint and Trace (DWT) unit so delay is precise.
+ * @note GR55xxx is based on ARM Cortex-M4, and this fuction is based on Data Watchpoint and Trace (DWT) unit
+ *       so delay is precise.
  *
- * @param number_of_us: The maximum delay time is about 67 seconds in 64M system clock. 
+ * @param number_of_us: The maximum delay time is about 67 seconds in 64M system clock.
  *                      The faster the system clock, the shorter the maximum delay time.
  *
  */
@@ -81,8 +82,7 @@ __STATIC_FORCEINLINE void delay_us(uint32_t number_of_us)
     const uint8_t clocks[] = {64, 48, 16, 24, 16, 32};
     uint32_t cycles = number_of_us * (clocks[AON->PWR_RET01 & AON_PWR_REG01_SYS_CLK_SEL]);
 
-    if (number_of_us == 0)
-    {
+    if (number_of_us == 0) {
         return;
     }
 
@@ -100,8 +100,7 @@ __STATIC_FORCEINLINE void delay_us(uint32_t number_of_us)
     uint32_t cyccnt_initial = DWT->CYCCNT;
 
     // Wait time end
-    while ((DWT->CYCCNT - cyccnt_initial) < cycles)
-    {}
+    while ((DWT->CYCCNT - cyccnt_initial) < cycles) { }
 
     // Restore registers.
     DWT->CTRL = dwt_ctrl_initial;
@@ -112,7 +111,8 @@ __STATIC_FORCEINLINE void delay_us(uint32_t number_of_us)
 /**
  * @brief Function for delaying execution for number of milliseconds.
  *
- * @note GR55xx is based on ARM Cortex-M4, and this fuction is based on Data Watchpoint and Trace (DWT) unit so delay is precise.
+ * @note GR55xx is based on ARM Cortex-M4, and this fuction is based on Data Watchpoint and Trace (DWT)
+ *       unit so delay is precise.
  *
  * @note Function internally calls @ref delay_us so the maximum delay is the
  * same as in case of @ref delay_us.

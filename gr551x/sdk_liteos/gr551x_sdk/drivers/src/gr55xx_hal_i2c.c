@@ -46,8 +46,7 @@ extern void hal_i2c_register_callback(hal_i2c_callback_t *hal_i2c_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static hal_i2c_callback_t i2c_callback =
-{
+static hal_i2c_callback_t i2c_callback = {
     .i2c_msp_init                   = hal_i2c_msp_init,
     .i2c_msp_deinit                 = hal_i2c_msp_deinit,
     .i2c_master_tx_cplt_callback    = hal_i2c_master_tx_cplt_callback,

@@ -46,8 +46,7 @@ extern void hal_adc_register_callback(adc_callback_t *adc_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
-static adc_callback_t adc_callback = 
-{
+static adc_callback_t adc_callback = {
     .adc_msp_init               = hal_adc_msp_init,
     .adc_msp_deinit             = hal_adc_msp_deinit,
     .adc_conv_cplt_callback     = hal_adc_conv_cplt_callback

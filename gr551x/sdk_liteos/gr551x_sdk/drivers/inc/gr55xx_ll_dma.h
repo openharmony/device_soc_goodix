@@ -73,70 +73,70 @@ extern "C" {
 /**
   * @brief LL DMA init Structure definition
   */
-typedef struct _ll_dma_init
-{
+typedef struct _ll_dma_init {
     uint32_t src_address;            /**< Specifies the Source base address for DMA transfer.
-
-                                         This parameter must be a value between Min_Data = 0 and Max_Data = 0xFFFFFFFF. */
+                                         This parameter must be a value between Min_Data = 0
+                                         and Max_Data = 0xFFFFFFFF. */
 
     uint32_t dst_address;            /**< Specifies the Destination base address for DMA transfer.
-
-                                         This parameter must be a value between Min_Data = 0 and Max_Data = 0xFFFFFFFF. */
+                                         This parameter must be a value between Min_Data = 0
+                                         and Max_Data = 0xFFFFFFFF. */
 
     uint32_t direction;             /**< Specifies if the data will be transferred from memory to peripheral,
-                                         from memory to memory or from peripheral to memory or form peripheral to peripheral.
+                                         from memory to memory or from peripheral to memory or
+                                         form peripheral to peripheral.
                                          This parameter can be a value of @ref DMA_LL_EC_DIRECTION
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_data_transfer_direction(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_data_transfer_direction(). */
 
     uint32_t  mode;                 /**< Specifies the Single block or Multi-block operation mode.
                                          This parameter can be a value of @ref DMA_LL_EC_MODE
                                          @note: The circular buffer mode cannot be used if the memory to memory
                                                 data transfer direction is configured on the selected Channel
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_mode(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_mode(). */
 
     uint32_t src_increment_mode;    /**< Specifies whether the Source address is incremented or decrement or not.
                                          This parameter can be a value of @ref DMA_LL_EC_SOURCE
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_source_increment_mode(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_source_increment_mode(). */
 
     uint32_t dst_increment_mode;    /**< Specifies whether the Destination address is incremented or decrement or not.
                                          This parameter can be a value of @ref DMA_LL_EC_DESTINATION
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_destination_increment_mode(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_destination_increment_mode(). */
 
     uint32_t src_data_width;        /**< Specifies the Souce transfer width alignment(byte, half word, word).
                                          This parameter can be a value of @ref DMA_LL_EC_SDATAALIGN
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_source_width(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_source_width(). */
 
     uint32_t dst_data_width;        /**< Specifies the Destination transfer width alignment(byte, half word, word).
                                          This parameter can be a value of @ref DMA_LL_EC_DDATAALIGN
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_destination_width(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_destination_width(). */
 
     uint32_t block_size;            /**< Specifies the number of data to transfer, in data unit.
-                                         The data unit is equal to the source buffer configuration set in src_data_width parameters.
+                                         The data unit is equal to the source buffer configuration set
+                                         in src_data_width parameters.
                                          This parameter must be a value between Min_Data = 0 and Max_Data = 0x1FF
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_block_size(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_block_size(). */
 
     uint32_t src_peripheral;        /**< Specifies the Source peripheral type.
                                          This parameter can be a value of @ref DMA_LL_EC_PERIPH
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_source_peripheral(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_source_peripheral(). */
 
     uint32_t dst_peripheral;        /**< Specifies the Destination peripheral type.
                                          This parameter can be a value of @ref DMA_LL_EC_PERIPH
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_destination_peripheral(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_destination_peripheral(). */
 
     uint32_t priority;              /**< Specifies the channel priority level.
                                          This parameter can be a value of @ref DMA_LL_EC_PRIORITY
-
-                                         This feature can be modified afterwards using unitary function @ref ll_dma_set_channel_priority_level(). */
-
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_dma_set_channel_priority_level(). */
 } ll_dma_init_t;
 
 /** @} */
@@ -164,7 +164,9 @@ typedef struct _ll_dma_init
 #define LL_DMA_CHANNEL_5                      ((uint32_t)0x00000005U) /**< DMA Channel 5 */
 #define LL_DMA_CHANNEL_6                      ((uint32_t)0x00000006U) /**< DMA Channel 6 */
 #define LL_DMA_CHANNEL_7                      ((uint32_t)0x00000007U) /**< DMA Channel 7 */
-#define LL_DMA_CHANNEL_ALL                    ((uint32_t)0xFFFF0000U) /**< DMA Channel all (used only for function @ref ll_dma_deinit(). */
+#define LL_DMA_CHANNEL_ALL                    ((uint32_t)0xFFFF0000U) /**< DMA Channel all
+                                                                           (used only for function
+                                                                           @ref ll_dma_deinit()) */
 /** @} */
 
 /** @defgroup DMA_LL_EC_DIRECTION Transfer Direction
@@ -181,9 +183,15 @@ typedef struct _ll_dma_init
   * @{
   */
 #define LL_DMA_MODE_SINGLE_BLOCK              ((uint32_t)0x00000000U)                      /**< Single block */
-#define LL_DMA_MODE_MULTI_BLOCK_SRC_RELOAD    DMA_CFGL_RELOAD_SRC                          /**< Multi-block: src address reload, dst address contiguous */
-#define LL_DMA_MODE_MULTI_BLOCK_DST_RELOAD    DMA_CFGL_RELOAD_DST                          /**< Multi-block: src address contiguous, dst address reload */
-#define LL_DMA_MODE_MULTI_BLOCK_ALL_RELOAD    (DMA_CFGL_RELOAD_SRC | DMA_CFGL_RELOAD_DST)  /**< Multi-block: src address reload, dst address reload */
+#define LL_DMA_MODE_MULTI_BLOCK_SRC_RELOAD    DMA_CFGL_RELOAD_SRC                          /**< Multi-block:
+                                                                                                src addr reload,
+                                                                                                dst addr contiguous */
+#define LL_DMA_MODE_MULTI_BLOCK_DST_RELOAD    DMA_CFGL_RELOAD_DST                          /**< Multi-block:
+                                                                                                src addr contiguous,
+                                                                                                dst addr reload */
+#define LL_DMA_MODE_MULTI_BLOCK_ALL_RELOAD    (DMA_CFGL_RELOAD_SRC | DMA_CFGL_RELOAD_DST)  /**< Multi-block:
+                                                                                                src addr reload,
+                                                                                                dst addr reload */
 /** @} */
 
 /** @defgroup DMA_LL_EC_SOURCE Source increment mode
@@ -586,7 +594,8 @@ __STATIC_INLINE uint32_t ll_dma_is_empty_fifo(dma_regs_t *DMAx, uint32_t channel
   *         @arg @ref LL_DMA_CHANNEL_6
   *         @arg @ref LL_DMA_CHANNEL_7
   * @param  configuration This parameter must be a combination of all the following values:
-  *         @arg @ref LL_DMA_MODE_SINGLE_BLOCK or @ref LL_DMA_MODE_MULTI_BLOCK_SRC_RELOAD or @ref LL_DMA_MODE_MULTI_BLOCK_DST_RELOAD or @ref LL_DMA_MODE_MULTI_BLOCK_ALL_RELOAD
+  *         @arg @ref LL_DMA_MODE_SINGLE_BLOCK or @ref LL_DMA_MODE_MULTI_BLOCK_SRC_RELOAD
+  *                   or @ref LL_DMA_MODE_MULTI_BLOCK_DST_RELOAD or @ref LL_DMA_MODE_MULTI_BLOCK_ALL_RELOAD
   *         @arg @ref LL_DMA_SRC_INCREMENT or @ref LL_DMA_SRC_DECREMENT or @ref LL_DMA_SRC_NO_CHANGE
   *         @arg @ref LL_DMA_DST_INCREMENT or @ref LL_DMA_DST_DECREMENT or @ref LL_DMA_DST_NO_CHANGE
   *         @arg @ref LL_DMA_SDATAALIGN_BYTE or @ref LL_DMA_SDATAALIGN_HALFWORD or @ref LL_DMA_SDATAALIGN_WORD
@@ -797,7 +806,8 @@ __STATIC_INLINE uint32_t ll_dma_get_source_increment_mode(dma_regs_t *DMAx, uint
   *         @arg @ref LL_DMA_DST_NO_CHANGE
   * @retval None
   */
-__STATIC_INLINE void ll_dma_set_destination_increment_mode(dma_regs_t *DMAx, uint32_t channel, uint32_t dst_increment_mode)
+__STATIC_INLINE void ll_dma_set_destination_increment_mode(dma_regs_t *DMAx, uint32_t channel,
+                                                           uint32_t dst_increment_mode)
 {
     MODIFY_REG(DMAx->CHANNEL[channel].CTL_LO, DMA_CTLL_DINC, dst_increment_mode);
 }
@@ -1608,7 +1618,8 @@ __STATIC_INLINE uint32_t ll_dma_get_destination_peripheral(dma_regs_t *DMAx, uin
   *         @arg @ref LL_DMA_DHANDSHAKING_HW
   * @retval None
   */
-__STATIC_INLINE void ll_dma_select_handshaking(dma_regs_t *DMAx, uint32_t channel, uint32_t src_handshaking, uint32_t dst_handshaking)
+__STATIC_INLINE void ll_dma_select_handshaking(dma_regs_t *DMAx, uint32_t channel,
+                                               uint32_t src_handshaking, uint32_t dst_handshaking)
 {
     MODIFY_REG(DMAx->CHANNEL[channel].CFG_LO, DMA_CFGL_HS_SEL_SRC | DMA_CFGL_HS_SEL_DST,
                src_handshaking | dst_handshaking);

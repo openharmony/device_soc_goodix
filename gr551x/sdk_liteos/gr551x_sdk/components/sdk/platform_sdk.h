@@ -38,11 +38,11 @@
  * @addtogroup SYSTEM
  * @{
  */
- /**
-  @addtogroup Plat_SDK Platform SDK
-  @{
-  @brief Definitions and prototypes for the Platform SDK
- */
+/**
+ @addtogroup Plat_SDK Platform SDK
+ @{
+ @brief Definitions and prototypes for the Platform SDK
+*/
 
 #ifndef _PLATFORM_SDK_H
 #define _PLATFORM_SDK_H
@@ -57,25 +57,23 @@
  * @{ */
 
 /** @brief system clock and run mode. */
-typedef enum
-{
-   XIP_64M = 0,            /**< XIP 64M. */
-   XIP_48M,                /**< XIP 48M. */
-   XIP_XO16M,              /**< XIP XO 16M. */
-   XIP_24M,                /**< XIP 24M. */
-   XIP_16M,                /**< XIP 16M. */
-   XIP_32M,                /**< XIP 32M. */
-   MIRROR_64M,             /**< MIRROR 64M. */
-   MIRROR_48M,             /**< MIRROR 48M. */
-   MIRROR_XO16M,           /**< MIRROR X) 16M. */
-   MIRROR_24M,             /**< MIRROR 24M. */
-   MIRROR_16M,             /**< MIRROR 16M. */
-   MIRROR_32M,             /**< MIRROR 32M. */
+typedef enum {
+    XIP_64M = 0,            /**< XIP 64M. */
+    XIP_48M,                /**< XIP 48M. */
+    XIP_XO16M,              /**< XIP XO 16M. */
+    XIP_24M,                /**< XIP 24M. */
+    XIP_16M,                /**< XIP 16M. */
+    XIP_32M,                /**< XIP 32M. */
+    MIRROR_64M,             /**< MIRROR 64M. */
+    MIRROR_48M,             /**< MIRROR 48M. */
+    MIRROR_XO16M,           /**< MIRROR X) 16M. */
+    MIRROR_24M,             /**< MIRROR 24M. */
+    MIRROR_16M,             /**< MIRROR 16M. */
+    MIRROR_32M,             /**< MIRROR 32M. */
 } run_mode_t;
 
 /** @brief sdk clock type. */
-typedef enum
-{
+typedef enum {
     RNG_OSC_CLK = 0,       /**< RNG OSC CLOCK. */
     RTC_OSC_CLK,           /**< RTC OSC CLOCK. */
     RNG_OSC_CLK2,          /**< RNG OSC CLOCK2. */
@@ -83,12 +81,11 @@ typedef enum
 
 
 /** @brief memory power setting mode. */
-typedef enum
-{
-   MEM_POWER_FULL_MODE = 0,   /**< Full mode. */
-   MEM_POWER_AUTO_MODE,       /**< Auto mode. */
+typedef enum {
+    MEM_POWER_FULL_MODE = 0,   /**< Full mode. */
+    MEM_POWER_AUTO_MODE,       /**< Auto mode. */
 } mem_power_t;
- /** @} */
+/** @} */
 
 /** @addtogroup PLAT_SDK_FUNCTIONS Functions
  * @{ */
@@ -228,7 +225,8 @@ void platform_clock_init(mcu_clock_type_t sys_clock, sdk_clock_type_t clock, uin
  * @retval :  void
  ****************************************************************************************
  */
-void platform_clock_init_rng(mcu_clock_type_t sys_clock, sdk_clock_type_t clock, uint16_t accuracy, uint16_t xo_offset);
+void platform_clock_init_rng(mcu_clock_type_t sys_clock, sdk_clock_type_t clock,
+                                        uint16_t accuracy, uint16_t xo_offset);
 
 /**
  ****************************************************************************************
@@ -282,12 +280,12 @@ void platform_init(void);
  */
 void warm_boot_first(void);
 
- /**
- ****************************************************************************************
- * @brief  the second warm boot stage..
- * @retval :  void
- ****************************************************************************************
- */
+/**
+****************************************************************************************
+* @brief  the second warm boot stage..
+* @retval :  void
+****************************************************************************************
+*/
 void warm_boot_second(void);
 
 /**

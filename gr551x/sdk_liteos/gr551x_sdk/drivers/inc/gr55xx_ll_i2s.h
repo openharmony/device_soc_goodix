@@ -73,37 +73,35 @@ extern "C" {
 /**
   * @brief LL I2S init structures definition
   */
-typedef struct _ll_i2s_init_t
-{
+typedef struct _ll_i2s_init_t {
     uint32_t rxdata_size;           /**< Specifies the I2S receive data size.
                                          This parameter can be a value of @ref I2S_LL_EC_DATASIZE.
-
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_rxsize(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_i2s_set_rxsize(). */
 
     uint32_t txdata_size;           /**< Specifies the I2S transmit data size.
                                          This parameter can be a value of @ref I2S_LL_EC_DATASIZE.
-
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_txsize(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_i2s_set_txsize(). */
 
     uint32_t rx_threshold;          /**< Specifies the I2S receive FIFO threshold.
                                          This parameter can be a value of @ref I2S_LL_EC_FIFO_THRESHOLD.
-
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_rx_fifo_threshold(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_i2s_set_rx_fifo_threshold(). */
 
     uint32_t tx_threshold;          /**< Specifies the I2S transmit FIFO threshold.
                                          This parameter can be a value of @ref I2S_LL_EC_FIFO_THRESHOLD.
-
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_tx_fifo_threshold(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_i2s_set_tx_fifo_threshold(). */
 
     uint32_t clock_source;          /**< Specifies the source of the I2S clock.
                                          This parameter can be a value of @ref I2S_LL_EC_CLOCK_SOURCE.
-
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_clock_src(). */
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_i2s_set_clock_src(). */
 
     uint32_t audio_freq;            /**< Specifies the frequency selected for the I2S communication.
-
-                                         This feature can be modified afterwards using unitary function @ref ll_i2s_set_clock_div(). */
-
+                                         This feature can be modified afterwards using unitary function
+                                         @ref ll_i2s_set_clock_div(). */
 } ll_i2s_init_t;
 
 /** @} */
@@ -124,20 +122,20 @@ typedef struct _ll_i2s_init_t
   * @brief    Flags definitions which can be used with LL_I2S_ReadReg function
   * @{
   */
-#define LL_I2S_STATUS_TXFO                  I2S_INTSTAT_TXFO            /**< TX FIFO write overflow flag                 */
-#define LL_I2S_STATUS_TXFE                  I2S_INTSTAT_TXFE            /**< TX FIFO threshold level is not reached flag */
-#define LL_I2S_STATUS_RXFO                  I2S_INTSTAT_RXFO            /**< RX FIFO receive overflow flag               */
-#define LL_I2S_STATUS_RXDA                  I2S_INTSTAT_RXDA            /**< RX FIFO threshold level is reached flag     */
+#define LL_I2S_STATUS_TXFO                  I2S_INTSTAT_TXFO         /**< TX FIFO write overflow flag                 */
+#define LL_I2S_STATUS_TXFE                  I2S_INTSTAT_TXFE         /**< TX FIFO threshold level is not reached flag */
+#define LL_I2S_STATUS_RXFO                  I2S_INTSTAT_RXFO         /**< RX FIFO receive overflow flag               */
+#define LL_I2S_STATUS_RXDA                  I2S_INTSTAT_RXDA         /**< RX FIFO threshold level is reached flag     */
 /** @} */
 
 /** @defgroup I2S_LL_EC_INTERRUPT Interrupt Defines
   * @brief    Interrupt definitions which can be used with LL_SPI_ReadReg and  LL_SPI_WriteReg functions
   * @{
   */
-#define LL_I2S_INT_TXFO                     I2S_INTMASK_TXFO            /**< TX FIFO write overflow interrupt                 */
-#define LL_I2S_INT_TXFE                     I2S_INTMASK_TXFE            /**< TX FIFO threshold level is not reached interrupt */
-#define LL_I2S_INT_RXFO                     I2S_INTMASK_RXFO            /**< RX FIFO receive overflow interrupt               */
-#define LL_I2S_INT_RXDA                     I2S_INTMASK_RXDA            /**< RX FIFO threshold level is reached interrupt     */
+#define LL_I2S_INT_TXFO                     I2S_INTMASK_TXFO    /**< TX FIFO write overflow interrupt                 */
+#define LL_I2S_INT_TXFE                     I2S_INTMASK_TXFE    /**< TX FIFO threshold level is not reached interrupt */
+#define LL_I2S_INT_RXFO                     I2S_INTMASK_RXFO    /**< RX FIFO receive overflow interrupt               */
+#define LL_I2S_INT_RXDA                     I2S_INTMASK_RXDA    /**< RX FIFO threshold level is reached interrupt     */
 /** @} */
 
 /** @defgroup I2S_LL_EC_CLOCK_SOURCE I2S Clock Source
@@ -190,9 +188,9 @@ typedef struct _ll_i2s_init_t
 /** @defgroup I2S_LL_EC_WS_CYCLES Word Select Line Cycles
   * @{
   */
-#define LL_I2S_WS_CYCLES_16                 (0x00000000UL)                      /**< 16 SCLK cycles in word select line. */
-#define LL_I2S_WS_CYCLES_24                 (0x1UL << I2S_CLKCONFIG_WSS_Pos)    /**< 24 SCLK cycles in word select line. */
-#define LL_I2S_WS_CYCLES_32                 (0x2UL << I2S_CLKCONFIG_WSS_Pos)    /**< 32 SCLK cycles in word select line. */
+#define LL_I2S_WS_CYCLES_16                 (0x00000000UL)                   /**< 16 SCLK cycles in word select line. */
+#define LL_I2S_WS_CYCLES_24                 (0x1UL << I2S_CLKCONFIG_WSS_Pos) /**< 24 SCLK cycles in word select line. */
+#define LL_I2S_WS_CYCLES_32                 (0x2UL << I2S_CLKCONFIG_WSS_Pos) /**< 32 SCLK cycles in word select line. */
 /** @} */
 
 /** @defgroup I2S_LL_EC_SCLK_GATE SCLK Gate

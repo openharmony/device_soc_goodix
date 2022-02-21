@@ -104,8 +104,7 @@
  *****************************************************************************************
  */
 /**@brief App log environment variable. */
-struct app_log_env_t
-{
+struct app_log_env_t {
     app_log_init_t       app_log_init;  /**< App log initialization variables. */
     bool                 is_filter_set; /**< App log filter is set or not. */
     app_log_trans_func_t trans_func;    /**< App log transmit function. */
@@ -159,20 +158,15 @@ static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char 
 {
     uint16_t cpy_length = 0;
 
-    if (!p_log_buff || !p_log_data)
-    {
+    if (!p_log_buff || !p_log_data) {
         return cpy_length;
     }
 
-    while (*p_log_data != 0)
-    {
-        if ((wr_idx + cpy_length) < APP_LOG_LINE_BUF_SIZE)
-        {
+    while (*p_log_data != 0) {
+        if ((wr_idx + cpy_length) < APP_LOG_LINE_BUF_SIZE) {
             p_log_buff[wr_idx + cpy_length] = *p_log_data++;
             cpy_length++;
-        }
-        else
-        {
+        } else {
             break;
         }
     }
@@ -192,12 +186,9 @@ static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char 
  */
 static bool app_log_is_fmt_set(uint8_t level, uint8_t fmt)
 {
-    if (s_app_log_env.app_log_init.fmt_set[level] & fmt)
-    {
+    if (s_app_log_env.app_log_init.fmt_set[level] & fmt) {
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 
@@ -215,13 +206,11 @@ static bool app_log_is_fmt_set(uint8_t level, uint8_t fmt)
  */
 static void app_log_data_trans(uint8_t *p_data, uint16_t length)
 {
-    if (NULL == p_data || 0 == length)
-    {
+    if (NULL == p_data || 0 == length) {
         return;
     }
 
-    if (s_app_log_env.trans_func)
-    {
+    if (s_app_log_env.trans_func) {
         s_app_log_env.trans_func(p_data, length);
     }
 
@@ -236,18 +225,13 @@ static void app_log_data_trans(uint8_t *p_data, uint16_t length)
  */
 sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_func, app_log_flush_func_t flush_func)
 {
-    if (NULL == p_log_init)
-    {
+    if (NULL == p_log_init) {
         s_app_log_env.is_filter_set = false;
         memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), 0, sizeof(app_log_init_t));
-    }
-    else if ( p_log_init->filter.level <= APP_LOG_LVL_DEBUG)
-    {
+    } else if ( p_log_init->filter.level <= APP_LOG_LVL_DEBUG) {
         s_app_log_env.is_filter_set = true;
         memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), p_log_init, sizeof(app_log_init_t));
-    }
-    else
-    {
+    } else {
         return SDK_ERR_INVALID_PARAM;
     }
 
@@ -257,7 +241,8 @@ sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_fu
     return SDK_SUCCESS;
 }
 
-void app_log_output(uint8_t level, const char *tag, const char *file, const char *func, const long line, const char *format, ...)
+void app_log_output(uint8_t level, const char *tag, const char *file, const char *func, const long line,
+                    const char *format, ...)
 {
     uint16_t log_length     = 0;
     uint8_t  newline_length = strlen(APP_LOG_NEWLINE_SIGN);
@@ -265,14 +250,12 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
     char     line_num[APP_LOG_LINE_NB_LEN_MAX + 1]  = { 0 };
     va_list  ap;
 
-    if (level > s_app_log_env.app_log_init.filter.level && s_app_log_env.is_filter_set)
-    {
+    if (level > s_app_log_env.app_log_init.filter.level && s_app_log_env.is_filter_set) {
         return;
     }
 
 #if APP_LOG_TAG_ENABLE
-    if (!strstr(tag, s_app_log_env.app_log_init.filter.tag))
-    {
+    if (!strstr(tag, s_app_log_env.app_log_init.filter.tag)) {
         return;
     }
 #endif
@@ -288,51 +271,41 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
 #endif
 
     // Encode level info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_LVL))
-    {
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_LVL)) {
         log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_svt_lvl_output_info[level]);
     }
 
 #if APP_LOG_TAG_ENABLE
     // Encode tag info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_TAG))
-    {
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_TAG)) {
         log_length += app_log_strcpy(log_length, s_log_encode_buf, tag);
         log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
     }
 #endif
 
     // Encode file directory name , function name and lune number info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR | APP_LOG_FMT_FUNC | APP_LOG_FMT_LINE))
-    {
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR | APP_LOG_FMT_FUNC | APP_LOG_FMT_LINE)) {
         log_length += app_log_strcpy(log_length, s_log_encode_buf, "(");
 
-        if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR))
-        {
+        if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR)) {
             log_length += app_log_strcpy(log_length, s_log_encode_buf, file);
 
-            if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC))
-            {
+            if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC)) {
                 log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
-            }
-            else if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
-            {
+            } else if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE)) {
                 log_length += app_log_strcpy(log_length, s_log_encode_buf, ":");
             }
         }
 
-        if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC))
-        {
+        if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC)) {
             log_length += app_log_strcpy(log_length, s_log_encode_buf, func);
 
-            if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
-            {
+            if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE)) {
                 log_length += app_log_strcpy(log_length, s_log_encode_buf, " Line:");
             }
         }
 
-        if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
-        {
+        if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE)) {
             snprintf_s(line_num, sizeof (line_num), APP_LOG_LINE_NB_LEN_MAX, "%ld", line);
             log_length += app_log_strcpy(log_length, s_log_encode_buf, line_num);
         }
@@ -341,29 +314,25 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
     }
 
     // Encode other log data to buffer. '\0' must be added in the end by vsnprintf. */
-    fmt_result = vsnprintf_s((char *)s_log_encode_buf + log_length, sizeof (s_log_encode_buf), APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
+    fmt_result = vsnprintf_s((char *)s_log_encode_buf + log_length, sizeof (s_log_encode_buf),
+                             APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
 
     va_end(ap);
 
     //  Calculate log length
-    if ((fmt_result > -1) && (log_length + fmt_result) <= APP_LOG_LINE_BUF_SIZE)
-    {
+    if ((fmt_result > -1) && (log_length + fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
         log_length += fmt_result;
-    }
-    else
-    {
+    } else {
         log_length = APP_LOG_LINE_BUF_SIZE;
     }
 
 #if APP_LOG_COLOR_ENABLE
-    if (log_length + (sizeof(CSI_END) - 1) + newline_length > APP_LOG_LINE_BUF_SIZE)
-    {
+    if (log_length + (sizeof(CSI_END) - 1) + newline_length > APP_LOG_LINE_BUF_SIZE) {
         log_length  = APP_LOG_LINE_BUF_SIZE;
         // Reserve some space for CSI end sign.
         log_length -= sizeof(CSI_END) - 1;
 #else
-    if (log_length + newline_length > APP_LOG_LINE_BUF_SIZE)
-    {
+    if (log_length + newline_length > APP_LOG_LINE_BUF_SIZE) {
         log_length = APP_LOG_LINE_BUF_SIZE;
 #endif
         log_length -= newline_length;
@@ -395,12 +364,9 @@ void app_log_raw_info(const char *format, ...)
 
     fmt_result = vsnprintf_s((char *)s_log_encode_buf, sizeof(s_log_encode_buf), APP_LOG_LINE_BUF_SIZE, format, ap);
 
-    if ((fmt_result > -1) && (fmt_result) <= APP_LOG_LINE_BUF_SIZE)
-    {
+    if ((fmt_result > -1) && (fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
         log_length = fmt_result;
-    }
-    else
-    {
+    } else {
         log_length = APP_LOG_LINE_BUF_SIZE;
     }
 
@@ -417,21 +383,16 @@ void app_log_hex_dump(uint8_t *p_data, uint16_t length)
 
     APP_LOG_LOCK();
 
-    for (convert_idx = 0; convert_idx < length; convert_idx++)
-    {
-        if (log_length >= APP_LOG_LINE_BUF_SIZE)
-        {
+    for (convert_idx = 0; convert_idx < length; convert_idx++) {
+        if (log_length >= APP_LOG_LINE_BUF_SIZE) {
             log_length = APP_LOG_LINE_BUF_SIZE;
             break;
         }
 
-        if (p_data[convert_idx] < ' ')
-        {
+        if (p_data[convert_idx] < ' ') {
             s_log_encode_buf[log_length] = '.';
             log_length++;
-        }
-        else
-        {
+        } else {
             snprintf_s(dump_str, sizeof (dump_str), 8, "%02X ", p_data[convert_idx]);
             log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
         }
@@ -444,8 +405,7 @@ void app_log_hex_dump(uint8_t *p_data, uint16_t length)
 
 void app_log_flush(void)
 {
-    if (s_app_log_env.flush_func)
-    {
+    if (s_app_log_env.flush_func) {
         s_app_log_env.flush_func();
     }
 }
@@ -454,8 +414,7 @@ void app_log_flush(void)
 #if IO_REDIRECT == 0
 #if defined(__CC_ARM)
 
-struct __FILE
-{
+struct __FILE {
     int handle;
 };
 
@@ -475,8 +434,7 @@ int _write(int file, const char *buf, int len)
 {
     int tx_len = 0;
 
-    while (tx_len < len)
-    {
+    while (tx_len < len) {
         app_log_data_trans((uint8_t *)buf, 1);
         buf++;
         tx_len++;
@@ -490,8 +448,7 @@ size_t __write(int handle, const unsigned char *buf, size_t size)
 {
     size_t len = 0;
 
-    while (len < size)
-    {
+    while (len < size) {
         app_log_data_trans((uint8_t *)buf, 1);
         buf++;
         len++;

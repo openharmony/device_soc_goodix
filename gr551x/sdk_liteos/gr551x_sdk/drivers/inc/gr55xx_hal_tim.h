@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief  HAL TIMER State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_TIMER_STATE_RESET             = 0x00,    /**< Peripheral not yet initialized or disabled  */
     HAL_TIMER_STATE_READY             = 0x01,    /**< Peripheral Initialized and ready for use    */
     HAL_TIMER_STATE_BUSY              = 0x02,    /**< An internal process is ongoing              */
@@ -94,10 +93,8 @@ typedef enum
 /**
   * @brief TIMER init Structure definition
   */
-typedef struct _timer_init
-{
+typedef struct _timer_init {
     uint32_t auto_reload;                   /**< Specifies the auto-reload value. */
-
 } timer_init_t;
 
 /** @} */
@@ -109,8 +106,7 @@ typedef struct _timer_init
 /**
   * @brief TIMER handle Structure definition
   */
-typedef struct _timer_handle
-{
+typedef struct _timer_handle {
     timer_regs_t               *p_instance;     /**< Register base address        */
 
     timer_init_t               init;            /**< TIMER Base required parameters */
@@ -118,7 +114,6 @@ typedef struct _timer_handle
     __IO hal_lock_t          lock;              /**< Locking object               */
 
     __IO hal_timer_state_t     state;           /**< TIMER operation state          */
-
 } timer_handle_t;
 /** @} */
 
@@ -136,8 +131,7 @@ typedef struct _timer_handle
   * @brief HAL_TIMER Callback function definition
   */
 
-typedef struct _hal_timer_callback
-{
+typedef struct _hal_timer_callback {
     void (*timer_msp_init)(timer_handle_t *p_timer);                /**< TIMER init MSP callback            */
     void (*timer_msp_deinit)(timer_handle_t *p_timer);              /**< TIMER de-init MSP callback         */
     void (*timer_period_elapsed_callback)(timer_handle_t *p_timer); /**< TIMER period elapsed callback      */
@@ -161,43 +155,43 @@ typedef struct _hal_timer_callback
   * @param  __HANDLE__ TIMER handle.
   * @retval None
   */
-#define __HAL_TIMER_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_TIMER_STATE_RESET)
+#define __HAL_TIMER_RESET_HANDLE_STATE(__HANDLE__)          ((__HANDLE__)->state = HAL_TIMER_STATE_RESET)
 
 /** @brief  Enable the specified TIMER peripheral.
   * @param  __HANDLE__ Specifies the TIMER Handle.
   * @retval None
   */
-#define __HAL_TIMER_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_EN)
+#define __HAL_TIMER_ENABLE(__HANDLE__)                      SET_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_EN)
 
 /** @brief  Disable the specified TIMER peripheral.
   * @param  __HANDLE__ Specifies the TIMER Handle.
   * @retval None
   */
-#define __HAL_TIMER_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_EN)
+#define __HAL_TIMER_DISABLE(__HANDLE__)                     CLEAR_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_EN)
 
 /** @brief  Enable the TIMER interrupt.
   * @param  __HANDLE__ Specifies the TIMER Handle.
   * @retval None
   */
-#define __HAL_TIMER_ENABLE_IT(__HANDLE__)                        SET_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_INTEN)
+#define __HAL_TIMER_ENABLE_IT(__HANDLE__)                   SET_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_INTEN)
 
 /** @brief  Disable the TIMER interrupt.
   * @param  __HANDLE__ Specifies the TIMER Handle.
   * @retval None
   */
-#define __HAL_TIMER_DISABLE_IT(__HANDLE__)                       CLEAR_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_INTEN)
+#define __HAL_TIMER_DISABLE_IT(__HANDLE__)                  CLEAR_BITS((__HANDLE__)->p_instance->CTRL, TIMER_CTRL_INTEN)
 
 /** @brief  Check whether the TIMER interrupt has occurred or not.
   * @param  __HANDLE__ Specifies the TIMER Handle.
   * @retval The new state of TIMER interrupt (SET or RESET).
   */
-#define __HAL_TIMER_GET_FLAG_IT(__HANDLE__)                      ll_timer_is_active_flag_it(__HANDLE__->p_instance)
+#define __HAL_TIMER_GET_FLAG_IT(__HANDLE__)                 ll_timer_is_active_flag_it((__HANDLE__)->p_instance)
 
 /** @brief  Clear the TIMER interrupt flag.
   * @param  __HANDLE__ Specifies the TIMER Handle.
   * @retval None
   */
-#define __HAL_TIMER_CLEAR_FLAG_IT(__HANDLE__)                    ll_timer_clear_flag_it(__HANDLE__->p_instance)
+#define __HAL_TIMER_CLEAR_FLAG_IT(__HANDLE__)               ll_timer_clear_flag_it((__HANDLE__)->p_instance)
 
 /** @} */
 
