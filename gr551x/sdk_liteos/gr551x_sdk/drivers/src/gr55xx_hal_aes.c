@@ -34,14 +34,9 @@
   */
 
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_AES_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_aes_init_ext(aes_handle_t *p_aes);
-extern hal_status_t hal_aes_deinit_ext(aes_handle_t *p_aes);
-extern void hal_aes_register_callback(aes_callback_t *aes_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

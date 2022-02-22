@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_GPIO_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern void hal_gpio_init_ext(gpio_regs_t *GPIOx, gpio_init_t *p_gpio_init);
-extern void hal_gpio_deinit_ext(gpio_regs_t *GPIOx, uint32_t gpio_pin);
-extern void hal_gpio_register_callback(hal_gpio_callback_t *callback);
 
 /* Private variables ---------------------------------------------------------*/
 

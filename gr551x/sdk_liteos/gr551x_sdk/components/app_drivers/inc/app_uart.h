@@ -73,29 +73,26 @@ extern "C" {
 /**
   * @brief UART module Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_UART_ID_0,                     /**< UART module 0 */
     APP_UART_ID_1,                     /**< UART module 1 */
     APP_UART_ID_MAX,                   /**< Only for check parameter, not used as input parameters. */
-}app_uart_id_t;
+} app_uart_id_t;
 
 /**
   * @brief UART operating mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_UART_TYPE_INTERRUPT,           /**< Interrupt operation mode */
     APP_UART_TYPE_POLLING,             /**< Polling operation mode   */
     APP_UART_TYPE_DMA,                 /**< DMA operation mode       */
     APP_UART_TYPE_MAX,                 /**< Only for check parameter, not used as input parameters. */
-}app_uart_type_t;
+} app_uart_type_t;
 
 /**
   * @brief UART event Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_UART_EVT_ERROR,                /**< Error reported by UART peripheral. */
     APP_UART_EVT_TX_CPLT,              /**< Requested TX transfer completed.   */
     APP_UART_EVT_RX_DATA,              /**< Requested RX transfer completed.   */
@@ -112,42 +109,37 @@ typedef enum
 /**
   * @brief UART IO Structures
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t      type;           /**< Specifies the type of UART IO. */
     app_io_mux_t       mux;            /**< Specifies the Peripheral to be connected to the selected pins. */
     uint32_t           pin;            /**< Specifies the IO pins to be configured.
                                             This parameter can be any value of @ref GR551x_pins. */
     app_io_pull_t      pull;           /**< Specifies the Pull-up or Pull-Down activation for the selected pins. */
-
-}app_uart_pin_t;
+} app_uart_pin_t;
 
 /**
   * @brief UART IO configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_uart_pin_t    tx;              /**< Set the configuration of UART TX pin.  */
     app_uart_pin_t    rx;              /**< Set the configuration of UART RX pin.  */
     app_uart_pin_t    cts;             /**< Set the configuration of UART CTS pin. */
     app_uart_pin_t    rts;             /**< Set the configuration of UART RTS pin. */
-}app_uart_pin_cfg_t;
+} app_uart_pin_cfg_t;
 
 /**
   * @brief UART operate mode Enumerations definition
   */
-typedef struct
-{
+typedef struct {
     app_uart_type_t   type;            /**< Specifies the operation mode of UART. */
     dma_channel_t     tx_dma_channel;  /**< Specifies the dma channel of UART TX. */
     dma_channel_t     rx_dma_channel;  /**< Specifies the dma channel of UART RX. */
-}app_uart_mode_t;
+} app_uart_mode_t;
 
 /**
   * @brief UART parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_uart_id_t      id;             /**< specified UART module ID.                                        */
     app_uart_pin_cfg_t pin_cfg;        /**< the pin configuration information for the specified UART module. */
     app_uart_mode_t    use_mode;       /**< UART operate mode.                                               */
@@ -157,8 +149,7 @@ typedef struct
 /**
   * @brief UART event structure definition
   */
-typedef struct
-{
+typedef struct {
     app_uart_evt_type_t type; /**< Type of event. */
     union
     {
@@ -177,7 +168,7 @@ typedef void (*app_uart_evt_handler_t)(app_uart_evt_t *p_evt);
   */
 typedef struct
 {
-    uint8_t * tx_buf;      /**< Pointer to the TX buffer. */
+    uint8_t   *tx_buf;     /**< Pointer to the TX buffer. */
     uint32_t  tx_buf_size; /**< Size of the TX buffer. */
 } app_uart_tx_buf_t;
 /** @} */
@@ -331,5 +322,3 @@ uint16_t app_uart_transmit_sem_sync(app_uart_id_t id, uint8_t *p_data, uint16_t 
 /** @} */
 /** @} */
 /** @} */
-
-

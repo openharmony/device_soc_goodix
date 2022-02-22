@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_SPI_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_spi_init_ext(spi_handle_t *p_spi);
-extern hal_status_t hal_spi_deinit_ext(spi_handle_t *p_spi);
-extern void hal_spi_register_callback(hal_spi_callback_t *hal_spi_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

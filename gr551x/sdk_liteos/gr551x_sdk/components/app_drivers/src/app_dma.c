@@ -37,11 +37,11 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_dma.h"
-#include "app_pwr_mgmt.h"
 #include <string.h>
 #include <stdbool.h>
+#include "app_pwr_mgmt.h"
 #include "platform_sdk.h"
+#include "app_dma.h"
 
 /*
  * DEFINES
@@ -55,8 +55,7 @@
  */
 
 /**@brief App dma state types. */
-typedef enum
-{
+typedef enum {
     APP_DMA_INVALID = 0,
     APP_DMA_ACTIVITY,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
@@ -64,8 +63,7 @@ typedef enum
 #endif
 } app_dma_state_t;
 
-struct dma_env_t
-{
+struct dma_env_t {
     app_dma_state_t       dma_state;
     dma_handle_t          handle;
     app_dma_evt_handler_t evt_handler;
@@ -87,8 +85,7 @@ static bool             s_sleep_cb_registered_flag = false;
 static struct dma_env_t s_dma_env[DMA_HANDLE_MAX];
 static pwr_id_t         s_dma_pwr_id;
 
-static const app_sleep_callbacks_t dma_sleep_cb =
-{
+static const app_sleep_callbacks_t dma_sleep_cb = {
     .app_prepare_for_sleep  = dma_prepare_for_sleep,
     .app_sleep_canceled     = dma_sleep_canceled,
     .app_wake_up_ind        = dma_wake_up_ind,
@@ -102,19 +99,16 @@ static bool dma_prepare_for_sleep(void)
 {
     hal_dma_state_t state;
 
-    for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++)
-    {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY)
-        {
+    for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++) {
+        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
             state = hal_dma_get_state(&s_dma_env[i].handle);
-            if ((state != HAL_DMA_STATE_RESET) && (state != HAL_DMA_STATE_READY))
-            {
+            if ((state != HAL_DMA_STATE_RESET) && (state != HAL_DMA_STATE_READY)) {
                 return false;
             }
             hal_dma_suspend_reg(&s_dma_env[i].handle);
-            #ifdef APP_DRIVER_WAKEUP_CALL_FUN
+#ifdef APP_DRIVER_WAKEUP_CALL_FUN
             s_dma_env[i].dma_state = APP_DMA_SLEEP;
-            #endif
+#endif
         }
     }
 
@@ -123,15 +117,6 @@ static bool dma_prepare_for_sleep(void)
 
 static void dma_sleep_canceled(void)
 {
-#if 0
-    for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++)
-    {
-        if (s_dma_env[i].dma_state == APP_DMA_SLEEP)
-        {
-            s_dma_env[i].dma_state = APP_DMA_ACTIVITY;
-        }
-    }
-#endif
 }
 
 SECTION_RAM_CODE static void dma_wake_up_ind(void)
@@ -139,17 +124,14 @@ SECTION_RAM_CODE static void dma_wake_up_ind(void)
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
     bool find = false;
 
-    for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++)
-    {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY)
-        {
+    for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++) {
+        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
             hal_dma_resume_reg(&s_dma_env[i].handle);
             find = true;
         }
     }
 
-    if (find)
-    {
+    if (find) {
         hal_nvic_clear_pending_irq(DMA_IRQn);
         hal_nvic_enable_irq(DMA_IRQn);
     }
@@ -159,16 +141,15 @@ SECTION_RAM_CODE static void dma_wake_up_ind(void)
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
 void dma_wake_up(dma_id_t id)
 {
-    if(id<0 || id >= DMA_HANDLE_MAX)
+    if (id<0 || id >= DMA_HANDLE_MAX) {
         return;
+    }
 
-    if (s_dma_env[id].dma_state == APP_DMA_SLEEP)
-    {
+    if (s_dma_env[id].dma_state == APP_DMA_SLEEP) {
         hal_dma_resume_reg(&s_dma_env[id].handle);
         s_dma_env[id].dma_state = APP_DMA_ACTIVITY;
 
-        if (!NVIC_GetEnableIRQ(DMA_IRQn))
-        {
+        if (!NVIC_GetEnableIRQ(DMA_IRQn)) {
             hal_nvic_clear_pending_irq(DMA_IRQn);
             hal_nvic_enable_irq(DMA_IRQn);
         }
@@ -184,13 +165,10 @@ void dma_tfr_callback(struct _dma_handle *hdma)
 {
     uint8_t i;
 
-    for (i = 0; i < DMA_HANDLE_MAX; i++)
-    {
+    for (i = 0; i < DMA_HANDLE_MAX; i++) {
         if ((s_dma_env[i].dma_state == APP_DMA_ACTIVITY) &&
-            (s_dma_env[i].handle.channel == hdma->channel))
-        {
-            if(NULL != s_dma_env[i].evt_handler)
-            {
+            (s_dma_env[i].handle.channel == hdma->channel)) {
+            if (s_dma_env[i].evt_handler != NULL) {
                 s_dma_env[i].evt_handler(APP_DMA_EVT_TFR);
             }
             break;
@@ -202,13 +180,10 @@ void dma_err_callback(struct _dma_handle * hdma)
 {
     uint8_t i;
 
-    for (i = 0; i < DMA_HANDLE_MAX; i++)
-    {
+    for (i = 0; i < DMA_HANDLE_MAX; i++) {
         if ((s_dma_env[i].dma_state == APP_DMA_ACTIVITY) &&
-            (s_dma_env[i].handle.channel == hdma->channel))
-        {
-            if(NULL != s_dma_env[i].evt_handler)
-            {
+            (s_dma_env[i].handle.channel == hdma->channel)) {
+            if (s_dma_env[i].evt_handler != NULL) {
                 s_dma_env[i].evt_handler(APP_DMA_EVT_ERROR);
             }
             break;
@@ -222,25 +197,18 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
     dma_id_t     id = -1;
     hal_status_t status = HAL_ERROR;
 
-    if (NULL != p_params)
-    {
-        if(!IS_DMA_ALL_INSTANCE(p_params->channel_number))
-        {
+    if (p_params != NULL) {
+        if (!IS_DMA_ALL_INSTANCE(p_params->channel_number)) {
             return -1;
         }
         GLOBAL_EXCEPTION_DISABLE();
-        for (i = 0; i < DMA_HANDLE_MAX; i++)
-        {
+        for (i = 0; i < DMA_HANDLE_MAX; i++) {
             if (s_dma_env[i].dma_state == APP_DMA_INVALID || \
-                s_dma_env[i].handle.channel == p_params->channel_number)
-            {
-                if(HAL_DMA_STATE_BUSY == s_dma_env[i].handle.state)
-                {
+                s_dma_env[i].handle.channel == p_params->channel_number) {
+                if (HAL_DMA_STATE_BUSY == s_dma_env[i].handle.state) {
                     i = DMA_HANDLE_MAX;
                     break;
-                }
-                else
-                {
+                } else {
                     id = i;
                     s_dma_env[i].dma_state = APP_DMA_ACTIVITY;
                     break;
@@ -249,10 +217,8 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
         }
         GLOBAL_EXCEPTION_ENABLE();
 
-        if (i < DMA_HANDLE_MAX)
-        {
-            if (s_sleep_cb_registered_flag == false)
-            {
+        if (i < DMA_HANDLE_MAX) {
+            if (s_sleep_cb_registered_flag == false) { // register sleep callback
                 s_sleep_cb_registered_flag = true;
                 s_dma_pwr_id = pwr_register_sleep_cb(&dma_sleep_cb, APP_DRIVER_DMA_WAPEUP_PRIORITY);
             }
@@ -269,8 +235,7 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
         }
     }
 
-    if (HAL_OK != status)
-    {
+    if (HAL_OK != status) {
         id = -1;
     }
 
@@ -282,8 +247,7 @@ uint16_t app_dma_deinit(dma_id_t id)
 {
     uint8_t i;
 
-    if ((id < 0) || (id >= DMA_HANDLE_MAX) || (s_dma_env[id].dma_state == APP_DMA_INVALID))
-    {
+    if ((id < 0) || (id >= DMA_HANDLE_MAX) || (s_dma_env[id].dma_state == APP_DMA_INVALID)) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
@@ -292,16 +256,13 @@ uint16_t app_dma_deinit(dma_id_t id)
     s_dma_env[id].dma_state = APP_DMA_INVALID;
     s_dma_env[id].handle.channel = (dma_channel_t)(-1);
 
-    for (i = 0; i < DMA_HANDLE_MAX; i++)
-    {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY)
-        {
+    for (i = 0; i < DMA_HANDLE_MAX; i++) {
+        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
             break;
         }
     }
 
-    if (i == DMA_HANDLE_MAX)
-    {
+    if (i == DMA_HANDLE_MAX) {
         pwr_unregister_sleep_cb(s_dma_pwr_id);
         s_sleep_cb_registered_flag = false;
         hal_nvic_disable_irq(DMA_IRQn);
@@ -313,8 +274,7 @@ uint16_t app_dma_deinit(dma_id_t id)
 
 dma_handle_t *app_dma_get_handle(dma_id_t id)
 {
-    if (id < 0 || id >= DMA_HANDLE_MAX || s_dma_env[id].dma_state == APP_DMA_INVALID)
-    {
+    if (id < 0 || id >= DMA_HANDLE_MAX || s_dma_env[id].dma_state == APP_DMA_INVALID) {
         return NULL;
     }
 
@@ -329,8 +289,7 @@ uint16_t app_dma_start(dma_id_t id, uint32_t src_address, uint32_t dst_address, 
 {
     hal_status_t status = HAL_ERROR;
 
-    if (id < 0 || id >= DMA_HANDLE_MAX || s_dma_env[id].dma_state == APP_DMA_INVALID)
-    {
+    if (id < 0 || id >= DMA_HANDLE_MAX || s_dma_env[id].dma_state == APP_DMA_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -339,8 +298,7 @@ uint16_t app_dma_start(dma_id_t id, uint32_t src_address, uint32_t dst_address, 
 #endif
 
     status = hal_dma_start_it(&s_dma_env[id].handle, src_address, dst_address, data_length);
-    if (HAL_OK != status)
-    {
+    if (HAL_OK != status) {
         return (uint16_t)status;
     }
 
@@ -353,11 +311,9 @@ SECTION_RAM_CODE void DMA_IRQHandler(void)
     platform_interrupt_protection_push();
 #endif
     uint8_t i;
-    for (i = 0; i < DMA_HANDLE_MAX; i++)
-    {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY)
-        {
-             hal_dma_irq_handler(&s_dma_env[i].handle);
+    for (i = 0; i < DMA_HANDLE_MAX; i++) {
+        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
+            hal_dma_irq_handler(&s_dma_env[i].handle);
         }
     }
 #if FLASH_PROTECT_PRIORITY

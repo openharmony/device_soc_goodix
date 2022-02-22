@@ -37,11 +37,11 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_pwm.h"
+#include <string.h>
 #include "app_io.h"
 #include "app_systick.h"
 #include "app_pwr_mgmt.h"
-#include <string.h>
+#include "app_pwm.h"
 
 #ifdef HAL_CALENDAR_MODULE_ENABLED
 
@@ -51,25 +51,21 @@
  */
 
 /**@brief App pwm state types. */
-typedef enum
-{
+typedef enum {
     APP_PWM_INVALID = 0,
     APP_PWM_ACTIVITY,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_PWM_SLEEP,
 #endif
-
 } app_pwm_state_t;
 
 /**@brief App pwm module state types. */
-typedef enum
-{
+typedef enum {
     APP_PWM_STOP = 0,
     APP_PWM_START,
 } app_pwm_module_state_t;
 
-struct pwm_env_t
-{
+struct pwm_env_t {
     app_pwm_pin_cfg_t      pin_cfg;
     app_pwm_state_t        pwm_state;
     app_pwm_module_state_t pwm_module_state;
@@ -95,8 +91,7 @@ static const uint32_t s_pwm_instance[APP_PWM_ID_MAX] = {PWM0_BASE, PWM1_BASE};
 static bool  s_sleep_cb_registered_flag = false;
 static pwr_id_t   s_pwm_pwr_id;
 
-static const app_sleep_callbacks_t pwm_sleep_cb =
-{
+static const app_sleep_callbacks_t pwm_sleep_cb = {
     .app_prepare_for_sleep = pwm_prepare_for_sleep,
     .app_sleep_canceled    = pwm_sleep_canceled,
     .app_wake_up_ind       = pwm_wake_up_ind
@@ -111,22 +106,19 @@ static bool pwm_prepare_for_sleep(void)
     hal_pwm_state_t state;
     uint8_t i;
 
-    for (i = 0; i < APP_PWM_ID_MAX; i++)
-    {
-        if (s_pwm_env[i].pwm_state == APP_PWM_ACTIVITY)
-        {
+    for (i = 0; i < APP_PWM_ID_MAX; i++) {
+        if (s_pwm_env[i].pwm_state == APP_PWM_ACTIVITY) {
             state = hal_pwm_get_state(&s_pwm_env[i].handle);
-            if ((state != HAL_PWM_STATE_RESET) && (state != HAL_PWM_STATE_READY))
-            {
+            if ((state != HAL_PWM_STATE_RESET) && (state != HAL_PWM_STATE_READY)) {
                 return false;
             }
 
             GLOBAL_EXCEPTION_DISABLE();
             hal_pwm_suspend_reg(&s_pwm_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
-            #ifdef APP_DRIVER_WAKEUP_CALL_FUN
+#ifdef APP_DRIVER_WAKEUP_CALL_FUN
             s_pwm_env[i].pwm_state = APP_PWM_SLEEP;
-            #endif
+#endif
         }
     }
     return true;
@@ -134,16 +126,6 @@ static bool pwm_prepare_for_sleep(void)
 
 static void pwm_sleep_canceled(void)
 {
-#if 0
-    for (uint8_t i = 0; i < APP_PWM_ID_MAX; i++)
-    {
-        if (s_pwm_env[i].pwm_state == APP_PWM_SLEEP)
-        {
-            s_pwm_env[i].pwm_state = APP_PWM_ACTIVITY;
-        }
-    }
-#endif
-
 }
 
 SECTION_RAM_CODE static void pwm_wake_up_ind(void)
@@ -151,16 +133,13 @@ SECTION_RAM_CODE static void pwm_wake_up_ind(void)
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
     uint8_t i;
 
-    for (i = 0; i < APP_PWM_ID_MAX; i++)
-    {
-        if (s_pwm_env[i].pwm_state == APP_PWM_ACTIVITY)
-        {
+    for (i = 0; i < APP_PWM_ID_MAX; i++) {
+        if (s_pwm_env[i].pwm_state == APP_PWM_ACTIVITY) {
             GLOBAL_EXCEPTION_DISABLE();
             hal_pwm_resume_reg(&s_pwm_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
 
-            if (s_pwm_env[i].pwm_module_state == APP_PWM_START)
-            {
+            if (s_pwm_env[i].pwm_module_state == APP_PWM_START) {
                 hal_pwm_start(&s_pwm_env[i].handle);
             }
         }
@@ -172,14 +151,12 @@ SECTION_RAM_CODE static void pwm_wake_up_ind(void)
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
 static void pwm_wake_up(app_pwm_id_t id)
 {
-    if (s_pwm_env[id].pwm_state == APP_PWM_SLEEP)
-    {
+    if (s_pwm_env[id].pwm_state == APP_PWM_SLEEP) {
         GLOBAL_EXCEPTION_DISABLE();
         hal_pwm_resume_reg(&s_pwm_env[id].handle);
         GLOBAL_EXCEPTION_ENABLE();
 
-        if (s_pwm_env[id].pwm_module_state == APP_PWM_START)
-        {
+        if (s_pwm_env[id].pwm_module_state == APP_PWM_START) {
             hal_pwm_start(&s_pwm_env[id].handle);
         }
     }
@@ -195,24 +172,21 @@ static uint16_t pwm_gpio_config(app_pwm_pin_cfg_t pin_cfg)
     io_init.pull = APP_IO_PULLUP;
     io_init.mode = APP_IO_MODE_MUX;
 
-    if (pin_cfg.channel_a.enable == APP_PWM_PIN_ENABLE)
-    {
+    if (pin_cfg.channel_a.enable == APP_PWM_PIN_ENABLE) {
         io_init.pin  = pin_cfg.channel_a.pin;
         io_init.mux  = pin_cfg.channel_a.mux;
         err_code = app_io_init(pin_cfg.channel_a.type, &io_init);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
 
-    if (pin_cfg.channel_b.enable == APP_PWM_PIN_ENABLE)
-    {
+    if (pin_cfg.channel_b.enable == APP_PWM_PIN_ENABLE) {
         io_init.pin  = pin_cfg.channel_b.pin;
         io_init.mux  = pin_cfg.channel_b.mux;
         err_code = app_io_init(pin_cfg.channel_b.type, &io_init);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
 
-    if (pin_cfg.channel_c.enable == APP_PWM_PIN_ENABLE)
-    {
+    if (pin_cfg.channel_c.enable == APP_PWM_PIN_ENABLE) {
         io_init.pin  = pin_cfg.channel_c.pin;
         io_init.mux  = pin_cfg.channel_c.mux;
         err_code = app_io_init(pin_cfg.channel_c.type, &io_init);
@@ -232,13 +206,11 @@ uint16_t app_pwm_init(app_pwm_params_t *p_params)
     app_drv_err_t app_err_code;
     hal_status_t  hal_err_code;
 
-    if (NULL == p_params)
-    {
+    if (p_params == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
 
-    if (id >= APP_PWM_ID_MAX)
-    {
+    if (id >= APP_PWM_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
@@ -262,13 +234,11 @@ uint16_t app_pwm_init(app_pwm_params_t *p_params)
     hal_err_code = hal_pwm_init(&s_pwm_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    if (!s_sleep_cb_registered_flag)
-    {
+    if (!s_sleep_cb_registered_flag) {
         s_sleep_cb_registered_flag = true;
 
         s_pwm_pwr_id = pwr_register_sleep_cb(&pwm_sleep_cb, APP_DRIVER_PWM_WAPEUP_PRIORITY);
-        if (s_pwm_pwr_id < 0)
-        {
+        if (s_pwm_pwr_id < 0) {
             return APP_DRV_ERR_INVALID_PARAM;
         }
     }
@@ -284,35 +254,29 @@ uint16_t app_pwm_deinit(app_pwm_id_t id)
 {
     hal_status_t err_code = HAL_ERROR;
 
-    if (id >= APP_PWM_ID_MAX)
-    {
+    if (id >= APP_PWM_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
-    if (s_pwm_env[id].pwm_state == APP_PWM_INVALID)
-    {
+    if (s_pwm_env[id].pwm_state == APP_PWM_INVALID) {
         return APP_DRV_ERR_INVALID_ID;
     }
     
     GLOBAL_EXCEPTION_DISABLE();
-    if(s_pwm_env[APP_PWM_ID_0].pwm_state == APP_PWM_INVALID && 
-       s_pwm_env[APP_PWM_ID_1].pwm_state == APP_PWM_INVALID)
-    {
-         pwr_unregister_sleep_cb(s_pwm_pwr_id);
-         s_sleep_cb_registered_flag = false;
+    if (s_pwm_env[APP_PWM_ID_0].pwm_state == APP_PWM_INVALID &&
+       s_pwm_env[APP_PWM_ID_1].pwm_state == APP_PWM_INVALID) {
+        pwr_unregister_sleep_cb(s_pwm_pwr_id);
+        s_sleep_cb_registered_flag = false;
     }
     GLOBAL_EXCEPTION_ENABLE();
 
-    if (s_pwm_env[id].pin_cfg.channel_a.enable == APP_PWM_PIN_ENABLE)
-    {
+    if (s_pwm_env[id].pin_cfg.channel_a.enable == APP_PWM_PIN_ENABLE) {
         app_io_deinit(s_pwm_env[id].pin_cfg.channel_a.type, s_pwm_env[id].pin_cfg.channel_a.pin);
     }
-    if (s_pwm_env[id].pin_cfg.channel_b.enable == APP_PWM_PIN_ENABLE)
-    {
+    if (s_pwm_env[id].pin_cfg.channel_b.enable == APP_PWM_PIN_ENABLE) {
         app_io_deinit(s_pwm_env[id].pin_cfg.channel_b.type, s_pwm_env[id].pin_cfg.channel_b.pin);
     }
-    if (s_pwm_env[id].pin_cfg.channel_c.enable == APP_PWM_PIN_ENABLE)
-    {
+    if (s_pwm_env[id].pin_cfg.channel_c.enable == APP_PWM_PIN_ENABLE) {
         app_io_deinit(s_pwm_env[id].pin_cfg.channel_c.type, s_pwm_env[id].pin_cfg.channel_c.pin);
     }
     
@@ -330,8 +294,7 @@ uint16_t app_pwm_start(app_pwm_id_t id)
 {
     hal_status_t err_code;
 
-    if (id >= APP_PWM_ID_MAX)
-    {
+    if (id >= APP_PWM_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
@@ -351,8 +314,7 @@ uint16_t app_pwm_stop(app_pwm_id_t id)
 {
     hal_status_t err_code;
 
-    if (id >= APP_PWM_ID_MAX)
-    {
+    if (id >= APP_PWM_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
@@ -373,8 +335,7 @@ uint16_t app_pwm_update_freq(app_pwm_id_t id, uint32_t freq)
 {
     hal_status_t err_code;
 
-    if (id >= APP_PWM_ID_MAX)
-    {
+    if (id >= APP_PWM_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
@@ -396,8 +357,7 @@ uint16_t app_pwm_config_channel(app_pwm_id_t id, app_pwm_active_channel_t channe
     hal_pwm_active_channel_t active_channel;
     pwm_channel_init_t channel_cfg;
 
-    if (id >= APP_PWM_ID_MAX)
-    {
+    if (id >= APP_PWM_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 

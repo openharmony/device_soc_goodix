@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_AON_WDT_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_aon_wdt_init_ext(aon_wdt_handle_t *p_aon_wdt);
-extern hal_status_t hal_aon_wdt_deinit_ext(aon_wdt_handle_t *p_aon_wdt);
-extern void hal_aon_wdt_register_callback(hal_aon_wdt_callback_t *aon_wdt_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

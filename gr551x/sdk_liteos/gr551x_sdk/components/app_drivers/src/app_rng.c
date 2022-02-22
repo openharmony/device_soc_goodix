@@ -37,11 +37,11 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_rng.h"
 #include "app_pwr_mgmt.h"
 #include "app_systick.h"
 #include "string.h"
 #include "platform_sdk.h"
+#include "app_rng.h"
 
 #ifdef HAL_RNG_MODULE_ENABLED
 
@@ -66,8 +66,7 @@
  */
 
 /**@brief App rng state types. */
-typedef enum
-{
+typedef enum {
     APP_RNG_INVALID = 0,
     APP_RNG_ACTIVITY,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
@@ -75,8 +74,7 @@ typedef enum
 #endif
 } app_rng_state_t;
 
-struct rng_env_t
-{
+struct rng_env_t {
     app_rng_evt_handler_t   evt_handler;
     rng_handle_t            handle;
     app_rng_type_t          ues_type;
@@ -105,7 +103,7 @@ static void rng_wake_up_ind(void);
  */
 struct rng_env_t s_rng_env = {
     .evt_handler = NULL,
-#ifdef ENV_RTOS_USE_SEMP   
+#ifdef ENV_RTOS_USE_SEMP
     .sem_rx = NULL,
 #endif
 #ifdef ENV_RTOS_USE_MUTEX
@@ -116,8 +114,7 @@ struct rng_env_t s_rng_env = {
 static bool s_sleep_cb_registered_flag = false;
 static pwr_id_t s_rng_pwr_id;
 
-const static app_sleep_callbacks_t rng_sleep_cb =
-{
+const static app_sleep_callbacks_t rng_sleep_cb = {
     .app_prepare_for_sleep = rng_prepare_for_sleep,
     .app_sleep_canceled = rng_sleep_canceled,
     .app_wake_up_ind = rng_wake_up_ind
@@ -127,24 +124,21 @@ const static app_sleep_callbacks_t rng_sleep_cb =
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
-static bool rng_prepare_for_sleep(void)
-{
+static bool rng_prepare_for_sleep(void) {
     hal_rng_state_t state;
 
-    if (s_rng_env.rng_state == APP_RNG_ACTIVITY)
-    {
+    if (s_rng_env.rng_state == APP_RNG_ACTIVITY) {
         state = hal_rng_get_state(&s_rng_env.handle);
-        if ((state != HAL_RNG_STATE_READY) && (state != HAL_RNG_STATE_RESET))
-        {
+        if ((state != HAL_RNG_STATE_READY) && (state != HAL_RNG_STATE_RESET)) {
             return false;
         }
 
         GLOBAL_EXCEPTION_DISABLE();
         hal_rng_suspend_reg(&s_rng_env.handle);
         GLOBAL_EXCEPTION_ENABLE();
-        #ifdef APP_DRIVER_WAKEUP_CALL_FUN
+#ifdef APP_DRIVER_WAKEUP_CALL_FUN
         s_rng_env.rng_state = APP_RNG_SLEEP;
-        #endif
+#endif
     }
 
     return true;
@@ -152,24 +146,16 @@ static bool rng_prepare_for_sleep(void)
 
 static void rng_sleep_canceled(void)
 {
-#if 0
-    if (s_rng_env.rng_state == APP_RNG_SLEEP)
-    {
-        s_rng_env.rng_state = APP_RNG_ACTIVITY;
-    }
-#endif
 }
 
 SECTION_RAM_CODE static void rng_wake_up_ind(void)
 {
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
-    if (s_rng_env.rng_state == APP_RNG_ACTIVITY)
-    {
+    if (s_rng_env.rng_state == APP_RNG_ACTIVITY) {
         GLOBAL_EXCEPTION_DISABLE();
         hal_rng_resume_reg(&s_rng_env.handle);
         GLOBAL_EXCEPTION_ENABLE();
-        if (s_rng_env.ues_type == APP_RNG_TYPE_INTERRUPT)
-        {
+        if (s_rng_env.ues_type == APP_RNG_TYPE_INTERRUPT) {
             hal_nvic_clear_pending_irq(RNG_IRQn);
             hal_nvic_enable_irq(RNG_IRQn);
         }
@@ -180,13 +166,11 @@ SECTION_RAM_CODE static void rng_wake_up_ind(void)
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
 static void rng_wake_up(void)
 {
-    if (s_rng_env.rng_state == APP_RNG_SLEEP)
-    {
+    if (s_rng_env.rng_state == APP_RNG_SLEEP) {
         GLOBAL_EXCEPTION_DISABLE();
         hal_rng_resume_reg(&s_rng_env.handle);
         GLOBAL_EXCEPTION_ENABLE();
-        if (s_rng_env.ues_type == APP_RNG_TYPE_INTERRUPT)
-        {
+        if (s_rng_env.ues_type == APP_RNG_TYPE_INTERRUPT) {
             hal_nvic_clear_pending_irq(RNG_IRQn);
             hal_nvic_enable_irq(RNG_IRQn);
         }
@@ -199,8 +183,7 @@ static void app_rng_event_call(rng_handle_t *p_rng, app_rng_evt_type_t evt_type,
 {
     app_rng_evt_t rng_evt = {APP_RNG_EVT_ERROR, 0x0};
 
-    if (p_rng->p_instance == RNG)
-    {
+    if (p_rng->p_instance == RNG) {
         rng_evt.type = evt_type;
         rng_evt.random_data = random32bit;
     }
@@ -209,8 +192,7 @@ static void app_rng_event_call(rng_handle_t *p_rng, app_rng_evt_type_t evt_type,
     app_driver_sem_post_from_isr(s_rng_env.sem_rx);
 #endif
 
-    if (s_rng_env.evt_handler != NULL)
-    {
+    if (s_rng_env.evt_handler != NULL) {
         s_rng_env.evt_handler(&rng_evt);
     }
 }
@@ -224,36 +206,31 @@ uint16_t app_rng_init(app_rng_params_t *p_params, app_rng_evt_handler_t evt_hand
     hal_status_t  hal_err_code = HAL_OK;
     app_drv_err_t app_err_code = APP_DRV_SUCCESS;
 
-    if (p_params == NULL)
-    {
+    if (p_params == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if(s_rng_env.sem_rx == NULL)
-    {
+    if (s_rng_env.sem_rx == NULL) {
         app_err_code = app_driver_sem_init(&s_rng_env.sem_rx);
         APP_DRV_ERR_CODE_CHECK(app_err_code);
     }
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if(s_rng_env.mutex_async == NULL)
-    {
+    if (s_rng_env.mutex_async == NULL) {
         app_err_code = app_driver_mutex_init(&s_rng_env.mutex_async);
         APP_DRV_ERR_CODE_CHECK(app_err_code);
     }
-     if(s_rng_env.mutex_sync == NULL)
-     {
-         app_err_code = app_driver_mutex_init(&s_rng_env.mutex_sync);
-         APP_DRV_ERR_CODE_CHECK(app_err_code);
-     }
+    if (s_rng_env.mutex_sync == NULL) {
+        app_err_code = app_driver_mutex_init(&s_rng_env.mutex_sync);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
 #endif
 
     app_systick_init();
 
-    if (p_params->use_type == APP_RNG_TYPE_INTERRUPT)
-    {
+    if (p_params->use_type == APP_RNG_TYPE_INTERRUPT) {
         hal_nvic_clear_pending_irq(RNG_IRQn);
         hal_nvic_enable_irq(RNG_IRQn);
     }
@@ -269,12 +246,10 @@ uint16_t app_rng_init(app_rng_params_t *p_params, app_rng_evt_handler_t evt_hand
     hal_err_code = hal_rng_init(&s_rng_env.handle);
     APP_DRV_ERR_CODE_CHECK(hal_err_code);
 
-    if(s_sleep_cb_registered_flag == false)    // register sleep callback
-    {
+    if (s_sleep_cb_registered_flag == false) { // register sleep callback
         s_sleep_cb_registered_flag = true;
         s_rng_pwr_id = pwr_register_sleep_cb(&rng_sleep_cb, APP_DRIVER_RNG_WAPEUP_PRIORITY);
-        if (s_rng_pwr_id < 0)
-        {
+        if (s_rng_pwr_id < 0) {
             return APP_DRV_ERR_INVALID_PARAM;
         }
     }
@@ -288,26 +263,23 @@ uint16_t app_rng_deinit(void)
 {
     hal_status_t  hal_err_code;
 
-    if (s_rng_env.rng_state == APP_RNG_INVALID)
-    {
+    if (s_rng_env.rng_state == APP_RNG_INVALID) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if(s_rng_env.sem_rx != NULL)
-    {
+    if (s_rng_env.sem_rx != NULL) {
         app_driver_sem_deinit(s_rng_env.sem_rx);
         s_rng_env.sem_rx = NULL;
     }
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if(s_rng_env.mutex_sync != NULL)
-    {
+    if (s_rng_env.mutex_sync != NULL) {
         app_driver_mutex_deinit(s_rng_env.mutex_sync);
         s_rng_env.mutex_sync = NULL;
     }
-    if(s_rng_env.mutex_async != NULL){
+    if (s_rng_env.mutex_async != NULL) {
         app_driver_mutex_deinit(s_rng_env.mutex_async);
         s_rng_env.mutex_async = NULL;
     }
@@ -335,8 +307,7 @@ uint16_t app_rng_gen_sync(uint16_t *p_seed, uint32_t *p_random32bit)
 
     if (s_rng_env.rng_state == APP_RNG_INVALID ||
         p_seed == NULL ||
-        p_random32bit == NULL)
-    {
+        p_random32bit == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -345,8 +316,7 @@ uint16_t app_rng_gen_sync(uint16_t *p_seed, uint32_t *p_random32bit)
 #endif
 
     err_code = hal_rng_generate_random_number(&s_rng_env.handle, p_seed, p_random32bit);
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
 
@@ -364,8 +334,7 @@ uint16_t app_rng_gen_sem_sync(uint16_t *p_seed)
 
     if (s_rng_env.rng_state == APP_RNG_INVALID ||
         s_rng_env.ues_type == APP_RNG_TYPE_POLLING ||
-        p_seed == NULL)
-    {
+        p_seed == NULL) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_RNG_DRV_ASYNC_MUTEX_UNLOCK;
 #endif
@@ -377,8 +346,7 @@ uint16_t app_rng_gen_sem_sync(uint16_t *p_seed)
 #endif
 
     err_code = hal_rng_generate_random_number_it(&s_rng_env.handle, p_seed);
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_RNG_DRV_ASYNC_MUTEX_UNLOCK;
 #endif
@@ -401,8 +369,7 @@ uint16_t app_rng_gen_async(uint16_t *p_seed)
 
     if (s_rng_env.rng_state == APP_RNG_INVALID ||
         s_rng_env.ues_type == APP_RNG_TYPE_POLLING ||
-        p_seed == NULL)
-    {
+        p_seed == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -411,8 +378,7 @@ uint16_t app_rng_gen_async(uint16_t *p_seed)
 #endif
 
     err_code = hal_rng_generate_random_number_it(&s_rng_env.handle, p_seed);
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
 
@@ -421,8 +387,7 @@ uint16_t app_rng_gen_async(uint16_t *p_seed)
 
 rng_handle_t *app_rng_get_handle(void)
 {
-    if (s_rng_env.rng_state == APP_RNG_INVALID)
-    {
+    if (s_rng_env.rng_state == APP_RNG_INVALID) {
         return NULL;
     }
 

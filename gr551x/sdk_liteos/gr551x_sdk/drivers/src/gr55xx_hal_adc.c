@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_ADC_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_adc_init_ext(adc_handle_t *p_adc);
-extern hal_status_t hal_adc_deinit_ext(adc_handle_t *p_adc);
-extern void hal_adc_register_callback(adc_callback_t *adc_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

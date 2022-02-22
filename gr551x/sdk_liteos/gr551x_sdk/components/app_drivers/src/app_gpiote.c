@@ -37,15 +37,19 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_gpiote.h"
-#include "app_pwr_mgmt.h"
 #include <string.h>
+#include "app_pwr_mgmt.h"
 #include "platform_sdk.h"
+#include "app_gpiote.h"
 
 /*
  * DEFINES
  *****************************************************************************************
  */
+#define BIT_8                     8
+#define BIT_16                    16
+#define BIT_24                    24
+
 #define GPIOTE_USE_PATTERN        0x47
 #define GPIOTE_USE_MAX            32
 #define GPIOTE_AON_PIN_USE_MAX    8
@@ -53,8 +57,7 @@
  * STRUCT DEFINE
  *****************************************************************************************
  */
-struct gpiote_env_t
-{
+struct gpiote_env_t {
     uint8_t            total_used;
     app_gpiote_param_t params[GPIOTE_USE_MAX];
 };
@@ -76,8 +79,7 @@ static   struct gpiote_env_t s_gpiote_env;
 static bool     s_sleep_cb_registered_flag = false;
 static pwr_id_t s_gpiote_pwr_id;
 
-static const app_sleep_callbacks_t gpiote_sleep_cb =
-{
+static const app_sleep_callbacks_t gpiote_sleep_cb = {
     .app_prepare_for_sleep = gpiote_prepare_for_sleep,
     .app_sleep_canceled    = gpiote_sleep_canceled,
     .app_wake_up_ind       = gpiote_wake_up_ind
@@ -88,8 +90,7 @@ static app_io_callback_t aon_cb_called_table[GPIOTE_AON_PIN_USE_MAX];
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
-static bool gpiote_prepare_for_sleep(void)
-{
+static bool gpiote_prepare_for_sleep(void) {
     return true;
 }
 
@@ -97,35 +98,28 @@ static void gpiote_sleep_canceled(void)
 {
 }
 
-SECTION_RAM_CODE static void gpiote_wake_up_ind(void)
-{
+SECTION_RAM_CODE static void gpiote_wake_up_ind(void) {
     bool is_ext0_need_enable = false;
     bool is_ext1_need_enable = false;
 
-    for (int idx = 0; idx < s_gpiote_env.total_used; idx++ )
-    {
-        if (s_gpiote_env.params[idx].type == APP_IO_TYPE_NORMAL)
-        {
-            if(APP_IO_PINS_0_15 & s_gpiote_env.params[idx].pin)
-            {
+    for (int idx = 0; idx < s_gpiote_env.total_used; idx++) {
+        if (s_gpiote_env.params[idx].type == APP_IO_TYPE_NORMAL) {
+            if (APP_IO_PINS_0_15 & s_gpiote_env.params[idx].pin) {
                 is_ext0_need_enable = true;
                 continue;
             }
-            if(APP_IO_PINS_16_31 & s_gpiote_env.params[idx].pin)
-            {
+            if (APP_IO_PINS_16_31 & s_gpiote_env.params[idx].pin) {
                 is_ext1_need_enable = true;
                 continue;
             }
         }
     }
 
-    if (is_ext0_need_enable)
-    {
+    if (is_ext0_need_enable) {
         hal_nvic_enable_irq(EXT0_IRQn);
     }
 
-    if (is_ext1_need_enable)
-    {
+    if (is_ext1_need_enable) {
         hal_nvic_enable_irq(EXT1_IRQn);
     }
 
@@ -142,25 +136,20 @@ uint16_t app_gpiote_init(const app_gpiote_param_t *p_params, uint8_t table_cnt)
     app_io_init_t io_init;
     app_drv_err_t err_code;
 
-    if (NULL == p_params)
-    {
+    if (p_params == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
     
-    if ( ((s_gpiote_env.total_used + table_cnt) > GPIOTE_USE_MAX) && table_cnt)
-    {
+    if (((s_gpiote_env.total_used + table_cnt) > GPIOTE_USE_MAX) && table_cnt) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     
-    for (uint8_t idx = 0; idx < table_cnt; idx++)
-    { 
+    for (uint8_t idx = 0; idx < table_cnt; idx++) { 
         exit_flag = 0x0;
         
-        for (uint8_t index = 0; index < s_gpiote_env.total_used; index ++)
-        {
-            if (s_gpiote_env.params[index].pin == p_params[idx].pin && 
-                s_gpiote_env.params[index].type == p_params[idx].type )
-            {
+        for (uint8_t index = 0; index < s_gpiote_env.total_used; index ++) {
+            if (s_gpiote_env.params[index].pin == p_params[idx].pin && \
+                s_gpiote_env.params[index].type == p_params[idx].type) {
                 exit_flag = 0x1;
                 break;
             }
@@ -175,59 +164,52 @@ uint16_t app_gpiote_init(const app_gpiote_param_t *p_params, uint8_t table_cnt)
         err_code = app_io_init(p_params[idx].type, &io_init);
         APP_DRV_ERR_CODE_CHECK(err_code);
 
-        if (exit_flag)
-        {
+        if (exit_flag) {
             continue;
         }
 
-        memcpy_s(&s_gpiote_env.params[s_gpiote_env.total_used], sizeof(s_gpiote_env.params[s_gpiote_env.total_used]), &p_params[idx], sizeof(app_gpiote_param_t));
+        memcpy(&s_gpiote_env.params[s_gpiote_env.total_used],
+               &p_params[idx], sizeof(app_gpiote_param_t));
 
-        if ((p_params[idx].handle_mode == APP_IO_ENABLE_WAKEUP) && (p_params[idx].type == APP_IO_TYPE_AON))
-        {
-           switch (p_params[idx].mode)
-           {
-             case APP_IO_MODE_IT_RISING:
-                  hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_RISING);
-                  break;
+        if ((p_params[idx].handle_mode == APP_IO_ENABLE_WAKEUP) && (p_params[idx].type == APP_IO_TYPE_AON)) {
+            switch (p_params[idx].mode) {
+                case APP_IO_MODE_IT_RISING:
+                    hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_RISING);
+                    break;
 
-             case APP_IO_MODE_IT_FALLING:
-                  hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_FALLING);
-                  break;
+                case APP_IO_MODE_IT_FALLING:
+                    hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_FALLING);
+                    break;
 
-             case APP_IO_MODE_IT_HIGH:
-                  hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_HIGH);
-                  break;
+                case APP_IO_MODE_IT_HIGH:
+                    hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_HIGH);
+                    break;
 
-             case APP_IO_MODE_IT_LOW:
-                  hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_LOW);
-                  break;
+                case APP_IO_MODE_IT_LOW:
+                    hal_pwr_config_ext_wakeup(p_params[idx].pin, PWR_EXTWKUP_TYPE_LOW);
+                    break;
 
-             default:
-                 break;
-           }
-           pwr_mgmt_wakeup_source_setup(PWR_WKUP_COND_EXT);
+                default:
+                    break;
+            }
+            pwr_mgmt_wakeup_source_setup(PWR_WKUP_COND_EXT);
         }
         
-        if (p_params[idx].type == APP_IO_TYPE_NORMAL)
-        {
+        if (p_params[idx].type == APP_IO_TYPE_NORMAL) {
             hal_nvic_clear_pending_irq(EXT0_IRQn);
             hal_nvic_enable_irq(EXT0_IRQn);
             hal_nvic_clear_pending_irq(EXT1_IRQn);
             hal_nvic_enable_irq(EXT1_IRQn);
-        }
-        else if (p_params[idx].type == APP_IO_TYPE_AON)
-        {
+        } else if (p_params[idx].type == APP_IO_TYPE_AON) {
             hal_nvic_clear_pending_irq(EXT2_IRQn);
             hal_nvic_enable_irq(EXT2_IRQn);
         }
         
         s_gpiote_env.total_used += 1;
     }
-    if (!s_sleep_cb_registered_flag ) // register sleep callback
-    {
+    if (!s_sleep_cb_registered_flag) { // register sleep callback 
         s_gpiote_pwr_id = pwr_register_sleep_cb(&gpiote_sleep_cb, APP_DRIVER_GPIOTE_WAPEUP_PRIORITY);
-        if (s_gpiote_pwr_id < 0)
-        {
+        if (s_gpiote_pwr_id < 0) {
             return APP_DRV_ERR_INVALID_PARAM;
         }
         s_sleep_cb_registered_flag = true;
@@ -243,23 +225,19 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
     app_io_init_t io_init;
     app_drv_err_t err_code;
 
-    if (NULL == p_config)
-    {
+    if (p_config == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
 
-    for (index = 0; index < s_gpiote_env.total_used; index ++)
-    {
-        if (s_gpiote_env.params[index].pin == p_config->pin && 
-            s_gpiote_env.params[index].type == p_config->type )
-        {
+    for (index = 0; index < s_gpiote_env.total_used; index ++) {
+        if (s_gpiote_env.params[index].pin == p_config->pin && \
+            s_gpiote_env.params[index].type == p_config->type) {
             exit_flag = 0x1;
             break;
         }
     }
 
-    if (!exit_flag || index >= GPIOTE_USE_MAX)
-    {
+    if (!exit_flag || index >= GPIOTE_USE_MAX) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -274,10 +252,8 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
     err_code = app_io_init(p_config->type, &io_init);
     APP_DRV_ERR_CODE_CHECK(err_code);
 
-    if ((p_config->handle_mode == APP_IO_ENABLE_WAKEUP) && (p_config->type == APP_IO_TYPE_AON))
-    {
-        switch (p_config->mode)
-        {
+    if ((p_config->handle_mode == APP_IO_ENABLE_WAKEUP) && (p_config->type == APP_IO_TYPE_AON)) {
+        switch (p_config->mode) {
             case APP_IO_MODE_IT_RISING:
                 hal_pwr_config_ext_wakeup(p_config->pin, PWR_EXTWKUP_TYPE_RISING);
                 break;
@@ -295,25 +271,21 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
                 break;
 
             default:
-            break;
+                break;
         }
         pwr_mgmt_wakeup_source_setup(PWR_WKUP_COND_EXT);
     }
 
-    if ((p_config->handle_mode == APP_IO_DISABLE_WAKEUP) && (p_config->type == APP_IO_TYPE_AON))
-    {
+    if ((p_config->handle_mode == APP_IO_DISABLE_WAKEUP) && (p_config->type == APP_IO_TYPE_AON)) {
         hal_pwr_disable_ext_wakeup(p_config->pin);
     }
 
-    if (p_config->type == APP_IO_TYPE_NORMAL)
-    {
+    if (p_config->type == APP_IO_TYPE_NORMAL) {
         hal_nvic_clear_pending_irq(EXT0_IRQn);
         hal_nvic_enable_irq(EXT0_IRQn);
         hal_nvic_clear_pending_irq(EXT1_IRQn);
         hal_nvic_enable_irq(EXT1_IRQn);
-    }
-    else if (p_config->type == APP_IO_TYPE_AON)
-    {
+    } else if (p_config->type == APP_IO_TYPE_AON) {
         hal_nvic_clear_pending_irq(EXT2_IRQn);
         hal_nvic_enable_irq(EXT2_IRQn);
     }
@@ -324,8 +296,7 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
 
 void app_gpiote_deinit(void)
 {
-    for (int idx=0; idx<s_gpiote_env.total_used; idx ++ )
-    { 
+    for (int idx=0; idx<s_gpiote_env.total_used; idx++) { 
         app_io_deinit(s_gpiote_env.params[idx].type, s_gpiote_env.params[idx].pin);
     }
     hal_nvic_disable_irq(EXT0_IRQn);
@@ -340,19 +311,16 @@ void hal_gpio_exti_callback(gpio_regs_t *GPIOx, uint16_t gpio_pin)
     uint32_t io_pin = gpio_pin;
     app_gpiote_evt_t gpiote_evt;
 
-    if (GPIO1 == GPIOx)
-    {
-        io_pin = (uint32_t)(gpio_pin << 16);
+    if (GPIO1 == GPIOx) {
+        io_pin = (uint32_t)(gpio_pin << BIT_16);
     }
 
     gpiote_evt.type = APP_IO_TYPE_NORMAL;
     gpiote_evt.pin = io_pin;
     gpiote_evt.ctx_type = APP_IO_CTX_INT;
 
-    for (uint8_t idx=0; idx<s_gpiote_env.total_used; idx ++)
-    {
-        if ((s_gpiote_env.params[idx].type == APP_IO_TYPE_NORMAL) && (io_pin == s_gpiote_env.params[idx].pin))
-        {
+    for (uint8_t idx=0; idx<s_gpiote_env.total_used; idx++) {
+        if ((s_gpiote_env.params[idx].type == APP_IO_TYPE_NORMAL) && (io_pin == s_gpiote_env.params[idx].pin)) {
             if (s_gpiote_env.params[idx].io_evt_cb)
                 s_gpiote_env.params[idx].io_evt_cb(&gpiote_evt);
         }
@@ -369,34 +337,26 @@ void hal_aon_gpio_callback(uint16_t aon_gpio_pin)
     gpiote_evt.type = APP_IO_TYPE_AON;
     gpiote_evt.pin = aon_gpio_pin;
     
-    if (pwr_mgmt_get_wakeup_flag() == WARM_BOOT)
-    {
+    if (pwr_mgmt_get_wakeup_flag() == WARM_BOOT) {
         gpiote_evt.ctx_type = APP_IO_CTX_WAKEUP;
-    }
-    else
-    {
+    } else {
         gpiote_evt.ctx_type = APP_IO_CTX_INT;
     }
-    memset_s(aon_cb_called_table, sizeof (aon_cb_called_table), 0, sizeof(aon_cb_called_table));
-    for (uint8_t idx = 0; idx < s_gpiote_env.total_used; idx++)
-    {
+
+    memset(aon_cb_called_table, 0, sizeof(aon_cb_called_table));
+    for (uint8_t idx = 0; idx < s_gpiote_env.total_used; idx++) {
         if ((s_gpiote_env.params[idx].type == APP_IO_TYPE_AON) && \
             (aon_gpio_pin & s_gpiote_env.params[idx].pin) && \
-            (s_gpiote_env.params[idx].io_evt_cb))
-        {
-            for(uint8_t i = 0; i < called_table_used_pos; i++)
-            {
-                if(aon_cb_called_table[i] == s_gpiote_env.params[idx].io_evt_cb)
-                {
+            (s_gpiote_env.params[idx].io_evt_cb)) {
+            for (uint8_t i = 0; i < called_table_used_pos; i++) {
+                if (aon_cb_called_table[i] == s_gpiote_env.params[idx].io_evt_cb) {
                     called_flag = 1;
                     break;
-                }
-                else
-                {
+                } else {
                     called_flag = 0;
                 }
             }
-            if(called_flag == 0)
+            if (called_flag == 0)
             {
                 s_gpiote_env.params[idx].io_evt_cb(&gpiote_evt);
                 aon_cb_called_table[called_table_used_pos] = s_gpiote_env.params[idx].io_evt_cb;

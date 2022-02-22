@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_COMP_MODULE_ENABLED) && (defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_comp_init_ext(comp_handle_t *p_comp);
-extern hal_status_t hal_comp_deinit_ext(comp_handle_t *p_comp);
-extern void hal_comp_register_callback(comp_callback_t *comp_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

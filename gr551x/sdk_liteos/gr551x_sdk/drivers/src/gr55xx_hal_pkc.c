@@ -36,14 +36,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_PKC_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_pkc_init_ext(pkc_handle_t *p_pkc);
-extern hal_status_t hal_pkc_deinit_ext(pkc_handle_t *p_pkc);
-extern void hal_pkc_register_callback(hal_pkc_callback_t *hal_pkc_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

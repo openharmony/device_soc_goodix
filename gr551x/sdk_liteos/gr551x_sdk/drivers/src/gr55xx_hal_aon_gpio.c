@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_AON_GPIO_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern void hal_aon_gpio_init_ext(aon_gpio_init_t *p_aon_gpio_init);
-extern void hal_aon_gpio_deinit_ext(uint32_t aon_gpio_pin);
-extern void hal_aon_gpio_register_callback(aon_gpio_callback_t *aon_gpio_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

@@ -52,8 +52,6 @@
 #ifndef _APP_SYSTICK_H_
 #define _APP_SYSTICK_H_
 
-#include <stdint.h>
-
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup APP_SYSTICK_DRIVER_FUNCTIONS Functions
   * @{

@@ -38,8 +38,8 @@
 #ifndef __APP_ERROR_H__
 #define __APP_ERROR_H__
 
-#include "ble_error.h"
 #include <stdint.h>
+#include "ble_error.h"
 
 /**
  * @defgroup APP_ERROR_MAROC Defines
@@ -50,12 +50,12 @@
 #define APP_ERROR_CHECK(ERROR_CODE)                         \
     do                                                      \
     {                                                       \
-        if (ERROR_CODE != SDK_SUCCESS)                      \
+        if ((ERROR_CODE) != SDK_SUCCESS)                      \
         {                                                   \
             app_error_info_t error_info =                   \
             {                                               \
                 .error_type       = APP_ERROR_API_RET,      \
-                .value.error_code = ERROR_CODE,             \
+                .value.error_code = (ERROR_CODE),           \
                 .file             = __FILE__,               \
                 .func             = __FUNCTION__,           \
                 .line             = __LINE__,               \
@@ -68,7 +68,7 @@
 #define APP_BOOL_CHECK(BOOL_VAL)                        \
     do                                                  \
     {                                                   \
-        if (!BOOL_VAL)                                  \
+        if (!(BOOL_VAL))                                \
         {                                               \
             app_error_info_t error_info =               \
             {                                           \

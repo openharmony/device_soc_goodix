@@ -71,8 +71,7 @@ extern "C" {
 /**
   * @brief RNG operating mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_RNG_TYPE_INTERRUPT,        /**< Interrupt operation mode */
     APP_RNG_TYPE_POLLING,          /**< Polling operation mode   */
     APP_RNG_TYPE_MAX               /**< Only for check parameter, not used as input parameters. */
@@ -81,8 +80,7 @@ typedef enum
 /**
   * @brief RNG event Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_RNG_EVT_DONE,             /**< Generated random by UART peripheral. */
     APP_RNG_EVT_ERROR,            /**< Error reported by UART peripheral.   */
 } app_rng_evt_type_t;
@@ -94,8 +92,7 @@ typedef enum
 /**
   * @brief RNG parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_rng_type_t      use_type;  /**< Specifies the operation mode of RNG. */
     rng_init_t          init;      /**< RNG required parameters.             */
 } app_rng_params_t;
@@ -103,8 +100,7 @@ typedef struct
 /**
   * @brief RNG event structure definition
   */
-typedef struct
-{
+typedef struct {
     app_rng_evt_type_t  type;           /**< Type of event. */
     uint32_t            random_data;    /**< Random number. */
 } app_rng_evt_t;

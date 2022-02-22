@@ -39,17 +39,18 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_log.h"
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "app_log.h"
 
 /*
  * DEFINE
  *****************************************************************************************
  */
 #if APP_LOG_COLOR_ENABLE
-/**@brief CSI(Control Sequence Introducer/Initiator) sign more information on https://en.wikipedia.org/wiki/ANSI_escape_code. */
+/**@brief CSI(Control Sequence Introducer/Initiator) sign more information on 
+  * https://en.wikipedia.org/wiki/ANSI_escape_code. */
 #define CSI_START                      "\033["
 #define CSI_END                        "\033[0m"
 
@@ -99,6 +100,8 @@
 
 #endif
 
+#define BIT_8                           8
+
 /*
  * STRUCTURES
  *****************************************************************************************
@@ -109,7 +112,6 @@ struct app_log_env_t {
     bool                 is_filter_set; /**< App log filter is set or not. */
     app_log_trans_func_t trans_func;    /**< App log transmit function. */
     app_log_flush_func_t flush_func;    /**< App log flush function. */
-
 };
 
 /*
@@ -118,8 +120,7 @@ struct app_log_env_t {
  */
 static uint8_t     s_log_encode_buf[APP_LOG_LINE_BUF_SIZE];  /**< App log data encode buffer. */
 
-static const char *s_log_svt_lvl_output_info[] =            /**< App log severity level outpout information. */
-{
+static const char *s_log_svt_lvl_output_info[] = {           /**< App log severity level outpout information. */
     [APP_LOG_LVL_ERROR]   = "APP_E: ",
     [APP_LOG_LVL_WARNING] = "APP_W: ",
     [APP_LOG_LVL_INFO]    = "APP_I: ",
@@ -127,8 +128,7 @@ static const char *s_log_svt_lvl_output_info[] =            /**< App log severit
 };
 
 #if APP_LOG_COLOR_ENABLE
-static const char *s_log_color_output_info[] =             /**< App log level outpout color information. */
-{
+static const char *s_log_color_output_info[] = {            /**< App log level outpout color information. */
     [APP_LOG_LVL_ERROR]   = APP_LOG_COLOR_ERROR,
     [APP_LOG_LVL_WARNING] = APP_LOG_COLOR_WARNING,
     [APP_LOG_LVL_INFO]    = APP_LOG_COLOR_INFO,
@@ -157,6 +157,7 @@ static struct app_log_env_t  s_app_log_env;                  /**< App log enviro
 static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char *p_log_data)
 {
     uint16_t cpy_length = 0;
+    char *temp_p_log_data = p_log_data;
 
     if (!p_log_buff || !p_log_data) {
         return cpy_length;
@@ -164,7 +165,7 @@ static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char 
 
     while (*p_log_data != 0) {
         if ((wr_idx + cpy_length) < APP_LOG_LINE_BUF_SIZE) {
-            p_log_buff[wr_idx + cpy_length] = *p_log_data++;
+            p_log_buff[wr_idx + cpy_length] = *temp_p_log_data++;
             cpy_length++;
         } else {
             break;
@@ -191,7 +192,6 @@ static bool app_log_is_fmt_set(uint8_t level, uint8_t fmt)
     } else {
         return false;
     }
-
 }
 
 /**
@@ -206,7 +206,7 @@ static bool app_log_is_fmt_set(uint8_t level, uint8_t fmt)
  */
 static void app_log_data_trans(uint8_t *p_data, uint16_t length)
 {
-    if (NULL == p_data || 0 == length) {
+    if (p_data == NULL || length == 0) {
         return;
     }
 
@@ -228,7 +228,7 @@ sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_fu
     if (NULL == p_log_init) {
         s_app_log_env.is_filter_set = false;
         memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), 0, sizeof(app_log_init_t));
-    } else if ( p_log_init->filter.level <= APP_LOG_LVL_DEBUG) {
+    } else if (p_log_init->filter.level <= APP_LOG_LVL_DEBUG) {
         s_app_log_env.is_filter_set = true;
         memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), p_log_init, sizeof(app_log_init_t));
     } else {
@@ -346,7 +346,6 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
     // Encode newline sign.
     log_length += app_log_strcpy(log_length, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
 
-
     app_log_data_trans(s_log_encode_buf, log_length);
 
     APP_LOG_UNLOCK();
@@ -363,7 +362,6 @@ void app_log_raw_info(const char *format, ...)
     APP_LOG_LOCK();
 
     fmt_result = vsnprintf_s((char *)s_log_encode_buf, sizeof(s_log_encode_buf), APP_LOG_LINE_BUF_SIZE, format, ap);
-
     if ((fmt_result > -1) && (fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
         log_length = fmt_result;
     } else {
@@ -393,7 +391,7 @@ void app_log_hex_dump(uint8_t *p_data, uint16_t length)
             s_log_encode_buf[log_length] = '.';
             log_length++;
         } else {
-            snprintf_s(dump_str, sizeof (dump_str), 8, "%02X ", p_data[convert_idx]);
+            snprintf_s(dump_str, sizeof (dump_str), BIT_8, "%02X ", p_data[convert_idx]);
             log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
         }
     }
@@ -410,7 +408,6 @@ void app_log_flush(void)
     }
 }
 
-
 #if IO_REDIRECT == 0
 #if defined(__CC_ARM)
 
@@ -418,8 +415,8 @@ struct __FILE {
     int handle;
 };
 
-FILE __stdout;
-FILE __stdin;
+FILE s_stdout;
+FILE s_stdin;
 
 int fputc(int ch, FILE *file)
 {
@@ -433,10 +430,11 @@ int fputc(int ch, FILE *file)
 int _write(int file, const char *buf, int len)
 {
     int tx_len = 0;
+    char *temp_buf = buf;
 
     while (tx_len < len) {
         app_log_data_trans((uint8_t *)buf, 1);
-        buf++;
+        temp_buf++;
         tx_len++;
     }
     return tx_len;
@@ -444,13 +442,14 @@ int _write(int file, const char *buf, int len)
 
 #elif defined(__ICCARM__)
 
-size_t __write(int handle, const unsigned char *buf, size_t size)
+size_t s_write(int handle, const unsigned char *buf, size_t size)
 {
     size_t len = 0;
+    unsigned char* temp_buf = buf;
 
     while (len < size) {
         app_log_data_trans((uint8_t *)buf, 1);
-        buf++;
+        temp_buf++;
         len++;
     }
     return len;

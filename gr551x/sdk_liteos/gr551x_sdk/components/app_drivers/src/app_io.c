@@ -37,31 +37,33 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_io.h"
 #include "gr55xx_hal_gpio.h"
 #include "gr55xx_hal_aon_gpio.h"
 #include "gr55xx_hal_msio.h"
+#include "app_io.h"
 
 #ifndef GR5515_E
 /*
  * DEFINES
  *****************************************************************************************
  */
+#define BIT_8                             8
+#define BIT_16                            16
+#define BIT_24                            24
+
 #define IO_MODE_NONE   0x00
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
-static const uint32_t s_io_pull[APP_IO_TYPE_MAX][APP_IO_PULL_MAX] = 
-{
+static const uint32_t s_io_pull[APP_IO_TYPE_MAX][APP_IO_PULL_MAX] = {
     { GPIO_NOPULL,     GPIO_PULLUP,     GPIO_PULLDOWN },
     { AON_GPIO_NOPULL, AON_GPIO_PULLUP, AON_GPIO_PULLDOWN },
     { MSIO_NOPULL,     MSIO_PULLUP,     MSIO_PULLDOWN },
 };
 
-static const uint32_t s_io_mode[APP_IO_TYPE_MAX][APP_IO_MODE_MAX] = 
-{
+static const uint32_t s_io_mode[APP_IO_TYPE_MAX][APP_IO_MODE_MAX] = {
     {
         GPIO_MODE_INPUT, GPIO_MODE_OUTPUT, GPIO_MODE_MUX, GPIO_MODE_IT_RISING,
         GPIO_MODE_IT_FALLING, GPIO_MODE_IT_HIGH, GPIO_MODE_IT_LOW, IO_MODE_NONE
@@ -70,7 +72,7 @@ static const uint32_t s_io_mode[APP_IO_TYPE_MAX][APP_IO_MODE_MAX] =
         AON_GPIO_MODE_INPUT, AON_GPIO_MODE_OUTPUT, AON_GPIO_MODE_MUX, AON_GPIO_MODE_IT_RISING,
         AON_GPIO_MODE_IT_FALLING, AON_GPIO_MODE_IT_HIGH, AON_GPIO_MODE_IT_LOW, IO_MODE_NONE
     },
-    { 
+    {
         MSIO_DIRECTION_INPUT, MSIO_DIRECTION_OUTPUT, MSIO_DIRECTION_INPUT, IO_MODE_NONE,
         IO_MODE_NONE, IO_MODE_NONE, IO_MODE_NONE, MSIO_DIRECTION_NONE
     },
@@ -86,17 +88,12 @@ uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
     aon_gpio_init_t aon_io_config;
     msio_init_t     msio_config;
 
-    if(NULL == p_init)
-    {
+    if (p_init == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
-    }
-    else
-    {
-        switch(type)
-        {
+    } else {
+        switch (type) {
             case APP_IO_TYPE_NORMAL:
-                if(APP_IO_MODE_ANALOG == p_init->mode)
-                {
+                if (APP_IO_MODE_ANALOG == p_init->mode) {
                     return APP_DRV_ERR_INVALID_MODE;
                 }
 
@@ -104,21 +101,18 @@ uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
                 io_config.pull = s_io_pull[type][p_init->pull];
                 io_config.mux = p_init->mux;
 
-                if(APP_IO_PINS_0_15 & p_init->pin)
-                {
+                if (APP_IO_PINS_0_15 & p_init->pin) {
                     io_config.pin = (APP_IO_PINS_0_15 & p_init->pin);
                     hal_gpio_init(GPIO0, &io_config);
                 }
-                if (APP_IO_PINS_16_31 & p_init->pin)
-                {
-                    io_config.pin = (APP_IO_PINS_16_31 & p_init->pin) >> 16;
+                if (APP_IO_PINS_16_31 & p_init->pin) {
+                    io_config.pin = (APP_IO_PINS_16_31 & p_init->pin) >> BIT_16;
                     hal_gpio_init(GPIO1, &io_config);
                 }
                 break;
 
             case APP_IO_TYPE_AON:
-                if(APP_IO_MODE_ANALOG == p_init->mode)
-                {
+                if (APP_IO_MODE_ANALOG == p_init->mode) {
                     return APP_DRV_ERR_INVALID_MODE;
                 }
                 aon_io_config.mode = s_io_mode[type][p_init->mode];
@@ -129,11 +123,11 @@ uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
                 break;
             
             case APP_IO_TYPE_MSIO:
-                if(p_init->mode >= APP_IO_MODE_IT_RISING && p_init->mode <= APP_IO_MODE_IT_LOW)
-                {
+                if (p_init->mode >= APP_IO_MODE_IT_RISING && p_init->mode <= APP_IO_MODE_IT_LOW) {
                     return APP_DRV_ERR_INVALID_MODE;
-                }   
-                msio_config.direction = (APP_IO_MODE_ANALOG == p_init->mode) ? MSIO_DIRECTION_INPUT : s_io_mode[type][p_init->mode];
+                }
+                msio_config.direction = (APP_IO_MODE_ANALOG == p_init->mode) ? \
+                                        MSIO_DIRECTION_INPUT : s_io_mode[type][p_init->mode];
                 msio_config.mode = (APP_IO_MODE_ANALOG == p_init->mode)? MSIO_MODE_ANALOG : MSIO_MODE_DIGITAL;
                 msio_config.pull = s_io_pull[type][p_init->pull];
                 msio_config.mux = p_init->mux;
@@ -151,16 +145,13 @@ uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
 
 uint16_t app_io_deinit(app_io_type_t type, uint32_t pin)
 {
-    switch(type)
-    {
+    switch (type) {
         case APP_IO_TYPE_NORMAL:
-            if(APP_IO_PINS_0_15 & pin)
-            {
+            if (APP_IO_PINS_0_15 & pin) {
                 hal_gpio_deinit(GPIO0, (APP_IO_PINS_0_15 & pin));
             }
-            if(APP_IO_PINS_16_31 & pin)
-            {
-                hal_gpio_deinit(GPIO1, (APP_IO_PINS_16_31 & pin) >> 16);
+            if (APP_IO_PINS_16_31 & pin) {
+                hal_gpio_deinit(GPIO1, (APP_IO_PINS_16_31 & pin) >> BIT_16);
             }
             break;
 
@@ -187,16 +178,13 @@ app_io_pin_state_t app_io_read_pin(app_io_type_t type, uint32_t pin)
     aon_gpio_pin_state_t aon_io_pin_state = AON_GPIO_PIN_RESET;
     msio_pin_state_t     msio_pin_state   = MSIO_PIN_RESET;
 
-    switch(type)
-    {
+    switch (type) {
         case APP_IO_TYPE_NORMAL:
-            if(APP_IO_PINS_0_15 & pin)
-            {
+            if (APP_IO_PINS_0_15 & pin) {
                 io_pin_state = hal_gpio_read_pin(GPIO0, pin);
             }
-            if(APP_IO_PINS_16_31 & pin)
-            {
-                io_pin_state = hal_gpio_read_pin(GPIO1, pin >> 16);
+            if (APP_IO_PINS_16_31 & pin) {
+                io_pin_state = hal_gpio_read_pin(GPIO1, pin >> BIT_16);
             }
             pin_state = (app_io_pin_state_t)io_pin_state;
             break;
@@ -225,16 +213,14 @@ uint16_t app_io_write_pin(app_io_type_t type, uint32_t pin, app_io_pin_state_t p
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
-    switch(type)
+    switch (type)
     {
         case APP_IO_TYPE_NORMAL:
-            if(APP_IO_PINS_0_15 & pin)
-            {
+            if (APP_IO_PINS_0_15 & pin) {
                 hal_gpio_write_pin(GPIO0, (uint16_t)(APP_IO_PINS_0_15 & pin), (gpio_pin_state_t)pin_state);
             }
-            if(APP_IO_PINS_16_31 & pin)
-            {
-                hal_gpio_write_pin(GPIO1, (uint16_t)((APP_IO_PINS_16_31 & pin) >> 16), (gpio_pin_state_t)pin_state);
+            if (APP_IO_PINS_16_31 & pin) {
+                hal_gpio_write_pin(GPIO1, (uint16_t)((APP_IO_PINS_16_31 & pin) >> BIT_16), (gpio_pin_state_t)pin_state);
             }
             break;
 
@@ -255,16 +241,14 @@ uint16_t app_io_write_pin(app_io_type_t type, uint32_t pin, app_io_pin_state_t p
 
 uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin)
 {
-    switch(type)
+    switch (type)
     {
         case APP_IO_TYPE_NORMAL:
-            if(APP_IO_PINS_0_15 & pin)
-            {
+            if (APP_IO_PINS_0_15 & pin) {
                 hal_gpio_toggle_pin(GPIO0, (uint16_t)(APP_IO_PINS_0_15 & pin));
             }
-            if(APP_IO_PINS_16_31 & pin)
-            {
-                hal_gpio_toggle_pin(GPIO1, (uint16_t)((APP_IO_PINS_16_31 & pin) >> 16));
+            if (APP_IO_PINS_16_31 & pin) {
+                hal_gpio_toggle_pin(GPIO1, (uint16_t)((APP_IO_PINS_16_31 & pin) >> BIT_16));
             }
             break;
 
@@ -273,8 +257,8 @@ uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin)
             break;
 
         case APP_IO_TYPE_MSIO:
-           hal_msio_toggle_pin(pin);
-           break;
+            hal_msio_toggle_pin(pin);
+            break;
 
         default:
             return APP_DRV_ERR_INVALID_TYPE;
@@ -292,27 +276,27 @@ extern uint16_t app_io_init_sym(app_io_type_t type, app_io_init_t *p_init);
 
 uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
 {
-   return app_io_init_sym(type, p_init);
+    return app_io_init_sym(type, p_init);
 }
 
 uint16_t app_io_deinit(app_io_type_t type, uint32_t pin)
 {
-   return app_io_deinit_sym(type, pin);
+    return app_io_deinit_sym(type, pin);
 }
 
 app_io_pin_state_t app_io_read_pin(app_io_type_t type, uint32_t pin)
 {
-   return app_io_read_pin_sym(type, pin);
+    return app_io_read_pin_sym(type, pin);
 }
 
 uint16_t app_io_write_pin(app_io_type_t type, uint32_t pin, app_io_pin_state_t pin_state)
 {
-   return app_io_write_pin_sym(type, pin, pin_state);
+    return app_io_write_pin_sym(type, pin, pin_state);
 }
 
 uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin)
 {
-   return app_io_toggle_pin_sym(type, pin);
+    return app_io_toggle_pin_sym(type, pin);
 }
 #endif
 

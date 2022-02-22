@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_I2C_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_i2c_init_ext(i2c_handle_t *p_i2c);
-extern hal_status_t hal_i2c_deinit_ext(i2c_handle_t *p_i2c);
-extern void hal_i2c_register_callback(hal_i2c_callback_t *hal_i2c_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

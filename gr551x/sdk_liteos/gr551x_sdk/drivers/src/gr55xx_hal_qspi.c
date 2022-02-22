@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_QSPI_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_qspi_init_ext(qspi_handle_t *p_qspi);
-extern hal_status_t hal_qspi_deinit_ext(qspi_handle_t *p_qspi);
-extern void hal_qspi_register_callback(hal_qspi_callback_t *hal_qspi_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

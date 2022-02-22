@@ -37,12 +37,12 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_spi.h"
+#include <string.h>
 #include "app_dma.h"
 #include "app_pwr_mgmt.h"
 #include "app_systick.h"
-#include <string.h>
 #include "platform_sdk.h"
+#include "app_spi.h"
 
 #if defined(HAL_SPI_V2_MODULE_ENABLED)
     #error "Please undef HAL_SPI_V2_MODULE_ENABLED in gr55xx_hal_conf.h"
@@ -55,27 +55,25 @@
  *****************************************************************************************
  */
 
-#define SPI_SMART_CS_LOW(id)                                            \
-    do {                                                                \
-            if((APP_SPI_ID_SLAVE != id) &&                              \
-               (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) \
-            {                                                           \
-                app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,         \
-                                s_spi_env[id].pin_cfg.cs.pin,           \
-                                APP_IO_PIN_RESET);                      \
-            }\
-        } while(0)
+#define SPI_SMART_CS_LOW(id)                                              \
+    do {                                                                  \
+            if ((APP_SPI_ID_SLAVE != id) &&                               \
+               (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) { \
+                app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,           \
+                                s_spi_env[id].pin_cfg.cs.pin,             \
+                                APP_IO_PIN_RESET);                        \
+            }                                                             \
+        } while (0)
 
-#define SPI_SMART_CS_HIGH(id)                                           \
-    do {                                                                \
-            if((APP_SPI_ID_SLAVE != id) &&                              \
-               (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) \
-            {                                                           \
-                app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,         \
-                                 s_spi_env[id].pin_cfg.cs.pin,          \
-                                 APP_IO_PIN_SET);                       \
-            }                                                           \
-    } while(0)
+#define SPI_SMART_CS_HIGH(id)                                             \
+    do {                                                                  \
+            if ((APP_SPI_ID_SLAVE != id) &&                               \
+               (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) { \
+                app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,           \
+                                 s_spi_env[id].pin_cfg.cs.pin,            \
+                                 APP_IO_PIN_SET);                         \
+            }                                                             \
+    } while (0)
 
 #ifdef ENV_RTOS_USE_MUTEX
 
@@ -87,6 +85,8 @@
 
 #endif
 
+#define MS_1000           1000
+
 
 /*
  * STRUCT DEFINE
@@ -94,8 +94,7 @@
  */
 
 /**@brief App spi state types. */
-typedef enum
-{
+typedef enum {
     APP_SPI_INVALID = 0,
     APP_SPI_ACTIVITY,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
@@ -103,8 +102,7 @@ typedef enum
 #endif
 } app_spi_state_t;
 
-struct spi_env_t
-{
+struct spi_env_t {
     app_spi_evt_handler_t   evt_handler;
     spi_handle_t            handle;
     app_spi_mode_t          use_mode;
@@ -172,8 +170,7 @@ struct spi_env_t  s_spi_env[APP_SPI_ID_MAX] = {
 static bool       s_sleep_cb_registered_flag = false;
 static pwr_id_t   s_spi_pwr_id;
 
-static const app_sleep_callbacks_t spi_sleep_cb =
-{
+static const app_sleep_callbacks_t spi_sleep_cb = {
     .app_prepare_for_sleep = spi_prepare_for_sleep,
     .app_sleep_canceled    = spi_sleep_canceled,
     .app_wake_up_ind       = spi_wake_up_ind
@@ -188,22 +185,19 @@ static bool spi_prepare_for_sleep(void)
     hal_spi_state_t state;
     uint8_t i;
 
-    for (i = 0; i < APP_SPI_ID_MAX; i++)
-    {
-        if (s_spi_env[i].spi_state == APP_SPI_ACTIVITY)
-        {
+    for (i = 0; i < APP_SPI_ID_MAX; i++) {
+        if (s_spi_env[i].spi_state == APP_SPI_ACTIVITY) {
             state = hal_spi_get_state(&s_spi_env[i].handle);
-            if ((state != HAL_SPI_STATE_READY) && (state != HAL_SPI_STATE_RESET))
-            {
+            if ((state != HAL_SPI_STATE_READY) && (state != HAL_SPI_STATE_RESET)) {
                 return false;
             }
 
             GLOBAL_EXCEPTION_DISABLE();
             hal_spi_suspend_reg(&s_spi_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
-            #ifdef APP_DRIVER_WAKEUP_CALL_FUN
+#ifdef APP_DRIVER_WAKEUP_CALL_FUN
             s_spi_env[i].spi_state = APP_SPI_SLEEP;
-            #endif
+#endif
         }
     }
 
@@ -212,15 +206,6 @@ static bool spi_prepare_for_sleep(void)
 
 static void spi_sleep_canceled(void)
 {
-#if 0
-    for (uint8_t i = 0; i < APP_SPI_ID_MAX; i++)
-    {
-        if (s_spi_env[i].spi_state == APP_SPI_SLEEP)
-        {
-            s_spi_env[i].spi_state = APP_SPI_ACTIVITY;
-        }
-    }
-#endif
 }
 
 SECTION_RAM_CODE static void spi_wake_up_ind(void)
@@ -228,16 +213,13 @@ SECTION_RAM_CODE static void spi_wake_up_ind(void)
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
     uint8_t i;
 
-    for (i = 0; i < APP_SPI_ID_MAX; i++)
-    {
-        if (s_spi_env[i].spi_state == APP_SPI_ACTIVITY)
-        {
+    for (i = 0; i < APP_SPI_ID_MAX; i++) {
+        if (s_spi_env[i].spi_state == APP_SPI_ACTIVITY) {
             GLOBAL_EXCEPTION_DISABLE();
             hal_spi_resume_reg(&s_spi_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
-            if(s_spi_env[i].use_mode.type == APP_SPI_TYPE_INTERRUPT ||
-               s_spi_env[i].use_mode.type == APP_SPI_TYPE_DMA)
-            {
+            if (s_spi_env[i].use_mode.type == APP_SPI_TYPE_INTERRUPT ||
+               s_spi_env[i].use_mode.type == APP_SPI_TYPE_DMA) {
                 hal_nvic_clear_pending_irq(s_spi_irq[i]);
                 hal_nvic_enable_irq(s_spi_irq[i]);
             }
@@ -249,23 +231,20 @@ SECTION_RAM_CODE static void spi_wake_up_ind(void)
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
 static void spi_wake_up(app_spi_id_t id)
 {
-    if (s_spi_env[id].spi_state == APP_SPI_SLEEP)
-    {
+    if (s_spi_env[id].spi_state == APP_SPI_SLEEP) {
         GLOBAL_EXCEPTION_DISABLE();
         hal_spi_resume_reg(&s_spi_env[id].handle);
         GLOBAL_EXCEPTION_ENABLE();
 
-        if(s_spi_env[id].use_mode.type == APP_SPI_TYPE_INTERRUPT ||
-           s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA)
-        {
+        if (s_spi_env[id].use_mode.type == APP_SPI_TYPE_INTERRUPT ||
+           s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA) {
             hal_nvic_clear_pending_irq(s_spi_irq[id]);
             hal_nvic_enable_irq(s_spi_irq[id]);
         }
         s_spi_env[id].spi_state = APP_SPI_ACTIVITY;
     }
 
-    if(s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA)
-    {
+    if (s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA) {
         dma_wake_up(s_spi_env[id].dma_id[0]);
         dma_wake_up(s_spi_env[id].dma_id[1]);
     }
@@ -277,19 +256,15 @@ static uint16_t spi_gpio_config(app_spi_id_t id, app_spi_pin_cfg_t pin_cfg)
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
     app_drv_err_t err_code = APP_DRV_SUCCESS;
 
-    if (pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)
-    {
-        if (id == APP_SPI_ID_SLAVE)
-        {
+    if (pin_cfg.cs.enable == APP_SPI_PIN_ENABLE) {
+        if (id == APP_SPI_ID_SLAVE) {
             io_init.pull = pin_cfg.cs.pull;
             io_init.mode = APP_IO_MODE_MUX;
             io_init.pin  = pin_cfg.cs.pin;
             io_init.mux  = pin_cfg.cs.mux;
             err_code = app_io_init(pin_cfg.cs.type, &io_init);
             APP_DRV_ERR_CODE_CHECK(err_code);
-        }
-        else
-        {
+        } else {
             io_init.pull = pin_cfg.cs.pull;
             io_init.mode = APP_IO_MODE_OUT_PUT;
             io_init.pin  = pin_cfg.cs.pin;
@@ -299,8 +274,7 @@ static uint16_t spi_gpio_config(app_spi_id_t id, app_spi_pin_cfg_t pin_cfg)
             APP_DRV_ERR_CODE_CHECK(err_code);
         }
     }
-    if (pin_cfg.clk.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (pin_cfg.clk.enable == APP_SPI_PIN_ENABLE) {
         io_init.pull = pin_cfg.clk.pull;
         io_init.mode = APP_IO_MODE_MUX;
         io_init.pin  = pin_cfg.clk.pin;
@@ -308,16 +282,14 @@ static uint16_t spi_gpio_config(app_spi_id_t id, app_spi_pin_cfg_t pin_cfg)
         err_code = app_io_init(pin_cfg.clk.type, &io_init);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
-    if (pin_cfg.mosi.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (pin_cfg.mosi.enable == APP_SPI_PIN_ENABLE) {
         io_init.pull = pin_cfg.mosi.pull;
         io_init.pin  = pin_cfg.mosi.pin;
         io_init.mux  = pin_cfg.mosi.mux;
         err_code = app_io_init(pin_cfg.mosi.type, &io_init);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
-    if (pin_cfg.miso.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (pin_cfg.miso.enable == APP_SPI_PIN_ENABLE) {
         io_init.pull = pin_cfg.miso.pull;
         io_init.pin  = pin_cfg.miso.pin;
         io_init.mux  = pin_cfg.miso.mux;
@@ -335,22 +307,18 @@ static uint16_t app_spi_config_dma(app_spi_params_t *p_params)
 
     tx_dma_params.channel_number             = p_params->use_mode.tx_dma_channel;
     tx_dma_params.init.src_request           = DMA_REQUEST_MEM;
-    tx_dma_params.init.dst_request           = (p_params->id == APP_SPI_ID_SLAVE) ? DMA_REQUEST_SPIS_TX : DMA_REQUEST_SPIM_TX;
+    tx_dma_params.init.dst_request           = (p_params->id == APP_SPI_ID_SLAVE) ? \
+                                               DMA_REQUEST_SPIS_TX : DMA_REQUEST_SPIM_TX;
     tx_dma_params.init.direction             = DMA_MEMORY_TO_PERIPH;
     tx_dma_params.init.src_increment         = DMA_SRC_INCREMENT;
     tx_dma_params.init.dst_increment         = DMA_DST_NO_CHANGE;
-    if (p_params->init.data_size <= SPI_DATASIZE_8BIT)
-    {
+    if (p_params->init.data_size <= SPI_DATASIZE_8BIT) {
         tx_dma_params.init.src_data_alignment    = DMA_SDATAALIGN_BYTE;
         tx_dma_params.init.dst_data_alignment    = DMA_DDATAALIGN_BYTE;
-    }
-    else if (p_params->init.data_size <= SPI_DATASIZE_16BIT)
-    {
+    } else if (p_params->init.data_size <= SPI_DATASIZE_16BIT) {
         tx_dma_params.init.src_data_alignment    = DMA_SDATAALIGN_HALFWORD;
         tx_dma_params.init.dst_data_alignment    = DMA_DDATAALIGN_HALFWORD;
-    }
-    else
-    {
+    } else {
         tx_dma_params.init.src_data_alignment    = DMA_SDATAALIGN_WORD;
         tx_dma_params.init.dst_data_alignment    = DMA_DDATAALIGN_WORD;
     }
@@ -359,31 +327,26 @@ static uint16_t app_spi_config_dma(app_spi_params_t *p_params)
 
     s_spi_env[p_params->id].dma_id[0] = app_dma_init(&tx_dma_params, NULL);
 
-    if (s_spi_env[p_params->id].dma_id[0] < 0)
-    {
+    if (s_spi_env[p_params->id].dma_id[0] < 0) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     s_spi_env[p_params->id].handle.p_dmatx = app_dma_get_handle(s_spi_env[p_params->id].dma_id[0]);
     s_spi_env[p_params->id].handle.p_dmatx->p_parent = (void*)&s_spi_env[p_params->id].handle;
 
     rx_dma_params.channel_number             = p_params->use_mode.rx_dma_channel;
-    rx_dma_params.init.src_request           = (p_params->id == APP_SPI_ID_SLAVE) ? DMA_REQUEST_SPIS_RX : DMA_REQUEST_SPIM_TX;
+    rx_dma_params.init.src_request           = (p_params->id == APP_SPI_ID_SLAVE) ? \
+                                               DMA_REQUEST_SPIS_RX : DMA_REQUEST_SPIM_TX;
     rx_dma_params.init.dst_request           = DMA_REQUEST_MEM;
     rx_dma_params.init.direction             = DMA_PERIPH_TO_MEMORY;
     rx_dma_params.init.src_increment         = DMA_SRC_NO_CHANGE;
     rx_dma_params.init.dst_increment         = DMA_DST_INCREMENT;
-    if (p_params->init.data_size <= SPI_DATASIZE_8BIT)
-    {
+    if (p_params->init.data_size <= SPI_DATASIZE_8BIT) {
         rx_dma_params.init.src_data_alignment    = DMA_SDATAALIGN_BYTE;
         rx_dma_params.init.dst_data_alignment    = DMA_DDATAALIGN_BYTE;
-    }
-    else if (p_params->init.data_size <= SPI_DATASIZE_16BIT)
-    {
+    } else if (p_params->init.data_size <= SPI_DATASIZE_16BIT) {
         rx_dma_params.init.src_data_alignment    = DMA_SDATAALIGN_HALFWORD;
         rx_dma_params.init.dst_data_alignment    = DMA_DDATAALIGN_HALFWORD;
-    }
-    else
-    {
+    } else {
         rx_dma_params.init.src_data_alignment    = DMA_SDATAALIGN_WORD;
         rx_dma_params.init.dst_data_alignment    = DMA_DDATAALIGN_WORD;
     }
@@ -392,8 +355,7 @@ static uint16_t app_spi_config_dma(app_spi_params_t *p_params)
 
     s_spi_env[p_params->id].dma_id[1] = app_dma_init(&rx_dma_params, NULL);
 
-    if (s_spi_env[p_params->id].dma_id[1] < 0)
-    {
+    if (s_spi_env[p_params->id].dma_id[1] < 0) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     s_spi_env[p_params->id].handle.p_dmarx = app_dma_get_handle(s_spi_env[p_params->id].dma_id[1]);
@@ -407,61 +369,47 @@ static void app_spi_event_call(spi_handle_t *p_spi, app_spi_evt_type_t evt_type)
     app_spi_evt_t spi_evt;
     app_spi_id_t id = APP_SPI_ID_MAX;
 
-    if (p_spi->p_instance == SPIS)
-    {
+    if (p_spi->p_instance == SPIS) {
         id = APP_SPI_ID_SLAVE;
-    }
-    else if (p_spi->p_instance == SPIM)
-    {
+    } else if (p_spi->p_instance == SPIM) {
         id = APP_SPI_ID_MASTER;
     }
 
     spi_evt.type = evt_type;
-    if (evt_type == APP_SPI_EVT_ERROR)
-    {
+    if (evt_type == APP_SPI_EVT_ERROR) {
         spi_evt.data.error_code = p_spi->error_code;
 #ifdef  ENV_RTOS_USE_SEMP
-        if (!s_spi_env[id].user_mode)
-        {
+        if (!s_spi_env[id].user_mode) {
             app_driver_sem_post_from_isr(s_spi_env[id].sem_tx);
             app_driver_sem_post_from_isr(s_spi_env[id].sem_rx);
         }
 #endif
         s_spi_env[id].rx_done = 1;
         s_spi_env[id].tx_done = 1;
-    }
-    else if (evt_type == APP_SPI_EVT_TX_CPLT)
-    {
+    } else if (evt_type == APP_SPI_EVT_TX_CPLT) {
         spi_evt.data.size = p_spi->tx_xfer_size - p_spi->tx_xfer_count;
 #ifdef  ENV_RTOS_USE_SEMP
-        if (!s_spi_env[id].user_mode)
-        {
+        if (!s_spi_env[id].user_mode) {
             app_driver_sem_post_from_isr(s_spi_env[id].sem_tx);
         }
 #endif
         s_spi_env[id].tx_done = 1;
-    }
-    else if (evt_type == APP_SPI_EVT_RX_DATA)
-    {
+    } else if (evt_type == APP_SPI_EVT_RX_DATA) {
         spi_evt.data.size = p_spi->rx_xfer_size - p_spi->rx_xfer_count;
 #ifdef  ENV_RTOS_USE_SEMP
-        if (!s_spi_env[id].user_mode)
-        {
+        if (!s_spi_env[id].user_mode) {
             app_driver_sem_post_from_isr(s_spi_env[id].sem_rx);
         }
 #endif
         s_spi_env[id].rx_done = 1;
-    }
-    else if (evt_type == APP_SPI_EVT_TX_RX)
-    {
+    } else if (evt_type == APP_SPI_EVT_TX_RX) {
         spi_evt.data.size = p_spi->rx_xfer_size - p_spi->rx_xfer_count;
     }
 
     s_spi_env[id].start_flag = false;
     SPI_SMART_CS_HIGH(id);
 
-    if(s_spi_env[id].evt_handler != NULL)
-    {
+    if (s_spi_env[id].evt_handler != NULL) {
         s_spi_env[id].evt_handler(&spi_evt);
     }
 }
@@ -475,42 +423,35 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
     uint8_t       id       = p_params->id;
     app_drv_err_t err_code = APP_DRV_SUCCESS;
 
-    if (NULL == p_params)
-    {
+    if (p_params == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
 
-    if (id >= APP_SPI_ID_MAX)
-    {
+    if (id >= APP_SPI_ID_MAX) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if(s_spi_env[id].sem_rx == NULL)
-    {
+    if (s_spi_env[id].sem_rx == NULL) {
         err_code = app_driver_sem_init(&s_spi_env[id].sem_rx);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
-    if(s_spi_env[id].sem_tx == NULL)
-    {
+    if (s_spi_env[id].sem_tx == NULL) {
         err_code = app_driver_sem_init(&s_spi_env[id].sem_tx);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
-    if(s_spi_env[id].sem_tx_rx == NULL)
-    {
+    if (s_spi_env[id].sem_tx_rx == NULL)  {
         err_code = app_driver_sem_init(&s_spi_env[id].sem_tx_rx);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if(s_spi_env[id].mutex_async == NULL)
-    {
+    if (s_spi_env[id].mutex_async == NULL) {
         err_code = app_driver_mutex_init(&s_spi_env[id].mutex_async);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
-    if(s_spi_env[id].mutex_sync == NULL)
-    {
+    if (s_spi_env[id].mutex_sync == NULL) {
         err_code = app_driver_mutex_init(&s_spi_env[id].mutex_sync);
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
@@ -521,16 +462,14 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
     err_code = spi_gpio_config(p_params->id, p_params->pin_cfg);
     APP_DRV_ERR_CODE_CHECK(err_code);
 
-    if(p_params->use_mode.type == APP_SPI_TYPE_DMA)
-    {
+    if (p_params->use_mode.type == APP_SPI_TYPE_DMA) {
         GLOBAL_EXCEPTION_DISABLE();
         err_code = app_spi_config_dma(p_params);
         GLOBAL_EXCEPTION_ENABLE();
         APP_DRV_ERR_CODE_CHECK(err_code);
     }
 
-    if(p_params->use_mode.type != APP_SPI_TYPE_POLLING)
-    {
+    if (p_params->use_mode.type != APP_SPI_TYPE_POLLING) {
         hal_nvic_clear_pending_irq(s_spi_irq[id]);
         hal_nvic_enable_irq(s_spi_irq[id]);
     }
@@ -547,13 +486,11 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
     hal_spi_deinit(&s_spi_env[id].handle);
     hal_spi_init(&s_spi_env[id].handle);
 
-    if (s_sleep_cb_registered_flag == false)
-    {
+    if (s_sleep_cb_registered_flag == false) { // register sleep callback
         s_sleep_cb_registered_flag = true;
         s_spi_pwr_id = pwr_register_sleep_cb(&spi_sleep_cb, APP_DRIVER_SPI_WAPEUP_PRIORITY);
 
-        if (s_spi_pwr_id < 0)
-        {
+        if (s_spi_pwr_id < 0) {
             return APP_DRV_ERR_INVALID_PARAM;
         }
     }
@@ -566,71 +503,59 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
 
 uint16_t app_spi_deinit(app_spi_id_t id)
 {
-    if ((id >= APP_SPI_ID_MAX) || (s_spi_env[id].spi_state == APP_SPI_INVALID))
-    {
+    if ((id >= APP_SPI_ID_MAX) || (s_spi_env[id].spi_state == APP_SPI_INVALID)) {
         return APP_DRV_ERR_INVALID_ID;
     }
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if(s_spi_env[id].sem_tx != NULL)
-    {
+    if (s_spi_env[id].sem_tx != NULL) {
         app_driver_sem_deinit(s_spi_env[id].sem_tx);
         s_spi_env[id].sem_tx = NULL;
     }
-    if(s_spi_env[id].sem_rx != NULL)
-    {
+    if (s_spi_env[id].sem_rx != NULL) {
         app_driver_sem_deinit(s_spi_env[id].sem_rx);
         s_spi_env[id].sem_rx = NULL;
     }
-    if(s_spi_env[id].sem_tx_rx != NULL)
-    {
+    if (s_spi_env[id].sem_tx_rx != NULL) {
         app_driver_sem_deinit(s_spi_env[id].sem_tx_rx);
         s_spi_env[id].sem_tx_rx = NULL;
     }
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if(s_spi_env[id].mutex_sync != NULL)
-    {
+    if (s_spi_env[id].mutex_sync != NULL) {
         app_driver_mutex_deinit(s_spi_env[id].mutex_sync);
         s_spi_env[id].mutex_sync = NULL;
     }
-    if(s_spi_env[id].mutex_async != NULL)
-    {
+    if (s_spi_env[id].mutex_async != NULL) {
         app_driver_mutex_deinit(s_spi_env[id].mutex_async);
         s_spi_env[id].mutex_async = NULL;
     }
 #endif
 
-    if (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE) {
         app_io_deinit(s_spi_env[id].pin_cfg.cs.type, s_spi_env[id].pin_cfg.cs.pin);
     }
-    if (s_spi_env[id].pin_cfg.clk.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (s_spi_env[id].pin_cfg.clk.enable == APP_SPI_PIN_ENABLE) {
         app_io_deinit(s_spi_env[id].pin_cfg.clk.type, s_spi_env[id].pin_cfg.clk.pin);
     }
-    if (s_spi_env[id].pin_cfg.mosi.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (s_spi_env[id].pin_cfg.mosi.enable == APP_SPI_PIN_ENABLE) {
         app_io_deinit(s_spi_env[id].pin_cfg.mosi.type, s_spi_env[id].pin_cfg.mosi.pin);
     }
-    if (s_spi_env[id].pin_cfg.miso.enable == APP_SPI_PIN_ENABLE)
-    {
+    if (s_spi_env[id].pin_cfg.miso.enable == APP_SPI_PIN_ENABLE) {
         app_io_deinit(s_spi_env[id].pin_cfg.miso.type, s_spi_env[id].pin_cfg.miso.pin);
     }
 
     hal_nvic_disable_irq(s_spi_irq[id]);
-    if(s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA)
-    {
+    if (s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA) {
         app_dma_deinit(s_spi_env[id].dma_id[0]);
         app_dma_deinit(s_spi_env[id].dma_id[1]);
     }
     s_spi_env[id].spi_state = APP_SPI_INVALID;
     s_spi_env[id].start_flag = false;
     GLOBAL_EXCEPTION_DISABLE();
-    if(s_spi_env[APP_SPI_ID_SLAVE].spi_state == APP_SPI_INVALID && 
-       s_spi_env[APP_SPI_ID_MASTER].spi_state == APP_SPI_INVALID)
-    {
+    if (s_spi_env[APP_SPI_ID_SLAVE].spi_state == APP_SPI_INVALID &&
+       s_spi_env[APP_SPI_ID_MASTER].spi_state == APP_SPI_INVALID) {
          pwr_unregister_sleep_cb(s_spi_pwr_id);
          s_sleep_cb_registered_flag = false;
     }
@@ -651,8 +576,7 @@ uint16_t app_spi_receive_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
         p_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -660,11 +584,9 @@ uint16_t app_spi_receive_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_receive_it(&s_spi_env[id].handle, p_data, size);
@@ -678,14 +600,11 @@ uint16_t app_spi_receive_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
             s_spi_env[id].start_flag = false;
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
         return APP_DRV_ERR_BUSY;
     }
 
@@ -699,8 +618,7 @@ uint16_t app_spi_receive_sync(app_spi_id_t id, uint8_t *p_data, uint16_t size, u
     if (id >= APP_SPI_ID_MAX ||
         p_data == NULL ||
         size == 0 ||
-        s_spi_env[id].spi_state == APP_SPI_INVALID)
-    {
+        s_spi_env[id].spi_state == APP_SPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -712,8 +630,7 @@ uint16_t app_spi_receive_sync(app_spi_id_t id, uint8_t *p_data, uint16_t size, u
     err_code = hal_spi_receive(&s_spi_env[id].handle, p_data, size, timeout);
     SPI_SMART_CS_HIGH(id);
 
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
 
@@ -733,8 +650,7 @@ uint16_t app_spi_receive_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t siz
         p_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -744,13 +660,10 @@ uint16_t app_spi_receive_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t siz
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     spi_wake_up(id);
 #endif
-    
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_receive_it(&s_spi_env[id].handle, p_data, size);
@@ -764,17 +677,14 @@ uint16_t app_spi_receive_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t siz
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
 #ifdef ENV_RTOS_USE_MUTEX
             APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
             s_spi_env[id].start_flag = false;
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -800,8 +710,7 @@ uint16_t app_spi_receive_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint1
         p_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -814,11 +723,9 @@ uint16_t app_spi_receive_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint1
     BLE_INT_DISABLE();
     s_spi_env[id].rx_done = 0;
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 hal_err_code = hal_spi_receive_it(&s_spi_env[id].handle, p_data, size);
@@ -832,21 +739,18 @@ uint16_t app_spi_receive_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint1
             default:
                 break;
         }
-        if (hal_err_code != HAL_OK)
-        {
+        if (hal_err_code != HAL_OK) {
             s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
             app_err_code = (uint16_t)hal_err_code;
             goto exit;
         }
-    }
-    else
-    {
+    } else {
         app_err_code = APP_DRV_ERR_BUSY;
         goto exit;
     }
 
-    while(s_spi_env[id].rx_done == 0);
+    while (s_spi_env[id].rx_done == 0);
 
 exit:
     s_spi_env[id].user_mode = 0x0;
@@ -864,8 +768,7 @@ uint16_t app_spi_transmit_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint
         p_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -878,11 +781,9 @@ uint16_t app_spi_transmit_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint
     BLE_INT_DISABLE();
     s_spi_env[id].tx_done = 0;
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 hal_err_code = hal_spi_transmit_it(&s_spi_env[id].handle, p_data, size);
@@ -896,22 +797,19 @@ uint16_t app_spi_transmit_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint
             default:
                 break;
         }
-        if (hal_err_code != HAL_OK)
-        {
+        if (hal_err_code != HAL_OK) {
             s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
             app_err_code = (uint16_t)hal_err_code;
 
             goto exit;
         }
-    }
-    else
-    {
+    } else {
         app_err_code = APP_DRV_ERR_BUSY;
         goto exit;
     }
 
-    while(s_spi_env[id].tx_done == 0);
+    while (s_spi_env[id].tx_done == 0);
 
 exit:
     s_spi_env[id].user_mode = 0x0;
@@ -928,8 +826,7 @@ uint16_t app_spi_transmit_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
         p_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -937,11 +834,9 @@ uint16_t app_spi_transmit_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_transmit_it(&s_spi_env[id].handle, p_data, size);
@@ -955,16 +850,13 @@ uint16_t app_spi_transmit_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
             s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
 
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
         return APP_DRV_ERR_BUSY;
     }
 
@@ -978,8 +870,7 @@ uint16_t app_spi_transmit_sync(app_spi_id_t id, uint8_t *p_data, uint16_t size, 
     if (id >= APP_SPI_ID_MAX ||
         p_data == NULL ||
         size == 0 ||
-        s_spi_env[id].spi_state == APP_SPI_INVALID)
-    {
+        s_spi_env[id].spi_state == APP_SPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -991,8 +882,7 @@ uint16_t app_spi_transmit_sync(app_spi_id_t id, uint8_t *p_data, uint16_t size, 
     err_code = hal_spi_transmit(&s_spi_env[id].handle, p_data, size, timeout);
     SPI_SMART_CS_HIGH(id);
 
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
 
@@ -1012,8 +902,7 @@ uint16_t app_spi_transmit_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t si
         p_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1024,11 +913,9 @@ uint16_t app_spi_transmit_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t si
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_transmit_it(&s_spi_env[id].handle, p_data, size);
@@ -1042,8 +929,7 @@ uint16_t app_spi_transmit_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t si
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
 #ifdef ENV_RTOS_USE_MUTEX
             APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1051,9 +937,7 @@ uint16_t app_spi_transmit_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t si
             SPI_SMART_CS_HIGH(id);
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1070,7 +954,8 @@ uint16_t app_spi_transmit_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t si
 }
 #endif
 
-uint16_t app_spi_transmit_receive_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t size, uint32_t timeout)
+uint16_t app_spi_transmit_receive_sync(app_spi_id_t id, uint8_t *p_tx_data, \
+                                       uint8_t *p_rx_data, uint32_t size, uint32_t timeout)
 {
     hal_status_t err_code;
 
@@ -1078,8 +963,7 @@ uint16_t app_spi_transmit_receive_sync(app_spi_id_t id, uint8_t *p_tx_data, uint
         p_tx_data == NULL ||
         p_rx_data == NULL ||
         size == 0 ||
-        s_spi_env[id].spi_state == APP_SPI_INVALID)
-    {
+        s_spi_env[id].spi_state == APP_SPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1091,8 +975,7 @@ uint16_t app_spi_transmit_receive_sync(app_spi_id_t id, uint8_t *p_tx_data, uint
     err_code = hal_spi_transmit_receive(&s_spi_env[id].handle, p_tx_data, p_rx_data, size, timeout);
     SPI_SMART_CS_HIGH(id);
 
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
 
@@ -1108,8 +991,7 @@ uint16_t app_spi_transmit_receive_async(app_spi_id_t id, uint8_t *p_tx_data, uin
         p_rx_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1117,11 +999,9 @@ uint16_t app_spi_transmit_receive_async(app_spi_id_t id, uint8_t *p_tx_data, uin
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_transmit_receive_it(&s_spi_env[id].handle, p_tx_data, p_rx_data, size);
@@ -1135,8 +1015,7 @@ uint16_t app_spi_transmit_receive_async(app_spi_id_t id, uint8_t *p_tx_data, uin
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
             s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
             return (uint16_t)err_code;
@@ -1160,8 +1039,7 @@ uint16_t app_spi_transmit_receive_sem_sync(app_spi_id_t id, uint8_t *p_tx_data, 
         p_rx_data == NULL ||
         size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1172,11 +1050,9 @@ uint16_t app_spi_transmit_receive_sem_sync(app_spi_id_t id, uint8_t *p_tx_data, 
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_transmit_receive_it(&s_spi_env[id].handle, p_tx_data, p_rx_data, size);
@@ -1190,8 +1066,7 @@ uint16_t app_spi_transmit_receive_sem_sync(app_spi_id_t id, uint8_t *p_tx_data, 
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
 #ifdef ENV_RTOS_USE_MUTEX
             APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1211,7 +1086,8 @@ uint16_t app_spi_transmit_receive_sem_sync(app_spi_id_t id, uint8_t *p_tx_data, 
 }
 #endif
 
-uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_size, uint32_t rx_size)
+uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, \
+                                   uint8_t *p_rx_data, uint32_t tx_size, uint32_t rx_size)
 {
     hal_status_t err_code;
 
@@ -1221,8 +1097,7 @@ uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t 
         tx_size == 0 ||
         rx_size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1230,11 +1105,9 @@ uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t 
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 SPI_SMART_CS_LOW(id);
                 err_code = hal_spi_read_eeprom_it(&s_spi_env[id].handle, p_tx_data, p_rx_data, tx_size, rx_size);
@@ -1248,22 +1121,20 @@ uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t 
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
-            s_spi_env[id].start_flag = false;			
+        if (err_code != HAL_OK) {
+            s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
         return APP_DRV_ERR_BUSY;
     }
 
     return APP_DRV_SUCCESS;
 }
 
-uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_size, uint32_t rx_size, uint32_t timeout)
+uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, \
+                                  uint8_t *p_rx_data, uint32_t tx_size, uint32_t rx_size, uint32_t timeout)
 {
     hal_status_t err_code;
 
@@ -1272,8 +1143,7 @@ uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *
         p_rx_data == NULL ||
         tx_size == 0 ||
         rx_size == 0 ||
-        s_spi_env[id].spi_state == APP_SPI_INVALID)
-    {
+        s_spi_env[id].spi_state == APP_SPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1285,15 +1155,15 @@ uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *
     err_code = hal_spi_read_eeprom(&s_spi_env[id].handle, p_tx_data, p_rx_data, tx_size, rx_size, timeout);
     SPI_SMART_CS_HIGH(id);
 
-    if (err_code != HAL_OK)
-    {
+    if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
 
     return APP_DRV_SUCCESS;
 }
 
-uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t *p_rx_data, uint32_t cmd_size, uint32_t rx_size)
+uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, \
+                                   uint8_t *p_rx_data, uint32_t cmd_size, uint32_t rx_size)
 {
     hal_status_t err_code;
 
@@ -1303,8 +1173,7 @@ uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t
         cmd_size == 0 ||
         rx_size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1312,20 +1181,17 @@ uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
         
         SPI_SMART_CS_LOW(id);
-        err_code = hal_spi_transmit(&s_spi_env[id].handle, p_cmd_data, cmd_size, 1000);
-        if (err_code != HAL_OK)
-        {
+        err_code = hal_spi_transmit(&s_spi_env[id].handle, p_cmd_data, cmd_size, MS_1000);
+        if (err_code != HAL_OK) {
             SPI_SMART_CS_HIGH(id);
             s_spi_env[id].start_flag = false;
             return (uint16_t)err_code;
         }
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 err_code = hal_spi_receive_it(&s_spi_env[id].handle, p_rx_data, rx_size);
                 break;
@@ -1337,22 +1203,20 @@ uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
-            s_spi_env[id].start_flag = false;			
+        if (err_code != HAL_OK) {
+            s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
         return APP_DRV_ERR_BUSY;
     }
 
     return APP_DRV_SUCCESS;
 }
 
-uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t *p_tx_data, uint32_t cmd_size, uint32_t tx_size)
+uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, \
+                                    uint8_t *p_tx_data, uint32_t cmd_size, uint32_t tx_size)
 {
     hal_status_t err_code;
 
@@ -1362,8 +1226,7 @@ uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_
         cmd_size == 0 ||
         tx_size == 0 ||
         s_spi_env[id].spi_state == APP_SPI_INVALID ||
-        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING)
-    {
+        s_spi_env[id].use_mode.type == APP_SPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1371,21 +1234,18 @@ uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_
     spi_wake_up(id);
 #endif
 
-    if (s_spi_env[id].start_flag == false)
-    {
+    if (s_spi_env[id].start_flag == false) {
         s_spi_env[id].start_flag = true;
         
         SPI_SMART_CS_LOW(id);
-        err_code = hal_spi_transmit(&s_spi_env[id].handle, p_cmd_data, cmd_size, 1000);
-        if (err_code != HAL_OK)
-        {
+        err_code = hal_spi_transmit(&s_spi_env[id].handle, p_cmd_data, cmd_size, MS_1000);
+        if (err_code != HAL_OK) {
             SPI_SMART_CS_HIGH(id);
             s_spi_env[id].start_flag = false;
             return (uint16_t)err_code;
         }
         
-        switch (s_spi_env[id].use_mode.type)
-        {
+        switch (s_spi_env[id].use_mode.type) {
             case APP_SPI_TYPE_INTERRUPT:
                 err_code = hal_spi_transmit_it(&s_spi_env[id].handle, p_tx_data, tx_size);
                 break;
@@ -1397,15 +1257,12 @@ uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_
             default:
                 break;
         }
-        if (err_code != HAL_OK)
-        {
+        if (err_code != HAL_OK) {
             s_spi_env[id].start_flag = false;
             SPI_SMART_CS_HIGH(id);
             return (uint16_t)err_code;
         }
-    }
-    else
-    {
+    } else {
         return APP_DRV_ERR_BUSY;
     }
 
@@ -1415,8 +1272,7 @@ uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_
 spi_handle_t *app_spi_get_handle(app_spi_id_t id)
 {
     if (id >= APP_SPI_ID_MAX ||
-        s_spi_env[id].spi_state == APP_SPI_INVALID)
-    {
+        s_spi_env[id].spi_state == APP_SPI_INVALID) {
         return NULL;
     }
 
@@ -1429,7 +1285,7 @@ spi_handle_t *app_spi_get_handle(app_spi_id_t id)
 
 void hal_spi_tx_cplt_callback(spi_handle_t *p_spi)
 {
-    app_spi_event_call(p_spi, APP_SPI_EVT_TX_CPLT); 
+    app_spi_event_call(p_spi, APP_SPI_EVT_TX_CPLT);
 }
 
 void hal_spi_rx_cplt_callback(spi_handle_t *p_spi)

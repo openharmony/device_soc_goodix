@@ -52,8 +52,8 @@
 #ifndef _APP_IO_H_
 #define _APP_IO_H_
 
-#include "app_drv_error.h"
 #include <stdint.h>
+#include "app_drv_error.h"
 
 /** @addtogroup APP_GPIO_PIN_DEFINES Defines
   * @{
@@ -128,8 +128,7 @@
 /**
   * @brief   GPIO state Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_PIN_RESET,        /**< IO pin low level. */
     APP_IO_PIN_SET,          /**< IO pin high level. */
 } app_io_pin_state_t;
@@ -137,8 +136,7 @@ typedef enum
 /**
   * @brief   GPIO type Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_TYPE_NORMAL,      /**< General Purpose Input/Output. */
     APP_IO_TYPE_AON,         /**< Always-on Input/Output.       */
     APP_IO_TYPE_MSIO,        /**< Mixed Signal I/O.             */
@@ -148,8 +146,7 @@ typedef enum
 /**
   * @brief   GPIO mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_MODE_INPUT,          /**< Input Mode.                                         */
     APP_IO_MODE_OUT_PUT,        /**< Output Mode.                                        */
     APP_IO_MODE_MUX,            /**< Mux Mode.                                           */
@@ -164,8 +161,7 @@ typedef enum
 /**
   * @brief   GPIO wake-up mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_NONE_WAKEUP,         /**< None Wakeup.         */
     APP_IO_DISABLE_WAKEUP,      /**< Disable AON GPIO Wakeup. */
     APP_IO_ENABLE_WAKEUP,       /**< Enable AON GPIO Wakeup.  */
@@ -174,8 +170,7 @@ typedef enum
 /**
   * @brief   GPIO handler context type Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_CTX_WAKEUP,          /**< the event of wakeup.    */
     APP_IO_CTX_INT,             /**< the event of interrupt. */
 }app_ctx_type_t;
@@ -183,8 +178,7 @@ typedef enum
 /**
   * @brief   GPIO pull Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_NOPULL,              /**< No Pull-up or Pull-down activation.  */
     APP_IO_PULLUP,              /**< Pull-up activation.                  */
     APP_IO_PULLDOWN,            /**< Pull-down activation.                */
@@ -194,8 +188,7 @@ typedef enum
 /**
   * @brief   GPIO mux Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_IO_MUX_0,               /**< IO mux mode 0. */
     APP_IO_MUX_1,               /**< IO mux mode 1. */
     APP_IO_MUX_2,               /**< IO mux mode 2. */
@@ -215,8 +208,7 @@ typedef enum
 /**
   * @brief GPIO parameter structure definition
   */
-typedef struct
-{
+typedef struct {
     uint32_t  pin;              /**< Specifies the IO pins to be configured.
                                      This parameter can be any value of @ref GR551x_pins */
     app_io_mode_t mode;         /**< Specifies the operating mode for the selected pins. */
@@ -224,8 +216,6 @@ typedef struct
     app_io_mux_t  mux;          /**< Specifies the Peripheral to be connected to the selected pins. */
 } app_io_init_t;
 /** @} */
-
-
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_APP_GPIO_DRIVER_FUNCTIONS Functions
@@ -300,5 +290,3 @@ uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin);
 /** @} */
 /** @} */
 /** @} */
-
-

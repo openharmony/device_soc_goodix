@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief I2C module Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_I2C_ID_0,                   /**< I2C module 0. */
     APP_I2C_ID_1,                   /**< I2C module 1. */
     APP_I2C_ID_MAX                  /**< Only for check parameter, not used as input parameters. */
@@ -82,8 +81,7 @@ typedef enum
 /**
   * @brief I2C role Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_I2C_ROLE_MASTER,           /**< I2C master device. */
     APP_I2C_ROLE_SLAVE,            /**< I2C slave device.  */
     APP_I2C_ROLE_MAX,              /**< Only for check parameter, not used as input parameters. */
@@ -92,8 +90,7 @@ typedef enum
 /**
   * @brief I2C operating mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_I2C_TYPE_INTERRUPT,        /**< Interrupt operation mode */
     APP_I2C_TYPE_POLLING,          /**< Polling operation mode   */
     APP_I2C_TYPE_DMA,              /**< DMA operation mode       */
@@ -103,8 +100,7 @@ typedef enum
 /**
   * @brief I2C event Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_I2C_EVT_ERROR,                   /**< Error reported by I2C peripheral.  */
     APP_I2C_EVT_TX_CPLT,                 /**< Requested TX transfer completed.    */
     APP_I2C_EVT_RX_DATA,                 /**< Requested RX transfer completed.    */
@@ -117,8 +113,7 @@ typedef enum
 /**
   * @brief I2C IO Structures
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t        type;     /**< Specifies the type of SPI IO.                                  */
     app_io_mux_t         mux;      /**< Specifies the Peripheral to be connected to the selected pins. */
     uint32_t             pin;      /**< Specifies the IO pins to be configured.
@@ -129,8 +124,7 @@ typedef struct
 /**
   * @brief I2C IO configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_i2c_pin_t       scl;       /**< Set the configuration of I2C SCL pin.   */
     app_i2c_pin_t       sda;       /**< Set the configuration of I2C SDA pin.   */
 } app_i2c_pin_cfg_t;
@@ -138,8 +132,7 @@ typedef struct
 /**
   * @brief I2C operate mode Enumerations definition
   */
-typedef struct
-{
+typedef struct {
     app_i2c_type_t      type;            /**< Specifies the operation mode of I2C. */
     dma_channel_t       tx_dma_channel;  /**< Specifies the dma channel of I2C TX. */
     dma_channel_t       rx_dma_channel;  /**< Specifies the dma channel of I2C RX. */
@@ -148,8 +141,7 @@ typedef struct
 /**
   * @brief I2C parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_i2c_id_t        id;              /**< specified I2C module ID.                                        */
     app_i2c_role_t      role;            /**< specified the role of I2C.                                      */
     app_i2c_pin_cfg_t   pin_cfg;         /**< the pin configuration information for the specified I2C module. */
@@ -160,11 +152,9 @@ typedef struct
 /**
   * @brief I2C event structure definition
   */
-typedef struct
-{
+typedef struct {
     app_i2c_evt_type_t type; /**< Type of event. */
-    union
-    {
+    union {
         uint32_t error_code;             /**< I2C Error code . */
         uint16_t size;                   /**< I2C transmitted/received counter. */
     } data;                              /**< I2C data. */
@@ -222,7 +212,8 @@ uint16_t app_i2c_deinit(app_i2c_id_t id);
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_i2c_receive_sync(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size, uint32_t timeout);
+uint16_t app_i2c_receive_sync(app_i2c_id_t id, uint16_t target_address,
+                              uint8_t *p_data, uint16_t size, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -253,7 +244,8 @@ uint16_t app_i2c_receive_async(app_i2c_id_t id, uint16_t target_address, uint8_t
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_i2c_transmit_sync(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size, uint32_t timeout);
+uint16_t app_i2c_transmit_sync(app_i2c_id_t id, uint16_t target_address,
+                               uint8_t *p_data, uint16_t size, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -275,7 +267,8 @@ uint16_t app_i2c_transmit_async(app_i2c_id_t id, uint16_t target_address, uint8_
  * @brief  Read an amount of data in blocking mode from a specific memory address
  *
  * @param[in]  id: I2C module ID.
- * @param[in]  dev_address: Target device address: The device 7 bits address value in datasheet must be shifted at right before call interface
+ * @param[in]  dev_address: Target device address: The device 7 bits address value
+ *             in datasheet must be shifted at right before call interface
  * @param[in]  mem_address: Internal memory address
  * @param[in]  mem_addr_size: Size of internal memory address
  * @param[in]  p_data: Pointer to data buffer
@@ -285,14 +278,17 @@ uint16_t app_i2c_transmit_async(app_i2c_id_t id, uint16_t target_address, uint8_
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_i2c_mem_read_sync(app_i2c_id_t id, uint16_t dev_address, uint16_t mem_address, uint16_t mem_addr_size, uint8_t *p_data, uint16_t size, uint32_t timeout);
+uint16_t app_i2c_mem_read_sync(app_i2c_id_t id, uint16_t dev_address,
+                               uint16_t mem_address, uint16_t mem_addr_size,
+                               uint8_t *p_data, uint16_t size, uint32_t timeout);
 
 /**
  ****************************************************************************************
  * @brief  Read an amount of data in non-blocking mode with Interrupt/DMA from a specific memory address
  *
  * @param[in]  id: I2C module ID.
- * @param[in]  dev_address: Target device address: The device 7 bits address value in datasheet must be shifted at right before call interface
+ * @param[in]  dev_address: Target device address: The device 7 bits address value in
+ *             datasheet must be shifted at right before call interface
  * @param[in]  mem_address: Internal memory address
  * @param[in]  mem_addr_size: Size of internal memory address
  * @param[in]  p_data: Pointer to data buffer
@@ -301,14 +297,17 @@ uint16_t app_i2c_mem_read_sync(app_i2c_id_t id, uint16_t dev_address, uint16_t m
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_i2c_mem_read_async(app_i2c_id_t id, uint16_t dev_address, uint16_t mem_address, uint16_t mem_addr_size, uint8_t *p_data, uint16_t size);
+uint16_t app_i2c_mem_read_async(app_i2c_id_t id, uint16_t dev_address,
+                                uint16_t mem_address, uint16_t mem_addr_size,
+                                uint8_t *p_data, uint16_t size);
 
 /**
  ****************************************************************************************
  * @brief  Write an amount of data in blocking mode to a specific memory address
  *
  * @param[in]  id: I2C module ID.
- * @param[in]  dev_address: Target device address: The device 7 bits address value in datasheet must be shifted at right before call interface
+ * @param[in]  dev_address: Target device address: The device 7 bits address value in
+ *             datasheet must be shifted at right before call interface
  * @param[in]  mem_address: Internal memory address
  * @param[in]  mem_addr_size: Size of internal memory address
  * @param[in]  p_data: Pointer to data buffer
@@ -318,14 +317,17 @@ uint16_t app_i2c_mem_read_async(app_i2c_id_t id, uint16_t dev_address, uint16_t 
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_i2c_mem_write_sync(app_i2c_id_t id, uint16_t dev_address, uint16_t mem_address, uint16_t mem_addr_size, uint8_t *p_data, uint16_t size, uint32_t timeout);
+uint16_t app_i2c_mem_write_sync(app_i2c_id_t id, uint16_t dev_address,
+                                uint16_t mem_address, uint16_t mem_addr_size,
+                                uint8_t *p_data, uint16_t size, uint32_t timeout);
 
 /**
  ****************************************************************************************
  * @brief  Write an amount of data in non-blocking mode with Interrupt/DMA to a specific memory address
  *
  * @param[in]  id: I2C module ID.
- * @param[in]  dev_address: Target device address: The device 7 bits address value in datasheet must be shifted at right before call interface
+ * @param[in]  dev_address: Target device address: The device 7 bits address value in
+ *             datasheet must be shifted at right before call interface
  * @param[in]  mem_address: Internal memory address
  * @param[in]  mem_addr_size: Size of internal memory address
  * @param[in]  p_data: Pointer to data buffer
@@ -334,7 +336,9 @@ uint16_t app_i2c_mem_write_sync(app_i2c_id_t id, uint16_t dev_address, uint16_t 
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_i2c_mem_write_async(app_i2c_id_t id, uint16_t dev_address, uint16_t mem_address, uint16_t mem_addr_size, uint8_t *p_data, uint16_t size);
+uint16_t app_i2c_mem_write_async(app_i2c_id_t id, uint16_t dev_address,
+                                 uint16_t mem_address, uint16_t mem_addr_size,
+                                 uint8_t *p_data, uint16_t size);
 
 /**
  ****************************************************************************************

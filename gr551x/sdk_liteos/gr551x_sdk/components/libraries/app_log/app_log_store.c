@@ -56,6 +56,10 @@
 #define APP_LOG_STORE_SAVE_BIT           (0x01 << 1)
 #define APP_LOG_STORE_DUMP_BIT           (0x01 << 2)
 
+#define OFFSET_0                         0
+#define OFFSET_1                         1
+#define OFFSET_2                         2
+
 
 /*
  * STRUCTURES
@@ -120,7 +124,7 @@ static bool log_store_head_check(log_store_head_t *p_head, uint32_t db_addr, uin
         return false;
     }
 
-    if (p_head->check_sum != log_store_check_sum_calc(head_data, head_len - 2)) {
+    if (p_head->check_sum != log_store_check_sum_calc(head_data, head_len - OFFSET_2)) {
         return false;
     }
 
@@ -132,7 +136,7 @@ static bool log_store_head_update(uint16_t nv_tag, log_store_head_t *p_head)
     uint16_t  head_len  = sizeof(log_store_head_t);
     uint8_t  *head_data = (uint8_t *)p_head;
 
-    p_head->check_sum = log_store_check_sum_calc(head_data, head_len - 2);
+    p_head->check_sum = log_store_check_sum_calc(head_data, head_len - OFFSET_2);
 
     if (nvds_put(nv_tag, head_len, (uint8_t *)p_head)) {
         return false;
@@ -143,7 +147,7 @@ static bool log_store_head_update(uint16_t nv_tag, log_store_head_t *p_head)
 
 static bool log_store_time_stamp_encode(uint8_t *p_buffer, uint8_t buffer_size)
 {
-    if (APP_LOG_STORE_TIME_SIZE != buffer_size) {
+    if (buffer_size != APP_LOG_STORE_TIME_SIZE) {
         return false;
     }
 
@@ -169,7 +173,7 @@ static void log_store_data_flash_write(void)
     uint32_t read_len;
     uint8_t  read_buff[APP_LOG_STORE_ONECE_OP_SIZE];
 
-    if (0 == (s_log_store_env.store_head.offset % s_log_store_env.blk_size)) {
+    if ((s_log_store_env.store_head.offset % s_log_store_env.blk_size) == 0) {
         if (s_log_store_ops.flash_erase) {
             s_log_store_ops.flash_erase(s_log_store_env.store_head.db_addr + s_log_store_env.store_head.offset,
                                         s_log_store_env.blk_size);
@@ -177,7 +181,6 @@ static void log_store_data_flash_write(void)
     }
 
     align_num = ALIGN_NUM(APP_LOG_STORE_ONECE_OP_SIZE, s_log_store_env.store_head.offset);
-
     if (align_num != s_log_store_env.store_head.offset) {
         read_len = ring_buffer_read(&s_log_store_rbuf, read_buff, align_num - s_log_store_env.store_head.offset);
     } else {
@@ -196,7 +199,6 @@ static void log_store_data_flash_write(void)
     }
 
     log_store_head_update(s_log_store_env.head_nv_tag, &s_log_store_env.store_head);
-
 }
 
 static void log_store_to_flash(void)
@@ -230,7 +232,6 @@ static void log_dump_from_flash(void)
 
     if (s_log_store_ops.flash_read) {
         uint32_t align_num = ALIGN_NUM(APP_LOG_STORE_ONECE_OP_SIZE, s_log_store_env.store_head.offset);
-
         if (align_num != s_log_store_env.store_head.offset &&
                 (s_log_store_dump_offset + APP_LOG_STORE_ONECE_OP_SIZE) == align_num) {
             dump_len = (s_log_store_env.store_head.offset + APP_LOG_STORE_ONECE_OP_SIZE - align_num);
@@ -245,7 +246,6 @@ static void log_dump_from_flash(void)
         }
 
         s_log_store_dump_offset += dump_len;
-
     } else {
         s_log_store_env.store_status &= ~APP_LOG_STORE_DUMP_BIT;
     }
@@ -275,15 +275,15 @@ uint16_t app_log_store_init(app_log_store_info_t *p_info, app_log_store_op_t *p_
         return SDK_ERR_DISALLOWED;
     }
 
-    if (NULL == p_info
-            || NULL == p_op_func
-            || NULL == p_op_func->flash_init
-            || NULL == p_op_func->flash_read
-            || NULL == p_op_func->flash_write
-            || NULL == p_op_func->flash_erase
-            || 0 == p_info->db_size
-            || 0 == p_info->blk_size
-            || 0 != (p_info->db_addr % p_info->blk_size)) {
+    if (p_info == NULL
+            || p_op_func == NULL
+            || p_op_func->flash_init == NULL
+            || p_op_func->flash_read == NULL
+            || p_op_func->flash_write == NULL
+            || p_op_func->flash_erase == NULL 
+            || p_info->db_size == 0
+            || p_info->blk_size == 0
+            || (p_info->db_addr % p_info->blk_size) != 0) {
         return SDK_ERR_INVALID_PARAM;
     }
 
@@ -337,7 +337,7 @@ uint16_t app_log_store_save(const uint8_t *p_data, const uint16_t length)
     ring_buffer_write(&s_log_store_rbuf, time_encode, APP_LOG_STORE_TIME_SIZE);
     ring_buffer_write(&s_log_store_rbuf, p_data, length);
 
-    if (APP_LOG_STORE_ONECE_OP_SIZE <= ring_buffer_items_count_get(&s_log_store_rbuf)) {
+    if (ring_buffer_items_count_get(&s_log_store_rbuf >= APP_LOG_STORE_ONECE_OP_SIZE)) {
         s_log_store_env.store_status |= APP_LOG_STORE_SAVE_BIT;
 #if APP_LOG_STORE_RUN_ON_OS
         log_store_to_flash();
@@ -360,7 +360,6 @@ void app_log_store_flush(void)
 
     do {
         items_count = ring_buffer_items_count_get(&s_log_store_rbuf);
-
         if (items_count) {
             log_store_data_flash_write();
         }
@@ -377,7 +376,7 @@ uint16_t app_log_store_dump(app_log_store_dump_cb_t dump_cb)
         return SDK_ERR_BUSY;
     }
 
-    if (NULL == dump_cb) {
+    if (dump_cb == NULL) {
         return SDK_ERR_POINTER_NULL;
     }
 
@@ -385,7 +384,7 @@ uint16_t app_log_store_dump(app_log_store_dump_cb_t dump_cb)
 
     app_log_store_flush();
 
-    if (0 == s_log_store_env.store_head.flip_over && 0 == s_log_store_env.store_head.offset) {
+    if (s_log_store_env.store_head.flip_over == 0 && s_log_store_env.store_head.offset == 0) {
         return SDK_SUCCESS;
     }
 

@@ -1,4 +1,3 @@
-#include "dbg_printf.h"
 
 void UART0_IRQHandler(void)
 {

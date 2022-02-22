@@ -41,12 +41,12 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_error.h"
-#include "app_error_cfg.h"
-#include "app_log.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include "app_error_cfg.h"
+#include "app_error.h"
+#include "app_log.h"
 
 /*
  * DEFINITIONS
@@ -116,7 +116,7 @@ static error_code_info_t s_error_code_info[APP_ERROR_CODE_NB] = {
     {SDK_ERR_NOT_ENOUGH_CREDITS,               "Not enough credits."},
 };
 #else
-extern error_code_info_t s_error_code_info[];
+static error_code_info_t s_error_code_info[];
 #endif
 
 /*
@@ -126,20 +126,30 @@ extern error_code_info_t s_error_code_info[];
 __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
 {
 #if APP_ERROR_INFO_PRINT_ENABLE
+    uint32_t ret;
     char s_error_print_info[APP_ERROR_INFO_LEN];
-    memset(s_error_print_info, 0, APP_ERROR_INFO_LEN);
+    ret = memset_s(s_error_print_info, sizeof(s_error_print_info), 0, APP_ERROR_INFO_LEN);
+    if (ret < 0) {
+      return;
+    }
 
     if (APP_ERROR_API_RET == p_error_info->error_type) {
         for (uint8_t i = 0; ; i++) {
             if (p_error_info->value.error_code == s_error_code_info[i].error_code) {
-                sprintf_s(s_error_print_info, sizeof (s_error_print_info),
+                ret = sprintf_s(s_error_print_info, sizeof (s_error_print_info),
                           "Error code 0x%04X: %s",
                           p_error_info->value.error_code,
                           s_error_code_info[i].error_info);
+                if (ret < 0) {
+                    return;
+                }
                 break;
-            } else if (APP_ERROR_CODE_NB == i) {
-                sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
+            } else if (i == APP_ERROR_CODE_NB) {
+                ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
                           "Error code 0x%04X: No found information.", p_error_info->value.error_code);
+                if (ret < 0) {
+                    return;
+                }
                 break;
             }
         }

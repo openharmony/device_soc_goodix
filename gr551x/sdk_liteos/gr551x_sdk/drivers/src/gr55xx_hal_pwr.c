@@ -39,7 +39,6 @@
 
 #if defined(HAL_PWR_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
 
-
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/

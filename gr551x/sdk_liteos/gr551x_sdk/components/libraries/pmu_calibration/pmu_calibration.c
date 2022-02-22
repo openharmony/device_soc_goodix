@@ -42,6 +42,8 @@
 #include "pmu_calibration.h"
 #include "platform_sdk.h"
 
+#define INTERVAL_MIN 2000
+#define STACKDEPTH   512
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
@@ -53,11 +55,13 @@ static void system_pmu_calibration_task(void *p_arg);
 static app_timer_id_t s_pmu_calibration_timer_id = 0;
 #endif
 
-extern uint32_t g_debug_temperature;
+uint32_t g_debug_temperature;
 
 #if CFG_LPCLK_INTERNAL_EN
 
 #define PMU_SMALL_INTERVAL_MS       (10*1000)
+#define TEMPERATURN_HIGH    44   
+#define TEMPERATURN_LOW     40
 static uint32_t pmu_interval_init = 30 * 1000;
 static uint32_t pmu_interval_prev = 0;
 
@@ -65,11 +69,11 @@ uint32_t pmu_interval_get(uint32_t is_init)
 {
     uint32_t interval = 0;
 
-    if (g_debug_temperature > 44) {
+    if (g_debug_temperature > TEMPERATURN_HIGH) {
         interval = PMU_SMALL_INTERVAL_MS;
-    } else if (g_debug_temperature >= 40 && g_debug_temperature <= 44 && is_init) {
+    } else if (g_debug_temperature >= TEMPERATURN_LOW && g_debug_temperature <= TEMPERATURN_HIGH && is_init) {
         interval = PMU_SMALL_INTERVAL_MS;
-    } else if (g_debug_temperature < 40) {
+    } else if (g_debug_temperature < TEMPERATURN_LOW) {
         interval = pmu_interval_init;
     }
 
@@ -91,10 +95,10 @@ void pmu_timer_handler(void* p_arg)
     interval_diff = interval_new > pmu_interval_prev ?
                     interval_new - pmu_interval_prev: pmu_interval_prev - interval_new;
 
-    if (interval_diff > 2000) {
+    if (interval_diff > INTERVAL_MIN) {
 #ifdef ENV_USE_FREERTOS
         portBASE_TYPE xHigherPriorityTaskWoken;
-        xTimerChangePeriodFromISR( timer_handle, interval_new, &xHigherPriorityTaskWoken);
+        xTimerChangePeriodFromISR(timer_handle, interval_new, &xHigherPriorityTaskWoken);
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 #else
         app_timer_delete(&s_pmu_calibration_timer_id);
@@ -130,7 +134,7 @@ void system_pmu_calibration_init(uint32_t interval)
 #endif // CFG_LPCLK_INTERNAL_EN
                                    );
 
-        xTaskCreate(system_pmu_calibration_task, "pmu_calibration_task", 512, NULL, configMAX_PRIORITIES - 1, NULL);
+        xTaskCreate(system_pmu_calibration_task, "pmu_calibration_task", STACKDEPTH, NULL, configMAX_PRIORITIES - 1, NULL);
 #else
         app_timer_delete(&s_pmu_calibration_timer_id);
         app_timer_create(&s_pmu_calibration_timer_id, ATIMER_REPEAT,
@@ -154,7 +158,7 @@ void system_pmu_calibration_init(uint32_t interval)
 void system_pmu_calibration_start(void)
 {
     if (timer_handle != NULL) {
-        if(xTimerIsTimerActive(timer_handle) == pdFALSE) {
+        if (xTimerIsTimerActive(timer_handle) == pdFALSE) {
             xTimerStart(timer_handle, 0);
         }
     }

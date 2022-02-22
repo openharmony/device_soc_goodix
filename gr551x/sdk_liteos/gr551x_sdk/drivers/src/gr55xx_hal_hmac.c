@@ -34,14 +34,9 @@
   */
 
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_HMAC_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_hmac_init_ext(hmac_handle_t *p_hmac);
-extern hal_status_t hal_hmac_deinit_ext(hmac_handle_t *p_hmac);
-extern void hal_hmac_register_callback(hal_hmac_callback_t *hal_hmac_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

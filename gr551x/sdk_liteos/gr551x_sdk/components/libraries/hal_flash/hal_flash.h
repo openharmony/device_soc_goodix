@@ -59,6 +59,15 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "gr55xx_hal.h"
+
+#if defined(GR5515_C)
+exflash_handle_t g_exflash_handle;
+#else
+extern exflash_handle_t g_exflash_handle;
+#endif
+
+extern uint32_t sys_security_enable_status_check(void);
 
 /** @addtogroup HAL_FLASH_DRIVER_FUNCTIONS Functions
  * @{ */
@@ -71,7 +80,7 @@
  * @retval false            If failure.
  *******************************************************************************
  */
-bool hal_flash_init( void );
+bool hal_flash_init(void);
 
 /**
  *******************************************************************************

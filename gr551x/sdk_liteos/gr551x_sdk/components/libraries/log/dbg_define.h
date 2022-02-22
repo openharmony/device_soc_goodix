@@ -1,8 +1,8 @@
 #ifndef __DBG_DEFINE_H__
 #define __DBG_DEFINE_H__
 
-#include "custom_config.h"
 #include <stdio.h>
+#include "custom_config.h"
 
 #ifdef CFG_DBG_PRINTF
 

@@ -38,8 +38,8 @@
 #ifndef __APP_ASSERT_H__
 #define __APP_ASSERT_H__
 
-#include "gr55xx_sys.h"
 #include <stdint.h>
+#include "gr55xx_sys.h"
 
 /**
  * @defgroup APP_ASSERT_MAROC Defines
@@ -53,7 +53,7 @@
         {                                                   \
             app_assert_handler(#EXPR, __FILE__, __LINE__);  \
         }                                                   \
-    } while(0)
+    } while (0)
 /** @} */
 
 /**
@@ -112,11 +112,6 @@ void app_assert_param_cb(int param0, int param1, const char *file, int line);
  *****************************************************************************************
  */
 void app_assert_err_cb(const char *expr, const char *file, int line);
-
-
 /** @} */
 
 #endif
-
-
-

@@ -76,8 +76,7 @@ typedef int16_t dma_id_t;
 /**
   * @brief DMA event Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_DMA_EVT_ERROR,                     /**< The event of error interrupt. */
     APP_DMA_EVT_TFR,                       /**< The event of transfer complete interrupt. */
 } app_dma_evt_type_t;
@@ -89,8 +88,7 @@ typedef enum
 /**
   * @brief DMA parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     dma_channel_t       channel_number;    /**< Specifies the channel of DMA. */
     dma_init_t          init;              /**< DMA communication parameters. */
 } app_dma_params_t;

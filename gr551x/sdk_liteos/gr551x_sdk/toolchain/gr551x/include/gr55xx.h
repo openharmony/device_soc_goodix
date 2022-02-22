@@ -191,6 +191,21 @@ do {                                                       \
 } while (0)
 /** @} */
 
+/** Array serial numbers are uniformly defined by macros.
+ *  Do not use magic numbers.
+ */
+#define ITEM_0      0
+#define ITEM_1      1
+#define ITEM_2      2
+#define ITEM_3      3
+#define ITEM_4      4
+#define ITEM_5      5
+#define ITEM_6      6
+#define ITEM_7      7
+#define ITEM_8      8
+#define ITEM_9      9
+#define ITEM_10     10
+
 #ifdef __cplusplus
 }
 #endif

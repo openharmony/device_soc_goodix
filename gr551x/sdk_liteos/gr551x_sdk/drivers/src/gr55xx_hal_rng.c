@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_RNG_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_rng_init_ext(rng_handle_t *p_rng);
-extern hal_status_t hal_rng_deinit_ext(rng_handle_t *p_rng);
-extern void hal_rng_register_callback(hal_rng_callback_t *hal_rng_callback);
 
 /* Private variables ---------------------------------------------------------*/
 
