@@ -49,14 +49,12 @@
   */
 
 
-#ifndef __APP_RTOS_ADAPTER_H
-#define __APP_RTOS_ADAPTER_H
+#ifndef __APP_RTOS_ADAPTER_H__
+#define __APP_RTOS_ADAPTER_H__
 /*
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include <string.h>
-#include <stdint.h>
 
 #ifdef ENV_USE_FREERTOS
 
@@ -104,8 +102,8 @@ typedef SemaphoreHandle_t             mutex_t;
  * @defgroup APP_RTOS_CONFIG_TYPEDEF Typedefs
  * @{
  */
-typedef void *                        sem_t;
-typedef void *                        mutex_t;
+typedef void                         *sem_t;
+typedef void                         *mutex_t;
 /** @} */
 
 /** @addtogroup APP_RTOS_CONFIG_DEFINES Defines

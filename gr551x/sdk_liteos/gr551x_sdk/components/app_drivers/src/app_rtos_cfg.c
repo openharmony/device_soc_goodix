@@ -37,11 +37,10 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_rtos_cfg.h"
-#include "app_drv_error.h"
 #include <stdio.h>
 #include <string.h>
-
+#include "app_drv_error.h"
+#include "app_rtos_cfg.h"
 
 #ifdef ENV_USE_FREERTOS
 
@@ -52,13 +51,11 @@ uint16_t app_driver_sem_init(sem_t *sem)
 {
     SemaphoreHandle_t *xSemaphore = (SemaphoreHandle_t *)sem;
 
-    if (NULL == sem)
-    {
+    if (sem == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     *xSemaphore = xSemaphoreCreateBinary();
-    if (NULL == *xSemaphore)
-    {
+    if (*xSemaphore == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
     return APP_DRV_SUCCESS;
@@ -76,30 +73,23 @@ uint16_t app_driver_sem_pend(sem_t sem, uint32_t time_out)
     SemaphoreHandle_t xSemaphore = (SemaphoreHandle_t)sem;
     TickType_t xTicks = portMAX_DELAY;
 
-    if (NULL == sem)
-    {
+    if (sem == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
-    if (time_out != portMAX_DELAY)
-    {
+    if (time_out != portMAX_DELAY) {
         xTicks = pdMS_TO_TICKS(time_out);
     }
 
-    if (__get_IPSR())
-    {
+    if (__get_IPSR()) {
         ret = xSemaphoreTakeFromISR(xSemaphore, &xHigherPriorityTaskWoken);
-        if(xHigherPriorityTaskWoken != pdFALSE)
-        {
+        if (xHigherPriorityTaskWoken != pdFALSE) {
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
-    }
-    else
-    {
+    } else {
         ret = xSemaphoreTake(xSemaphore, xTicks);
     }
-    if (ret != pdTRUE)
-    {
+    if (ret != pdTRUE) {
         return APP_DRV_ERR_TIMEOUT;
     }
     return APP_DRV_SUCCESS;
@@ -111,24 +101,18 @@ uint16_t app_driver_sem_post(sem_t sem)
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     SemaphoreHandle_t xSemaphore = (SemaphoreHandle_t)sem;
 
-    if (NULL == sem)
-    {
+    if (sem == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
-    if (__get_IPSR())
-    {
+    if (__get_IPSR()) {
         ret = xSemaphoreGiveFromISR(xSemaphore, &xHigherPriorityTaskWoken);
-        if(xHigherPriorityTaskWoken != pdFALSE)
-        {
+        if (xHigherPriorityTaskWoken != pdFALSE) {
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
-    }
-    else
-    {
+    } else {
         ret = xSemaphoreGive(xSemaphore);
     }
-    if (ret != pdTRUE)
-    {
+    if (ret != pdTRUE) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     return APP_DRV_SUCCESS;
@@ -140,18 +124,15 @@ uint16_t app_driver_sem_post_from_isr(sem_t sem)
     BaseType_t ret = pdTRUE;
     SemaphoreHandle_t xSemaphore = (SemaphoreHandle_t)sem;
 
-    if (NULL == sem)
-    {
+    if (sem == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
     ret = xSemaphoreGiveFromISR(xSemaphore, &xHigherPriorityTaskWoken);
-    if(xHigherPriorityTaskWoken != pdFALSE)
-    {
+    if (xHigherPriorityTaskWoken != pdFALSE) {
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
-    if (ret != pdTRUE)
-    {
+    if (ret != pdTRUE) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     return APP_DRV_SUCCESS;
@@ -161,13 +142,11 @@ uint16_t app_driver_mutex_init(mutex_t *mutex)
 {
     SemaphoreHandle_t *xMutex = (SemaphoreHandle_t *)(mutex);
 
-    if (NULL == mutex)
-    {
+    if (mutex == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     *xMutex = xSemaphoreCreateMutex();
-    if (NULL == *xMutex)
-    {
+    if (*xMutex == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
     }
     return APP_DRV_SUCCESS;
@@ -185,31 +164,24 @@ uint16_t app_driver_mutex_pend(mutex_t mutex, uint32_t time_out)
     BaseType_t ret = pdTRUE;
     TickType_t xTicks = portMAX_DELAY;
 
-    if (NULL == mutex)
-    {
+    if (mutex == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
-    if (time_out != portMAX_DELAY)
-    {
+    if (time_out != portMAX_DELAY) {
         xTicks = pdMS_TO_TICKS(time_out);
     }
 
-    if (__get_IPSR())
-    {
+    if (__get_IPSR()) {
         ret = xSemaphoreTakeFromISR(xMutex, &xHigherPriorityTaskWoken);
-        if(xHigherPriorityTaskWoken != pdFALSE)
-        {
+        if (xHigherPriorityTaskWoken != pdFALSE) {
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
-    }
-    else
-    {
+    } else {
         ret = xSemaphoreTake(xMutex, xTicks);
     }
 
-    if (ret != pdTRUE)
-    {
+    if (ret != pdTRUE) {
         return APP_DRV_ERR_TIMEOUT;
     }
     return APP_DRV_SUCCESS;
@@ -221,25 +193,19 @@ uint16_t app_driver_mutex_post(mutex_t mutex)
     SemaphoreHandle_t xMutex = (SemaphoreHandle_t)mutex;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    if (NULL == mutex)
-    {
+    if (mutex == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
-    if (__get_IPSR())
-    {
+    if (__get_IPSR()) {
         ret = xSemaphoreGiveFromISR(xMutex, &xHigherPriorityTaskWoken);
-        if(xHigherPriorityTaskWoken != pdFALSE)
-        {
+        if (xHigherPriorityTaskWoken != pdFALSE) {
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
-    }
-    else
-    {
+    } else {
         ret = xSemaphoreGive(xMutex);
     }
 
-    if (ret != pdTRUE)
-    {
+    if (ret != pdTRUE) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
     return APP_DRV_SUCCESS;

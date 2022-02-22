@@ -36,14 +36,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_CALENDAR_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function ---------------------------------------------------------*/
-
-extern hal_status_t hal_calendar_init_ext(calendar_handle_t *p_calendar);
-extern hal_status_t hal_calendar_deinit_ext(calendar_handle_t *p_calendar);
-extern void hal_calendar_register_callback(hal_calendar_callback_t *hal_calendar_callback);
 
 /* Private variables -------------------------------------------------------*/
 

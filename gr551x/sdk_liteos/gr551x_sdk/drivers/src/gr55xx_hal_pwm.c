@@ -34,14 +34,9 @@
   */
 
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_PWM_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_pwm_init_ext(pwm_handle_t *p_pwm);
-extern hal_status_t hal_pwm_deinit_ext(pwm_handle_t *p_pwm);
-extern void hal_pwm_register_callback(hal_pwm_callback_t *hal_pwm_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

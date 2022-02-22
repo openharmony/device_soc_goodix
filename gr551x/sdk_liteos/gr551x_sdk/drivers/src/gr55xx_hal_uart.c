@@ -35,14 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_UART_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_uart_init_ext(uart_handle_t *p_uart);
-extern hal_status_t hal_uart_deinit_ext (uart_handle_t *p_uart);
-extern void hal_uart_register_callback(hal_uart_callback_t *hal_uart_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

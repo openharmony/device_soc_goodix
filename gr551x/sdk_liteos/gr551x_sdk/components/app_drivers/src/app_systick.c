@@ -37,10 +37,10 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_systick.h"
+#include <stdbool.h>
 #include "gr55xx_hal.h"
 #include "app_pwr_mgmt.h"
-#include <stdbool.h>
+#include "app_systick.h"
 
 /*
  * DEFINES
@@ -63,8 +63,7 @@ static void systick_wake_up_ind(void);
 static uint8_t s_systick_use_flag = 0;
 static bool    s_sleep_cb_registered_flag = false;
 
-static const app_sleep_callbacks_t systick_sleep_cb =
-{
+static const app_sleep_callbacks_t systick_sleep_cb = {
     .app_prepare_for_sleep = systick_prepare_for_sleep,
     .app_sleep_canceled    = systick_sleep_canceled,
     .app_wake_up_ind       = systick_wake_up_ind
@@ -85,8 +84,7 @@ static void systick_sleep_canceled(void)
  */
 SECTION_RAM_CODE static void systick_wake_up_ind(void)
 {
-    if (s_systick_use_flag != SYSTICK_USE_PATTERN)
-    {
+    if (s_systick_use_flag != SYSTICK_USE_PATTERN) {
         return;
     }
 
@@ -101,11 +99,9 @@ void app_systick_init(void)
 {
     s_systick_use_flag = SYSTICK_USE_PATTERN;
 
-    if(s_sleep_cb_registered_flag == false)    // register sleep callback
-    {
-        if ( !(SysTick->CTRL & SysTick_CTRL_ENABLE_Msk) )
-        {
-             hal_init();
+    if (s_sleep_cb_registered_flag == false) { // register sleep callback
+        if (!(SysTick->CTRL & SysTick_CTRL_ENABLE_Msk)) {
+            hal_init();
         }
         s_sleep_cb_registered_flag = true;
         pwr_register_sleep_cb(&systick_sleep_cb, APP_DRIVER_SYSTICK_WAPEUP_PRIORITY);
@@ -114,6 +110,5 @@ void app_systick_init(void)
 
 void app_systick_deinit(void)
 {
-
 }
 

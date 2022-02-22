@@ -52,10 +52,10 @@
 #ifndef _APP_PWR_MGMT_H_
 #define _APP_PWR_MGMT_H_
 
-#include "gr55xx_pwr.h"
-#include "app_drv_config.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "app_drv_config.h"
+#include "gr55xx_pwr.h"
 
 /** @addtogroup APP_PWR_DEFINE Defines
   * @{
@@ -77,8 +77,7 @@ typedef int16_t pwr_id_t;
 /**
   * @brief PWR sleep check function Structure
   */
-typedef struct
-{
+typedef struct {
     bool (*app_prepare_for_sleep)(void);    /**<Peripherals prepare sleep fuction . */
     void (*app_sleep_canceled)(void);       /**<Peripherals cancel sleep fuction . */
     void (*app_wake_up_ind)(void);          /**< Resume peripherals when used fuctioin . */

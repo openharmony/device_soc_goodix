@@ -132,8 +132,7 @@ extern "C" {
  * @{
  */
 /**@brief APP driver peripheral wakeup priority define. */
-typedef enum
-{
+typedef enum {
     WAPEUP_PRIORITY_LOW = 1,          /**< Wakeup priority low */
     WAPEUP_PRIORITY_MID,              /**< Wakeup priority mid */
     WAPEUP_PRIORITY_HIGH              /**< Wakeup priority high */
@@ -143,7 +142,6 @@ typedef enum
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
 // #define APP_DRIVER_WAKEUP_CALL_FUN
 #endif
-
 
 #ifdef __cplusplus
 }

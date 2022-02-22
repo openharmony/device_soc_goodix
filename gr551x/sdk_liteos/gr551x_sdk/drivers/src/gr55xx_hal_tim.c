@@ -34,14 +34,9 @@
   */
 
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_TIMER_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_timer_base_init_ext(timer_handle_t *p_timer);
-extern hal_status_t hal_timer_base_deinit_ext(timer_handle_t *p_timer);
-extern void hal_timer_register_callback(hal_timer_callback_t *hal_timer_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

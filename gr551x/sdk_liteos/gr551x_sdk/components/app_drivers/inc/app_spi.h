@@ -83,8 +83,7 @@ extern "C" {
 /**
   * @brief SPI module Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_SPI_ID_SLAVE,                /**< SPI slave module.  */
     APP_SPI_ID_MASTER,               /**< SPI master module. */
     APP_SPI_ID_MAX,                  /**< Only for check parameter, not used as input parameters. */
@@ -93,8 +92,7 @@ typedef enum
 /**
   * @brief SPI operating mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_SPI_TYPE_INTERRUPT,          /**< Interrupt operation mode */
     APP_SPI_TYPE_POLLING,            /**< Polling operation mode   */
     APP_SPI_TYPE_DMA,                /**< DMA operation mode       */
@@ -104,8 +102,7 @@ typedef enum
 /**
   * @brief SPI event Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_SPI_EVT_ERROR,                  /**< Error reported by UART peripheral.  */
     APP_SPI_EVT_TX_CPLT,                /**< Requested TX transfer completed.    */
     APP_SPI_EVT_RX_DATA,                /**< Requested RX transfer completed.    */
@@ -119,8 +116,7 @@ typedef enum
 /**
   * @brief SPI IO Structures
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t        type;       /**< Specifies the type of SPI IO.                                  */
     app_io_mux_t         mux;        /**< Specifies the Peripheral to be connected to the selected pins. */
     uint32_t             pin;        /**< Specifies the IO pins to be configured.
@@ -132,8 +128,7 @@ typedef struct
 /**
   * @brief SPI IO configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_spi_pin_t       cs;          /**< Set the configuration of SPI CS pin.   */
     app_spi_pin_t       clk;         /**< Set the configuration of SPI CLK pin.  */
     app_spi_pin_t       mosi;        /**< Set the configuration of SPI MOSI pin. */
@@ -143,8 +138,7 @@ typedef struct
 /**
   * @brief SPI operate mode Enumerations definition
   */
-typedef struct
-{
+typedef struct {
     app_spi_type_t      type;            /**< Specifies the operation mode of SPI. */
     dma_channel_t       tx_dma_channel;  /**< Specifies the dma channel of SPI TX. */
     dma_channel_t       rx_dma_channel;  /**< Specifies the dma channel of SPI RX. */
@@ -153,8 +147,7 @@ typedef struct
 /**
   * @brief SPI parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_spi_id_t        id;              /**< specified SPI module ID.                                        */
     app_spi_pin_cfg_t   pin_cfg;         /**< the pin configuration information for the specified SPI module. */
     app_spi_mode_t      use_mode;        /**< SPI operate mode.                                               */
@@ -164,11 +157,9 @@ typedef struct
 /**
   * @brief SPI event structure definition
   */
-typedef struct
-{
+typedef struct {
     app_spi_evt_type_t  type; /**< Type of event. */
-    union
-    {
+    union {
         uint32_t error_code;           /**< SPI Error code . */
         uint16_t size;                 /**< SPI transmitted/received counter. */
     } data;                            /**< SPI data. */
@@ -280,7 +271,8 @@ uint16_t app_spi_transmit_async(app_spi_id_t id, uint8_t *p_data, uint16_t size)
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_spi_transmit_receive_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t size, uint32_t timeout);
+uint16_t app_spi_transmit_receive_sync(app_spi_id_t id, uint8_t *p_tx_data,
+                                       uint8_t *p_rx_data, uint32_t size, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -310,7 +302,8 @@ uint16_t app_spi_transmit_receive_async(app_spi_id_t id, uint8_t *p_tx_data, uin
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_size, uint32_t rx_size, uint32_t timeout);
+uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data,
+                                  uint32_t tx_size, uint32_t rx_size, uint32_t timeout);
 
 /**
  ****************************************************************************************
@@ -325,7 +318,8 @@ uint16_t app_spi_read_eeprom_sync(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data, uint32_t tx_size, uint32_t rx_size);
+uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t *p_rx_data,
+                                   uint32_t tx_size, uint32_t rx_size);
 
 /**
  ****************************************************************************************
@@ -340,7 +334,8 @@ uint16_t app_spi_read_eeprom_async(app_spi_id_t id, uint8_t *p_tx_data, uint8_t 
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t *p_tx_data, uint32_t cmd_size, uint32_t tx_size);
+uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t *p_tx_data,
+                                    uint32_t cmd_size, uint32_t tx_size);
 
 /**
  ****************************************************************************************
@@ -355,7 +350,8 @@ uint16_t app_spi_write_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_
  * @return Result of operation.
  ****************************************************************************************
  */
-uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t *p_rx_data, uint32_t cmd_size, uint32_t rx_size);
+uint16_t app_spi_read_memory_async(app_spi_id_t id, uint8_t *p_cmd_data, uint8_t *p_rx_data,
+                                   uint32_t cmd_size, uint32_t rx_size);
 
 /**
  ****************************************************************************************
@@ -450,5 +446,3 @@ uint16_t app_spi_transmit_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint
 /** @} */
 /** @} */
 /** @} */
-
-

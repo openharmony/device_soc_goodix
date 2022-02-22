@@ -35,18 +35,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_EXFLASH_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_exflash_init_ext(exflash_handle_t *p_exflash);
-extern hal_status_t hal_exflash_deinit_ext(exflash_handle_t *p_exflash);
-extern void hal_exflash_register_callback(hal_exflash_callback_t *hal_exflash_callback);
-extern hal_status_t hal_exflash_read_rom(exflash_handle_t *p_exflash, uint32_t addr, uint8_t *p_data, uint32_t size);
-extern hal_status_t hal_exflash_read_patch(exflash_handle_t *p_exflash, uint32_t addr, uint8_t *p_data, uint32_t size);
-extern hal_status_t hal_xqspi_init_ext_patch(xqspi_handle_t *p_xqspi);
-extern hal_status_t hal_xqspi_init_ext_rom(xqspi_handle_t *p_xqspi);
 
 /* Private variables ---------------------------------------------------------*/
 

@@ -79,8 +79,7 @@ extern "C" {
 /**
   * @brief QSPI module Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_QSPI_ID_0,              /**< QSPI module 0 */
     APP_QSPI_ID_1,              /**< QSPI module 1 */
     APP_QSPI_ID_MAX             /**< Only for check parameter, not used as input parameters. */
@@ -89,8 +88,7 @@ typedef enum
 /**
   * @brief QSPI operating mode Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_QSPI_TYPE_INTERRUPT,    /**< Interrupt operation mode */
     APP_QSPI_TYPE_POLLING,      /**< Polling operation mode   */
     APP_QSPI_TYPE_DMA,          /**< DMA operation mode       */
@@ -100,8 +98,7 @@ typedef enum
 /**
 * @brief APP QSPI Event Type
 */
-typedef enum
-{
+typedef enum {
     APP_QSPI_EVT_ERROR,          /**< Error reported by UART peripheral. */
     APP_QSPI_EVT_TX_CPLT,        /**< Requested TX transfer completed.   */
     APP_QSPI_EVT_RX_DATA,        /**< Requested RX transfer completed.   */
@@ -115,8 +112,7 @@ typedef enum
 /**
   * @brief QSPI IO configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t  type;         /**< Specifies the type of QSPI IO. */
     app_io_mux_t   mux;          /**< Specifies the Peripheral to be connected to the selected pins. */
     uint32_t       pin;          /**< Specifies the IO pins to be configured.
@@ -128,8 +124,7 @@ typedef struct
 /**
   * @brief QSPI configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_qspi_pin_t cs;           /**< Set the configuration of QSPI CS pin. */
     app_qspi_pin_t clk;          /**< Set the configuration of QSPI CLK pin. */
     app_qspi_pin_t io_0;         /**< Set the configuration of QSPI IO0 pin. */
@@ -141,8 +136,7 @@ typedef struct
 /**
   * @brief QSPI operate mode Enumerations definition
   */
-typedef struct
-{
+typedef struct {
     app_qspi_type_t    type;        /**< Specifies the operation mode of QSPI. */
     dma_channel_t      dma_channel; /**< Specifies the dma channel of QSPI.    */
 } app_qspi_mode_t;
@@ -150,8 +144,7 @@ typedef struct
 /**
   * @brief QSPI parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_qspi_id_t      id;       /**< specified QSPI module ID.                                        */
     app_qspi_pin_cfg_t pin_cfg;  /**< the pin configuration information for the specified QSPI module. */
     app_qspi_mode_t    use_mode; /**< QSPI operate mode.                                               */
@@ -176,11 +169,9 @@ typedef qspi_command_t app_qspi_command_t;
 /**
   * @brief QSPI event structure definition
   */
-typedef struct
-{
+typedef struct {
     app_qspi_evt_type_t type;    /**< Type of event. */
-    union
-    {
+    union {
         uint32_t error_code;     /**< QSPI Error code . */
         uint16_t size;           /**< QSPI transmitted/received counter. */
     } data;                      /**< Event data. */
@@ -233,7 +224,8 @@ uint16_t app_qspi_deinit(app_qspi_id_t id);
  * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to receive.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  timeout: Timeout duration
  *
@@ -244,10 +236,12 @@ uint16_t app_qspi_command_receive_sync(app_qspi_id_t id, app_qspi_command_t *p_c
 
 /**
  ****************************************************************************************
- * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in non-blocking mode with Interrupt.
+ * @brief  Receive an amount of data with the specified instruction,
+ *         address and dummy cycles in non-blocking mode with Interrupt.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to receive.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  *
  * @return Result of operation.
@@ -260,7 +254,8 @@ uint16_t app_qspi_command_receive_async(app_qspi_id_t id, app_qspi_command_t *p_
  * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to transmit.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  timeout: Timeout duration
  *
@@ -271,10 +266,12 @@ uint16_t app_qspi_command_transmit_sync(app_qspi_id_t id, app_qspi_command_t *p_
 
 /**
  ****************************************************************************************
- * @brief  Receive an amount of data with the specified instruction, address and dummy cycles in non-blocking mode with Interrupt.
+ * @brief  Receive an amount of data with the specified instruction,
+ *         address and dummy cycles in non-blocking mode with Interrupt.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to transmit.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  *
  * @return Result of operation.
@@ -287,7 +284,8 @@ uint16_t app_qspi_command_transmit_async(app_qspi_id_t id, app_qspi_command_t *p
  * @brief  Transmit only instruction in blocking mode.
  * @note   This function is used only in Indirect Write Mode.
  * @param[in]  id: which QSPI module want to transmit command.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[in]  timeout: Timeout duration
  *
  * @return Result of operation.
@@ -300,7 +298,8 @@ uint16_t app_qspi_command_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint
  * @brief  Transmit instruction in non-blocking mode with Interrupt.
  * @note   This function is used only in Indirect Write Mode.
  * @param[in]  id: which QSPI module want to transmit command.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  *
  * @return Result of operation.
  ****************************************************************************************
@@ -379,7 +378,8 @@ qspi_handle_t *app_qspi_get_handle(app_qspi_id_t id);
  * @brief  [RTOS] Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to receive.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  *
  * @return Result of operation.
@@ -392,7 +392,8 @@ uint16_t app_qspi_command_receive_sem_sync(app_qspi_id_t id, app_qspi_command_t 
  * @brief  [RTOS] Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to transmit.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  *
  * @return Result of operation.
@@ -405,7 +406,8 @@ uint16_t app_qspi_command_transmit_sem_sync(app_qspi_id_t id, app_qspi_command_t
  * @brief  [RTOS] Transmit only instruction in blocking mode.
  * @note   This function is used only in Indirect Write Mode.
  * @param[in]  id: which QSPI module want to transmit command.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  *
  * @return Result of operation.
  ****************************************************************************************
@@ -442,10 +444,12 @@ uint16_t app_qspi_receive_sem_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t l
 
 /**
  ****************************************************************************************
- * @brief  [High speed] Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
+ * @brief  [High speed] Receive an amount of data with
+ *         the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to receive.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  *
  * @return Result of operation.
@@ -455,10 +459,12 @@ uint16_t app_qspi_command_receive_high_speed_sync(app_qspi_id_t id, app_qspi_com
 
 /**
  ****************************************************************************************
- * @brief  [High speed] Receive an amount of data with the specified instruction, address and dummy cycles in blocking mode.
+ * @brief  [High speed] Receive an amount of data with
+ *         the specified instruction, address and dummy cycles in blocking mode.
  * @note   This function is used only in Indirect Read Mode.
  * @param[in]  id: which QSPI module want to transmit.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  *
  * @return Result of operation.
@@ -471,7 +477,8 @@ uint16_t app_qspi_command_transmit_high_speed_sync(app_qspi_id_t id, app_qspi_co
  * @brief  [High speed] Transmit only instruction in blocking mode.
  * @note   This function is used only in Indirect Write Mode.
  * @param[in]  id: which QSPI module want to transmit command.
- * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_cmd: Pointer to a app_qspi_command_t structure that
+ *             contains the instruction and address for data transfer.
  *
  * @return Result of operation.
  ****************************************************************************************

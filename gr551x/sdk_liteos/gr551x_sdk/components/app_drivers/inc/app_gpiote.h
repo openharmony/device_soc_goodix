@@ -62,8 +62,7 @@
 /**
   * @brief GPIO Interrupt event Structure definition
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t           type;       /**< Type of event. */
     uint32_t                pin;        /**< Specifies the IO pins to be configured. */
     app_ctx_type_t          ctx_type;   /**< Type of handler context. */
@@ -82,8 +81,7 @@ typedef void (*app_io_callback_t)(app_gpiote_evt_t *p_evt);
 /**
   * @brief GPIOTE Interrupt parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t           type;           /**< Specifies IO type */
     uint32_t                pin;            /**< Specifies the IO pins to be configured. */
     app_io_mode_t           mode;           /**< Specifies the IO mode for the selected pins. */

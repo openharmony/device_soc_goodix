@@ -6,10 +6,6 @@
 #define FLASH_MANU_ID_INVALID0    0x00
 #define FLASH_MANU_ID_INVALID1    0xFF
 
-extern exflash_handle_t g_exflash_handle;
-extern hal_status_t hal_xqspi_command_receive_patch(xqspi_handle_t *p_xqspi, xqspi_command_t *p_cmd, uint8_t *p_data,
-        uint32_t retry);
-
 static uint32_t s_identification_id;
 static SECTION_RAM_CODE hal_status_t exflash_read_identification_id(exflash_handle_t *p_exflash)
 {

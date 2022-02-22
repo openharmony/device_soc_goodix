@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "dbg_printf.h"
 #include "SEGGER_RTT.h"
+#include "dbg_printf.h"
 
 #define LOG_UART_GRP                    UART0
 #define LOG_UART_PORT                   GPIO0
@@ -28,7 +28,7 @@ __WEAK int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, vo
     return 0;
 }
 
-__WEAK unsigned SEGGER_RTT_Write(unsigned BufferIndex, const void* pBuffer, unsigned NumBytes)
+__WEAK unsigned SEGGER_RTT_Write(unsigned BufferIndex, const uint8_t* pBuffer, unsigned NumBytes)
 {
     return 0;
 }
@@ -88,10 +88,10 @@ static void dbg_uart_init(uart_regs_t *UARTx, dbg_printf_mode_t mode)
     ll_cgc_disable_force_off_serial_hclk();
     ll_cgc_disable_wfi_off_serial_hclk();
 
-    if(UARTx == UART0) {
+    if (UARTx == UART0) {
         /* Enable UART0 clock */
         ll_cgc_disable_force_off_uart0_hclk();
-    } else if(UARTx == UART1) {
+    } else if (UARTx == UART1) {
         /* Enable UART1 clock */
         ll_cgc_disable_force_off_uart1_hclk();
     }
@@ -108,15 +108,15 @@ static void dbg_uart_init(uart_regs_t *UARTx, dbg_printf_mode_t mode)
     /* Set baudrate */
     baud = DBG_UART_BAUDRATE;
     ll_uart_set_baud_rate(UARTx, uart_pclk, baud);
-    /* Set data bit = 8;
-       Set stop bit = 1;
-       Set parity = none;
-       Set fifo enable; */
+    /* Set data bit = 8;*/
+    /* Set stop bit = 1;*/
+    /* Set parity = none;*/
+    /* Set fifo enable; */
     ll_uart_config_character(UARTx, LL_UART_DATABITS_8B, LL_UART_PARITY_NONE, LL_UART_STOPBITS_1);
     /* Set fifo enable */
     ll_uart_enable_fifo(UARTx);
 
-    if((DBG_PRINTF_INT_UART0 == mode) || (DBG_PRINTF_INT_UART1 == mode)) {
+    if ((DBG_PRINTF_INT_UART0 == mode) || (DBG_PRINTF_INT_UART1 == mode)) {
         /* Set tx fifo threshold */
         ll_uart_set_tx_fifo_threshold(UARTx, LL_UART_TX_FIFO_TH_EMPTY);
 
@@ -131,11 +131,11 @@ static void dbg_uart_init(uart_regs_t *UARTx, dbg_printf_mode_t mode)
 
 static void dbg_uart_send_char(uart_regs_t *UARTx, uint8_t ch)
 {
-    if((DBG_PRINTF_UART0 == dbg_printf_mode) || (DBG_PRINTF_UART1 == dbg_printf_mode)) {
+    if ((DBG_PRINTF_UART0 == dbg_printf_mode) || (DBG_PRINTF_UART1 == dbg_printf_mode)) {
         /* Wait untill TX FIFO is not full */
-        while(!ll_uart_is_active_flag_tfnf(UARTx));
+        while (!ll_uart_is_active_flag_tfnf(UARTx));
         ll_uart_transmit_data8(UARTx, ch);
-    } else if((DBG_PRINTF_INT_UART0 == dbg_printf_mode) || (DBG_PRINTF_INT_UART1 == dbg_printf_mode)) {
+    } else if ((DBG_PRINTF_INT_UART0 == dbg_printf_mode) || (DBG_PRINTF_INT_UART1 == dbg_printf_mode)) {
         /* Fill ring buffer to use interrupt send */
         push_char(&dbg_ring_buf, ch);
         /* Enable TXE interrupt */
@@ -148,7 +148,7 @@ static uint8_t dbg_uart_get_char(uart_regs_t *UARTx)
 {
     uint8_t ch;
 
-    while(!ll_uart_is_active_flag_rfne(UARTx));
+    while (!ll_uart_is_active_flag_rfne(UARTx));
     /* UART receive byte */
     ch = ll_uart_receive_data8(UARTx);
     return ch;
@@ -156,7 +156,7 @@ static uint8_t dbg_uart_get_char(uart_regs_t *UARTx)
 
 static int dbg_send_char(int ch)
 {
-    switch(dbg_printf_mode) {
+    switch (dbg_printf_mode) {
         case DBG_PRINTF_UART0:
         case DBG_PRINTF_INT_UART0:
             dbg_uart_send_char(UART0, (uint8_t)ch);
@@ -169,7 +169,7 @@ static int dbg_send_char(int ch)
             ITM_SendChar(ch);
             break;
         case DBG_PRINTF_RTT:
-            SEGGER_RTT_Write(0, (void*)&ch, 1);
+            SEGGER_RTT_Write(0, &ch, 1);
             break;
         default:
             break;
@@ -181,7 +181,7 @@ static int dbg_get_char(void)
 {
     int32_t ch = -1;
 
-    switch(dbg_printf_mode) {
+    switch (dbg_printf_mode) {
         case DBG_PRINTF_UART0:
         case DBG_PRINTF_INT_UART0:
             ch = dbg_uart_get_char(UART0);
@@ -205,7 +205,7 @@ static int dbg_get_char(void)
 
 void dbg_printf_set_mode(dbg_printf_mode_t mode)
 {
-    switch(mode) {
+    switch (mode) {
         case DBG_PRINTF_UART0:
         case DBG_PRINTF_INT_UART0:
             dbg_uart_init(UART0, mode);
@@ -234,12 +234,12 @@ uint8_t dbg_printf_uart_callback(uart_regs_t *UARTx)
     uint32_t isrflag = ll_uart_get_it_flag(UARTx);
 
     if (LL_UART_IIR_THRE == isrflag) {
-        if (0 == dbg_ring_buf.valid) {
+        if (dbg_ring_buf.valid == 0) {
             /* Disable TXE interrupt */
             ll_uart_disable_it(UARTx, LL_UART_IER_THRE);
         } else {
             uint8_t curxfercnt = UART_TXFIFO_SIZE - ll_uart_get_tx_fifo_level(UARTx);
-            while(curxfercnt && dbg_ring_buf.valid) {
+            while (curxfercnt && dbg_ring_buf.valid) {
                 ll_uart_transmit_data8(UARTx, pop_char(&dbg_ring_buf));
                 curxfercnt--;
             }
@@ -253,25 +253,25 @@ uint8_t dbg_printf_uart_callback(uart_regs_t *UARTx)
 uint32_t dbg_printf_uart_flush(void)
 {
     uint32_t count = 0;
-    if((DBG_PRINTF_INT_UART0 == dbg_printf_mode) || (DBG_PRINTF_INT_UART1 == dbg_printf_mode)) {
+    if ((DBG_PRINTF_INT_UART0 == dbg_printf_mode) || (DBG_PRINTF_INT_UART1 == dbg_printf_mode)) {
         uart_regs_t *UARTx = ((DBG_PRINTF_INT_UART0 == dbg_printf_mode)? UART0: UART1);
         IRQn_Type uart_irq_num = ((DBG_PRINTF_INT_UART0 == dbg_printf_mode) ? UART0_IRQn : UART1_IRQn);
 
         NVIC_DisableIRQ(uart_irq_num);
         NVIC_ClearPendingIRQ(uart_irq_num);
         count = dbg_ring_buf.valid;
-        while(dbg_ring_buf.valid) {
+        while (dbg_ring_buf.valid) {
             /* Wait untill TX FIFO is not full */
-            while(!ll_uart_is_active_flag_tfnf(UARTx));
+            while (!ll_uart_is_active_flag_tfnf(UARTx));
             ll_uart_transmit_data8(UARTx, pop_char(&dbg_ring_buf));
         }
         /* Wait untill TX FIFO is empty. */
-        while(!ll_uart_is_active_flag_tfe(UARTx));
+        while (!ll_uart_is_active_flag_tfe(UARTx));
         NVIC_EnableIRQ(uart_irq_num);
     } else if ((DBG_PRINTF_UART0 == dbg_printf_mode) || (DBG_PRINTF_UART1 == dbg_printf_mode)) {
         uart_regs_t *UARTx = ((DBG_PRINTF_UART0 == dbg_printf_mode)? UART0: UART1);
         /* Wait untill TX FIFO is empty. */
-        while(!ll_uart_is_active_flag_tfe(UARTx));
+        while (!ll_uart_is_active_flag_tfe(UARTx));
     }
 
     return count;
@@ -282,9 +282,6 @@ uint32_t dbg_printf_uart_flush(void)
 struct __FILE {
     int handle;
 };
-
-FILE __stdout;
-FILE __stdin;
 
 int fputc(int ch, FILE * file)
 {

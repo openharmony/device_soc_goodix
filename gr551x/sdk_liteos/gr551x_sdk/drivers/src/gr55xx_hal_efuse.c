@@ -34,14 +34,9 @@
   */
 
 #include "gr55xx_hal.h"
+#include "gr55xx_rom_symbol.h"
 
 #if defined(HAL_EFUSE_MODULE_ENABLED) && (defined(GR5515_D) || defined(GR5515_E))
-
-/* extern function -----------------------------------------------------------*/
-
-extern hal_status_t hal_efuse_init_ext(efuse_handle_t *p_efuse);
-extern hal_status_t hal_efuse_deinit_ext(efuse_handle_t *p_efuse);
-extern void hal_efuse_register_callback(hal_efuse_callback_t *hal_efuse_callback);
 
 /* Private variables ---------------------------------------------------------*/
 

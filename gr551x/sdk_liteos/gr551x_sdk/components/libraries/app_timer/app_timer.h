@@ -38,9 +38,9 @@
 #ifndef __APP_TIMER_H__
 #define __APP_TIMER_H__
 
-#include "gr55xx_sys.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "gr55xx_sys.h"
 
 /**
  * @defgroup APP_TIMER_MAROC Defines
@@ -67,7 +67,7 @@ typedef enum {
  * @{
  */
 /**@brief The timer node trigger function. */
-typedef void (*app_timer_fun_t)(void* p_ctx);
+typedef void (*app_timer_fun_t)(uint8_t* p_ctx);
 /** @} */
 
 /**
@@ -81,7 +81,7 @@ typedef struct {
     uint8_t                  next_trigger_mode;          /**< Next trigger mode. */
     uint32_t                 original_delay;             /**< Original delay (us). */
     uint32_t                 next_trigger_time;          /**< Next trigger time. */
-    void*                    next_trigger_callback_var;  /**< Timer trigger callback argument. */
+    uint8_t*                 next_trigger_callback_var;  /**< Timer trigger callback argument. */
     app_timer_fun_t          next_trigger_callback;      /**< Timer trigger callback . */
 } app_timer_t;
 
@@ -156,7 +156,7 @@ void app_timer_stop(app_timer_id_t p_timer_id);
  * @param[in] p_ctx : the pointer of context
  *****************************************************************************************
  */
-sdk_err_t app_timer_start(app_timer_id_t p_timer_id, uint32_t delay, void *p_ctx);
+sdk_err_t app_timer_start(app_timer_id_t p_timer_id, uint32_t delay, uint8_t *p_ctx);
 
 /**
  *****************************************************************************************

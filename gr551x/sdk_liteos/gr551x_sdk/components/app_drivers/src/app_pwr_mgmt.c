@@ -36,16 +36,15 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_pwr_mgmt.h"
 #include "gr55xx_hal.h"
 #include "gr55xx_pwr.h"
+#include "app_pwr_mgmt.h"
 
 /*
- * STRUCT DEFINE
+ * STRUCT DEFINES
  *****************************************************************************************
  */
-struct pwr_env_t
-{
+struct pwr_env_t {
     app_sleep_callbacks_t *pwr_sleep_cb[APP_SLEEP_CB_MAX];
     wakeup_priority_t wakeup_priority[APP_SLEEP_CB_MAX];
     bool is_pwr_callback_reg;
@@ -80,10 +79,10 @@ pwr_id_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priorit
         goto exit;
     }
 
-    while ((i < APP_SLEEP_CB_MAX) && (s_pwr_env.pwr_sleep_cb[i] != NULL)) 
-    {
+    while ((i < APP_SLEEP_CB_MAX) && (s_pwr_env.pwr_sleep_cb[i] != NULL)) {
         i++;
     }
+
     if (i < APP_SLEEP_CB_MAX) 
     {
         s_pwr_env.pwr_sleep_cb[i] = (app_sleep_callbacks_t *)p_cb;
@@ -99,8 +98,7 @@ exit:
 
 void pwr_unregister_sleep_cb(pwr_id_t id)
 {
-    if(id < APP_SLEEP_CB_MAX)
-    {
+    if (id < APP_SLEEP_CB_MAX) { // Is id valid?
         s_pwr_env.pwr_sleep_cb[id] = NULL;
     }
 }
@@ -111,13 +109,10 @@ SECTION_RAM_CODE void pwr_wake_up_ind(void)
     app_sleep_callbacks_t *p_cb;
     wakeup_priority_t priority;
 
-    for (priority = WAPEUP_PRIORITY_HIGH; priority != 0; priority--)
-    {
-        for (i = 0; i < APP_SLEEP_CB_MAX; i++) 
-        {
+    for (priority = WAPEUP_PRIORITY_HIGH; priority != 0; priority--) {
+        for (i = 0; i < APP_SLEEP_CB_MAX; i++) {
             p_cb = s_pwr_env.pwr_sleep_cb[i];
-            if ((p_cb != NULL) && (p_cb ->app_wake_up_ind != NULL) && (priority == s_pwr_env.wakeup_priority[i])) 
-            {
+            if ((p_cb != NULL) && (p_cb ->app_wake_up_ind != NULL) && (priority == s_pwr_env.wakeup_priority[i])) {
                 p_cb ->app_wake_up_ind();
             }
         }
@@ -131,13 +126,10 @@ pwr_mgmt_dev_state_t pwr_enter_sleep_check(void)
     app_sleep_callbacks_t *p_cb;
 
     // 1. Inquiry Adapters
-    for (i = APP_SLEEP_CB_MAX - 1; i >= 0; i--) 
-    {
+    for (i = APP_SLEEP_CB_MAX - 1; i >= 0; i--) {
         p_cb = s_pwr_env.pwr_sleep_cb[i];
-        if (( p_cb != NULL) && (p_cb->app_prepare_for_sleep != NULL) ) 
-        {
-            if (!p_cb->app_prepare_for_sleep()) 
-            {
+        if ((p_cb != NULL) && (p_cb->app_prepare_for_sleep != NULL)) {
+            if (!p_cb->app_prepare_for_sleep()) {
                 allow_entering_sleep = DEVICE_BUSY;
                 break;
             }
@@ -145,14 +137,11 @@ pwr_mgmt_dev_state_t pwr_enter_sleep_check(void)
     }
 
     // 2. If an Adapter rejected sleep, resume any Adapters that have already accepted it.
-    if ( allow_entering_sleep == DEVICE_BUSY )
-    {
+    if (allow_entering_sleep == DEVICE_BUSY) {
         i++;
-        while (i < APP_SLEEP_CB_MAX) 
-        {
+        while (i < APP_SLEEP_CB_MAX) {
             p_cb = s_pwr_env.pwr_sleep_cb[i];
-            if ( (p_cb != NULL) && (p_cb->app_sleep_canceled != NULL) ) 
-            {
+            if ((p_cb != NULL) && (p_cb->app_sleep_canceled != NULL)) {
                 p_cb->app_sleep_canceled();
             }
             i++;

@@ -97,14 +97,22 @@ extern "C" {
   * @{
   */
 
-#define DEFAULT_SPIM_GROUP0   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_6, APP_IO_MUX_7}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_3, APP_IO_MUX_2},\
-                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_4, APP_IO_MUX_2}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_5, APP_IO_MUX_2}}
-#define DEFAULT_SPIM_GROUP1   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_4, APP_IO_MUX_7}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_7, APP_IO_MUX_4},\
-                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_6, APP_IO_MUX_4}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_5, APP_IO_MUX_4}}
-#define DEFAULT_SPIM_GROUP2   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_15, APP_IO_MUX_7}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_12, APP_IO_MUX_1},\
-                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_13, APP_IO_MUX_1}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_14, APP_IO_MUX_1}}
-#define DEFAULT_SPIM_GROUP3   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_17, APP_IO_MUX_7}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_24, APP_IO_MUX_0},\
-                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_25, APP_IO_MUX_0}, {APP_IO_TYPE_NORMAL, APP_IO_PIN_16, APP_IO_MUX_0}}
+#define DEFAULT_SPIM_GROUP0   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_6, APP_IO_MUX_7}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_3, APP_IO_MUX_2}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_4, APP_IO_MUX_2}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_5, APP_IO_MUX_2}}
+#define DEFAULT_SPIM_GROUP1   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_4, APP_IO_MUX_7}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_7, APP_IO_MUX_4}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_6, APP_IO_MUX_4}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_5, APP_IO_MUX_4}}
+#define DEFAULT_SPIM_GROUP2   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_15, APP_IO_MUX_7}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_12, APP_IO_MUX_1}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_13, APP_IO_MUX_1}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_14, APP_IO_MUX_1}}
+#define DEFAULT_SPIM_GROUP3   {{APP_IO_TYPE_NORMAL, APP_IO_PIN_17, APP_IO_MUX_7}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_24, APP_IO_MUX_0}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_25, APP_IO_MUX_0}, \
+                               {APP_IO_TYPE_NORMAL, APP_IO_PIN_16, APP_IO_MUX_0}}
 
 /** @} */
 
@@ -112,32 +120,27 @@ extern "C" {
   * @addtogroup Spi Flash IO configuration Structures
   * @{
   */
-typedef enum
-{
+typedef enum {
     FLASH_SPIM_ID,                   /**< SPI master module.     */
     FLASH_QSPI_ID0,                  /**< QSPI master module 0.  */
     FLASH_QSPI_ID1,                  /**< QSPI master module 1.  */
     FLASH_SPI_ID_MAX,                /**< Only for check parameter, not used as input parameters. */
 } spi_type_t;
 
-typedef struct _spi_io
-{
+typedef struct _spi_io {
     app_io_type_t gpio;
     uint32_t      pin;
     app_io_mux_t  mux;
 } spi_io_t;
 
-typedef struct _flash_io
-{
+typedef struct _flash_io {
     spi_io_t spi_cs;
     spi_io_t spi_clk;
-    union
-    {
+    union {
         spi_io_t spim_mosi;
         spi_io_t qspi_io0;
     } spi_io0;
-    union
-    {
+    union {
         spi_io_t spim_miso;
         spi_io_t qspi_io1;
     } spi_io1;
@@ -145,14 +148,12 @@ typedef struct _flash_io
     spi_io_t qspi_io3;
 } flash_io_t;
 
-typedef struct _flash_init
-{
+typedef struct _flash_init {
     spi_type_t spi_type;
     flash_io_t flash_io;
 } flash_init_t;
 
-typedef struct flash_control
-{
+typedef struct flash_control {
     uint8_t         qspi_tmt_done;
     uint8_t         qspi_rcv_done;
     app_qspi_id_t   qspi_id;

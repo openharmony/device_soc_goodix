@@ -49,11 +49,11 @@
  * with the macro *FLASH_ENABLE.
  ******************************************************************************/
 
-#include "gr55xx_hal.h"
-#include "hal_flash.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include "gr55xx_hal.h"
+#include "hal_flash.h"
 
 #ifndef EXFLASH_ENABLE
 #define EXFLASH_ENABLE                        /**<Use exflash. */
@@ -63,8 +63,6 @@
 // #define VFLASH_ENABLE                       /**<Use vflash for BLE Stack in Flash. */
 #endif
 
-extern uint32_t sys_security_enable_status_check(void);
-
 #ifdef EXFLASH_ENABLE
 
 #if defined(ROM_RUN_IN_FLASH) || defined(GR5515_C)
@@ -72,12 +70,6 @@ const uint32_t baud_rate[6] = {XQSPI_BAUD_RATE_64M, XQSPI_BAUD_RATE_48M, XQSPI_B
                                XQSPI_BAUD_RATE_24M, XQSPI_BAUD_RATE_16M, XQSPI_BAUD_RATE_32M
                               };
 xqspi_handle_t g_xqspi_handle = {0};
-#endif
-
-#if defined(GR5515_C)
-exflash_handle_t g_exflash_handle;
-#else
-extern exflash_handle_t g_exflash_handle;
 #endif
 
 bool hal_flash_init(void)
@@ -130,7 +122,7 @@ uint32_t hal_flash_write_r(const uint32_t addr, const uint8_t *buf, const uint32
                                       rd_buf, rd_bytes);
             if ((HAL_OK == status) && (memcmp(buf + offset, rd_buf, rd_bytes) == 0)) {
                 unrd_bytes -= rd_bytes;
-                if (0 == unrd_bytes) {
+                if (unrd_bytes == 0) {
                     return size;
                 } else {
                     offset += rd_bytes;
@@ -143,7 +135,7 @@ uint32_t hal_flash_write_r(const uint32_t addr, const uint8_t *buf, const uint32
             } else {
                 break;
             }
-        } while(1);
+        } while (1);
     }
 
     return 0;
@@ -172,7 +164,7 @@ bool hal_flash_erase_chip(void)
 
 void hal_flash_get_info(uint32_t *id, uint32_t *size)
 {
-    if (NULL == id || NULL == size) {
+    if (id == NULL || size == NULL) {
         return;
     }
 
@@ -222,7 +214,7 @@ bool hal_flash_erase_chip(void)
 
 void hal_flash_get_info(uint32_t *id, uint32_t *size)
 {
-    if (NULL == id || NULL == size) {
+    if (id == NULL || size  == NULL) {
         return;
     }
 
