@@ -89,12 +89,14 @@
 /** @brief Characteristic Base UUID. */
 #define BLE_ATT_BT_UUID_128             {0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, \
                                          0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+
 /** @brief  Change a 16-bit UUID array to a 128-bit one (append 0).
   * @param  uuid: 16-bit UUID
   * @retval None
   */
 #define BLE_ATT_16_TO_128_ARRAY(uuid)   {(uuid) & 0xFF, ((uuid) >> 8) & 0xFF, 0x00, 0x00, 0x00, \
-                                         0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 }
+                                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
 /** @brief  Change a 16-bit UUID array to a 16-bit one (append 0).
   * @param  uuid: 16-bit UUID
   * @retval None
@@ -210,7 +212,7 @@ typedef enum {
     BLE_ATT_UNIT_DENS_KG_PER_CUBIC_METRE                         = BLE_ATT_UUID_16(0x2714),
     /**< Density unit: kilogram per cubic meter. */
     BLE_ATT_UNIT_KG_PER_SQ_METRE                                 = BLE_ATT_UUID_16(0x2715),
-    /**< Surface density unit: kilogram per square meter. */
+    /**< Surface density unit: (kg/m^2)kilogram per square meter. */
     BLE_ATT_UNIT_CUBIC_METRE_PER_KG                              = BLE_ATT_UUID_16(0x2716),
     /**< Specific volume unit: cubic meter per kilogram. */
     BLE_ATT_UNIT_AMPERE_PER_SQ_METRE                             = BLE_ATT_UUID_16(0x2717),
@@ -274,7 +276,7 @@ typedef enum {
     BLE_ATT_UNIT_PASCAL_SECOND                                   = BLE_ATT_UUID_16(0x2740),
     /**< Synamic viscosity unit: pascal second. */
     BLE_ATT_UNIT_NEWTON_METRE                                    = BLE_ATT_UUID_16(0x2741),
-    /**< Moment of force unit: newton meter. */
+    /**< Moment of force unit: (N.m)newton meter. */
     BLE_ATT_UNIT_NEWTON_PER_METRE                                = BLE_ATT_UUID_16(0x2742),
     /**< Surface tension unit: newton per meter. */
     BLE_ATT_UNIT_RADIAN_PER_SECOND                               = BLE_ATT_UUID_16(0x2743),
@@ -298,7 +300,7 @@ typedef enum {
     BLE_ATT_UNIT_COULOMB_PER_CUBIC_METRE                         = BLE_ATT_UUID_16(0x274C),
     /**< Electric charge density unit: coulomb per cubic meter. */
     BLE_ATT_UNIT_SURF_COULOMB_PER_SQ_METRE                       = BLE_ATT_UUID_16(0x274D),
-    /**< Surface charge density unit: coulomb per square meter. */
+    /**< Surface charge density unit: coulomb/(square meter). */
     BLE_ATT_UNIT_FLUX_COULOMB_PER_SQ_METRE                       = BLE_ATT_UUID_16(0x274E),
     /**< Electric flux density unit: coulomb per square meter. */
     BLE_ATT_UNIT_FARAD_PER_METRE                                 = BLE_ATT_UUID_16(0x274F),
@@ -318,7 +320,7 @@ typedef enum {
     BLE_ATT_UNIT_WATT_PER_SQ_METRE_STERADIAN                     = BLE_ATT_UUID_16(0x2756),
     /**< Radiance unit: watt per square meter steradian. */
     BLE_ATT_UNIT_KATAL_PER_CUBIC_METRE                           = BLE_ATT_UUID_16(0x2757),
-    /**< Catalytic activity concentration unit: katal per cubic meter. */
+    /**< Catalytic active - concentration unit: katal per cubic meter. */
     BLE_ATT_UNIT_MINUTE                                          = BLE_ATT_UUID_16(0x2760),
     /**< Time unit: minute. */
     BLE_ATT_UNIT_HOUR                                            = BLE_ATT_UUID_16(0x2761),

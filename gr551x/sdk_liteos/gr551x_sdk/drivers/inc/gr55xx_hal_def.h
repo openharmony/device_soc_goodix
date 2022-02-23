@@ -148,7 +148,7 @@ do {                                                                            
   */
 #define __HAL_LOCK(__HANDLE__)                                              \
 do {                                                                        \
-    if((__HANDLE__)->lock == HAL_LOCKED)                                    \
+    if ((__HANDLE__)->lock == HAL_LOCKED)                                   \
     {                                                                       \
         return HAL_BUSY;                                                    \
     }                                                                       \

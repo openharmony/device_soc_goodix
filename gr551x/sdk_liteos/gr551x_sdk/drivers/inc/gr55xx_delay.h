@@ -124,9 +124,10 @@ __STATIC_FORCEINLINE void delay_us(uint32_t number_of_us)
 #if defined(GR5515_E)
 void delay_ms(uint32_t number_of_ms);
 #else
+#define DELAY_CON_FACTOR 1000
 __STATIC_FORCEINLINE void delay_ms(uint32_t number_of_ms)
 {
-    delay_us(1000 * number_of_ms);
+    delay_us(DELAY_CON_FACTOR * number_of_ms);
     return;
 }
 #endif

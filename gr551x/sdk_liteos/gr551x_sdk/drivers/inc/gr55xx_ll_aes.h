@@ -770,7 +770,7 @@ __STATIC_INLINE void ll_aes_clear_flag_it_done(aes_regs_t *AESx)
   */
 __STATIC_INLINE void ll_aes_set_dma_transfer_block(aes_regs_t *AESx, uint32_t block)
 {
-    MODIFY_REG(AESx->TRAN_SIZE, AES_TRAN_SIZE, (block << 4) - 1);
+    MODIFY_REG(AESx->TRAN_SIZE, AES_TRAN_SIZE, (block << ITEM_4) - 1);
 }
 
 /**
@@ -785,7 +785,7 @@ __STATIC_INLINE void ll_aes_set_dma_transfer_block(aes_regs_t *AESx, uint32_t bl
   */
 __STATIC_INLINE uint32_t ll_aes_get_dma_transfer_block(aes_regs_t *AESx)
 {
-    return ((READ_BITS(AESx->TRAN_SIZE, AES_TRAN_SIZE) + 1) >> 4);
+    return ((READ_BITS(AESx->TRAN_SIZE, AES_TRAN_SIZE) + 1) >> ITEM_4);
 }
 
 /**
@@ -931,7 +931,7 @@ __STATIC_INLINE uint32_t ll_aes_get_data_95_64(aes_regs_t *AESx)
   */
 __STATIC_INLINE uint32_t ll_aes_get_data_63_32(aes_regs_t *AESx)
 {
-    return (READ_REG(AESx->DATA_OUT[2]));
+    return (READ_REG(AESx->DATA_OUT[ITEM_2]));
 }
 
 /**
@@ -946,7 +946,7 @@ __STATIC_INLINE uint32_t ll_aes_get_data_63_32(aes_regs_t *AESx)
   */
 __STATIC_INLINE uint32_t ll_aes_get_data_31_0(aes_regs_t *AESx)
 {
-    return (READ_REG(AESx->DATA_OUT[3]));
+    return (READ_REG(AESx->DATA_OUT[ITEM_3]));
 }
 
 /**
@@ -994,7 +994,7 @@ __STATIC_INLINE void ll_aes_set_key_223_192(aes_regs_t *AESx, uint32_t key)
   */
 __STATIC_INLINE void ll_aes_set_key_191_160(aes_regs_t *AESx, uint32_t key)
 {
-    WRITE_REG(AESx->KEY[2], key);
+    WRITE_REG(AESx->KEY[ITEM_2], key);
 }
 
 /**
@@ -1010,7 +1010,7 @@ __STATIC_INLINE void ll_aes_set_key_191_160(aes_regs_t *AESx, uint32_t key)
   */
 __STATIC_INLINE void ll_aes_set_key_159_128(aes_regs_t *AESx, uint32_t key)
 {
-    WRITE_REG(AESx->KEY[3], key);
+    WRITE_REG(AESx->KEY[ITEM_3], key);
 }
 
 /**
@@ -1026,7 +1026,7 @@ __STATIC_INLINE void ll_aes_set_key_159_128(aes_regs_t *AESx, uint32_t key)
   */
 __STATIC_INLINE void ll_aes_set_key_127_96(aes_regs_t *AESx, uint32_t key)
 {
-    WRITE_REG(AESx->KEY[4], key);
+    WRITE_REG(AESx->KEY[ITEM_4], key);
 }
 
 /**
@@ -1042,7 +1042,7 @@ __STATIC_INLINE void ll_aes_set_key_127_96(aes_regs_t *AESx, uint32_t key)
   */
 __STATIC_INLINE void ll_aes_set_key_95_64(aes_regs_t *AESx, uint32_t key)
 {
-    WRITE_REG(AESx->KEY[5], key);
+    WRITE_REG(AESx->KEY[ITEM_5], key);
 }
 
 /**
@@ -1058,7 +1058,7 @@ __STATIC_INLINE void ll_aes_set_key_95_64(aes_regs_t *AESx, uint32_t key)
   */
 __STATIC_INLINE void ll_aes_set_key_63_32(aes_regs_t *AESx, uint32_t key)
 {
-    WRITE_REG(AESx->KEY[6], key);
+    WRITE_REG(AESx->KEY[ITEM_6], key);
 }
 
 /**
@@ -1074,7 +1074,7 @@ __STATIC_INLINE void ll_aes_set_key_63_32(aes_regs_t *AESx, uint32_t key)
   */
 __STATIC_INLINE void ll_aes_set_key_31_0(aes_regs_t *AESx, uint32_t key)
 {
-    WRITE_REG(AESx->KEY[7], key);
+    WRITE_REG(AESx->KEY[ITEM_7], key);
 }
 
 /**
@@ -1246,7 +1246,7 @@ __STATIC_INLINE void ll_aes_set_vector_95_64(aes_regs_t *AESx, uint32_t vector)
   */
 __STATIC_INLINE void ll_aes_set_vector_63_32(aes_regs_t *AESx, uint32_t vector)
 {
-    WRITE_REG(AESx->VECTOR_INIT[2], vector);
+    WRITE_REG(AESx->VECTOR_INIT[ITEM_2], vector);
 }
 
 /**
@@ -1262,7 +1262,7 @@ __STATIC_INLINE void ll_aes_set_vector_63_32(aes_regs_t *AESx, uint32_t vector)
   */
 __STATIC_INLINE void ll_aes_set_vector_31_0(aes_regs_t *AESx, uint32_t vector)
 {
-    WRITE_REG(AESx->VECTOR_INIT[3], vector);
+    WRITE_REG(AESx->VECTOR_INIT[ITEM_3], vector);
 }
 
 /**
@@ -1310,7 +1310,7 @@ __STATIC_INLINE void ll_aes_set_data_95_64(aes_regs_t *AESx, uint32_t data)
   */
 __STATIC_INLINE void ll_aes_set_data_63_32(aes_regs_t *AESx, uint32_t data)
 {
-    WRITE_REG(AESx->DATA_IN[2], data);
+    WRITE_REG(AESx->DATA_IN[ITEM_2], data);
 }
 
 /**
@@ -1326,7 +1326,7 @@ __STATIC_INLINE void ll_aes_set_data_63_32(aes_regs_t *AESx, uint32_t data)
   */
 __STATIC_INLINE void ll_aes_set_data_31_0(aes_regs_t *AESx, uint32_t data)
 {
-    WRITE_REG(AESx->DATA_IN[3], data);
+    WRITE_REG(AESx->DATA_IN[ITEM_3], data);
 }
 
 /**

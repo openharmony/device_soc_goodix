@@ -107,14 +107,14 @@
 
 #if APP_LOG_PRINTF_ENABLE
 #if APP_LOG_SEVERITY_LEVEL >= APP_LOG_LVL_ERROR
-#define APP_LOG_ERROR(...) app_log_output(APP_LOG_LVL_ERROR, APP_LOG_TAG,\
+#define APP_LOG_ERROR(...) app_log_output(APP_LOG_LVL_ERROR, APP_LOG_TAG, \
                                           __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
 #else
 #define APP_LOG_ERROR(...)
 #endif
 
 #if APP_LOG_SEVERITY_LEVEL >= APP_LOG_LVL_WARNING
-#define APP_LOG_WARNING(...) app_log_output(APP_LOG_LVL_WARNING, APP_LOG_TAG, __FILE__,\
+#define APP_LOG_WARNING(...) app_log_output(APP_LOG_LVL_WARNING, APP_LOG_TAG, __FILE__, \
                                             __FUNCTION__, __LINE__, __VA_ARGS__)
 #else
 #define APP_LOG_WARNING(...)

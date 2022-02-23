@@ -142,57 +142,54 @@ typedef struct {
                                                 0xBB: DualIO Fast Read mode,
                                                 0x6B: QuadOut Fast Read mode,
                                                 0xEB: QuadIO Fast Read mode */
-    uint32_t xqspi_speed:4;                /**< Bit: 0-3  clock speed. 0 :64 MHz, 1:48 MHz,
+    uint32_t xqspi_speed : 4;              /**< Bit: 0-3  clock speed. 0 :64 MHz, 1:48 MHz,
                                                 2:32 MHz, 3:24 MHz, 4:16 MHz. */
-    uint32_t code_copy_mode: 1;            /**< Bit: 4 code copy mode. 0:XIP,1:QSPI. */
-    uint32_t system_clk:3;                 /**< Bit: 5-7 system clock. 0:64 MHz, 1:48 MHz, 2:32 MHz(xo),
+    uint32_t code_copy_mode : 1;           /**< Bit: 4 code copy mode. 0:XIP,1:QSPI. */
+    uint32_t system_clk : 3;               /**< Bit: 5-7 system clock. 0:64 MHz, 1:48 MHz, 2:32 MHz(xo),
                                                 3:24 MHz, 4:16 MHz, 5:32 MHz(cpll). */
-    uint32_t check_image:1;                /**< Bit: 8 check image. */
-    uint32_t boot_delay:1;                 /**< Bit: Boot delay flag. */
-    uint32_t is_dap_boot:1;                /**< Bit: 11 check if boot dap mode. */
-    uint32_t reserved:21;                  /**< Bit: 24 reserved. */
+    uint32_t check_image : 1;              /**< Bit: 8 check image. */
+    uint32_t boot_delay : 1;               /**< Bit: Boot delay flag. */
+    uint32_t is_dap_boot : 1;              /**< Bit: 11 check if boot dap mode. */
+    uint32_t reserved : 21;                /**< Bit: 24 reserved. */
 } boot_info_t;
 
 
 /** @brief DFU uart config definition. */
 typedef struct {
-    dfu_info_state
-    state;              /**< DFU UART Enable or Disable. This parameter can be a value of @ref dfu_info_state.*/
-    dfu_uart_baudrate_t
-    baud_rate;          /**< UART communication baudrate. This parameter can be a value of @ref dfu_uart_baudrate_t.*/
-    dfu_uart_data_bit_t
-    data_bit;           /**< The number of data bits transmitted or received in a frame.
-                             This parameter can be a value of @ref dfu_uart_data_bit_t.*/
-    dfu_uart_stop_bit_t
-    stop_bits;          /**< The number of stop bits transmitted.
-                             This parameter can be a value of @ref dfu_uart_stop_bit_t.*/
-    dfu_uart_parity_bit_t
-    parity;             /**< Specify the parity mode. This parameter can be a value of @ref dfu_uart_parity_bit_t.*/
-    dfu_uart_pin_group_t
-    pin_group;          /**< Uart pin group. This parameter can be a value of @ref dfu_uart_pin_group_t.*/
+    dfu_info_state state;                   /**< DFU UART Enable or Disable. This parameter can be a value of
+                                                    @ref dfu_info_state. */
+    dfu_uart_baudrate_t baud_rate;          /**< UART communication baudrate. This parameter can be a value of
+                                                    @ref dfu_uart_baudrate_t. */
+    dfu_uart_data_bit_t data_bit;           /**< The number of data bits transmitted or received in a frame.
+                                                    This parameter can be a value of @ref dfu_uart_data_bit_t. */
+    dfu_uart_stop_bit_t stop_bits;          /**< The number of stop bits transmitted.
+                                                    This parameter can be a value of @ref dfu_uart_stop_bit_t. */
+    dfu_uart_parity_bit_t parity;             /**< Specify the parity mode. This parameter can be a value of
+                                                    @ref dfu_uart_parity_bit_t. */
+    dfu_uart_pin_group_t pin_group;          /**< Uart pin group. This parameter can be a value of
+                                                    @ref dfu_uart_pin_group_t. */
 } dfu_uart_info_t;
 
 /** @brief DFU Advertisement name config definition. */
 typedef struct {
-    dfu_info_state
-    state;                          /**< If a set name is used, this parameter can be a value of @ref dfu_info_state.*/
+    dfu_info_state state;                          /**< If a set name is used, this parameter can be a value of
+                                                        @ref dfu_info_state. */
     uint8_t        adv_name[DFU_ADV_MAX_LENGTH];   /**< Adv name data. */
     uint16_t       adv_name_length;                /**< The length of the name. */
 } dfu_adv_name_info_t;
 
 /** @brief DFU NVDS init info definition. */
 typedef struct {
-    dfu_info_state
-    state;                       /**< If NVDS init is required, this parameter can be a value of @ref dfu_info_state.*/
+    dfu_info_state state;            /**< If NVDS init is required, this parameter can be a value of
+                                            @ref dfu_info_state. */
     uint16_t        page_size;       /**< NVDS page size. */
     uint32_t        start_address;   /**< NVDS start address. */
 } dfu_nvds_info_t;
 
 /** @brief DFU cmd disable info definition. */
 typedef struct {
-    dfu_info_state
-    state;                         /**< If DFU cmd disable config is required, this parameter can be a value of
-                                        @ref dfu_info_state.*/
+    dfu_info_state  state;          /**< If DFU cmd disable config is required, this parameter can be a value of
+                                        @ref dfu_info_state. */
     uint16_t cmd_bit_map;          /**< NVDS start address. */
 } dfu_cmd_disable_t;
 

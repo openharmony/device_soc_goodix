@@ -208,13 +208,11 @@ app_io_pin_state_t app_io_read_pin(app_io_type_t type, uint32_t pin)
 
 uint16_t app_io_write_pin(app_io_type_t type, uint32_t pin, app_io_pin_state_t pin_state)
 {
-    if (pin_state != APP_IO_PIN_RESET && pin_state != APP_IO_PIN_SET)
-    {
+    if (pin_state != APP_IO_PIN_RESET && pin_state != APP_IO_PIN_SET) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
-    switch (type)
-    {
+    switch (type) {
         case APP_IO_TYPE_NORMAL:
             if (APP_IO_PINS_0_15 & pin) {
                 hal_gpio_write_pin(GPIO0, (uint16_t)(APP_IO_PINS_0_15 & pin), (gpio_pin_state_t)pin_state);
@@ -241,8 +239,7 @@ uint16_t app_io_write_pin(app_io_type_t type, uint32_t pin, app_io_pin_state_t p
 
 uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin)
 {
-    switch (type)
-    {
+    switch (type) {
         case APP_IO_TYPE_NORMAL:
             if (APP_IO_PINS_0_15 & pin) {
                 hal_gpio_toggle_pin(GPIO0, (uint16_t)(APP_IO_PINS_0_15 & pin));
@@ -267,12 +264,6 @@ uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin)
     return APP_DRV_SUCCESS;
 }
 #else
-
-extern uint16_t app_io_toggle_pin_sym(app_io_type_t type, uint32_t pin);
-extern uint16_t app_io_write_pin_sym(app_io_type_t type, uint32_t pin, app_io_pin_state_t pin_state);
-extern app_io_pin_state_t app_io_read_pin_sym(app_io_type_t type, uint32_t pin);
-extern uint16_t app_io_deinit_sym(app_io_type_t type, uint32_t pin);
-extern uint16_t app_io_init_sym(app_io_type_t type, app_io_init_t *p_init);
 
 uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
 {

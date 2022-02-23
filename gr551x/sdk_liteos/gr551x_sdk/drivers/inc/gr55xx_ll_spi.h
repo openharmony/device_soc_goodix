@@ -269,35 +269,35 @@ typedef struct _ll_qspi_init_t {
 /** @defgroup SPI_LL_EC_DATASIZE Datawidth
   * @{
   */
-#define LL_SSI_DATASIZE_4BIT                (3UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer:  4 bits */
-#define LL_SSI_DATASIZE_5BIT                (4UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer:  5 bits */
-#define LL_SSI_DATASIZE_6BIT                (5UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer:  6 bits */
-#define LL_SSI_DATASIZE_7BIT                (6UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer:  7 bits */
-#define LL_SSI_DATASIZE_8BIT                (7UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer:  8 bits */
-#define LL_SSI_DATASIZE_9BIT                (8UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer:  9 bits */
-#define LL_SSI_DATASIZE_10BIT               (9UL << SSI_CTRL0_DFS32_Pos)    /**< Data length for SPI transfer: 10 bits */
-#define LL_SSI_DATASIZE_11BIT               (10UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 11 bits */
-#define LL_SSI_DATASIZE_12BIT               (11UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 12 bits */
-#define LL_SSI_DATASIZE_13BIT               (12UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 13 bits */
-#define LL_SSI_DATASIZE_14BIT               (13UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 14 bits */
-#define LL_SSI_DATASIZE_15BIT               (14UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 15 bits */
-#define LL_SSI_DATASIZE_16BIT               (15UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 16 bits */
-#define LL_SSI_DATASIZE_17BIT               (16UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 17 bits */
-#define LL_SSI_DATASIZE_18BIT               (17UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 18 bits */
-#define LL_SSI_DATASIZE_19BIT               (18UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 19 bits */
-#define LL_SSI_DATASIZE_20BIT               (19UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 20 bits */
-#define LL_SSI_DATASIZE_21BIT               (20UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 21 bits */
-#define LL_SSI_DATASIZE_22BIT               (21UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 22 bits */
-#define LL_SSI_DATASIZE_23BIT               (22UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 23 bits */
-#define LL_SSI_DATASIZE_24BIT               (23UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 24 bits */
-#define LL_SSI_DATASIZE_25BIT               (24UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 25 bits */
-#define LL_SSI_DATASIZE_26BIT               (25UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 26 bits */
-#define LL_SSI_DATASIZE_27BIT               (26UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 27 bits */
-#define LL_SSI_DATASIZE_28BIT               (27UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 28 bits */
-#define LL_SSI_DATASIZE_29BIT               (28UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 29 bits */
-#define LL_SSI_DATASIZE_30BIT               (29UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 30 bits */
-#define LL_SSI_DATASIZE_31BIT               (30UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 31 bits */
-#define LL_SSI_DATASIZE_32BIT               (31UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 32 bits */
+#define LL_SSI_DATASIZE_4BIT                (3UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer:  4 bits */
+#define LL_SSI_DATASIZE_5BIT                (4UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer:  5 bits */
+#define LL_SSI_DATASIZE_6BIT                (5UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer:  6 bits */
+#define LL_SSI_DATASIZE_7BIT                (6UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer:  7 bits */
+#define LL_SSI_DATASIZE_8BIT                (7UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer:  8 bits */
+#define LL_SSI_DATASIZE_9BIT                (8UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer:  9 bits */
+#define LL_SSI_DATASIZE_10BIT               (9UL << SSI_CTRL0_DFS32_Pos)   /**< Data length for SPI transfer: 10 bits */
+#define LL_SSI_DATASIZE_11BIT               (10UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 11 bits */
+#define LL_SSI_DATASIZE_12BIT               (11UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 12 bits */
+#define LL_SSI_DATASIZE_13BIT               (12UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 13 bits */
+#define LL_SSI_DATASIZE_14BIT               (13UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 14 bits */
+#define LL_SSI_DATASIZE_15BIT               (14UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 15 bits */
+#define LL_SSI_DATASIZE_16BIT               (15UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 16 bits */
+#define LL_SSI_DATASIZE_17BIT               (16UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 17 bits */
+#define LL_SSI_DATASIZE_18BIT               (17UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 18 bits */
+#define LL_SSI_DATASIZE_19BIT               (18UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 19 bits */
+#define LL_SSI_DATASIZE_20BIT               (19UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 20 bits */
+#define LL_SSI_DATASIZE_21BIT               (20UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 21 bits */
+#define LL_SSI_DATASIZE_22BIT               (21UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 22 bits */
+#define LL_SSI_DATASIZE_23BIT               (22UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 23 bits */
+#define LL_SSI_DATASIZE_24BIT               (23UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 24 bits */
+#define LL_SSI_DATASIZE_25BIT               (24UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 25 bits */
+#define LL_SSI_DATASIZE_26BIT               (25UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 26 bits */
+#define LL_SSI_DATASIZE_27BIT               (26UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 27 bits */
+#define LL_SSI_DATASIZE_28BIT               (27UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 28 bits */
+#define LL_SSI_DATASIZE_29BIT               (28UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 29 bits */
+#define LL_SSI_DATASIZE_30BIT               (29UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 30 bits */
+#define LL_SSI_DATASIZE_31BIT               (30UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 31 bits */
+#define LL_SSI_DATASIZE_32BIT               (31UL << SSI_CTRL0_DFS32_Pos)  /**< Data length for SPI transfer: 32 bits */
 /** @} */
 
 /** @defgroup SPI_LL_EC_MICROWIRECOMMANDSIZE MicroWire CommandSize

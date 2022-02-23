@@ -205,6 +205,9 @@ do {                                                       \
 #define ITEM_8      8
 #define ITEM_9      9
 #define ITEM_10     10
+#define ITEM_11     11
+
+#define ITEM_16     16
 
 #ifdef __cplusplus
 }

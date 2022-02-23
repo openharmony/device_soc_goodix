@@ -1,11 +1,11 @@
 #ifndef DBG_PRINTF_H_
 #define DBG_PRINTF_H_
 
+#include "gr55xx_hal.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "gr55xx_hal.h"
 
 /* Ring buffer for interrupt send */
 #define DBG_RING_BUF_SIZE       (8192ul)

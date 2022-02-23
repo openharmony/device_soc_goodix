@@ -216,7 +216,6 @@ bool ring_buffer_is_reach_left_threshold(ring_buffer_t *p_ring_buff, uint32_t le
     uint32_t surplus_space;
 
     surplus_space = ring_buffer_surplus_space_get(p_ring_buff);
-
     if (letf_threshold >= surplus_space) {
         return true;
     } else {

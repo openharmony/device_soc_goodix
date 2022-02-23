@@ -43,7 +43,7 @@
 #include "gr55xx_sys.h"
 #include "gr55xx_hal.h"
 #include "custom_config.h"
-
+#include "gr55xx_rom_symbol.h"
 
 /******************************************************************************/
 /*           Cortex-M4F Processor Interruption and Exception Handlers         */
@@ -67,7 +67,7 @@ SECTION_RAM_CODE __asm void SVC_Handler (void)
     MRSNE    R12, PSP                ; Yes, use PSP
     MOVEQ    R12, SP                 ; No, use MSP
     PUSH     {R0-R3, LR}
-    MOV      R0, R12 
+    MOV      R0, R12
     BL       SVC_handler_proc
     MOV      R12, R0
     POP      {R0-R3, LR}
@@ -82,21 +82,19 @@ SVC_Dead
 #elif defined ( __GNUC__ )
 #elif defined (__ICCARM__)
 
-extern uint32_t *SVC_Table;
-extern uint32_t get_patch_rep_addr(uint32_t ori_func);
 SECTION_RAM_CODE uint32_t SVC_handler_proc(uint32_t *svc_args)
 {
     uint16_t svc_cmd;
     uint32_t svc_func_addr;
     uint32_t func_addr = 0;
-    svc_func_addr = svc_args[6];
+    svc_func_addr = svc_args[ITEM_6];
     svc_cmd = *((uint16_t*)svc_func_addr-1);
     if ((svc_cmd<=0xDFFF)&&(svc_cmd>=0xDF00)) {
         func_addr = (uint32_t)SVC_Table[svc_cmd&(0xFF)];
         return func_addr ;
     } else {
         func_addr=get_patch_rep_addr(svc_func_addr);
-        svc_args[6] = func_addr;
+        svc_args[ITEM_6] = func_addr;
         return 0;
     }
 }
@@ -153,14 +151,14 @@ uint32_t __R4_R11_REG[8];
 void print_callstack_handler(uint32_t sp)
 {
     printf("================================\r\n");
-    printf("  r0: %08x     r1: %08x\r\n", (uint32_t *)sp)[0], ((uint32_t *)sp)[1]);
-    printf("  r2: %08x     r3: %08x\r\n", ((uint32_t *)sp)[2], ((uint32_t *)sp)[3]);
-    printf("  r4: %08x     r5: %08x\r\n", __R4_R11_REG[0], __R4_R11_REG[1]);
-    printf("  r6: %08x     r7: %08x\r\n", __R4_R11_REG[2], __R4_R11_REG[3]);
-    printf("  r8: %08x     r9: %08x\r\n", __R4_R11_REG[4], __R4_R11_REG[5]);
-    printf("  r10:%08x     r11:%08x\r\n", __R4_R11_REG[6], __R4_R11_REG[7]);
-    printf("  r12:%08x     lr: %08x\r\n", ((uint32_t *)sp)[4], ((uint32_t *)sp)[5]);
-    printf("  pc: %08x     xpsr: %08x\r\n", ((uint32_t *)sp)[6], ((uint32_t *)sp)[7]);
+    printf("  r0: %08x     r1: %08x\r\n", (uint32_t *)sp)[ITEM_0], ((uint32_t *)sp)[ITEM_1]);
+    printf("  r2: %08x     r3: %08x\r\n", ((uint32_t *)sp)[ITEM_2], ((uint32_t *)sp)[ITEM_3]);
+    printf("  r4: %08x     r5: %08x\r\n", __R4_R11_REG[ITEM_0], __R4_R11_REG[ITEM_1]);
+    printf("  r6: %08x     r7: %08x\r\n", __R4_R11_REG[ITEM_2], __R4_R11_REG[ITEM_3]);
+    printf("  r8: %08x     r9: %08x\r\n", __R4_R11_REG[ITEM_4], __R4_R11_REG[ITEM_5]);
+    printf("  r10:%08x     r11:%08x\r\n", __R4_R11_REG[ITEM_6], __R4_R11_REG[ITEM_7]);
+    printf("  r12:%08x     lr: %08x\r\n", ((uint32_t *)sp)[ITEM_4], ((uint32_t *)sp)[ITEM_5]);
+    printf("  pc: %08x     xpsr: %08x\r\n", ((uint32_t *)sp)[ITEM_6], ((uint32_t *)sp)[ITEM_7]);
     printf("================================\r\n");
 }
 

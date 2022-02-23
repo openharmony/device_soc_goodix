@@ -60,7 +60,7 @@ uint32_t g_debug_temperature;
 #if CFG_LPCLK_INTERNAL_EN
 
 #define PMU_SMALL_INTERVAL_MS       (10*1000)
-#define TEMPERATURN_HIGH    44   
+#define TEMPERATURN_HIGH    44
 #define TEMPERATURN_LOW     40
 static uint32_t pmu_interval_init = 30 * 1000;
 static uint32_t pmu_interval_prev = 0;
@@ -134,7 +134,8 @@ void system_pmu_calibration_init(uint32_t interval)
 #endif // CFG_LPCLK_INTERNAL_EN
                                    );
 
-        xTaskCreate(system_pmu_calibration_task, "pmu_calibration_task", STACKDEPTH, NULL, configMAX_PRIORITIES - 1, NULL);
+        xTaskCreate(system_pmu_calibration_task, "pmu_calibration_task",
+                    STACKDEPTH, NULL, configMAX_PRIORITIES - 1, NULL);
 #else
         app_timer_delete(&s_pmu_calibration_timer_id);
         app_timer_create(&s_pmu_calibration_timer_id, ATIMER_REPEAT,

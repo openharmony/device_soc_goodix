@@ -100,9 +100,9 @@ extern const int CODE_SECTION_END;
 #endif
 #endif
 
-void __fault_trace_nvds_save_prepare(void);
-void __fault_trace_nvds_add(const char *format, ...);
-void __fault_trace_nvds_save_flush(void);
+void fault_trace_nvds_save_prepare(void);
+void fault_trace_nvds_add(const char *format, ...);
+void fault_trace_nvds_save_flush(void);
 
 /**
  * @defgroup CORTEX_BACKTRACE_MAROC Defines
@@ -181,13 +181,14 @@ typedef struct {
             unsigned int UnusedBits3    : 1;   /**< Unused Bits 3. */
             unsigned int PENDSVACT      : 1;   /**< Read as 1 if PendSV exception is active. */
             unsigned int SYSTICKACT     : 1;   /**< Read as 1 if SYSTICK exception is active. */
-unsigned int USGFAULTPENDED :
-            1;   /**< Usage fault pended; usage fault started but was replaced by a higher-priority exception. */
+/**< Usage fault pended; usage fault started but was replaced by a higher-priority exception. */
+unsigned int USGFAULTPENDED : 1;
 /**< Memory management fault pended; memory management fault started but was replaced by a higher-priority exception. */
 unsigned int MEMFAULTPENDED : 1;
 /**< Bus fault pended; bus fault handler was started but was replaced by a higher-priority exception. */
 unsigned int BUSFAULTPENDED : 1;
-            unsigned int SVCALLPENDED   : 1;   /**< SVC pended; SVC was started but was replaced by a higher-priority exception. */
+/**< SVC pended; SVC was started but was replaced by a higher-priority exception. */
+            unsigned int SVCALLPENDED   : 1;
             unsigned int MEMFAULTENA    : 1;   /**< Memory management fault handler enable. */
             unsigned int BUSFAULTENA    : 1;   /**< Bus fault handler enable. */
             unsigned int USGFAULTENA    : 1;   /**< Usage fault handler enable. */

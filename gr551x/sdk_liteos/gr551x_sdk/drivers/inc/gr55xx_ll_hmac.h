@@ -709,7 +709,7 @@ __STATIC_INLINE void ll_hmac_clear_flag_it_done(hmac_regs_t *HMACx)
   */
 __STATIC_INLINE void ll_hmac_set_dma_transfer_block(hmac_regs_t *HMACx, uint32_t block)
 {
-    MODIFY_REG(HMACx->TRAN_SIZE, HMAC_TRANSIZE, (block << 6) - 1);
+    MODIFY_REG(HMACx->TRAN_SIZE, HMAC_TRANSIZE, (block << ITEM_6) - 1);
 }
 
 /**
@@ -724,7 +724,7 @@ __STATIC_INLINE void ll_hmac_set_dma_transfer_block(hmac_regs_t *HMACx, uint32_t
   */
 __STATIC_INLINE uint32_t ll_hmac_get_dma_transfer_block(hmac_regs_t *HMACx)
 {
-    return ((READ_BITS(HMACx->TRAN_SIZE, HMAC_TRANSIZE) + 1) >> 6);
+    return ((READ_BITS(HMACx->TRAN_SIZE, HMAC_TRANSIZE) + 1) >> ITEM_6);
 }
 
 /**
@@ -840,7 +840,7 @@ __STATIC_INLINE void ll_hmac_set_user_hash_223_192(hmac_regs_t *HMACx, uint32_t 
   */
 __STATIC_INLINE void ll_hmac_set_user_hash_191_160(hmac_regs_t *HMACx, uint32_t hash)
 {
-    WRITE_REG(HMACx->USER_HASH[2], hash);
+    WRITE_REG(HMACx->USER_HASH[ITEM_2], hash);
 }
 
 /**
@@ -856,7 +856,7 @@ __STATIC_INLINE void ll_hmac_set_user_hash_191_160(hmac_regs_t *HMACx, uint32_t 
   */
 __STATIC_INLINE void ll_hmac_set_user_hash_159_128(hmac_regs_t *HMACx, uint32_t hash)
 {
-    WRITE_REG(HMACx->USER_HASH[3], hash);
+    WRITE_REG(HMACx->USER_HASH[ITEM_3], hash);
 }
 
 /**
@@ -872,7 +872,7 @@ __STATIC_INLINE void ll_hmac_set_user_hash_159_128(hmac_regs_t *HMACx, uint32_t 
   */
 __STATIC_INLINE void ll_hmac_set_user_hash_127_96(hmac_regs_t *HMACx, uint32_t hash)
 {
-    WRITE_REG(HMACx->USER_HASH[4], hash);
+    WRITE_REG(HMACx->USER_HASH[ITEM_4], hash);
 }
 
 /**
@@ -888,7 +888,7 @@ __STATIC_INLINE void ll_hmac_set_user_hash_127_96(hmac_regs_t *HMACx, uint32_t h
   */
 __STATIC_INLINE void ll_hmac_set_user_hash_95_64(hmac_regs_t *HMACx, uint32_t hash)
 {
-    WRITE_REG(HMACx->USER_HASH[5], hash);
+    WRITE_REG(HMACx->USER_HASH[ITEM_5], hash);
 }
 
 /**
@@ -904,7 +904,7 @@ __STATIC_INLINE void ll_hmac_set_user_hash_95_64(hmac_regs_t *HMACx, uint32_t ha
   */
 __STATIC_INLINE void ll_hmac_set_user_hash_63_32(hmac_regs_t *HMACx, uint32_t hash)
 {
-    WRITE_REG(HMACx->USER_HASH[6], hash);
+    WRITE_REG(HMACx->USER_HASH[ITEM_6], hash);
 }
 
 /**
@@ -920,7 +920,7 @@ __STATIC_INLINE void ll_hmac_set_user_hash_63_32(hmac_regs_t *HMACx, uint32_t ha
   */
 __STATIC_INLINE void ll_hmac_set_user_hash_31_0(hmac_regs_t *HMACx, uint32_t hash)
 {
-    WRITE_REG(HMACx->USER_HASH[7], hash);
+    WRITE_REG(HMACx->USER_HASH[ITEM_7], hash);
 }
 
 /**
@@ -999,7 +999,7 @@ __STATIC_INLINE void ll_hmac_set_key1(hmac_regs_t *HMACx, uint32_t key)
   */
 __STATIC_INLINE void ll_hmac_set_key2(hmac_regs_t *HMACx, uint32_t key)
 {
-    WRITE_REG(HMACx->KEY[2], key);
+    WRITE_REG(HMACx->KEY[ITEM_2], key);
 }
 
 /**
@@ -1015,7 +1015,7 @@ __STATIC_INLINE void ll_hmac_set_key2(hmac_regs_t *HMACx, uint32_t key)
   */
 __STATIC_INLINE void ll_hmac_set_key3(hmac_regs_t *HMACx, uint32_t key)
 {
-    WRITE_REG(HMACx->KEY[3], key);
+    WRITE_REG(HMACx->KEY[ITEM_3], key);
 }
 
 /**
@@ -1031,7 +1031,7 @@ __STATIC_INLINE void ll_hmac_set_key3(hmac_regs_t *HMACx, uint32_t key)
   */
 __STATIC_INLINE void ll_hmac_set_key4(hmac_regs_t *HMACx, uint32_t key)
 {
-    WRITE_REG(HMACx->KEY[4], key);
+    WRITE_REG(HMACx->KEY[ITEM_4], key);
 }
 
 /**
@@ -1047,7 +1047,7 @@ __STATIC_INLINE void ll_hmac_set_key4(hmac_regs_t *HMACx, uint32_t key)
   */
 __STATIC_INLINE void ll_hmac_set_key5(hmac_regs_t *HMACx, uint32_t key)
 {
-    WRITE_REG(HMACx->KEY[5], key);
+    WRITE_REG(HMACx->KEY[ITEM_5], key);
 }
 
 /**
@@ -1063,7 +1063,7 @@ __STATIC_INLINE void ll_hmac_set_key5(hmac_regs_t *HMACx, uint32_t key)
   */
 __STATIC_INLINE void ll_hmac_set_key6(hmac_regs_t *HMACx, uint32_t key)
 {
-    WRITE_REG(HMACx->KEY[6], key);
+    WRITE_REG(HMACx->KEY[ITEM_6], key);
 }
 
 /**
@@ -1079,7 +1079,7 @@ __STATIC_INLINE void ll_hmac_set_key6(hmac_regs_t *HMACx, uint32_t key)
   */
 __STATIC_INLINE void ll_hmac_set_key7(hmac_regs_t *HMACx, uint32_t key)
 {
-    WRITE_REG(HMACx->KEY[7], key);
+    WRITE_REG(HMACx->KEY[ITEM_7], key);
 }
 
 /**

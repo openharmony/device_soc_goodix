@@ -37,10 +37,10 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include "app_pwr_mgmt.h"
-#include "app_systick.h"
 #include "string.h"
 #include "platform_sdk.h"
+#include "app_pwr_mgmt.h"
+#include "app_systick.h"
 #include "app_rng.h"
 
 #ifdef HAL_RNG_MODULE_ENABLED
@@ -112,7 +112,7 @@ struct rng_env_t s_rng_env = {
 #endif
 };
 static bool s_sleep_cb_registered_flag = false;
-static pwr_id_t s_rng_pwr_id;
+static int16_t s_rng_pwr_id;
 
 const static app_sleep_callbacks_t rng_sleep_cb = {
     .app_prepare_for_sleep = rng_prepare_for_sleep,
@@ -124,7 +124,8 @@ const static app_sleep_callbacks_t rng_sleep_cb = {
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
-static bool rng_prepare_for_sleep(void) {
+static bool rng_prepare_for_sleep(void)
+{
     hal_rng_state_t state;
 
     if (s_rng_env.rng_state == APP_RNG_ACTIVITY) {

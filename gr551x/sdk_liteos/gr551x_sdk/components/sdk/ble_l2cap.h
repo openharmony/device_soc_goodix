@@ -49,10 +49,10 @@
 #ifndef __BLE_L2CAP_H__
 #define __BLE_L2CAP_H__
 
-#include "ble_error.h"
-#include "gr55xx_sys_cfg.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "ble_error.h"
+#include "gr55xx_sys_cfg.h"
 
 /** @addtogroup BLE_L2CAP_ENUMERATIONS Enumerations
  * @{ */

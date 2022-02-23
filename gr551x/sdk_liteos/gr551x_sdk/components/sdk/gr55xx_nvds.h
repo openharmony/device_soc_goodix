@@ -85,7 +85,9 @@ enum NVDS_STATUS {
 /** @addtogroup NVDS_STRUCTURES Structures
  * @{ */
 /** @brief NVDS Item tag. */
+#if 1
 typedef uint16_t NvdsTag_t;
+#endif
 /** @} */
 
 /** @addtogroup NVDS_FUNCTIONS Functions

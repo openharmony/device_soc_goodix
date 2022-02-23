@@ -49,7 +49,7 @@
  *****************************************************************************************
  */
 #if APP_LOG_COLOR_ENABLE
-/**@brief CSI(Control Sequence Introducer/Initiator) sign more information on 
+/**@brief CSI(Control Sequence Introducer/Initiator) sign more information on
   * https://en.wikipedia.org/wiki/ANSI_escape_code. */
 #define CSI_START                      "\033["
 #define CSI_END                        "\033[0m"

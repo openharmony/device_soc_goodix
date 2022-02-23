@@ -784,7 +784,7 @@ __STATIC_INLINE void ll_gpio_reset_output_pin(gpio_regs_t *GPIOx, uint32_t pin_m
 {
 #ifdef USE_GPIO_MASK_REGISTER
     WRITE_REG(GPIOx->MASKLOWBYTE[(uint8_t)pin_mask], 0x0000U);
-    WRITE_REG(GPIOx->MASKHIGHBYTE[(uint8_t)(pin_mask >> 8)], 0x0000U);
+    WRITE_REG(GPIOx->MASKHIGHBYTE[(uint8_t)(pin_mask >> ITEM_8)], 0x0000U);
 #else
     CLEAR_BITS(GPIOx->DATAOUT, pin_mask);
 #endif

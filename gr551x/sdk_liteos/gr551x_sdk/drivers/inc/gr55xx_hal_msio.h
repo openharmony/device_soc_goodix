@@ -55,6 +55,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_msio.h"
 #include "gr55xx_hal_def.h"
+/* Include MSIO HAL Extended module */
+#include "gr55xx_hal_msio_ex.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -221,9 +223,6 @@ typedef struct _msio_init {
 /** @} */
 
 /** @} */
-
-/* Include MSIO HAL Extended module */
-#include "gr55xx_hal_msio_ex.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_MSIO_DRIVER_FUNCTIONS Functions

@@ -52,6 +52,7 @@
 #include "patch.h"
 #include "patch_tab.h"
 #include "gr55xx_ll_gpio.h"
+#include "gr55xx_rom_symbol.h"
 
 // NOTE: SVC #0 is reserved for freertos, DO NOT USE IT!
 #define SVC_TABLE_NUM_MAX   4
@@ -63,15 +64,10 @@
 #define FLASH_IO_2      (LL_GPIO_PIN_5)      /* XQSPI flash IO2 (WP)  */
 #define FLASH_IO_3      (LL_GPIO_PIN_3)      /* XQSPI flash IO3 (HOLD) */
 #define HAL_EXFLASH_IO_PULL_SET(_PIN_, _PULL_)  ll_gpio_set_pin_pull(GPIO1, _PIN_, _PULL_)
-
-extern uint8_t nvds_put_patch(NvdsTag_t tag, uint16_t len, const uint8_t *p_buf);
-extern uint8_t nvds_put_rom(NvdsTag_t tag, uint16_t len, const uint8_t *p_buf);
-extern void dfu_cmd_handler_replace_for_encrypt(void);
     
 static uint32_t SVC_TABLE_USER_SPACE[SVC_TABLE_NUM_MAX] __attribute__((section("SVC_TABLE")));
 
 #if (CFG_LCP_SUPPORT && (CHIP_TYPE == 0))
-extern uint16_t gdx_lcp_buf_init(uint32_t buf_addr);
 static uint8_t lcp_buf[280] __attribute__((section (".ARM.__at_0x00820000"), zero_init));
 #endif
 
@@ -79,11 +75,9 @@ static uint8_t lcp_buf[280] __attribute__((section (".ARM.__at_0x00820000"), zer
 static uint8_t s_nvds_cache[4096];
 #endif
 
-
 static void nvds_setup(void)
 {
 #ifdef GR5515_E
-    extern uint8_t *g_nvds_buf;
     g_nvds_buf = (uint8_t *)&s_nvds_cache;
 #endif
   
@@ -107,7 +101,7 @@ static void nvds_setup(void)
                 }
                 /* Flash fault, cannot startup.
                  * TODO: Output log via UART or Dump an error code to flash. */
-                while (1){}
+                while (1) {}
             }
         case NVDS_SUCCESS:
             break;
@@ -171,7 +165,7 @@ static void system_calibration(void)
 
 static void exflash_io_pull_config(void)
 {
-    /* XQSPI IO configuration needs to match Flash. 
+    /* XQSPI IO configuration needs to match Flash.
        The default configuration can match most Flash */
     HAL_EXFLASH_IO_PULL_SET(FLASH_CS,   LL_GPIO_PULL_UP);
     HAL_EXFLASH_IO_PULL_SET(FLASH_CLK,  LL_GPIO_PULL_NO);
@@ -193,9 +187,9 @@ void platform_init(void)
     }
 
 #ifdef EXFLASH_WAKEUP_DELAY
-    warm_boot_set_exflash_readid_delay(EXFLASH_WAKEUP_DELAY * 5);
+    warm_boot_set_exflash_readid_delay(EXFLASH_WAKEUP_DELAY * ITEM_5);
     run_mode_t run_mode = (run_mode_t)(SYSTEM_CLOCK);
-    uint16_t osc_time = ble_wakeup_osc_time_get(run_mode) + (EXFLASH_WAKEUP_DELAY * 5);
+    uint16_t osc_time = ble_wakeup_osc_time_get(run_mode) + (EXFLASH_WAKEUP_DELAY * ITEM_5);
     ble_wakeup_osc_time_set(run_mode, osc_time);
 #endif
 
@@ -232,13 +226,13 @@ void platform_init(void)
     /* Register the SVC Table. */
     svc_table_register(SVC_TABLE_USER_SPACE);
 
-#if ENCRYPT_ENABLE 
+#if ENCRYPT_ENABLE
     fpb_register_patch_init_func(fpb_encrypt_mode_patch_enable);
 #else
     fpb_register_patch_init_func(fpb_patch_enable);
 #endif
 
-    /* platform init process. */ 
+    /* platform init process. */
     platform_sdk_init();
 
 #if ENCRYPT_ENABLE
@@ -261,8 +255,6 @@ void platform_init(void)
     return;
 }
 
-extern void system_platform_init(void);
-extern int main(void);
 #if defined ( __GNUC__ )
 void __main(void)
 {
@@ -290,7 +282,6 @@ void __main(void)
 
 #if defined ( __CC_ARM )
 //lint -e{10}
-extern void $Super$$main(void);
 //lint -e{10,144}
 void $Sub$$main(void)
 {
@@ -301,13 +292,11 @@ void $Sub$$main(void)
 
 #if defined ( __ICCARM__ )
 
-extern void __iar_program_start(void);
 void __main(void)
 {
     __iar_program_start();
 }
 
-extern void __iar_data_init3(void);
 int __low_level_init(void)
 {
     // call IAR table copy function.

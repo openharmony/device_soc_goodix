@@ -8,10 +8,10 @@ __WEAK void  ble_per_adv_env_init(void) {};
 __WEAK void  ble_scan_env_init(void) {};
 __WEAK void  ble_sync_env_init(void) {};
 
-typedef int (*ke_msg_func_t)(uint16_t const msgid, void const *param,
+typedef int (*ke_msg_func_t)(uint16_t const msgid, uint16_t const *param,
                              uint16_t const dest_id, uint16_t const src_id);
 
-typedef int (*llm_hci_cmd_hdl_func_t)(void const *param, uint16_t opcode);
+typedef int (*llm_hci_cmd_hdl_func_t)(uint16_t const *param, uint16_t opcode);
 
 typedef struct {
     ke_msg_func_t ori_func_addr;
@@ -24,88 +24,88 @@ typedef struct {
 } hci_cmd_tab_item_t;
 
 // ble sdk task
-extern int host_to_sdk_msg_handler_patch(uint16_t const msgid, void *param,
+extern int host_to_sdk_msg_handler_patch(uint16_t const msgid, uint16_t *param,
                                          uint16_t const dest_id, uint16_t const src_id);
 // ble sdk gapm for common
-extern int gap_activity_stopped_ind_handler_patch(uint16_t const msgid, void const *p_param,
+extern int gap_activity_stopped_ind_handler_patch(uint16_t const msgid, uint16_t const *p_param,
                                                   uint16_t const dest_id, uint16_t const src_id);
-extern int gapm_cmp_evt_handler_patch(uint16_t const msgid, void const *param,
+extern int gapm_cmp_evt_handler_patch(uint16_t const msgid, uint16_t const *param,
                                       uint16_t const dest_id, uint16_t const src_id);
-extern int gap_dev_bdaddr_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int gap_dev_bdaddr_ind_handler_patch(uint16_t const msgid, uint16_t const *param,
                                             uint16_t const dest_id, uint16_t const src_id);
 // llm task for common
-extern int llm_hci_command_handler_patch(uint16_t const msgid, void const *param,
-                                         uint16_t const dest_id,uint16_t const src_id);
+extern int llm_hci_command_handler_patch(uint16_t const msgid, uint16_t const *param,
+                                         uint16_t const dest_id, uint16_t const src_id);
 // hci cmd for common
-extern int hci_le_add_dev_to_wlst_cmd_handler_patch(void const *param, uint16_t opcode);
-extern int hci_le_rmv_dev_from_wlst_cmd_handler_patch(void const *param, uint16_t opcode);
-extern int hci_le_clear_wlst_cmd_handler_patch(void const *param, uint16_t opcode);
+extern int hci_le_add_dev_to_wlst_cmd_handler_patch(uint16_t const *param, uint16_t opcode);
+extern int hci_le_rmv_dev_from_wlst_cmd_handler_patch(uint16_t const *param, uint16_t opcode);
+extern int hci_le_clear_wlst_cmd_handler_patch(uint16_t const *param, uint16_t opcode);
 
-extern int hci_dbg_ble_reg_wr_cmd_handler_patch(void const *param, uint16_t opcode);
-extern int hci_dbg_ble_reg_rd_cmd_handler_patch(void const *param, uint16_t opcode);
+extern int hci_dbg_ble_reg_wr_cmd_handler_patch(uint16_t const *param, uint16_t opcode);
+extern int hci_dbg_ble_reg_rd_cmd_handler_patch(uint16_t const *param, uint16_t opcode);
 
 #if CFG_MAX_CONNECTIONS
 // gattc task
-extern int l2cc_pdu_recv_ind_handler_patch(uint16_t const msgid, void *param,
+extern int l2cc_pdu_recv_ind_handler_patch(uint16_t const msgid, struct l2cc_pdu_recv_ind *param,
                                            uint16_t const dest_id, uint16_t const src_id);
 // llc task
-extern int llc_loc_llcp_rsp_to_handler_patch(uint16_t const msgid, void const *param,
+extern int llc_loc_llcp_rsp_to_handler_patch(uint16_t const msgid, uint16_t const *param,
                                              uint16_t const dest_id, uint16_t const src_id);
-extern int llc_rem_llcp_rsp_to_handler_patch(uint16_t const msgid, void const *param,
-                                             uint16_t const dest_id,uint16_t const src_id);
-extern int lld_acl_rx_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int llc_rem_llcp_rsp_to_handler_patch(uint16_t const msgid, uint16_t const *param,
+                                             uint16_t const dest_id, uint16_t const src_id);
+extern int lld_acl_rx_ind_handler_patch(uint16_t const msgid, uint16_t const *param,
                                         uint16_t const dest_id, uint16_t const src_id);
-extern int lld_con_offset_upd_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int lld_con_offset_upd_ind_handler_patch(uint16_t const msgid, uint16_t const *param,
                                                 uint16_t const dest_id, uint16_t const src_id);
-extern int lld_con_param_upd_cfm_handler_patch(uint16_t const msgid, void const *param,
+extern int lld_con_param_upd_cfm_handler_patch(uint16_t const msgid, uint16_t const *param,
                                                uint16_t const dest_id, uint16_t const src_id);
-extern int lld_llcp_rx_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int lld_llcp_rx_ind_handler_patch(uint16_t const msgid, uint16_t const *param,
                                          uint16_t const dest_id, uint16_t const src_id);
-extern int lld_llcp_tx_cfm_handler_patch(uint16_t const msgid, void const *param,
+extern int lld_llcp_tx_cfm_handler_patch(uint16_t const msgid, uint16_t const *param,
                                          uint16_t const dest_id, uint16_t const src_id);
-extern int lld_ch_map_upd_cfm_handler_patch(uint16_t const msgid, void const *param,
+extern int lld_ch_map_upd_cfm_handler_patch(uint16_t const msgid, uint16_t const *param,
                                             uint16_t const dest_id, uint16_t const src_id);
-extern int lld_phy_upd_cfm_handler_patch(uint16_t const msgid, void const*param,
+extern int lld_phy_upd_cfm_handler_patch(uint16_t const msgid, uint16_t const *param,
                                          uint16_t const dest_id, uint16_t const src_id);
-extern int llc_auth_payl_nearly_to_handler_patch(uint16_t const msgid, void const *param,
-        uint16_t const dest_id, uint16_t const src_id);
-extern int llc_auth_payl_real_to_handler_patch(uint16_t const msgid, void const *param,
-        uint16_t const dest_id, uint16_t const src_id);
+extern int llc_auth_payl_nearly_to_handler_patch(uint16_t const msgid, uint16_t const *param,
+                                                 uint16_t const dest_id, uint16_t const src_id);
+extern int llc_auth_payl_real_to_handler_patch(uint16_t const msgid, uint16_t const *param,
+                                               uint16_t const dest_id, uint16_t const src_id);
 // l2cc task
-extern int hci_nb_cmp_pkts_evt_handler_patch(uint16_t const msgid, void const *event,
-        uint16_t const dest_id, uint16_t const src_id);
+extern int hci_nb_cmp_pkts_evt_handler_patch(uint16_t const msgid, struct hci_nb_cmp_pkts_evt const *event,
+                                             uint16_t const dest_id, uint16_t const src_id);
 // gapc task
-extern int gapc_hci_handler_patch(uint16_t const msgid, void const* event,
+extern int gapc_hci_handler_patch(uint16_t const msgid, uint16_t const *event,
                                   uint16_t dest_id, uint16_t src_id);
 // ble sdk task for gapc
-extern int gap_connection_req_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int gap_connection_req_ind_handler_patch(uint16_t const msgid, struct gapc_connection_req_ind const *param,
                                                 uint16_t const dest_id, uint16_t const src_id);
-extern int gap_disconnect_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int gap_disconnect_ind_handler_patch(uint16_t const msgid, struct gapc_disconnect_ind const *param,
                                             uint16_t const dest_id, uint16_t const src_id);
-extern int gap_cmp_evt_handler_patch(uint16_t const msgid, void const *param,
+extern int gap_cmp_evt_handler_patch(uint16_t const msgid, struct gapc_cmp_evt const *param,
                                      uint16_t const dest_id, uint16_t const src_id);
-extern int sec_rcv_sec_req_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int sec_rcv_sec_req_ind_handler_patch(uint16_t const msgid, struct gapc_security_ind const *param,
                                              uint16_t const dest_id, uint16_t const src_id);
-extern int sec_rcv_encrypt_req_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int sec_rcv_encrypt_req_ind_handler_patch(uint16_t const msgid, struct gapc_encrypt_req_ind const *param,
                                                  uint16_t const dest_id, uint16_t const src_id);
 // ble sdk task for gatt
-extern int ble_sdk_gatts_svc_changed_cfg_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int ble_sdk_gatts_svc_changed_cfg_ind_handler_patch(uint16_t const msgid, struct gattc_svc_changed_cfg const *param,
                                                            uint16_t const dest_id, uint16_t const src_id);
-extern int ble_sdk_gattc_event_ind_handler_patch(uint16_t const msgid, void const *param,
+extern int ble_sdk_gattc_event_ind_handler_patch(uint16_t const msgid, struct gattc_event_ind const *param,
                                                  uint16_t const dest_id, uint16_t const src_id);
 #endif
 
 #if CFG_MAX_SCAN
 // gapm task for scan
-extern int gapm_activity_create_cmd_handler_patch(uint16_t const msgid, void const *param,
+extern int gapm_activity_create_cmd_handler_patch(uint16_t const msgid, struct gapm_activity_create_cmd const *param,
                                                   uint16_t const dest_id, uint16_t const src_id);
-extern int gapm_hci_handler_patch(uint16_t const msgid, void const* event,
+extern int gapm_hci_handler_patch(uint16_t const msgid, uint16_t const *event,
                                   uint16_t dest_id, uint16_t opcode);
 
 // hci cmd for scan
-extern int hci_le_ext_create_con_cmd_handler_patch(void *param, uint16_t opcode);
-extern int hci_le_set_ext_scan_param_cmd_handler_patch(void const *param, uint16_t opcode);
-extern int hci_le_set_ext_scan_en_cmd_handler_patch(void const *param, uint16_t opcode);
+extern int hci_le_ext_create_con_cmd_handler_patch(struct hci_le_ext_create_con_cmd *param, uint16_t opcode);
+extern int hci_le_set_ext_scan_param_cmd_handler_patch(struct hci_le_set_ext_scan_param_cmd const *param, uint16_t opcode);
+extern int hci_le_set_ext_scan_en_cmd_handler_patch(struct hci_le_set_ext_scan_en_cmd const *param, uint16_t opcode);
 #endif
 
 msg_tab_item_t msg_tab[] = {

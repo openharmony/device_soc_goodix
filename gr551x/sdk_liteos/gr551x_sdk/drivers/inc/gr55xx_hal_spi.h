@@ -628,7 +628,7 @@ void hal_spi_msp_deinit(spi_handle_t *p_spi);
             The end of the data processing will be indicated through the
             dedicated SPI IRQ when using Interrupt mode or the DMA IRQ when
             using DMA mode.
-            The hal_spi_tx_cplt_callback(), hal_spi_rx_cplt_callback() and hal_spi_txrx_cplt_callback() 
+            The hal_spi_tx_cplt_callback(), hal_spi_rx_cplt_callback() and hal_spi_txrx_cplt_callback()
             user callbacks will be executed respectively at the end of the transmit or Receive process
             The hal_spi_error_callback() user callback will be executed when a communication error is detected.
 
@@ -950,7 +950,7 @@ void hal_spi_abort_cplt_callback(spi_handle_t *p_spi);
  * @param[in]  p_spi: Pointer to an SPI handle which contains the configuration information for the specified SPI.
  * @retval ::HAL_SPI_STATE_RESET: Peripheral not initialized.
  * @retval ::HAL_SPI_STATE_READY: Peripheral initialized and ready for use.
- * @retval ::HAL_SPI_STATE_BUSY: An internal process is ongoing. 
+ * @retval ::HAL_SPI_STATE_BUSY: An internal process is ongoing.
  * @retval ::HAL_SPI_STATE_BUSY_TX: Data Transmission process is ongoing.
  * @retval ::HAL_SPI_STATE_BUSY_RX: Data Reception process is ongoing.
  * @retval ::HAL_SPI_STATE_BUSY_TX_RX: Data Transmission and Reception process is ongoing.

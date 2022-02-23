@@ -1731,7 +1731,7 @@ typedef struct _rng_regs {
                                                              AON_MEM_CTL_SLP_TRN_OFF_PLL_TUNE |  \
                                                              AON_MEM_CTL_SLP_TRN_OFF_LDO_EN    | \
                                                              AON_MEM_CTL_SLP_TRN_OFF_PLL_RST |   \
-                                                             AON_MEM_CTL_SLP_TRN_OFF_IO_LDO_EN )
+                                                             AON_MEM_CTL_SLP_TRN_OFF_IO_LDO_EN)
 
 #define AON_MEM_CTL_SLP_TRN_OFF_IO_LDO_EN_Pos               (22U)
 #define AON_MEM_CTL_SLP_TRN_OFF_IO_LDO_EN_Len               (1U)
@@ -4131,7 +4131,7 @@ typedef struct _rng_regs {
 #define MCU_SUB_MSIO_MUX_CTL_SEL_04                         (MCU_SUB_MSIO_MUX_CTL_SEL_Msk << 16)
 
 /**********  Bit definition for MCU_SUB_REG_MCU_SUBSYS_CG_CTRL_0 register  ***********/
-#define MCU_SUB_WFI_MSK_HCLK_0                              (0xFFFU)                                   
+#define MCU_SUB_WFI_MSK_HCLK_0                              (0xFFFU)
 
 #define MCU_SUB_WFI_I2S_S_HCLK_Pos                          (11U)
 #define MCU_SUB_WFI_I2S_S_HCLK_Len                          (1U)
@@ -5401,7 +5401,7 @@ typedef struct _rng_regs {
 #define UART_IER_ERBFI_Pos                                  (0U)
 #define UART_IER_ERBFI_Len                                  (1U)
 #define UART_IER_ERBFI_Msk                                  (0x1U << UART_IER_ERBFI_Pos)
-#define UART_IER_ERBFI                                      UART_IER_ERBFI_Msk  /**< Enable Received Data 
+#define UART_IER_ERBFI                                      UART_IER_ERBFI_Msk  /**< Enable Received Data
                                                                                      Available Interrupt */
 
 /*******************  Bit definition for UART_FCR register  *******************/

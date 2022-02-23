@@ -60,22 +60,20 @@ struct pwr_env_t s_pwr_env;
  * GLOBAL FUNCTION DEFINITIONS
  ****************************************************************************************
  */
-pwr_id_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priority_t wakeup_priority)
+int16_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priority_t wakeup_priority)
 {
-    pwr_id_t id = -1;
+    int16_t id = -1;
     uint8_t  i  = 0;
 
     GLOBAL_EXCEPTION_DISABLE();
 
-    if (!s_pwr_env.is_pwr_callback_reg)
-    {
+    if (!s_pwr_env.is_pwr_callback_reg) {
         pwr_mgmt_dev_init(pwr_wake_up_ind);
         pwr_mgmt_set_callback(pwr_enter_sleep_check, NULL);
         s_pwr_env.is_pwr_callback_reg = true;
     }
 
-    if (p_cb == NULL || wakeup_priority > WAPEUP_PRIORITY_HIGH || wakeup_priority < WAPEUP_PRIORITY_LOW)
-    {
+    if (p_cb == NULL || wakeup_priority > WAPEUP_PRIORITY_HIGH || wakeup_priority < WAPEUP_PRIORITY_LOW) {
         goto exit;
     }
 
@@ -83,20 +81,17 @@ pwr_id_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priorit
         i++;
     }
 
-    if (i < APP_SLEEP_CB_MAX) 
-    {
+    if (i < APP_SLEEP_CB_MAX) {
         s_pwr_env.pwr_sleep_cb[i] = (app_sleep_callbacks_t *)p_cb;
         s_pwr_env.wakeup_priority[i] = wakeup_priority;
         id = i;
     }
-
 exit:
     GLOBAL_EXCEPTION_ENABLE();
-
     return id;
 }
 
-void pwr_unregister_sleep_cb(pwr_id_t id)
+void pwr_unregister_sleep_cb(int16_t id)
 {
     if (id < APP_SLEEP_CB_MAX) { // Is id valid?
         s_pwr_env.pwr_sleep_cb[id] = NULL;

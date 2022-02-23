@@ -280,7 +280,7 @@ uint16_t app_log_store_init(app_log_store_info_t *p_info, app_log_store_op_t *p_
             || p_op_func->flash_init == NULL
             || p_op_func->flash_read == NULL
             || p_op_func->flash_write == NULL
-            || p_op_func->flash_erase == NULL 
+            || p_op_func->flash_erase == NULL
             || p_info->db_size == 0
             || p_info->blk_size == 0
             || (p_info->db_addr % p_info->blk_size) != 0) {

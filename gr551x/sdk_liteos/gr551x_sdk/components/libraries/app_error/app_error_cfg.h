@@ -55,7 +55,7 @@
 #define APP_ERROR_CALL_STACK_DEPTH_MAX      16
 
 #if APP_ERROR_INFO_PRINT_ENABLE
-#define APP_ERROR_INFO_PRINT(...)           printf(__VA_ARGS__);printf("\r\n");/**< Print line. */
+#define APP_ERROR_INFO_PRINT(...)           printf(__VA_ARGS__);printf("\r\n"); /**< Print line. */
 #else
 #define APP_ERROR_INFO_PRINT(...)
 #endif

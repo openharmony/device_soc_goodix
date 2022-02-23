@@ -54,11 +54,9 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
+#include <stdint.h>       // standard definitions
 #include "ble_error.h"
 #include "ble_gapc.h"
-#include <stdint.h>       // standard definitions
-#include <stddef.h>       // standard definitions
-
 
 /**
  @addtogroup BLE_GAPM Generic Access Profile (GAP) Management
@@ -130,10 +128,10 @@
                                                                          (Outdoor Sports Activity subtype). */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_DISP 5186     /**< Location and Navigation Display Device
                                                                          (Outdoor Sports Activity subtype). */
-#define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_POD          5187     /**< Location Pod
-                                                                         (Outdoor Sports Activity subtype). */
-#define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_POD  5188     /**< Location and Navigation Pod
-                                                                         (Outdoor Sports Activity subtype). */
+#define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_POD          5187     /**< Location Pod (Outdoor Sports
+                                                                         Activity subtype). */
+#define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_POD  5188     /**< Location and Navigation Pod (Outdoor Sports
+                                                                         Activity subtype). */
 
 /** @defgroup BLE_GAP_PHYS GAP PHYs (bitmask)
  * @{ */
@@ -206,7 +204,7 @@ typedef enum {
 typedef enum {
     BLE_GAP_GET_DEV_VERSION = 0,          /**< Get version information for the local Controller. */
     BLE_GAP_GET_DEV_BDADDR,               /**< Get local device BD Address. */
-    //BLE_GAP_GET_DEV_ADV_TX_POWER,       /**< Get the transmit power level used for LE advertising channel packets. */
+    // BLE_GAP_GET_DEV_ADV_TX_POWER,      /**< Get the transmit power level used for LE advertising channel packets. */
     BLE_GAP_GET_SUGGESTED_DFLT_LE_DATA_LEN, /**< Get suggested values (SuggestedMaxTxOctets and SuggestedMaxTxTime)
                                                 for the Controller's maximum transmitted number of payload octets
                                                 and maximum packet transmission time to be used for new connections. */
@@ -217,8 +215,8 @@ typedef enum {
     BLE_GAP_GET_NB_ADV_SETS,                /**< Read the maximum number of advertising sets currently supported
                                                  by the controller. */
     BLE_GAP_GET_MAX_LE_ADV_DATA_LEN,        /**< Get maximum data length for advertising data. */
-    BLE_GAP_GET_DEV_TX_POWER,               /**< Read the minimum and maximum transmit powers supported 
-                                                 by the Controller. */
+    BLE_GAP_GET_DEV_TX_POWER,               /**< Read the minimum and maximum transmit powers supported by the
+                                                 Controller. */
     BLE_GAP_GET_DEV_RF_RF_PATH_COMP,        /**< Get RF path compensation values. */
 } gap_dev_info_get_type_t;
 
@@ -282,9 +280,8 @@ typedef enum {
                                            Only applicable in following cases:
                                            - Legacy advertising: if connectable
                                            - Extended advertising: connectable or
-                                             (non-connectable and non-discoverable). */
-    GAP_ADV_PROP_HDC_POS,             /**< Indicate that High Duty Cycle has to be used for advertising 
-                                           on primary channel,
+                                           (non-connectable and non-discoverable). */
+    GAP_ADV_PROP_HDC_POS,  /**< Indicate that High Duty Cycle has to be used for advertising on primary channel,
                                            applicable only if created advertising is not an extended advertising. */
     GAP_ADV_PROP_USE_LEGACY_PDUS_POS, /**< Use legacy advertising PDUs. */
     GAP_ADV_PROP_ANONYMOUS_POS,       /**< Enable anonymous mode. Device address will not appear in sending PDUs.
@@ -481,12 +478,12 @@ typedef enum {
  */
 
 typedef enum {
-    PRIVACY_MODE_NETWORK= 0x00,      /**< Set to the network privacy mode for the peer device. */
+    PRIVACY_MODE_NETWORK = 0x00,      /**< Set to the network privacy mode for the peer device. */
     PRIVACY_MODE_DEVICE = 0x01,      /**< Set to the device privacy mode for the peer device. */
 } privacy_mode_t;
 
 /**
- * @brief Possible roles of the activity.
+ * @brief Possible roles for the activity.
  */
 typedef enum {
     GAP_ACTIVITY_ROLE_ADV = 0,          /**< Adertise role. */
@@ -779,13 +776,13 @@ typedef struct {
  * @brief The BLE reslove rpa address callback.
  */
 typedef void (*reslv_rpa_addr_callback_t) (uint8_t status, gap_bdaddr_t *iden_addr,
-        uint8_t src_info);
+                                           uint8_t src_info);
 
 /**
  * @brief The BLE rpa address report callback.
  */
 typedef void (*rpa_addr_report_callback_t) (ble_actv_type_t type, uint8_t index,
-        const uint8_t *rpa_addr);
+                                            const uint8_t *rpa_addr);
 
 /** @} */
 
@@ -834,8 +831,8 @@ uint16_t ble_gap_addr_get(gap_bdaddr_t *p_addr);
  *
  * @param[in] role: Select the role to set tx power. @ref gap_activity_role_t for possible roles.
  * @param[in] index: The idx parameter is interpreted on role.
- *              -If role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
- *              -If role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of connection.
+ *              -If the role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
+ *              -If the role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of connection.
  *              -For all other roles, it should be ignored.
  * @param[in] txpwr_dbm: The value of the tx power, Range: -20dbm to 7dbm.
  *
@@ -853,9 +850,9 @@ uint16_t ble_gap_tx_power_set(gap_activity_role_t role, uint8_t index, int8_t tx
  *
  * @param[in] role: Select the role to Get tx power. @ref gap_activity_role_t for possible roles.
  * @param[in] index: The idx parameter is interpreted on role.
- *              -If role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
- *              -If role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of connection.
- *              -For all other roles, it should be ignored.
+ *                   -If the role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
+ *                   -If the role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of connection.
+ *                   -For all other roles, it should be ignored.
  * @param[in] txpwr_dbm: The value of the tx power, Range: -20dbm to 7dbm.
  *
  * @retval ::SDK_SUCCESS: Operation is Success.
@@ -929,7 +926,7 @@ uint16_t ble_gap_privacy_params_set(uint16_t renew_dur, bool enable_flag);
  * @retval ::SDK_ERR_INVALID_PARAM: Invalid parameter supplied.
  ****************************************************************************************
  */
-uint16_t ble_gap_data_length_set(uint16_t sugg_max_tx_octet,uint16_t sugg_max_tx_time);
+uint16_t ble_gap_data_length_set(uint16_t sugg_max_tx_octet, uint16_t sugg_max_tx_time);
 
 /**
  ****************************************************************************************
@@ -947,7 +944,7 @@ uint16_t ble_gap_data_length_set(uint16_t sugg_max_tx_octet,uint16_t sugg_max_tx
  *       (max_mtu = 512, max_mps = 512 and  max_nb_lecb = 10).
  ****************************************************************************************
  */
-uint16_t ble_gap_l2cap_params_set(uint16_t max_mtu,uint16_t max_mps,uint8_t max_nb_lecb);
+uint16_t ble_gap_l2cap_params_set(uint16_t max_mtu, uint16_t max_mps, uint8_t max_nb_lecb);
 
 /**
  ****************************************************************************************

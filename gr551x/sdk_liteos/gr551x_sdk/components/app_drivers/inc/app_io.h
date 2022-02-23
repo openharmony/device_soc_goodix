@@ -285,6 +285,16 @@ uint16_t app_io_write_pin(app_io_type_t type, uint32_t pin, app_io_pin_state_t p
 uint16_t app_io_toggle_pin(app_io_type_t type, uint32_t pin);
 /** @} */
 
+uint16_t app_io_toggle_pin_sym(app_io_type_t type, uint32_t pin);
+
+uint16_t app_io_write_pin_sym(app_io_type_t type, uint32_t pin, app_io_pin_state_t pin_state);
+
+app_io_pin_state_t app_io_read_pin_sym(app_io_type_t type, uint32_t pin);
+
+uint16_t app_io_deinit_sym(app_io_type_t type, uint32_t pin);
+
+uint16_t app_io_init_sym(app_io_type_t type, app_io_init_t *p_init);
+
 #endif
 
 /** @} */

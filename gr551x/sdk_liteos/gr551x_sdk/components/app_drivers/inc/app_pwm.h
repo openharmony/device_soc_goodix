@@ -76,8 +76,7 @@ extern "C" {
 /**
   * @brief PWM module Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_PWM_ID_0,                /**< PWM module 0 */
     APP_PWM_ID_1,                /**< PWM module 1 */
     APP_PWM_ID_MAX               /**< Only for check parameter, not used as input parameters. */
@@ -90,8 +89,7 @@ typedef enum
 /**
   * @brief PWM IO configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_io_type_t  type;         /**< Specifies the type of PWM IO. */
     app_io_mux_t   mux;          /**< Specifies the Peripheral to be connected to the selected pins. */
     uint32_t       pin;          /**< Specifies the IO pins to be configured.
@@ -104,8 +102,7 @@ typedef struct
 /**
   * @brief PWM configuration Structures
   */
-typedef struct
-{
+typedef struct {
     app_pwm_pin_t channel_a;     /**< Set the configuration of PWM channel A pin. */
     app_pwm_pin_t channel_b;     /**< Set the configuration of PWM channel B pin. */
     app_pwm_pin_t channel_c;     /**< Set the configuration of PWM channel C pin. */
@@ -115,13 +112,12 @@ typedef struct
 /**
   * @brief PWM Channel init Structure definition
   */
-typedef struct
-{
+typedef struct {
     uint8_t duty;               /**< Specifies the duty in PWM output mode.
-                                     This parameter must be a number between 0 ~ 100.*/
+                                     This parameter must be a number between 0 ~ 100. */
 
     uint8_t drive_polarity;     /**< Specifies the drive polarity in PWM output mode.
-                                     This parameter can be a value of @ref PWM_Drive_Polarity.*/
+                                     This parameter can be a value of @ref PWM_Drive_Polarity. */
 } app_pwm_channel_init_t;
 /** @} */
 
@@ -131,8 +127,7 @@ typedef struct
 /**
   * @brief PWM active channel Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     APP_PWM_ACTIVE_CHANNEL_A        = 0x01,    /**< The active channel is A     */
     APP_PWM_ACTIVE_CHANNEL_B        = 0x02,    /**< The active channel is B     */
     APP_PWM_ACTIVE_CHANNEL_C        = 0x04,    /**< The active channel is C     */
@@ -147,8 +142,7 @@ typedef enum
 /**
   * @brief PWM parameters structure definition
   */
-typedef struct
-{
+typedef struct {
     app_pwm_id_t             id;              /**< specified PWM module ID.      */
     app_pwm_pin_cfg_t        pin_cfg;         /**< the pin configuration information for the specified PWM module. */
     app_pwm_active_channel_t active_channel;  /**< PWM operate mode.             */

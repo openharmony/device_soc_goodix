@@ -38,10 +38,10 @@
  *****************************************************************************************
  */
 #include <string.h>
+#include "platform_sdk.h"
 #include "app_dma.h"
 #include "app_pwr_mgmt.h"
 #include "app_systick.h"
-#include "platform_sdk.h"
 #include "app_uart.h"
 
 
@@ -82,7 +82,7 @@ struct uart_env_t {
     uart_handle_t          handle;
     app_uart_mode_t        use_mode;
     app_uart_pin_cfg_t     pin_cfg;
-    dma_id_t               dma_id[2];
+    int16_t                dma_id[2];
     app_uart_state_t       uart_state;
     ring_buffer_t          tx_ring_buffer;
     uint8_t                tx_send_buf[TX_ONCE_MAX_SIZE];
@@ -140,7 +140,7 @@ struct uart_env_t s_uart_env[APP_UART_ID_MAX] = {
     }
 };
 static bool       s_sleep_cb_registered_flag = false;
-static pwr_id_t   s_uart_pwr_id;
+static int16_t   s_uart_pwr_id;
 
 static const app_sleep_callbacks_t uart_sleep_cb = {
     .app_prepare_for_sleep = uart_prepare_for_sleep,
@@ -551,7 +551,7 @@ uint16_t app_uart_deinit(app_uart_id_t id)
     s_uart_env[id].start_flush_flag = false;
 
     GLOBAL_EXCEPTION_DISABLE();
-    if (s_uart_env[APP_UART_ID_0].uart_state == APP_UART_INVALID && 
+    if (s_uart_env[APP_UART_ID_0].uart_state == APP_UART_INVALID &&
         s_uart_env[APP_UART_ID_1].uart_state == APP_UART_INVALID) {
         pwr_unregister_sleep_cb(s_uart_pwr_id);
         s_sleep_cb_registered_flag = false;
@@ -842,8 +842,7 @@ void app_uart_flush(app_uart_id_t id)
 
             do {
                 items_count = ring_buffer_items_count_get(&s_uart_env[id].tx_ring_buffer);
-                while (items_count)
-                {
+                while (items_count) {
                     uint8_t send_char;
 
                     ring_buffer_read(&s_uart_env[id].tx_ring_buffer, &send_char, 1);

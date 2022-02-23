@@ -183,8 +183,6 @@ typedef struct {
                                                              although not reach the service end handle. */
 } ble_gattc_browse_srvc_t;
 
-
-
 /** @brief GATT service. */
 typedef struct {
     uint16_t  start_hdl;            /**< Start handle. */
@@ -274,12 +272,12 @@ typedef struct {
 /** @brief GATTC Event callback Structures. */
 typedef struct {
     /**< Primary Service Discovery Response callback. */
-    void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t * p_prim_srvc_disc);
+    void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_srvc_disc_t *p_prim_srvc_disc);
     /**< Relationship Discovery Response callback. */
     void (*app_gattc_inc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status,
-                                       const ble_gattc_incl_disc_t * p_inc_srvc_disc);
+                                       const ble_gattc_incl_disc_t *p_inc_srvc_disc);
     /**< Characteristic Discovery Response callback. */
-    void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_disc_t * p_char_disc);
+    void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status, const ble_gattc_char_disc_t *p_char_disc);
     /**< Descriptor Discovery Response callback. */
     void (*app_gattc_char_desc_disc_cb)(uint8_t conn_idx, uint8_t status,
                                         const ble_gattc_char_desc_disc_t *p_char_desc_disc);
@@ -384,7 +382,7 @@ uint16_t ble_gattc_included_services_discover(uint8_t conn_idx, uint16_t start_h
  ****************************************************************************************
  */
 uint16_t ble_gattc_char_discover(uint8_t conn_idx, uint16_t start_hdl,
-                                            uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
+                                 uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
 
 /**
  ****************************************************************************************
@@ -445,7 +443,7 @@ uint16_t ble_gattc_read(uint8_t conn_idx, uint16_t handle, uint16_t offset);
  ****************************************************************************************
  */
 uint16_t ble_gattc_read_by_uuid(uint8_t conn_idx, uint16_t start_hdl,
-                                           uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
+                                uint16_t end_hdl, const ble_uuid_t *p_char_uuid);
 
 /**
  ****************************************************************************************
