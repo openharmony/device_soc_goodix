@@ -141,7 +141,8 @@ typedef void (*io_dump_func_t)(void);
 typedef void (*mem_check_proc_t)(void);
 
 /** @brief pwr table. */
-extern pwr_table_t pwr_table[];
+#define MAX_PWR_TABLE_LEN 12
+extern pwr_table_t pwr_table[MAX_PWR_TABLE_LEN];
 
 /** @} */
 
@@ -209,8 +210,6 @@ pwr_mgmt_mode_t pwr_mgmt_baseband_state_get(void);
  */
 pwr_mgmt_mode_t pwr_mgmt_check_ext_timer(void);
 
-
-
 /**
  ****************************************************************************************
  * @brief  Sleep Policy Scheduling Function.
@@ -245,7 +244,6 @@ bool pwr_mgmt_ble_wakeup(void);
  */
 void pwr_mgmt_check_ble_event(void);
 
-
 /**
  ****************************************************************************************
  * @brief  This function is used to push startup information in app timer.
@@ -264,7 +262,6 @@ void pwr_mgmt_notify_timer_event(notify_timer_event_t timer_event);
  ****************************************************************************************
  */
 pwr_mgmt_mode_t pwr_mgmt_get_sleep_mode(void);
-
 
 /**
  ****************************************************************************************
@@ -303,7 +300,7 @@ void pwr_mgmt_ultra_sleep(uint32_t time_ms);
  * @return   void
  ****************************************************************************************
  */
-void pwr_mgmt_init( pwr_table_t *p_pwr_table, mcu_clock_type_t sys_clk);
+void pwr_mgmt_init(pwr_table_t *p_pwr_table, mcu_clock_type_t sys_clk);
 
 /**
  ****************************************************************************************
@@ -432,7 +429,7 @@ void pwr_mgmt_register_trace_func(trace_func_t trace_func);
 /**
  ****************************************************************************************
  * @brief  function registered to dump io configuration.
- * @retval :
+ * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_register_io_dump_func(io_dump_func_t dump_func);

@@ -114,7 +114,7 @@ struct qspi_env_t {
     qspi_handle_t           handle;
     app_qspi_mode_t         use_mode;
     app_qspi_pin_cfg_t      pin_cfg;
-    dma_id_t                dma_id;
+    int16_t                 dma_id;
     app_qspi_state_t        qspi_state;
     bool                    start_flag;
     volatile uint8_t        rx_done;
@@ -384,7 +384,6 @@ static void app_qspi_event_call(qspi_handle_t *p_qspi, app_qspi_evt_type_t evt_t
 static void app_qspi_config_dma_qwrite_32b_patch(app_qspi_id_t id, bool enable_patch, uint32_t endian_mode)
 {
 #if defined(GR5515_D)
-    extern void hal_qspi_config_dma_qwrite_32b_patch(qspi_handle_t *p_qspi, bool enable_patch, uint32_t endian_mode) ;
     hal_qspi_config_dma_qwrite_32b_patch(&s_qspi_env[id].handle, enable_patch, endian_mode);
 #endif
 }
@@ -430,7 +429,6 @@ uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_h
 #endif
 
     app_systick_init();
-
     app_err_code = qspi_gpio_config(p_params->pin_cfg);
     APP_DRV_ERR_CODE_CHECK(app_err_code);
 
@@ -790,7 +788,8 @@ uint16_t app_qspi_command_transmit_sem_sync(app_qspi_id_t id, app_qspi_command_t
                 break;
 
             case APP_QSPI_TYPE_DMA:
-                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
+                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN,
+                                                     QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
                 err_code = hal_qspi_command_transmit_dma(&s_qspi_env[id].handle, p_cmd, p_data);
                 app_qspi_config_dma_qwrite_32b_patch(id, 0, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
                 break;
@@ -852,7 +851,8 @@ uint16_t app_qspi_command_transmit_high_speed_sync(app_qspi_id_t id, app_qspi_co
                 break;
 
             case APP_QSPI_TYPE_DMA:
-                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
+                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN,
+                                                     QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
                 hal_err_code = hal_qspi_command_transmit_dma(&s_qspi_env[id].handle, p_cmd, p_data);
                 app_qspi_config_dma_qwrite_32b_patch(id, 0, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
                 break;
@@ -904,7 +904,8 @@ uint16_t app_qspi_command_transmit_async(app_qspi_id_t id, app_qspi_command_t *p
                 break;
 
             case APP_QSPI_TYPE_DMA:
-                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
+                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN,
+                                                     QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
                 err_code = hal_qspi_command_transmit_dma(&s_qspi_env[id].handle, p_cmd, p_data);
                 app_qspi_config_dma_qwrite_32b_patch(id, 0, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
                 break;

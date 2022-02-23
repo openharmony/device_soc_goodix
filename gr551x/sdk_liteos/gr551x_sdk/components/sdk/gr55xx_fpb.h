@@ -48,8 +48,6 @@
 #define __GR55XX_FPB_H_
 
 #include <stdint.h>
-#include <stdio.h>
-#include <stdbool.h>
 
 /**
  * @addtogroup GR55XX_FPB_ENUMERATIONS Enumerations
@@ -103,7 +101,7 @@ typedef void(*fun_t)(void);
 * @retval :  void
 ****************************************************************************************
 */
-void fpb_enable(uint8_t index_start,uint8_t index_end);
+void fpb_enable(uint8_t index_start, uint8_t index_end);
 
 /**
  ****************************************************************************************

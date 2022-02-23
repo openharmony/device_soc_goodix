@@ -244,8 +244,8 @@ typedef struct _hal_xqspi_callback {
 /** @defgroup XQSPI_Read_CMD XQSPI Read Command in XIP mode
   * @{
   */
-#define XQSPI_READ_CMD_READ              LL_XQSPI_XIP_CMD_READ           /**< Read mode                  */
-#define XQSPI_READ_CMD_FAST_READ         LL_XQSPI_XIP_CMD_FAST_READ      /**< Fast Read mode             */
+#define XQSPI_READ_CMD_READ              LL_XQSPI_XIP_CMD_READ           /**< Read mode                   */
+#define XQSPI_READ_CMD_FAST_READ         LL_XQSPI_XIP_CMD_FAST_READ      /**< Fast Read mode              */
 #define XQSPI_READ_CMD_DUAL_OUT_READ     LL_XQSPI_XIP_CMD_DUAL_OUT_READ  /**< Dual-Out Fast Read mode     */
 #define XQSPI_READ_CMD_DUAL_IO_READ      LL_XQSPI_XIP_CMD_DUAL_IO_READ   /**< Dual-IO Fast Read mode      */
 #define XQSPI_READ_CMD_QUAD_OUT_READ     LL_XQSPI_XIP_CMD_QUAD_OUT_READ  /**< Quad-Out Fast Read mode     */
@@ -257,16 +257,16 @@ typedef struct _hal_xqspi_callback {
   */
 #define XQSPI_CLOCK_MODE_0       ((LL_XQSPI_SCPOL_LOW << 1) | LL_XQSPI_SCPHA_1EDGE)   /**< Inactive state of CLK is low,
                                                                                            CLK toggles at the start of
-                                                                                           first data bit   */
+                                                                                           first data bit */
 #define XQSPI_CLOCK_MODE_1       ((LL_XQSPI_SCPOL_LOW << 1) | LL_XQSPI_SCPHA_2EDGE)   /**< Inactive state of CLK is low,
                                                                                            CLK toggles in the middle of
-                                                                                           first data bit  */
+                                                                                           first data bit */
 #define XQSPI_CLOCK_MODE_2        ((LL_XQSPI_SCPOL_HIGH << 1) | LL_XQSPI_SCPHA_1EDGE) /**< Inactive state of CLK is high,
                                                                                            CLK toggles at the start of
-                                                                                           first data bit   */
+                                                                                           first data bit */
 #define XQSPI_CLOCK_MODE_3        ((LL_XQSPI_SCPOL_HIGH << 1) | LL_XQSPI_SCPHA_2EDGE) /**< Inactive state of CLK is high,
                                                                                            CLK toggles in the middle of
-                                                                                           first data bit  */
+                                                                                           first data bit */
 /** @} */
 
 /** @defgroup XQSPI_Baud_Rate XQSPI Clock Speed

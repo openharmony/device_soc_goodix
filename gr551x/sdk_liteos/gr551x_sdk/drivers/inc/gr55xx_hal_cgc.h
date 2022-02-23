@@ -160,8 +160,6 @@ typedef struct _cgc_init {
 #define CGC_FRC_ALL_CLK                      ((uint32_t)0x05FFFFFFU)     /**< All clocks                   */
 /** @} */
 
-
-
 /**
   * @brief CGC_default_config init Struct default configuartion
   */
@@ -173,7 +171,6 @@ typedef struct _cgc_init {
 /** @} */
 
 /** @} */
-
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_CGC_DRIVER_FUNCTIONS Functions

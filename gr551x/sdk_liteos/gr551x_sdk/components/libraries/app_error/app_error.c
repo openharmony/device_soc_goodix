@@ -45,8 +45,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "app_error_cfg.h"
-#include "app_error.h"
 #include "app_log.h"
+#include "app_error.h"
 
 /*
  * DEFINITIONS
@@ -130,7 +130,7 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
     char s_error_print_info[APP_ERROR_INFO_LEN];
     ret = memset_s(s_error_print_info, sizeof(s_error_print_info), 0, APP_ERROR_INFO_LEN);
     if (ret < 0) {
-      return;
+        return;
     }
 
     if (APP_ERROR_API_RET == p_error_info->error_type) {
@@ -154,9 +154,12 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
             }
         }
     } else if (APP_ERROR_BOOL_COMPARE == p_error_info->error_type) {
-        sprintf_s(s_error_print_info, sizeof (s_error_print_info),
+        ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info),
                   "(%s) is not established.",
                   p_error_info->value.expr);
+        if (ret < 0) {
+            return;
+        }
     }
 
     app_log_output(APP_LOG_LVL_ERROR,

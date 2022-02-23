@@ -333,7 +333,7 @@ __STATIC_INLINE void ll_uart_set_baud_rate(uart_regs_t *UARTx, uint32_t peripher
 
     SET_BITS(UARTx->LCR, UART_LCR_DLAB);
     WRITE_REG(UARTx->RBR_DLL_THR.DLL, uartdiv & UART_DLL_DLL);
-    WRITE_REG(UARTx->DLH_IER.DLH, (uartdiv >> 8) & UART_DLH_DLH);
+    WRITE_REG(UARTx->DLH_IER.DLH, (uartdiv >> ITEM_8) & UART_DLH_DLH);
     CLEAR_BITS(UARTx->LCR, UART_LCR_DLAB);
     WRITE_REG(UARTx->DLF, __LL_UART_DLF(peripheral_clock, baud_rate));
 }
@@ -358,11 +358,11 @@ __STATIC_INLINE uint32_t ll_uart_get_baud_rate(uart_regs_t *UARTx, uint32_t peri
     register uint32_t baud = 0x0U;
 
     SET_BITS(UARTx->LCR, UART_LCR_DLAB);
-    uartdiv = UARTx->RBR_DLL_THR.DLL | (UARTx->DLH_IER.DLH << 8);
+    uartdiv = UARTx->RBR_DLL_THR.DLL | (UARTx->DLH_IER.DLH << ITEM_8);
     CLEAR_BITS(UARTx->LCR, UART_LCR_DLAB);
 
     if ((uartdiv != 0) && (UARTx->DLF != 0x0U)) {
-        baud = peripheral_clock / (16 * uartdiv + UARTx->DLF);
+        baud = peripheral_clock / (ITEM_16 * uartdiv + UARTx->DLF);
     }
 
     return baud;

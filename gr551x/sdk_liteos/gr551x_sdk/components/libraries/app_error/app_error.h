@@ -48,12 +48,9 @@
 
 /**@brief Macro for calling error handler function if supplied error code isn`t GR_SUCCESS. */
 #define APP_ERROR_CHECK(ERROR_CODE)                         \
-    do                                                      \
-    {                                                       \
-        if ((ERROR_CODE) != SDK_SUCCESS)                      \
-        {                                                   \
-            app_error_info_t error_info =                   \
-            {                                               \
+    do {                                                    \
+        if ((ERROR_CODE) != SDK_SUCCESS) {                  \
+            app_error_info_t error_info = {                 \
                 .error_type       = APP_ERROR_API_RET,      \
                 .value.error_code = (ERROR_CODE),           \
                 .file             = __FILE__,               \
@@ -62,16 +59,13 @@
             };                                              \
             app_error_fault_handler(&error_info);           \
         }                                                   \
-    } while(0)
+    } while (0)
 
 /**@brief Macro for calling error handler function if supplied boolean value is false. */
 #define APP_BOOL_CHECK(BOOL_VAL)                        \
-    do                                                  \
-    {                                                   \
-        if (!(BOOL_VAL))                                \
-        {                                               \
-            app_error_info_t error_info =               \
-            {                                           \
+    do {                                                \
+        if (!(BOOL_VAL)) {                              \
+            app_error_info_t error_info = {             \
                 .error_type = APP_ERROR_BOOL_COMPARE,   \
                 .value.expr = #BOOL_VAL,                \
                 .file       = __FILE__,                 \
@@ -80,7 +74,7 @@
             };                                          \
             app_error_fault_handler(&error_info);       \
         }                                               \
-    } while(0)
+    } while (0)
 /** @} */
 
 /**

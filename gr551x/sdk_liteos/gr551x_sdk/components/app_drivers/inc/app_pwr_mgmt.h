@@ -57,6 +57,11 @@
 #include "app_drv_config.h"
 #include "gr55xx_pwr.h"
 
+/**
+  * @brief PWR id
+  */
+typedef int16_t pwr_id_t;
+
 /** @addtogroup APP_PWR_DEFINE Defines
   * @{
   */
@@ -65,14 +70,6 @@
   */
 #define APP_SLEEP_CB_MAX     16
 /** @} */
-
-/** @addtogroup APP_PWR_STRUCTURES Structures
-  * @{
-  */
-/**
-  * @brief PWR id
-  */
-typedef int16_t pwr_id_t;
 
 /**
   * @brief PWR sleep check function Structure
@@ -98,7 +95,7 @@ typedef struct {
  * @return   ID
  ****************************************************************************************
  */
-pwr_id_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priority_t wakeup_priority);
+int16_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priority_t wakeup_priority);
 
 /**
  ****************************************************************************************
@@ -106,7 +103,7 @@ pwr_id_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priorit
  * @param    id : which id want to unregister
  ****************************************************************************************
  */
-void pwr_unregister_sleep_cb(pwr_id_t id);
+void pwr_unregister_sleep_cb(int16_t id);
 
 /**
  ****************************************************************************************

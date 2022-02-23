@@ -61,15 +61,6 @@ extern "C" {
 
 #ifdef HAL_DMA_MODULE_ENABLED
 
-/** @addtogroup APP_DMA_TYPEDEFS Typedefs
-  * @{
-  */
-/**
-  * @brief DMA id definition
-  */
-typedef int16_t dma_id_t;
-/** @} */
-
 /** @addtogroup APP_DMA_ENUMERATIONS Enumerations
   * @{
   */
@@ -121,7 +112,7 @@ typedef void (*app_dma_evt_handler_t)(app_dma_evt_type_t type);
  * @return DMA ID
  ****************************************************************************************
  */
-dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_handler);
+int16_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_handler);
 
 /**
  ****************************************************************************************
@@ -132,7 +123,7 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
  * @return Result of De-initialization.
  ****************************************************************************************
  */
-uint16_t app_dma_deinit(dma_id_t ins_id);
+uint16_t app_dma_deinit(int16_t ins_id);
 
 /**
  ****************************************************************************************
@@ -144,7 +135,7 @@ uint16_t app_dma_deinit(dma_id_t ins_id);
  * @param[in]  data_length: The length of data to be transferred from source to destination, ranging between 0 and 4095.
  ****************************************************************************************
  */
-uint16_t app_dma_start(dma_id_t id, uint32_t src_address, uint32_t dst_address, uint32_t data_length);
+uint16_t app_dma_start(int16_t id, uint32_t src_address, uint32_t dst_address, uint32_t data_length);
 
 /**
  ****************************************************************************************
@@ -155,7 +146,7 @@ uint16_t app_dma_start(dma_id_t id, uint32_t src_address, uint32_t dst_address, 
  * @return Pointer to the specified ID's DMA handle.
  ****************************************************************************************
  */
-dma_handle_t *app_dma_get_handle(dma_id_t id);
+dma_handle_t *app_dma_get_handle(int16_t id);
 
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
 /**
@@ -167,7 +158,7 @@ dma_handle_t *app_dma_get_handle(dma_id_t id);
  * @return void.
  ****************************************************************************************
  */
-void dma_wake_up(dma_id_t id);
+void dma_wake_up(int16_t id);
 #endif
 
 

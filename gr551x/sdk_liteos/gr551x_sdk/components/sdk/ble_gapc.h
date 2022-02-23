@@ -55,11 +55,10 @@
 #ifndef __BLE_GAPC_H__
 #define __BLE_GAPC_H__
 
+#include <stdint.h>         // Standard Integer
+#include <stdbool.h>
 #include "ble_error.h"
 #include "gr55xx_sys_cfg.h"
-#include <stdint.h>         // Standard Integer
-#include <string.h>
-#include <stdbool.h>
 
 /**
  * @defgroup  BLE_GAPC_DEFINES Defines
@@ -245,7 +244,7 @@ typedef struct {
     uint16_t suggted_max_tx_time;   /**< The Host's suggested value for the Controller's maximum packet
                                          transmissiontime to be used for new connections.
                                          Range: 0x0148-0x4290 (all other values reserved for future use),
-                                         default: 0x0148*/
+                                         default: 0x0148 */
 } gap_sugg_dflt_data_len_t;
 
 /** @brief Number of available advertising sets info. */
@@ -301,9 +300,8 @@ typedef struct {
 
 /** @brief APP receives the extended advertising report indication info struct. */
 typedef struct {
-    uint8_t      adv_type;              /**< Advertising type. @see enum gap_adv_report_type_t. */
-    uint8_t
-    adv_info;                           /**< Bit field providing information about the received report. 
+    uint8_t adv_type;                   /**< Advertising type. @see enum gap_adv_report_type_t. */
+    uint8_t adv_info;                   /**< Bit field providing information about the received report.
                                              @see enum gap_adv_report_info_t. */
     gap_bdaddr_t broadcaster_addr;      /**< Broadcaster device address. */
     gap_bdaddr_t direct_addr;           /**< Target address (in case of a directed advertising report). */
@@ -312,10 +310,9 @@ typedef struct {
     uint8_t      phy_prim;              /**< Primary PHY on which advertising report has been received. */
     uint8_t      phy_second;            /**< Secondary PHY on which advertising report has been received. */
     uint8_t      adv_sid;               /**< Advertising SID , valid only for periodic advertising report. */
-    uint16_t
-    period_adv_intv;       /**< Periodic advertising interval (in unit of 1.25ms, min is 7.5ms),
-                                valid only for periodic advertising report. */
-    uint8_t      per_sync_idx;          /**< Periodic syncronization index, 
+    uint16_t period_adv_intv;           /**< Periodic advertising interval (in unit of 1.25ms, min is 7.5ms),
+                                             valid only for periodic advertising report. */
+    uint8_t      per_sync_idx;          /**< Periodic syncronization index,
                                              valid only for periodic advertising report. */
     uint16_t     length;                /**< Report length. */
     uint8_t      data[__ARRAY_EMPTY];   /**< Report. */
@@ -340,13 +337,13 @@ typedef struct {
 } gap_conn_update_cmp_t;
 
 /** @brief The parameter of connection. */
-typedef  struct {
+typedef struct {
     uint16_t interval_min;  /**< Minimum value for the connection interval.
                                  This shall be less than or equal to Conn_Interval_Max.
                                  Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s*/
     uint16_t interval_max;  /**< Maximum value for the connection interval.
                                  This shall be greater than or equal to Conn_Interval_Min.
-                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s.*/
+                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s. */
     uint16_t slave_latency; /**< Slave latency for the connection in number of connection events.
                                  Range: 0x0000 to 0x01F3. */
     uint16_t sup_timeout;   /**< Supervision timeout for the LE link. Range: 0x000A to 0x0C80,
@@ -354,13 +351,13 @@ typedef  struct {
 } gap_conn_param_t;
 
 /** @brief The parameter of update connection. */
-typedef  struct {
+typedef struct {
     uint16_t interval_min;  /**< Minimum value for the connection interval.
                                  This shall be less than or equal to Conn_Interval_Max.
                                  Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s*/
     uint16_t interval_max;  /**< Maximum value for the connection interval.
                                  This shall be greater than or equal to Conn_Interval_Min.
-                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s.*/
+                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s. */
     uint16_t slave_latency; /**< Slave latency for the connection in number of connection events.
                                  Range: 0x0000 to 0x01F3. */
     uint16_t sup_timeout;   /**< Supervision timeout for the LE link. range: 0x000A to 0x0C80,
@@ -397,7 +394,7 @@ typedef struct {
                                         The nth bit (n is in the range of 0 to 36) contains the value for
                                         the link layer channel index n.
                                         Channel n is unused = 0, channel n is used = 1.
-                                        The most significant bits are reserved for future use.*/
+                                        The most significant bits are reserved for future use. */
 } gap_chnl_map_t;
 
 /** @brief PHY info. */
@@ -452,7 +449,7 @@ typedef struct {
                                           |14                   | Channel Selection Algorithm #2|
                                           |15                    |LE Power Class 1|
                                           |16                  |Minimum Number of Used Channels Procedure|
-                                          |All other values |Reserved for Future Use|*/
+                                          |All other values |Reserved for Future Use| */
 } gap_peer_features_ind_t;
 
 /** @brief LE peer info. */
@@ -599,7 +596,7 @@ typedef struct {
 
     /**
       ****************************************************************************************
-      * @brief This callback function will be called once the scanning activity has been stopped.
+      * @brief This callback function will be called once the scanning activi-ty has been stopped.
       * @param[in] status:           The status of stopping a scanner.
       * @param[in] scan_stop_reason: The stop reason. See @ref gap_stopped_reason_t.
       * @retval void
@@ -719,7 +716,7 @@ typedef struct {
 
     /**
       ****************************************************************************************
-      *@brief This callback function will be called when the peer device requests updating connection.
+      * @brief This callback function will be called when the peer device requests updating connection.
       * @param[in] conn_idx:                The connection index.
       * @param[in] p_conn_param_update_req: Pointer to the connection update request param. See @ref gap_conn_param_t.
       * @retval void
@@ -846,7 +843,7 @@ uint16_t ble_gap_latency_set(uint8_t conn_idx, uint16_t latency);
 
 /**
  *****************************************************************************************
- * @brief Consult BLE connection activity plan situation function.
+ * @brief Consult BLE connection activity - plan situation function.
  * @note  This function should be called when connection established and no periodic advertising exists.
  *
  * @param[out] p_act_num:       Pointer to the number of existing connection activities.

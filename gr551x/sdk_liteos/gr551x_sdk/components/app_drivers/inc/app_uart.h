@@ -151,8 +151,7 @@ typedef struct {
   */
 typedef struct {
     app_uart_evt_type_t type; /**< Type of event. */
-    union
-    {
+    union {
         uint32_t error_code;           /**< UART Error code . */
         uint16_t size;                 /**< UART transmitted/received counter. */
     } data;                            /**< UART event data. */
@@ -166,8 +165,7 @@ typedef void (*app_uart_evt_handler_t)(app_uart_evt_t *p_evt);
 /**
   * @brief UART buffer structure definition
   */
-typedef struct
-{
+typedef struct {
     uint8_t   *tx_buf;     /**< Pointer to the TX buffer. */
     uint32_t  tx_buf_size; /**< Size of the TX buffer. */
 } app_uart_tx_buf_t;

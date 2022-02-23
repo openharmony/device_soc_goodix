@@ -1882,7 +1882,7 @@ __STATIC_INLINE uint32_t ll_pkc_get_swmi_tmp_pointer(pkc_regs_t *PKCx)
   */
 __STATIC_INLINE void ll_pkc_set_operation_word_length(pkc_regs_t *PKCx, uint32_t WordLength)
 {
-    MODIFY_REG(PKCx->SW_CONFIG7, PKC_SW_CONFIG7_WORDLEN, (WordLength >> 5) - 1);
+    MODIFY_REG(PKCx->SW_CONFIG7, PKC_SW_CONFIG7_WORDLEN, (WordLength >> ITEM_5) - 1);
 }
 
 /**
@@ -1897,7 +1897,7 @@ __STATIC_INLINE void ll_pkc_set_operation_word_length(pkc_regs_t *PKCx, uint32_t
   */
 __STATIC_INLINE uint32_t ll_pkc_get_operation_word_length(pkc_regs_t *PKCx)
 {
-    return ((READ_BITS(PKCx->SW_CONFIG7, PKC_SW_CONFIG7_WORDLEN) + 1) << 5);
+    return ((READ_BITS(PKCx->SW_CONFIG7, PKC_SW_CONFIG7_WORDLEN) + 1) << ITEM_5);
 }
 
 /**

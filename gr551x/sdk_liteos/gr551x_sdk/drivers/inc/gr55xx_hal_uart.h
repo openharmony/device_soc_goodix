@@ -429,9 +429,8 @@ do {                                                                    \
   * @param __CONTROL__ UART hardware flow control.
   * @retval SET (__CONTROL__ is valid) or RESET (__CONTROL__ is invalid)
   */
-#define IS_UART_HARDWARE_FLOW_CONTROL(__CONTROL__) \
-                                   (((__CONTROL__) == UART_HWCONTROL_NONE) || \
-                                    ((__CONTROL__) == UART_HWCONTROL_RTS_CTS)
+#define IS_UART_HARDWARE_FLOW_CONTROL(__CONTROL__) (((__CONTROL__) == UART_HWCONTROL_NONE) || \
+                                                    ((__CONTROL__) == UART_HWCONTROL_RTS_CTS))
 /** @} */
 
 /**

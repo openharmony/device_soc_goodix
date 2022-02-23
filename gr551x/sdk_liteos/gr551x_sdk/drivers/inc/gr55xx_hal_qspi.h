@@ -53,6 +53,7 @@
 #define __GR55xx_HAL_QSPI_H__
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
 #include "gr55xx_ll_spi.h"
 #include "gr55xx_hal_def.h"
 
@@ -185,7 +186,7 @@ typedef struct _qspi_command_t {
                                              This parameter can be a value of @ref QSPI_Data_Mode. */
 
     uint32_t length;                    /**< Specifies the number of data to transfer. (This is the number of bytes).
-                                             This parameter can be any value between 0 and 0xFFFFFFFF 
+                                             This parameter can be any value between 0 and 0xFFFFFFFF
                                              (0 means undefined length until end of memory). */
 } qspi_command_t;
 /** @} */
@@ -662,7 +663,7 @@ void hal_qspi_msp_deinit(qspi_handle_t *p_qspi);
             The end of the data processing will be indicated through the
             dedicated QSPI IRQ when using Interrupt mode or the DMA IRQ when
             using DMA mode.
-            The hal_qspi_tx_cplt_callback(), hal_qspi_rx_cplt_callback() and hal_qspi_txrx_cplt_callback() 
+            The hal_qspi_tx_cplt_callback(), hal_qspi_rx_cplt_callback() and hal_qspi_txrx_cplt_callback()
             user callbacks will be executed respectively at the end of the transmit or Receive process.
             The hal_qspi_error_callback() user callback will be executed when a communication error is detected
 
@@ -1111,6 +1112,7 @@ hal_status_t hal_qspi_suspend_reg(qspi_handle_t *p_qspi);
  */
 hal_status_t hal_qspi_resume_reg(qspi_handle_t *p_qspi);
 
+void hal_qspi_config_dma_qwrite_32b_patch(qspi_handle_t *p_qspi, bool enable_patch, uint32_t endian_mode);
 /** @} */
 
 /** @} */

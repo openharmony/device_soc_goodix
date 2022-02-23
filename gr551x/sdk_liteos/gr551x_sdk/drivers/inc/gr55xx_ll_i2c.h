@@ -128,7 +128,7 @@ typedef struct _ll_i2c_init {
                                                                                  remote master in read mode */
 #define LL_I2C_ABRT_SLV_ARBLOST             I2C_TX_ABRT_SRC_SLV_ARBLOST     /**< Slave lost arbitration to
                                                                                  remote master */
-#define LL_I2C_ABRT_SLVFLUSH_TXFIFO         I2C_TX_ABRT_SRC_SLVFLUSH_TXFIFO /**< Slave flushes existing data 
+#define LL_I2C_ABRT_SLVFLUSH_TXFIFO         I2C_TX_ABRT_SRC_SLVFLUSH_TXFIFO /**< Slave flushes existing data
                                                                                  in TX-FIFO upon getting read command */
 #define LL_I2C_ABRT_ARB_LOST                I2C_TX_ABRT_SRC_ARB_LOST        /**< Master or Slave Transmitter
                                                                                  lost arbitration */
@@ -1299,8 +1299,8 @@ __STATIC_INLINE uint32_t ll_i2c_get_abort_source(i2c_regs_t *I2Cx)
   */
 __STATIC_INLINE uint32_t ll_i2c_get_tx_flush_count(i2c_regs_t *I2Cx)
 {
-    return (uint32_t)(READ_BITS(I2Cx->TX_ABRT_SOURCE,
-                      I2C_TX_ABRT_SRC_TX_FLUSH_CNT) >> I2C_TX_ABRT_SRC_TX_FLUSH_CNT_Pos);
+    return (uint32_t)(READ_BITS(I2Cx->TX_ABRT_SOURCE, I2C_TX_ABRT_SRC_TX_FLUSH_CNT) >> \
+                      I2C_TX_ABRT_SRC_TX_FLUSH_CNT_Pos);
 }
 
 /** @} */

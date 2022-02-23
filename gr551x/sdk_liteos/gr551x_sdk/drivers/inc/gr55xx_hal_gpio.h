@@ -55,6 +55,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_gpio.h"
 #include "gr55xx_hal_def.h"
+/* Include GPIO HAL Extended module */
+#include "gr55xx_hal_gpio_ex.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -265,9 +267,6 @@ typedef struct _gpio_init {
 /** @} */
 
 /** @} */
-
-/* Include GPIO HAL Extended module */
-#include "gr55xx_hal_gpio_ex.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_GPIO_DRIVER_FUNCTIONS Functions

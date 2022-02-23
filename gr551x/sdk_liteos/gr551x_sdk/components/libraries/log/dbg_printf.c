@@ -22,7 +22,7 @@ static ring_buf_t dbg_ring_buf;
 static dbg_printf_mode_t dbg_printf_mode = DBG_PRINTF_NONE;
 volatile int32_t ITM_RxBuffer = 0x5AA55AA5U;
 
-__WEAK int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, void* pBuffer, unsigned BufferSize,
+__WEAK int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, uint8_t* pBuffer, unsigned BufferSize,
                                      unsigned Flags)
 {
     return 0;
@@ -108,10 +108,10 @@ static void dbg_uart_init(uart_regs_t *UARTx, dbg_printf_mode_t mode)
     /* Set baudrate */
     baud = DBG_UART_BAUDRATE;
     ll_uart_set_baud_rate(UARTx, uart_pclk, baud);
-    /* Set data bit = 8;*/
-    /* Set stop bit = 1;*/
-    /* Set parity = none;*/
-    /* Set fifo enable; */
+    /* Set data bit to 8; */
+    /* Set stop bit to 1; */
+    /* Set parity to none; */
+    /* Set fifo to enable; */
     ll_uart_config_character(UARTx, LL_UART_DATABITS_8B, LL_UART_PARITY_NONE, LL_UART_STOPBITS_1);
     /* Set fifo enable */
     ll_uart_enable_fifo(UARTx);
@@ -191,7 +191,8 @@ static int dbg_get_char(void)
             ch = dbg_uart_get_char(UART1);
             break;
         case DBG_PRINTF_ITM:
-            while (ITM_CheckChar() == 0);
+            while (ITM_CheckChar() == 0) {
+            }
             ch = ITM_ReceiveChar();
             break;
         case DBG_PRINTF_RTT:
@@ -232,7 +233,6 @@ void dbg_printf_set_mode(dbg_printf_mode_t mode)
 uint8_t dbg_printf_uart_callback(uart_regs_t *UARTx)
 {
     uint32_t isrflag = ll_uart_get_it_flag(UARTx);
-
     if (LL_UART_IIR_THRE == isrflag) {
         if (dbg_ring_buf.valid == 0) {
             /* Disable TXE interrupt */
@@ -302,25 +302,27 @@ void _sys_exit(int return_code)
 
 #elif defined(__GNUC__)
 
-int _write(int file, const char * buf, int len)
+int _write(int file, const char *buf, int len)
 {
     int tx_len = 0;
+    char *temp_buf = buf;
 
     while (tx_len < len) {
-        dbg_send_char(*buf);
-        buf++;
+        dbg_send_char(*temp_buf);
+        temp_buf++;
         tx_len++;
     }
     return tx_len;
 }
 
-int _read(int file, char * buf, int len)
+int _read(int file, char *buf, int len)
 {
     int rx_len = 0;
+    char *temp_buf = buf;
 
     while (rx_len < len) {
-        *buf = dbg_get_char();
-        buf++;
+        *temp_buf = dbg_get_char();
+        temp_buf++;
         rx_len++;
     }
     return rx_len;
@@ -329,7 +331,7 @@ int _read(int file, char * buf, int len)
 
 #elif defined(__ICCARM__)
 
-size_t __write(int handle, const unsigned char * buf, size_t size)
+size_t _write(int handle, const unsigned char * buf, size_t size)
 {
     size_t len = 0;
 
@@ -341,7 +343,7 @@ size_t __write(int handle, const unsigned char * buf, size_t size)
     return len;
 }
 
-size_t __read(int handle, unsigned char * buf, size_t size)
+size_t _read(int handle, unsigned char * buf, size_t size)
 {
     int rx_len = 0;
 

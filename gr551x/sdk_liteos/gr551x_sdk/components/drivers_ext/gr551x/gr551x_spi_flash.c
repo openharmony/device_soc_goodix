@@ -45,6 +45,7 @@
  * DEFINES
  *****************************************************************************************
  */
+#define BIT_0                             0
 #define BIT_8                             8
 #define BIT_16                            16
 #define BIT_24                            24
@@ -184,7 +185,8 @@ static uint32_t spi_flash_device_size(void)
         while (g_qspi_ctl.spi_rcv_done == 0);
         
         if (data[ITEM_0] != 0 && data[ITEM_3] < 0xFF) {
-            flash_size = ((data[ITEM_3] << 24) + (data[ITEM_2] << 16) + (data[ITEM_1] << 8) + (data[ITEM_0] << 0) + 1) / 8;
+            flash_size = ((data[ITEM_3] << BIT_24) + (data[ITEM_2] << BIT_16) +
+                          (data[ITEM_1] << BIT_8) + (data[ITEM_0] << BIT_0) + 1) / BIT_8;
         }
     } else {
         uint8_t data[ITEM_4] = {0};
@@ -205,7 +207,8 @@ static uint32_t spi_flash_device_size(void)
         while (g_qspi_ctl.qspi_rcv_done == 0);
 
         if (data[ITEM_0] != 0 && data[ITEM_3] < 0xFF) {
-            flash_size = ((data[ITEM_3] << 24) + (data[ITEM_2] << 16) + (data[ITEM_1] << 8) + (data[ITEM_0] << 0) + 1) / 8;
+            flash_size = ((data[ITEM_3] << BIT_24) + (data[ITEM_2] << BIT_16) +
+                          (data[ITEM_1] << BIT_8) + (data[ITEM_0] << BIT_0) + 1) / BIT_8;
         }
     }
 
@@ -218,8 +221,8 @@ static uint32_t spim_flash_write(uint32_t address, uint8_t *buffer, uint32_t nby
     uint8_t control_frame[ITEM_4] = {0};
 
     control_frame[ITEM_0] = SPI_FLASH_CMD_PP;
-    control_frame[ITEM_1] = (address >> 16) & 0xFF;
-    control_frame[ITEM_2] = (address >> 8) & 0xFF;
+    control_frame[ITEM_1] = (address >> BIT_16) & 0xFF;
+    control_frame[ITEM_2] = (address >> BIT_8) & 0xFF;
     control_frame[ITEM_3] = address & 0xFF;
 
     g_qspi_ctl.spi_tmt_done = 0;
@@ -255,8 +258,8 @@ static uint32_t spim_flash_read(uint32_t address, uint8_t *buffer, uint32_t nbyt
     uint8_t control_frame[ITEM_4] = {0};
 
     control_frame[ITEM_0] = SPI_FLASH_CMD_READ;
-    control_frame[ITEM_1] = (address >> 16) & 0xFF;
-    control_frame[ITEM_2] = (address >> 8) & 0xFF;
+    control_frame[ITEM_1] = (address >> BIT_16) & 0xFF;
+    control_frame[ITEM_2] = (address >> BIT_8) & 0xFF;
     control_frame[ITEM_3] = address & 0xFF;
 
     g_qspi_ctl.spi_rcv_done = 0;
@@ -419,7 +422,7 @@ bool spi_flash_init(flash_init_t *p_flash_init)
             io_init.pull = APP_IO_PULLUP;
             io_init.pin  = qspi_params.pin_cfg.io_3.pin;
             io_init.mux  = APP_IO_MUX_7;
-            if (app_io_init(qspi_params.pin_cfg.io_3.type , &io_init)) {
+            if (app_io_init(qspi_params.pin_cfg.io_3.type, &io_init)) {
                 return false;
             }
             
@@ -522,8 +525,7 @@ bool spi_flash_chip_erase(void)
 
     spi_flash_write_enable();
     
-    if (FLASH_SPIM_ID == g_flash_init.spi_type)
-    {
+    if (FLASH_SPIM_ID == g_flash_init.spi_type) {
         g_qspi_ctl.spi_tmt_done = 0;
         app_spi_transmit_async(g_qspi_ctl.spi_id, control_frame, sizeof(control_frame));
         while (g_qspi_ctl.spi_tmt_done == 0);

@@ -139,7 +139,7 @@ SECTION_RAM_CODE static void dma_wake_up_ind(void)
 }
 
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
-void dma_wake_up(dma_id_t id)
+void dma_wake_up(int16_t id)
 {
     if (id<0 || id >= DMA_HANDLE_MAX) {
         return;
@@ -191,10 +191,10 @@ void dma_err_callback(struct _dma_handle * hdma)
     }
 }
 
-dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_handler)
+int16_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_handler)
 {
     uint8_t      i  = 0;
-    dma_id_t     id = -1;
+    int16_t     id = -1;
     hal_status_t status = HAL_ERROR;
 
     if (p_params != NULL) {
@@ -223,7 +223,7 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
                 s_dma_pwr_id = pwr_register_sleep_cb(&dma_sleep_cb, APP_DRIVER_DMA_WAPEUP_PRIORITY);
             }
             s_dma_env[i].handle.channel = p_params->channel_number;
-            memcpy_s(&s_dma_env[i].handle.init, sizeof (s_dma_env[i].handle.init),&p_params->init, sizeof(dma_init_t));
+            memcpy_s(&s_dma_env[i].handle.init, sizeof(s_dma_env[i].handle.init), &p_params->init, sizeof(dma_init_t));
             s_dma_env[i].handle.xfer_tfr_callback   = dma_tfr_callback;
             s_dma_env[i].handle.xfer_error_callback = dma_err_callback;
             s_dma_env[i].handle.xfer_abort_callback = NULL;
@@ -243,7 +243,7 @@ dma_id_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_hand
 }
 
 
-uint16_t app_dma_deinit(dma_id_t id)
+uint16_t app_dma_deinit(int16_t id)
 {
     uint8_t i;
 
@@ -272,7 +272,7 @@ uint16_t app_dma_deinit(dma_id_t id)
     return APP_DRV_SUCCESS;
 }
 
-dma_handle_t *app_dma_get_handle(dma_id_t id)
+dma_handle_t *app_dma_get_handle(int16_t id)
 {
     if (id < 0 || id >= DMA_HANDLE_MAX || s_dma_env[id].dma_state == APP_DMA_INVALID) {
         return NULL;
@@ -285,7 +285,7 @@ dma_handle_t *app_dma_get_handle(dma_id_t id)
     return &s_dma_env[id].handle;
 }
 
-uint16_t app_dma_start(dma_id_t id, uint32_t src_address, uint32_t dst_address, uint32_t data_length)
+uint16_t app_dma_start(int16_t id, uint32_t src_address, uint32_t dst_address, uint32_t data_length)
 {
     hal_status_t status = HAL_ERROR;
 

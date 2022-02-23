@@ -133,7 +133,7 @@ app_timer_t* get_next_timer(void)
     int min_handle = TIMER_INVALID_NODE_NUMBER;
     uint32_t min_value = (uint32_t)0xFFFFFFFF;
 
-    for (int idx=0; idx<TIMER_NODE_CNT; idx++) {
+    for (int idx = 0; idx < TIMER_NODE_CNT; idx++) {
         if (s_timer_node[idx].original_delay && (s_timer_node[idx].timer_node_status == APP_TIMER_NODE_START)) {
             if ((s_timer_node[idx].next_trigger_time - s_app_timer_info.apptimer_total_ticks) < min_value) {
                 min_value = s_timer_node[idx].next_trigger_time - s_app_timer_info.apptimer_total_ticks;
@@ -160,7 +160,7 @@ app_timer_t* get_next_timer(void)
 void clear_total_ticks(void)
 {
     if (s_app_timer_info.apptimer_total_ticks >= 0xF0000000) {
-        for (int idx=0; idx<TIMER_NODE_CNT; idx++) {
+        for (int idx = 0; idx < TIMER_NODE_CNT; idx++) {
             if (s_timer_node[idx].original_delay) {
                 s_timer_node[idx].next_trigger_time -= s_app_timer_info.apptimer_total_ticks;
             }
@@ -309,7 +309,7 @@ sdk_err_t app_timer_delete(app_timer_id_t *p_timer_id)
                                                     s_app_timer_info.apptimer_total_ticks;
             s_app_timer_info.p_curr_timer_node = p_timer_node;
             hal_pwr_config_timer_wakeup(PWR_SLP_TIMER_MODE_SINGLE,
-                                        sys_us_2_lpcycles( s_app_timer_info.apptimer_runout_time));
+                                        sys_us_2_lpcycles(s_app_timer_info.apptimer_runout_time));
         } else {
             s_app_timer_info.apptimer_start = APP_TIMER_STOP;
             s_app_timer_info.p_curr_timer_node = NULL;

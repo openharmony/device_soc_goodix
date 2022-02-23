@@ -79,28 +79,28 @@ extern "C" {
  * @{
  */
 /**@brief App Driver error code check. */
-#define APP_DRV_ERR_CODE_CHECK(err_code)            \
-      do                                            \
-      {                                             \
-          if (err_code != APP_DRV_SUCCESS)          \
-          {                                         \
-              return err_code;                      \
-          }                                         \
-      } while (0)                                   \
+#define APP_DRV_ERR_CODE_CHECK(err_code)          \
+    do                                            \
+    {                                             \
+        if ((err_code) != APP_DRV_SUCCESS)        \
+        {                                         \
+            return err_code;                      \
+        }                                         \
+    } while (0)
 /** @} */
 
 /**@addtogroup HAL_DRV_ERR_CODE_CHECK Hal Driver error code check
  * @{
  */
  /**@brief Hal Driver error code check. */
-#define HAL_ERR_CODE_CHECK(err_code)                \
-      do                                            \
-      {                                             \
-          if (HAL_OK != err_code)                   \
-          {                                         \
-              return (uint16_t)err_code;            \
-          }                                         \
-      } while (0)                                   \
+#define HAL_ERR_CODE_CHECK(err_code)              \
+    do                                            \
+    {                                             \
+        if ((err_code) != HAL_OK)                 \
+        {                                         \
+            return (uint16_t)(err_code);          \
+        }                                         \
+    } while (0)
 /** @} */
 /** @} */
 

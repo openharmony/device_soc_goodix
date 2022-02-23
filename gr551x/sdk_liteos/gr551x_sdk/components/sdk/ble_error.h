@@ -46,8 +46,8 @@
   @brief  File that contains error codes.
  */
 
-#ifndef _BLE_SDK_ERROR_H_
-#define _BLE_SDK_ERROR_H_
+#ifndef __BLE_ERROR_H__
+#define __BLE_ERROR_H__
 
 #include <stdint.h>
 
@@ -187,7 +187,6 @@
 #define BLE_GATT_ERR_INVALID_PERM                   0x56 /**< Permission set in service/attribute is invalid. */
 #define BLE_GATT_ERR_BROWSE_NO_ANY_MORE             0x57 /**< GATT browses no any more contents. */
 
-
 /**@brief LL Specific Error. */
 #define BLE_LL_ERR_UNKNOWN_HCI_COMMAND              0x91 /**< Unknown HCI Command. */
 #define BLE_LL_ERR_UNKNOWN_CONNECTION_ID            0x92 /**< Unknown Connection Identifier. */
@@ -253,16 +252,15 @@
  * @defgroup BLE_ERROR_TYPEDEF Typedefs
  * @{
  */
+ #if 1
 /**@brief Callback function error parameter type. */
 typedef uint8_t   ble_err_t;
 /**@brief SDK API result type. */
 typedef uint16_t  sdk_err_t;
+#endif
 /**@} */
 /**@} */
-
 
 #endif
 /** @} */
 /** @} */
-
-

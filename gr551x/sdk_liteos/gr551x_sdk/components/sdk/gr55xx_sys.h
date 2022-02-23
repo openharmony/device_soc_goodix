@@ -46,8 +46,6 @@
  * @brief Definitions and prototypes for the system SDK interface.
 */
 
-
-
 #ifndef __GR55XX_SYS_H__
 #define __GR55XX_SYS_H__
 
@@ -119,7 +117,7 @@ typedef enum {
     PACKAGE_GR5515RGBD      = 1,    /**< BGA68 package. */
     PACKAGE_GR5515GGBD      = 2,    /**< BGA55 package. */
     PACKAGE_GR5515IGND      = 3,    /**< QFN56 + 1024K flash package. */
-    PACKAGE_GR5515I0ND      = 4,    /**< QFN56 + no flash package, support external high voltage flash only*/
+    PACKAGE_GR5515I0ND      = 4,    /**< QFN56 + no flash package, support external high voltage flash only */
     PACKAGE_GR5513BEND      = 5,    /**< QFN40 + 128KB RAM + 512KB flash packet. */
     PACKAGE_GR5515BEND      = 6,    /**< QFN40 + 256KB RAM + 512KB flash packet. */
     PACKAGE_GR5513BENDU     = 7,    /**< QFN40 + 256KB RAM + 512KB flash packet @1.7V ~ 3.6V. */
@@ -164,26 +162,26 @@ typedef struct {
 
 /** @brief ADC trim parameter information definition. */
 typedef struct {
-    uint16_t adc_temp;                /**< ADC TEMP. */
-    uint16_t slope_int_0p8;           /**< Internal reference 0.8v. */
-    uint16_t offset_int_0p8;          /**< Internal reference 0.8v. */
-    uint16_t slope_int_1p2;           /**< Internal reference 1.2v. */
-    uint16_t offset_int_1p2;          /**< Internal reference 1.2v. */
-    uint16_t slope_int_1p6;           /**< Internal reference 1.6v. */
-    uint16_t offset_int_1p6;          /**< Internal reference 1.6v. */
-    uint16_t slope_int_2p0;           /**< Internal reference 2.0v. */
-    uint16_t offset_int_2p0;          /**< Internal reference 2.0v. */
-    uint16_t slope_ext_1p0;           /**< External reference 1.0v. */
-    uint16_t offset_ext_1p0;          /**< External reference 1.0v. */
+    uint16_t adc_temp;                /** < ADC TEMP. */
+    uint16_t slope_int_0p8;           /** < Internal reference 0.8v. */
+    uint16_t offset_int_0p8;          /** < Internal reference 0.8v. */
+    uint16_t slope_int_1p2;           /** < Internal reference 1.2v. */
+    uint16_t offset_int_1p2;          /** < Internal reference 1.2v. */
+    uint16_t slope_int_1p6;           /** < Internal reference 1.6v. */
+    uint16_t offset_int_1p6;          /** < Internal reference 1.6v. */
+    uint16_t slope_int_2p0;           /** < Internal reference 2.0v. */
+    uint16_t offset_int_2p0;          /** < Internal reference 2.0v. */
+    uint16_t slope_ext_1p0;           /** < External reference 1.0v. */
+    uint16_t offset_ext_1p0;          /** < External reference 1.0v. */
 } adc_trim_info_t;
 
 /** @brief PMU trim parameter information definition. */
 typedef struct {
-    uint8_t  io_ldo_bypass;    /**< IO LDO bypass */
-    uint8_t  io_ldo_vout;      /**< IO LDO Vout. */
-    uint8_t  dig_ldo_64m;      /**< DIG LDO 64m. */
-    uint8_t  dig_ldo_16m;      /**< DIG LDO 16m */
-    uint8_t  dcdc_vout;        /**< DCDC Vout */
+    uint8_t io_ldo_bypass;    /** < IO LDO bypass */
+    uint8_t io_ldo_vout;      /** < IO LDO Vout. */
+    uint8_t dig_ldo_64m;      /** < DIG LDO 64m. */
+    uint8_t dig_ldo_16m;      /** < DIG LDO 16m */
+    uint8_t dcdc_vout;        /** < DCDC Vout */
 } pmu_trim_info_t;
 
 /** @} */
@@ -236,7 +234,7 @@ void *sys_malloc(uint32_t size);
  * @param[in] p_mem: Pointer to memory block.
  *****************************************************************************************
  */
-void sys_free(void *p_mem);
+void sys_free(uint8_t *p_mem);
 
 /**
  *****************************************************************************************
@@ -493,8 +491,8 @@ uint32_t sys_us_2_lpcycles(uint32_t us);
  * The function converts a duration in lp cycles into a duration in half μs, according to the
  * low power clock frequency (32768Hz or 32000Hz).
  * @param[in]     lpcycles:    Duration in lp cycles.
- * @param[in,out] error_corr:  Insert and retrieve error created by truncating the LP Cycle Time to a half μs
- *                             (in half μs).
+ * @param[in,out] error_corr:  Insert and retrieve error created by truncating the LP Cycle
+ *                             Time to a half μs (in half μs).
  *
  * @return Duration in half μs
  ****************************************************************************************
@@ -513,7 +511,6 @@ uint32_t sys_lpcycles_2_hus(uint32_t lpcycles, uint32_t *error_corr);
  *****************************************************************************************
  */
 uint16_t sys_ble_heartbeat_period_set(uint32_t period_hus);
-
 
 /**
  *****************************************************************************************
@@ -726,10 +723,6 @@ uint32_t sys_reverse_word(uint32_t value);
  ****************************************************************************************
  */
 uint16_t sys_reverse_hword(uint16_t value);
-
-
-
-
 
 /** @} */
 #endif

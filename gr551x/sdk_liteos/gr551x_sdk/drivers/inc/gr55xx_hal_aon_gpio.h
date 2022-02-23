@@ -55,6 +55,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_aon_gpio.h"
 #include "gr55xx_hal_def.h"
+/* Include AON GPIO HAL Extended module */
+#include "gr55xx_hal_aon_gpio_ex.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -254,9 +256,6 @@ typedef struct _aon_gpio_callback {
 /** @} */
 
 /** @} */
-
-/* Include AON GPIO HAL Extended module */
-#include "gr55xx_hal_aon_gpio_ex.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_AON_GPIO_DRIVER_FUNCTIONS Functions

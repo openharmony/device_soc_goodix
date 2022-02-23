@@ -137,7 +137,7 @@ void system_lp_counter_set(uint8_t cnt_a, uint8_t cnt_b);
 
 /**
  ****************************************************************************************
- * @brief  Set Time to wakeup oscillator before BLE Activity.
+ * @brief : Set Time to wakeup oscillator before BLE Activity.
  * @param[in] run_mode :  run mode.
  * @param[in] osc_us   :  Time Reserved for wakeup oscillator(unit: us).
  * @retval :  void
@@ -147,7 +147,7 @@ void ble_wakeup_osc_time_set(run_mode_t run_mode, uint16_t osc_us);
 
 /**
  ****************************************************************************************
- * @brief  Get Time to wakeup oscillator before BLE Activity.
+ * @brief : Get Time to wakeup oscillator before BLE Activity.
  * @param[in] run_mode :  run mode.
  * @retval :  osc_us   :  Time Reserved for wakeup oscillator(unit: us).
  ****************************************************************************************
@@ -226,7 +226,7 @@ void platform_clock_init(mcu_clock_type_t sys_clock, sdk_clock_type_t clock, uin
  ****************************************************************************************
  */
 void platform_clock_init_rng(mcu_clock_type_t sys_clock, sdk_clock_type_t clock,
-                                        uint16_t accuracy, uint16_t xo_offset);
+                             uint16_t accuracy, uint16_t xo_offset);
 
 /**
  ****************************************************************************************
@@ -338,7 +338,7 @@ uint32_t warm_boot_get_exflash_readid_delay(void);
  * @retval :  void
  ****************************************************************************************
  */
-void pmu_calibration_handler(void* p_arg);
+void pmu_calibration_handler(uint8_t* p_arg);
 
 
 /**

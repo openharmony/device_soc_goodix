@@ -1959,7 +1959,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_rtfr(dma_regs_t *DMAx, uint32_t c
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_rblk(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[2], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[ITEM_2], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -1983,7 +1983,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_rblk(dma_regs_t *DMAx, uint32_t c
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_rsrct(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[4], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[ITEM_4], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2007,7 +2007,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_rsrct(dma_regs_t *DMAx, uint32_t 
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_rdstt(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[6], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[ITEM_6], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2031,7 +2031,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_rdstt(dma_regs_t *DMAx, uint32_t 
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_rerr(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[8], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.RAW_CH_EVT[ITEM_8], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2100,7 +2100,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr2(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << 2)) == (1 << 2));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << ITEM_2)) == (1 << ITEM_2));
 }
 
 /**
@@ -2115,7 +2115,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr3(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << 3)) == (1 << 3));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << ITEM_3)) == (1 << ITEM_3));
 }
 
 /**
@@ -2130,7 +2130,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr4(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << 4)) == (1 << 4));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << ITEM_4)) == (1 << ITEM_4));
 }
 
 /**
@@ -2145,7 +2145,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr5(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << 5)) == (1 << 5));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << ITEM_5)) == (1 << ITEM_5));
 }
 
 /**
@@ -2160,7 +2160,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr6(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << 6)) == (1 << 6));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << ITEM_6)) == (1 << ITEM_6));
 }
 
 /**
@@ -2175,7 +2175,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr7(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << 7)) == (1 << 7));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[0], (1 << ITEM_7)) == (1 << ITEM_7));
 }
 
 /**
@@ -2199,7 +2199,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_tfr7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2214,7 +2214,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk(dma_regs_t *DMAx, uint32_t ch
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk0(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 0)) == (1 << 0));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << 0)) == (1 << 0));
 }
 
 /**
@@ -2229,7 +2229,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk1(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 1)) == (1 << 1));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << 1)) == (1 << 1));
 }
 
 /**
@@ -2244,7 +2244,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk2(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 2)) == (1 << 2));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << ITEM_2)) == (1 << ITEM_2));
 }
 
 /**
@@ -2259,7 +2259,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk3(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 3)) == (1 << 3));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << ITEM_3)) == (1 << ITEM_3));
 }
 
 /**
@@ -2274,7 +2274,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk4(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 4)) == (1 << 4));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << ITEM_4)) == (1 << ITEM_4));
 }
 
 /**
@@ -2289,7 +2289,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk5(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 5)) == (1 << 5));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << ITEM_5)) == (1 << ITEM_5));
 }
 
 /**
@@ -2304,7 +2304,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk6(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 6)) == (1 << 6));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << ITEM_6)) == (1 << ITEM_6));
 }
 
 /**
@@ -2319,7 +2319,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk7(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[2], (1 << 7)) == (1 << 7));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_2], (1 << ITEM_7)) == (1 << ITEM_7));
 }
 
 /**
@@ -2343,7 +2343,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_blk7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2358,7 +2358,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct(dma_regs_t *DMAx, uint32_t c
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct0(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 0)) == (1 << 0));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << 0)) == (1 << 0));
 }
 
 /**
@@ -2373,7 +2373,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct1(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 1)) == (1 << 1));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << 1)) == (1 << 1));
 }
 
 /**
@@ -2388,7 +2388,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct2(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 2)) == (1 << 2));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << ITEM_2)) == (1 << ITEM_2));
 }
 
 /**
@@ -2403,7 +2403,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct3(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 3)) == (1 << 3));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << ITEM_3)) == (1 << ITEM_3));
 }
 
 /**
@@ -2418,7 +2418,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct4(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 4)) == (1 << 4));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << ITEM_4)) == (1 << ITEM_4));
 }
 
 /**
@@ -2433,7 +2433,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct5(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 5)) == (1 << 5));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << ITEM_5)) == (1 << ITEM_5));
 }
 
 /**
@@ -2448,7 +2448,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct6(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 6)) == (1 << 6));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << ITEM_6)) == (1 << ITEM_6));
 }
 
 /**
@@ -2463,7 +2463,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct7(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[4], (1 << 7)) == (1 << 7));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_4], (1 << ITEM_7)) == (1 << ITEM_7));
 }
 
 /**
@@ -2487,7 +2487,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_srct7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2502,7 +2502,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt(dma_regs_t *DMAx, uint32_t c
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt0(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 0)) == (1 << 0));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << 0)) == (1 << 0));
 }
 
 /**
@@ -2517,7 +2517,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt1(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 1)) == (1 << 1));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << 1)) == (1 << 1));
 }
 
 /**
@@ -2532,7 +2532,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt2(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 2)) == (1 << 2));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << ITEM_2)) == (1 << ITEM_2));
 }
 
 /**
@@ -2547,7 +2547,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt3(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 3)) == (1 << 3));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << ITEM_3)) == (1 << ITEM_3));
 }
 
 /**
@@ -2562,7 +2562,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt4(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 4)) == (1 << 4));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << ITEM_4)) == (1 << ITEM_4));
 }
 
 /**
@@ -2577,7 +2577,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt5(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 5)) == (1 << 5));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << ITEM_5)) == (1 << ITEM_5));
 }
 
 /**
@@ -2592,7 +2592,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt6(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 6)) == (1 << 6));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << ITEM_6)) == (1 << ITEM_6));
 }
 
 /**
@@ -2607,7 +2607,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt7(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[6], (1 << 7)) == (1 << 7));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_6], (1 << ITEM_7)) == (1 << ITEM_7));
 }
 
 /**
@@ -2631,7 +2631,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_dstt7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -2646,7 +2646,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err(dma_regs_t *DMAx, uint32_t ch
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err0(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 0)) == (1 << 0));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << 0)) == (1 << 0));
 }
 
 /**
@@ -2661,7 +2661,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err1(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 1)) == (1 << 1));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << 1)) == (1 << 1));
 }
 
 /**
@@ -2676,7 +2676,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err2(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 2)) == (1 << 2));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << ITEM_2)) == (1 << ITEM_2));
 }
 
 /**
@@ -2691,7 +2691,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err3(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 3)) == (1 << 3));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << ITEM_3)) == (1 << ITEM_3));
 }
 
 /**
@@ -2706,7 +2706,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err4(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 4)) == (1 << 4));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << ITEM_4)) == (1 << ITEM_4));
 }
 
 /**
@@ -2721,7 +2721,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err5(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 5)) == (1 << 5));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << ITEM_5)) == (1 << ITEM_5));
 }
 
 /**
@@ -2736,7 +2736,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err6(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 6)) == (1 << 6));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << ITEM_6)) == (1 << ITEM_6));
 }
 
 /**
@@ -2751,7 +2751,7 @@ __STATIC_INLINE uint32_t ll_dma_is_active_flag_err6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE uint32_t ll_dma_is_active_flag_err7(dma_regs_t *DMAx)
 {
-    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[8], (1 << 7)) == (1 << 7));
+    return (READ_BITS(DMAx->EVENT.STATUS_CH_EVT[ITEM_8], (1 << ITEM_7)) == (1 << ITEM_7));
 }
 
 /**
@@ -2820,7 +2820,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_tfr2(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << 2));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << ITEM_2));
 }
 
 /**
@@ -2835,7 +2835,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_tfr3(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << 3));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << ITEM_3));
 }
 
 /**
@@ -2850,7 +2850,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_tfr4(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << 4));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << ITEM_4));
 }
 
 /**
@@ -2865,7 +2865,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_tfr5(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << 5));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << ITEM_5));
 }
 
 /**
@@ -2880,7 +2880,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_tfr6(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << 6));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << ITEM_6));
 }
 
 /**
@@ -2895,7 +2895,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_tfr7(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << 7));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[0], (1 << ITEM_7));
 }
 
 /**
@@ -2919,7 +2919,7 @@ __STATIC_INLINE void ll_dma_clear_flag_tfr7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << channel));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << channel));
 }
 
 /**
@@ -2934,7 +2934,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk0(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 0));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << 0));
 }
 
 /**
@@ -2949,7 +2949,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk1(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 1));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << 1));
 }
 
 /**
@@ -2964,7 +2964,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk2(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 2));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << ITEM_2));
 }
 
 /**
@@ -2979,7 +2979,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk3(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 3));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << ITEM_3));
 }
 
 /**
@@ -2994,7 +2994,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk4(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 4));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << ITEM_4));
 }
 
 /**
@@ -3009,7 +3009,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk5(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 5));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << ITEM_5));
 }
 
 /**
@@ -3024,7 +3024,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk6(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 6));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << ITEM_6));
 }
 
 /**
@@ -3039,7 +3039,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_blk7(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[2], (1 << 7));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_2], (1 << ITEM_7));
 }
 
 /**
@@ -3063,7 +3063,7 @@ __STATIC_INLINE void ll_dma_clear_flag_blk7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << channel));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << channel));
 }
 
 /**
@@ -3078,7 +3078,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct0(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 0));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << 0));
 }
 
 /**
@@ -3093,7 +3093,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct1(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 1));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << 1));
 }
 
 /**
@@ -3108,7 +3108,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct2(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 2));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << ITEM_2));
 }
 
 /**
@@ -3123,7 +3123,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct3(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 3));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << ITEM_3));
 }
 
 /**
@@ -3138,7 +3138,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct4(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 4));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << ITEM_4));
 }
 
 /**
@@ -3153,7 +3153,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct5(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 5));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << ITEM_5));
 }
 
 /**
@@ -3168,7 +3168,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct6(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 6));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << ITEM_6));
 }
 
 /**
@@ -3183,7 +3183,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_srct7(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[4], (1 << 7));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_4], (1 << ITEM_7));
 }
 
 /**
@@ -3207,7 +3207,7 @@ __STATIC_INLINE void ll_dma_clear_flag_srct7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << channel));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << channel));
 }
 
 /**
@@ -3222,7 +3222,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt0(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 0));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << 0));
 }
 
 /**
@@ -3237,7 +3237,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt1(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 1));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << 1));
 }
 
 /**
@@ -3252,7 +3252,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt2(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 2));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << ITEM_2));
 }
 
 /**
@@ -3267,7 +3267,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt3(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 3));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << ITEM_3));
 }
 
 /**
@@ -3282,7 +3282,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt4(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 4));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << ITEM_4));
 }
 
 /**
@@ -3297,7 +3297,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt5(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 5));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << ITEM_5));
 }
 
 /**
@@ -3312,7 +3312,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt6(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 6));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << ITEM_6));
 }
 
 /**
@@ -3327,7 +3327,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_dstt7(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[6], (1 << 7));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_6], (1 << ITEM_7));
 }
 
 /**
@@ -3351,7 +3351,7 @@ __STATIC_INLINE void ll_dma_clear_flag_dstt7(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << channel));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << channel));
 }
 
 /**
@@ -3366,7 +3366,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err0(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 0));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << 0));
 }
 
 /**
@@ -3381,7 +3381,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err0(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err1(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 1));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << 1));
 }
 
 /**
@@ -3396,7 +3396,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err1(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err2(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 2));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << ITEM_2));
 }
 
 /**
@@ -3411,7 +3411,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err2(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err3(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 3));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << ITEM_3));
 }
 
 /**
@@ -3426,7 +3426,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err3(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err4(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 4));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << ITEM_4));
 }
 
 /**
@@ -3441,7 +3441,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err4(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err5(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 5));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << ITEM_5));
 }
 
 /**
@@ -3456,7 +3456,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err5(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err6(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 6));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << ITEM_6));
 }
 
 /**
@@ -3471,7 +3471,7 @@ __STATIC_INLINE void ll_dma_clear_flag_err6(dma_regs_t *DMAx)
   */
 __STATIC_INLINE void ll_dma_clear_flag_err7(dma_regs_t *DMAx)
 {
-    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[8], (1 << 7));
+    WRITE_REG(DMAx->EVENT.CLEAR_CH_EVT[ITEM_8], (1 << ITEM_7));
 }
 
 /** @} */
@@ -3525,7 +3525,7 @@ __STATIC_INLINE void ll_dma_enable_it_tfr(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_enable_it_blk(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[2], (1 << (channel + DMA_MASK_BLK_WE_Pos)) + (1 << channel));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_2], (1 << (channel + DMA_MASK_BLK_WE_Pos)) + (1 << channel));
 }
 
 /**
@@ -3549,7 +3549,7 @@ __STATIC_INLINE void ll_dma_enable_it_blk(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_enable_it_srct(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[4], (1 << (channel + DMA_MASK_SRC_TRN_WE_Pos)) + (1 << channel));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_4], (1 << (channel + DMA_MASK_SRC_TRN_WE_Pos)) + (1 << channel));
 }
 
 /**
@@ -3573,7 +3573,7 @@ __STATIC_INLINE void ll_dma_enable_it_srct(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_enable_it_dstt(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[6], (1 << (channel + DMA_MASK_DST_TRN_WE_Pos)) + (1 << channel));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_6], (1 << (channel + DMA_MASK_DST_TRN_WE_Pos)) + (1 << channel));
 }
 
 /**
@@ -3597,7 +3597,7 @@ __STATIC_INLINE void ll_dma_enable_it_dstt(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_enable_it_err(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[8], (1 << (channel + DMA_MASK_ERR_WE_Pos)) + (1 << channel));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_8], (1 << (channel + DMA_MASK_ERR_WE_Pos)) + (1 << channel));
 }
 
 /**
@@ -3645,7 +3645,7 @@ __STATIC_INLINE void ll_dma_disable_it_tfr(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_disable_it_blk(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[2], (1 << (channel + DMA_MASK_BLK_WE_Pos)));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_2], (1 << (channel + DMA_MASK_BLK_WE_Pos)));
 }
 
 /**
@@ -3669,7 +3669,7 @@ __STATIC_INLINE void ll_dma_disable_it_blk(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_disable_it_srct(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[4], (1 << (channel + DMA_MASK_SRC_TRN_WE_Pos)));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_4], (1 << (channel + DMA_MASK_SRC_TRN_WE_Pos)));
 }
 
 /**
@@ -3693,7 +3693,7 @@ __STATIC_INLINE void ll_dma_disable_it_srct(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_disable_it_dstt(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[6], (1 << (channel + DMA_MASK_DST_TRN_WE_Pos)));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_6], (1 << (channel + DMA_MASK_DST_TRN_WE_Pos)));
 }
 
 /**
@@ -3717,7 +3717,7 @@ __STATIC_INLINE void ll_dma_disable_it_dstt(dma_regs_t *DMAx, uint32_t channel)
   */
 __STATIC_INLINE void ll_dma_disable_it_err(dma_regs_t *DMAx, uint32_t channel)
 {
-    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[8], (1 << (channel + DMA_MASK_ERR_WE_Pos)));
+    WRITE_REG(DMAx->EVENT.MASK_CH_EVT[ITEM_8], (1 << (channel + DMA_MASK_ERR_WE_Pos)));
 }
 
 /**
@@ -3765,7 +3765,7 @@ __STATIC_INLINE uint32_t ll_dma_is_enable_it_tfr(dma_regs_t *DMAx, uint32_t chan
   */
 __STATIC_INLINE uint32_t ll_dma_is_enable_it_blk(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[2], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[ITEM_2], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -3789,7 +3789,7 @@ __STATIC_INLINE uint32_t ll_dma_is_enable_it_blk(dma_regs_t *DMAx, uint32_t chan
   */
 __STATIC_INLINE uint32_t ll_dma_is_enable_it_srct(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[4], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[ITEM_4], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -3813,7 +3813,7 @@ __STATIC_INLINE uint32_t ll_dma_is_enable_it_srct(dma_regs_t *DMAx, uint32_t cha
   */
 __STATIC_INLINE uint32_t ll_dma_is_enable_it_dstt(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[6], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[ITEM_6], (1 << channel)) == (1 << channel));
 }
 
 /**
@@ -3837,7 +3837,7 @@ __STATIC_INLINE uint32_t ll_dma_is_enable_it_dstt(dma_regs_t *DMAx, uint32_t cha
   */
 __STATIC_INLINE uint32_t ll_dma_is_enable_it_err(dma_regs_t *DMAx, uint32_t channel)
 {
-    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[8], (1 << channel)) == (1 << channel));
+    return (READ_BITS(DMAx->EVENT.MASK_CH_EVT[ITEM_8], (1 << channel)) == (1 << channel));
 }
 
 /**

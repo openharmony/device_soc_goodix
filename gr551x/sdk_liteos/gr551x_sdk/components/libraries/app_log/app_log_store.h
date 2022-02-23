@@ -166,5 +166,3 @@ void app_log_store_schedule(void);
 /** @} */
 #endif
 #endif
-
-

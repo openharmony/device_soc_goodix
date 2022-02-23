@@ -107,7 +107,7 @@ struct spi_env_t {
     spi_handle_t            handle;
     app_spi_mode_t          use_mode;
     app_spi_pin_cfg_t       pin_cfg;
-    dma_id_t                dma_id[2];
+    int16_t                 dma_id[2];
     app_spi_state_t         spi_state;
     bool                    start_flag;
     volatile uint8_t        rx_done;
@@ -489,7 +489,6 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
     if (s_sleep_cb_registered_flag == false) { // register sleep callback
         s_sleep_cb_registered_flag = true;
         s_spi_pwr_id = pwr_register_sleep_cb(&spi_sleep_cb, APP_DRIVER_SPI_WAPEUP_PRIORITY);
-
         if (s_spi_pwr_id < 0) {
             return APP_DRV_ERR_INVALID_PARAM;
         }
@@ -556,8 +555,8 @@ uint16_t app_spi_deinit(app_spi_id_t id)
     GLOBAL_EXCEPTION_DISABLE();
     if (s_spi_env[APP_SPI_ID_SLAVE].spi_state == APP_SPI_INVALID &&
        s_spi_env[APP_SPI_ID_MASTER].spi_state == APP_SPI_INVALID) {
-         pwr_unregister_sleep_cb(s_spi_pwr_id);
-         s_sleep_cb_registered_flag = false;
+        pwr_unregister_sleep_cb(s_spi_pwr_id);
+        s_sleep_cb_registered_flag = false;
     }
     GLOBAL_EXCEPTION_ENABLE();
 

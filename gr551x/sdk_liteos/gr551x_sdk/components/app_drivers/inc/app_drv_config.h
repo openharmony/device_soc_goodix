@@ -139,10 +139,6 @@ typedef enum {
 } wakeup_priority_t;
 /** @} */
 
-#ifndef APP_DRIVER_WAKEUP_CALL_FUN
-// #define APP_DRIVER_WAKEUP_CALL_FUN
-#endif
-
 #ifdef __cplusplus
 }
 #endif

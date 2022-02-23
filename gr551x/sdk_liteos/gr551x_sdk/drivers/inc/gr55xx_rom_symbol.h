@@ -39,10 +39,27 @@
 #define __GR55xx_ROM_SYMBOL_H__
 
 #include "gr55xx_hal.h"
+#include "gr55xx_nvds.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern exflash_handle_t g_exflash_handle;
+extern uint32_t *SVC_Table;
+extern uint8_t *g_nvds_buf;
+
+uint16_t gdx_lcp_buf_init(uint32_t buf_addr);
+uint8_t nvds_put_patch(NvdsTag_t tag, uint16_t len, const uint8_t *p_buf);
+uint8_t nvds_put_rom(NvdsTag_t tag, uint16_t len, const uint8_t *p_buf);
+void dfu_cmd_handler_replace_for_encrypt(void);
+uint32_t get_patch_rep_addr(uint32_t ori_func);
+void __main(void);
+void system_platform_init(void);
+int main(void);
+void $Super$$main(void);
+void __iar_program_start(void);
+void __iar_data_init3(void);
 
 void hal_pwr_config_timer_wakeup_ext(uint8_t timer_mode, uint32_t load_count);
 void hal_pwr_register_timer_elaspsed_handler(pwr_slp_elapsed_handler_t pwr_slp_elapsed_hander);

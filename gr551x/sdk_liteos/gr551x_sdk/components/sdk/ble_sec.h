@@ -49,8 +49,8 @@
 #ifndef __BLE_SEC_H__
 #define __BLE_SEC_H__
 
-#include "ble_error.h"
 #include <stdbool.h>
+#include "ble_error.h"
 
 /** @addtogroup BLE_SM_DEFINES Defines
  * @{
@@ -91,7 +91,7 @@ typedef enum {
 } sec_io_cap_t;
 
 /** @brief SEC Encryption Request Type.
-  *@note These types indicate some operations need to interact with app during pair process.
+  * @note These types indicate some operations need to interact with app during pair process.
  */
 typedef enum {
     PAIR_REQ, /**< Pair request. Apps need to decide whether to accept this request. */

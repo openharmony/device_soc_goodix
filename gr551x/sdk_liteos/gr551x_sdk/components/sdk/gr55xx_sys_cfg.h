@@ -54,7 +54,9 @@
 /** @addtogroup GR55XX_SYS_CFG_DEFINES Defines
  * @{
  */
-#define __ARRAY_EMPTY  /**< Empty Array. */
+#if 1
+#define __ARRAY_EMPTY  /** < Empty Array. */
+#endif
 /** @} */
 
 /**
@@ -68,8 +70,7 @@ typedef struct {
     uint16_t twosc;                  /**< Twosc delay. */
     uint16_t twext;                  /**< Twext delay. */
     uint16_t twrm;                   /**< Twrm delay. */
-    uint16_t sleep_algo_dur;         /**< Duration of sleep and wake-up algorithm (depends on CPU speed)
-                                          expressed in half us.. */
+    uint16_t sleep_algo_dur;         /**< Duration of sleep and wake-up algorithm (depends on CPU speed) expressed in half us.. */
 } ble_slp_config_t ;
 
 /** @brief BLE Scheduler configure defination. */

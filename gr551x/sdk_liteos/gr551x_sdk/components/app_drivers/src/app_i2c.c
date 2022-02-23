@@ -82,7 +82,7 @@ struct i2c_env_t {
     app_i2c_mode_t          use_mode;
     app_i2c_role_t          role;
     app_i2c_pin_cfg_t       pin_cfg;
-    dma_id_t                dma_id[2];
+    int16_t                dma_id[2];
     app_i2c_state_t         i2c_state;
     bool                    start_flag;
 #ifdef ENV_RTOS_USE_SEMP
@@ -186,7 +186,7 @@ SECTION_RAM_CODE static void i2c_wake_up_ind(void)
             hal_i2c_resume_reg(&s_i2c_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
 
-            if(s_i2c_env[i].use_mode.type != APP_I2C_TYPE_POLLING) {
+            if (s_i2c_env[i].use_mode.type != APP_I2C_TYPE_POLLING) {
                 hal_nvic_clear_pending_irq(s_i2c_irq[i]);
                 hal_nvic_enable_irq(s_i2c_irq[i]);
             }
@@ -390,10 +390,9 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
     hal_err_code = hal_i2c_init(&s_i2c_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    if (s_sleep_cb_registered_flag == false) { // register sleep callback 
+    if (s_sleep_cb_registered_flag == false) { // register sleep callback
         s_sleep_cb_registered_flag = true;
         s_i2c_pwr_id = pwr_register_sleep_cb(&i2c_sleep_cb, APP_DRIVER_I2C_WAPEUP_PRIORITY);
-
         if (s_i2c_pwr_id < 0) {
             return APP_DRV_ERR_INVALID_PARAM;
         }
@@ -450,7 +449,7 @@ uint16_t app_i2c_deinit(app_i2c_id_t id)
     s_i2c_env[id].start_flag = false;
 
     GLOBAL_EXCEPTION_DISABLE();
-    if (s_i2c_env[APP_I2C_ID_0].i2c_state == APP_I2C_INVALID && 
+    if (s_i2c_env[APP_I2C_ID_0].i2c_state == APP_I2C_INVALID &&
         s_i2c_env[APP_I2C_ID_1].i2c_state == APP_I2C_INVALID) {
         pwr_unregister_sleep_cb(s_i2c_pwr_id);
         s_sleep_cb_registered_flag = false;
@@ -663,7 +662,7 @@ uint16_t app_i2c_transmit_sync(app_i2c_id_t id, uint16_t target_address, \
     i2c_wake_up(id);
 #endif
 
-    switch(s_i2c_env[id].role) {
+    switch (s_i2c_env[id].role) {
         case APP_I2C_ROLE_MASTER:
             err_code = hal_i2c_master_transmit(&s_i2c_env[id].handle, target_address, p_data, size, timeout);
             break;

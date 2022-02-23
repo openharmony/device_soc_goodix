@@ -50,11 +50,9 @@
 #define __BLE_PRF_H__
 
 #include "ble_error.h"
-#include "ble_att.h"
 #include "ble_gatts.h"
 #include "ble_gattc.h"
 #include "ble_gatt.h"
-
 
 /**
   @addtogroup BLE_PRF_COMMON Profile Common
@@ -112,7 +110,6 @@ typedef struct {
 
 /** @} */
 
-
 /**
   @addtogroup BLE_PRF_SERVER Profile Server
   @{
@@ -158,13 +155,13 @@ typedef struct {
  */
 typedef struct {
     /**< Read attribute value callback which is used when value is present in user space.
-         Function @ref ble_gatts_read_cfm should be called to send attribute value to stack.*/
+         Function @ref ble_gatts_read_cfm should be called to send attribute value to stack. */
     void (*app_gatts_read_cb)(uint8_t conidx, const gatts_read_req_cb_t *p_read_req);
     /**< Write attribute value callback. Function @ref ble_gatts_write_cfm should be called to
-         send write attribute value status to stack no matter the value is in user's zone or BLE stack.*/
+         send write attribute value status to stack no matter the value is in user's zone or BLE stack. */
     void (*app_gatts_write_cb)(uint8_t conidx, const gatts_write_req_cb_t *p_write_req);
     /**< Prepare write value callback function.Function @ref ble_gatts_prepare_write_cfm should be called to
-         send prepare write attribute value status to stack no matter the value is in user's zone or BLE stack.*/
+         send prepare write attribute value status to stack no matter the value is in user's zone or BLE stack. */
     void (*app_gatts_prep_write_cb)(uint8_t conidx, const gatts_prep_write_req_cb_t *p_prep_req);
     /**< Notification or indication callback function. */
     void (*app_gatts_ntf_ind_cb)(uint8_t conidx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind);
@@ -209,8 +206,6 @@ uint16_t ble_server_prf_add(const prf_server_info_t *p_server_prf_info);
 
 /** @} */
 
-
-
 /**
   @addtogroup BLE_PRF_CLIENT Profile Client
   @{
@@ -236,18 +231,17 @@ typedef enum {
     GATTC_EVT_UNREGISTER, /**< GATT client event unregister. */
 } gattc_prf_reg_evt_t;
 
-
 /** @brief GATTC Profile callback Structures. */
 typedef struct {
     /**< Primary Service Discovery Response callback. */
     void (*app_gattc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status,
-                                   const ble_gattc_srvc_disc_t * p_prim_srvc_disc);
+                                   const ble_gattc_srvc_disc_t *p_prim_srvc_disc);
     /**< Relationship Discovery Response callback. */
     void (*app_gattc_inc_srvc_disc_cb)(uint8_t conn_idx, uint8_t status,
-                                       const ble_gattc_incl_disc_t * p_inc_srvc_disc);
+                                       const ble_gattc_incl_disc_t *p_inc_srvc_disc);
     /**< Characteristic Discovery Response callback. */
     void (*app_gattc_char_disc_cb)(uint8_t conn_idx, uint8_t status,
-                                   const ble_gattc_char_disc_t * p_char_disc);
+                                   const ble_gattc_char_disc_t *p_char_disc);
     /**< Descriptor Discovery Response callback. */
     void (*app_gattc_char_desc_disc_cb)(uint8_t conn_idx, uint8_t status,
                                         const ble_gattc_char_desc_disc_t *p_char_desc_disc);
@@ -259,8 +253,7 @@ typedef struct {
                                uint16_t handle);
     /**< Handle Value Notification/Indication Event callback. */
     void (*app_gattc_ntf_ind_cb)(uint8_t conn_idx,
-                                 const ble_gattc_ntf_ind_t
-                                 *p_ntf_ind);
+                                 const ble_gattc_ntf_ind_t *p_ntf_ind);
     /**< Service found callback during browsing procedure. */
     void (*app_gattc_srvc_browse_cb)(uint8_t conn_idx, uint8_t status,
                                      const ble_gattc_browse_srvc_t *p_browse_srvc);
@@ -280,7 +273,6 @@ typedef struct {
 } prf_client_info_t;
 
 /** @} */
-
 
 /**
   @addtogroup BLE_PRF_CLIENT_FUNCTIONS Functions
@@ -306,7 +298,6 @@ typedef struct {
  ****************************************************************************************
  */
 uint16_t ble_client_prf_add(const prf_client_info_t *p_client_prf_info, uint8_t *p_client_prf_id);
-
 
 /**
  ****************************************************************************************
@@ -379,7 +370,7 @@ uint16_t ble_gattc_prf_primary_services_discover(uint8_t prf_id, uint8_t conn_id
  ****************************************************************************************
  */
 uint16_t ble_gattc_prf_included_services_discover(uint8_t prf_id, uint8_t conn_idx, uint16_t start_hdl,
-        uint16_t end_hdl);
+                                                  uint16_t end_hdl);
 
 /**
  ****************************************************************************************

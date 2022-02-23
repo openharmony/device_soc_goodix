@@ -72,8 +72,7 @@ extern "C" {
 /**
   * @brief HAL I2S State Enumerations definition
   */
-typedef enum
-{
+typedef enum {
     HAL_I2S_STATE_RESET        = 0x00,    /**< Peripheral not initialized                          */
     HAL_I2S_STATE_READY        = 0x01,    /**< Peripheral initialized and ready for use            */
     HAL_I2S_STATE_BUSY         = 0x02,    /**< An internal process is ongoing                      */
