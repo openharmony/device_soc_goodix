@@ -41,24 +41,6 @@
 */
 #include "utility.h"
 
-#define ZERO      0
-#define ONE       1
-#define TWO       2
-#define THREE     3
-#define FOUR      4
-#define FIVE      5
-#define SIX       6
-#define SEVEN     7
-#define EIGHT     8
-
-#define RIGHT_MOV_8BIT    8
-#define RIGHT_MOV_16BIT   16
-#define RIGHT_MOV_24BIT   24
-#define RIGHT_MOV_32BIT   32
-#define RIGHT_MOV_40BIT   40
-#define RIGHT_MOV_48BIT   48
-#define RIGHT_MOV_56BIT   56
-
 /*
  * DEFINES
  *****************************************************************************************
