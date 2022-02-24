@@ -37,7 +37,7 @@ extern "C" {
 #define LOG_UART_RX_PULL                APP_IO_PULLUP
 
 /**< Size of app uart tx buffer. */
-#define UART_TX_BUFF_SIZE               0x2000    
+#define UART_TX_BUFF_SIZE               0x2000
 
 extern EVENT_CB_S g_shellInputEvent;
 

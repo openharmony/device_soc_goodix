@@ -46,7 +46,7 @@
 void hal_pwr_config_timer_wakeup(uint8_t timer_mode, uint32_t load_count)
 {
     hal_pwr_register_timer_elaspsed_handler(hal_pwr_sleep_timer_elapsed_callback);
-    
+
     hal_pwr_config_timer_wakeup_ext(timer_mode, load_count);
 }
 

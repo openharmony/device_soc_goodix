@@ -92,7 +92,7 @@ extern "C" {
 /**@addtogroup HAL_DRV_ERR_CODE_CHECK Hal Driver error code check
  * @{
  */
- /**@brief Hal Driver error code check. */
+/**@brief Hal Driver error code check. */
 #define HAL_ERR_CODE_CHECK(err_code)              \
     do                                            \
     {                                             \

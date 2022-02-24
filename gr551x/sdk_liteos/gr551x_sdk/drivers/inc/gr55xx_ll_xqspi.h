@@ -385,9 +385,33 @@ typedef struct _ll_xqspi_init_t {
 SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_enable_cache(xqspi_regs_t *XQSPIx)
 {
     CLEAR_BITS(XQSPIx->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS);
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
 }
 
 /**
@@ -404,9 +428,33 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_enable_cache(xqspi_regs_t *XQSPIx
 SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_disable_cache(xqspi_regs_t *XQSPIx)
 {
     SET_BITS(XQSPIx->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS);
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
 }
 
 /**

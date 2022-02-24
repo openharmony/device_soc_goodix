@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef __HI_WATHDOG_H
-#define __HI_WATHDOG_H
+#ifndef __HI_WATHDOG_H__
+#define __HI_WATHDOG_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,4 +27,4 @@ void hi_watchdog_disable(void);
 }
 #endif
 
-#endif /* __HI_WATHDOG_H */
+#endif /* __HI_WATHDOG_H__ */

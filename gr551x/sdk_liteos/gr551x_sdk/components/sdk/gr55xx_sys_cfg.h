@@ -54,9 +54,7 @@
 /** @addtogroup GR55XX_SYS_CFG_DEFINES Defines
  * @{
  */
-#if 1
 #define __ARRAY_EMPTY  /** < Empty Array. */
-#endif
 /** @} */
 
 /**

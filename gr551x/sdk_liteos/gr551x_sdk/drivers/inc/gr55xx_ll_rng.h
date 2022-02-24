@@ -35,9 +35,9 @@
  ****************************************************************************************
  */
 
- /** @addtogroup PERIPHERAL Peripheral Driver
-  * @{
-  */
+/** @addtogroup PERIPHERAL Peripheral Driver
+ * @{
+ */
 
 /** @addtogroup LL_DRIVER LL Driver
   * @{

@@ -17,8 +17,8 @@
 #include "iot_pwm.h"
 #include "app_pwm.h"
 
-#define PWM_IO_CONFIG           {{ APP_IO_TYPE_MSIO, APP_IO_MUX_0, APP_IO_PIN_0, APP_IO_NOPULL, APP_PWM_PIN_ENABLE },\
-                                 { APP_IO_TYPE_MSIO, APP_IO_MUX_0, APP_IO_PIN_1, APP_IO_NOPULL, APP_PWM_PIN_ENABLE },\
+#define PWM_IO_CONFIG           {{ APP_IO_TYPE_MSIO, APP_IO_MUX_0, APP_IO_PIN_0, APP_IO_NOPULL, APP_PWM_PIN_ENABLE }, \
+                                 { APP_IO_TYPE_MSIO, APP_IO_MUX_0, APP_IO_PIN_1, APP_IO_NOPULL, APP_PWM_PIN_ENABLE }, \
                                  { APP_IO_TYPE_MSIO, APP_IO_MUX_0, APP_IO_PIN_2, APP_IO_NOPULL, APP_PWM_PIN_ENABLE }}
 
 #define PWM_ACTIVE_CAHN          APP_PWM_ACTIVE_CHANNEL_ALL
@@ -39,8 +39,7 @@ unsigned int IoTPwmInit(unsigned int port)
 
     pwm_params.id = port;
     ret = app_pwm_init(&pwm_params);
-    if (ret != APP_DRV_SUCCESS)
-    {
+    if (ret != APP_DRV_SUCCESS) {
         return IOT_FAILURE;
     }
     return IOT_SUCCESS;

@@ -121,7 +121,7 @@ uint16_t app_io_init(app_io_type_t type, app_io_init_t *p_init)
                 aon_io_config.pin = (APP_AON_IO_PIN_ALL & p_init->pin);
                 hal_aon_gpio_init(&aon_io_config);
                 break;
-            
+
             case APP_IO_TYPE_MSIO:
                 if (p_init->mode >= APP_IO_MODE_IT_RISING && p_init->mode <= APP_IO_MODE_IT_LOW) {
                     return APP_DRV_ERR_INVALID_MODE;

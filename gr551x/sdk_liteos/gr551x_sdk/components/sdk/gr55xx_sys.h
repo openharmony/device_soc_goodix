@@ -66,7 +66,13 @@
 #define SYS_INVALID_TIMER_ID              0xFF              /**< Invalid system Timer ID. */
 #define SYS_BD_ADDR_LEN                   GAP_ADDR_LEN      /**< Length of Bluetoth Device Address. */
 #define SYS_CHIP_UID_LEN                  0x10              /**< Length of Bluetoth Chip UID. */
-#define SYS_SET_BD_ADDR(BD_ADDR_ARRAY)    nvds_put(0xC001, SYS_BD_ADDR_LEN, BD_ADDR_ARRAY)  /**< NVDS put BD address. */
+
+static inline uint8_t ble_sys_set_bd_addr(uint8_t *BD_ADDR_ARRAY)
+{
+    return nvds_put(0xC001, SYS_BD_ADDR_LEN, BD_ADDR_ARRAY);
+}
+
+#define SYS_SET_BD_ADDR(BD_ADDR_ARRAY) ble_sys_set_bd_addr(BD_ADDR_ARRAY)  /**< NVDS put BD address. */
 /** @} */
 
 /**

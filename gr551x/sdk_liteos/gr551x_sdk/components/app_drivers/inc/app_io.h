@@ -141,7 +141,7 @@ typedef enum {
     APP_IO_TYPE_AON,         /**< Always-on Input/Output.       */
     APP_IO_TYPE_MSIO,        /**< Mixed Signal I/O.             */
     APP_IO_TYPE_MAX,         /**< Only for check parameter, not used as input parameters. */
-}app_io_type_t;
+} app_io_type_t;
 
 /**
   * @brief   GPIO mode Enumerations definition
@@ -156,7 +156,7 @@ typedef enum {
     APP_IO_MODE_IT_LOW,         /**< Interrupt Mode with Low-level trigger detection.    */
     APP_IO_MODE_ANALOG,         /**< Analog IO Mode.                                     */
     APP_IO_MODE_MAX,            /**< Only for check parameter, not used as input parameters. */
-}app_io_mode_t;
+} app_io_mode_t;
 
 /**
   * @brief   GPIO wake-up mode Enumerations definition
@@ -165,7 +165,7 @@ typedef enum {
     APP_IO_NONE_WAKEUP,         /**< None Wakeup.         */
     APP_IO_DISABLE_WAKEUP,      /**< Disable AON GPIO Wakeup. */
     APP_IO_ENABLE_WAKEUP,       /**< Enable AON GPIO Wakeup.  */
-}app_handle_mode_t;
+} app_handle_mode_t;
 
 /**
   * @brief   GPIO handler context type Enumerations definition
@@ -173,7 +173,7 @@ typedef enum {
 typedef enum {
     APP_IO_CTX_WAKEUP,          /**< the event of wakeup.    */
     APP_IO_CTX_INT,             /**< the event of interrupt. */
-}app_ctx_type_t;
+} app_ctx_type_t;
 
 /**
   * @brief   GPIO pull Enumerations definition
@@ -183,7 +183,7 @@ typedef enum {
     APP_IO_PULLUP,              /**< Pull-up activation.                  */
     APP_IO_PULLDOWN,            /**< Pull-down activation.                */
     APP_IO_PULL_MAX             /**< Only for check parameter, not used as input parameters. */
-}app_io_pull_t;
+} app_io_pull_t;
 
 /**
   * @brief   GPIO mux Enumerations definition
@@ -199,7 +199,7 @@ typedef enum {
     APP_IO_MUX_7,               /**< IO mux mode 7. */
     APP_IO_MUX_8,               /**< IO mux mode 8. */
     APP_IO_MUX_MAX,             /**< Only for check parameter, not used as input parameters. */
-}app_io_mux_t;
+} app_io_mux_t;
 /** @} */
 
 /** @addtogroup APP_GPIO_STRUCT Structures

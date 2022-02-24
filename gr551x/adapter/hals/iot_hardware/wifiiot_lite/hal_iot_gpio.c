@@ -108,15 +108,14 @@ static inline app_io_type_t pin_map(uint32_t id, uint32_t *pin)
     }
 }
 
-static int get_pin_index(uint32_t pin) 
+static int get_pin_index(uint32_t pin)
 {
-	int index = 0;
-	while ((pin & 1) != 1)
-	{
-		index++;
-		pin = pin >> 1;
-	}
-	return index;
+    int index = 0;
+    while ((pin & 1) != 1) {
+        index++;
+        pin = pin >> 1;
+    }
+    return index;
 }
 
 static void app_io_callback(app_gpiote_evt_t *p_evt)
@@ -159,7 +158,7 @@ unsigned int IoTGpioSetDir(unsigned int id, IotGpioDir dir)
     io_init.mux  = APP_IO_MUX_7;
 
     if (dir == IOT_GPIO_DIR_IN) {
-        io_init.mode = APP_IO_MODE_INPUT;  
+        io_init.mode = APP_IO_MODE_INPUT;
     } else if (dir == IOT_GPIO_DIR_OUT) {
         io_init.mode = APP_IO_MODE_OUT_PUT;
     }
@@ -193,9 +192,9 @@ unsigned int IoTGpioSetOutputVal(unsigned int id, IotGpioValue val)
     io_type = pin_map(id, &pin);
 
     if (val == IOT_GPIO_VALUE0) {
-        app_io_write_pin(io_type, pin, APP_IO_PIN_RESET); 
+        app_io_write_pin(io_type, pin, APP_IO_PIN_RESET);
     } else if (val == IOT_GPIO_VALUE1) {
-        app_io_write_pin(io_type, pin, APP_IO_PIN_SET); 
+        app_io_write_pin(io_type, pin, APP_IO_PIN_SET);
     }
     g_gpio_out[id] = val;
 

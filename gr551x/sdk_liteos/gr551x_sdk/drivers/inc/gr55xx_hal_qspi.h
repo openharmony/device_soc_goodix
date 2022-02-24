@@ -104,7 +104,7 @@ typedef struct _qspi_init_t {
 
     uint32_t clock_mode;        /**< Specifies the Clock Mode. It indicates the level that clock takes between commands.
                                      This parameter can be a value of @ref QSPI_Clock_Mode */
-    
+
     uint32_t rx_sample_delay;   /**< Specifies the RX sample delay. It is used to delay the sample of the RX input port.
                                      This parameter can be a number between 0 and 0x7 */
 } qspi_init_t;

@@ -18,64 +18,64 @@
 static BOOL HOTA_STATUS = 0;
 int HotaHalInit(void)
 {
-	if (HOTA_STATUS == 1) {
-		return OHOS_FAILURE;
-	} else {
-		HOTA_STATUS = 1;
-		return OHOS_SUCCESS;
-	}
+    if (HOTA_STATUS == 1) {
+        return OHOS_FAILURE;
+    } else {
+        HOTA_STATUS = 1;
+        return OHOS_SUCCESS;
+    }
 }
 
 int HotaHalGetUpdateIndex(unsigned int *index)
 {
-	return OHOS_SUCCESS;
+    return OHOS_SUCCESS;
 }
 
 int HotaHalDeInit(void)
 {
-	if (HOTA_STATUS == 0) {
-		return OHOS_FAILURE;
-	} else {
-		HOTA_STATUS = 0;
-		return OHOS_SUCCESS;
-	}
+    if (HOTA_STATUS == 0) {
+        return OHOS_FAILURE;
+    } else {
+        HOTA_STATUS = 0;
+        return OHOS_SUCCESS;
+    }
 }
 
 int HotaHalRead(int partition, unsigned int offset, unsigned int bufLen,
-		unsigned char *buffer)
+                unsigned char *buffer)
 {
-	return -1;
+    return -1;
 }
 
 int HotaHalWrite(int partition, unsigned char *buffer, unsigned int offset,
-		 unsigned int bufLen)
+                 unsigned int bufLen)
 {
-	return OHOS_SUCCESS;
+    return OHOS_SUCCESS;
 }
 
 int HotaHalRestart(void)
 {
-	return OHOS_SUCCESS;
+    return OHOS_SUCCESS;
 }
 
 int HotaHalSetBootSettings(void)
 {
-	return OHOS_SUCCESS;
+    return OHOS_SUCCESS;
 }
 
 int HotaHalRollback(void)
 {
-	return OHOS_SUCCESS;
+    return OHOS_SUCCESS;
 }
 
 const ComponentTableInfo *HotaHalGetPartitionInfo()
 {
-	return 0;
+    return 0;
 }
 
 unsigned char *HotaHalGetPubKey(unsigned int *length)
 {
-	return 0;
+    return 0;
 }
 
 
@@ -123,5 +123,3 @@ int HotaHalCheckVersionValid(const char *currentVersion, const char *pkgVersion,
 {
     return (strncmp(currentVersion, pkgVersion, pkgVersionLength) == 0) ? 1 : 0;
 }
-
-

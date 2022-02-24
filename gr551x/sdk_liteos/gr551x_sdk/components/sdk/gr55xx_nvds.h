@@ -59,7 +59,12 @@
  * The values of Tag 0x0000 and 0xFFFF are invalid. idx should not be used
  * as the parameter of NVDS APIs directly. The range of idx is 0x0001~0x3FFF.
  */
-#define NV_TAG_APP(idx)     (NV_TAGCAT_APP | ((idx) & 0x3FFF))
+static inline uint32_t ble_nv_tag_app(uint32_t idx)
+{
+    return (NV_TAGCAT_APP | ((idx) & 0x3FFF));
+}
+
+#define NV_TAG_APP(idx)     ble_nv_tag_app(idx)
 /** @} */
 
 /** @addtogroup NVDS_ENUMERATIONS Enumerations
@@ -85,9 +90,7 @@ enum NVDS_STATUS {
 /** @addtogroup NVDS_STRUCTURES Structures
  * @{ */
 /** @brief NVDS Item tag. */
-#if 1
-typedef uint16_t NvdsTag_t;
-#endif
+typedef unsigned short NvdsTag_t;
 /** @} */
 
 /** @addtogroup NVDS_FUNCTIONS Functions

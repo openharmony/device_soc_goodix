@@ -16,8 +16,8 @@
 #include <stdio.h>
 #include "gr55xx.h"
 #include "app_log.h"
-#include "uart.h"
 #include "los_sem.h"
+#include "uart.h"
 
 #define UART_TX_TIMEOUT         1000
 #define HILOG_IDX               2
@@ -27,9 +27,8 @@ static bool uart_initialized = false;
 
 static void uart_callback(app_uart_evt_t *p_evt)
 {
-    if ((p_evt->type == APP_UART_EVT_RX_DATA) || 
-        (p_evt->type == APP_UART_EVT_ERROR)) {
-
+    if ((p_evt->type == APP_UART_EVT_RX_DATA) ||
+            (p_evt->type == APP_UART_EVT_ERROR)) {
         LOS_SemPost(rxSemHandle);
 #if (LOSCFG_USE_SHELL == 1)
         (void)LOS_EventWrite(&g_shellInputEvent, 0x1);

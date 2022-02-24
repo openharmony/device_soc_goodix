@@ -147,7 +147,7 @@ static uint8_t spi_flash_read_status(void)
 
     if (FLASH_SPIM_ID == g_flash_init.spi_type) {
         uint8_t control_frame[1] = {SPI_FLASH_CMD_RDSR};
-        
+
         g_qspi_ctl.spi_rcv_done = 0;
         app_spi_read_memory_async(g_qspi_ctl.spi_id, control_frame, (uint8_t*)&status, sizeof(control_frame), 1);
         while (g_qspi_ctl.spi_rcv_done == 0);
@@ -168,7 +168,7 @@ static uint8_t spi_flash_read_status(void)
         app_qspi_command_receive_async(g_qspi_ctl.qspi_id, &command, (uint8_t*)&status);
         while (g_qspi_ctl.qspi_rcv_done == 0);
     }
-    
+
     return status;
 }
 
@@ -183,7 +183,7 @@ static uint32_t spi_flash_device_size(void)
         g_qspi_ctl.spi_rcv_done = 0;
         app_spi_read_memory_async(g_qspi_ctl.spi_id, control_frame, data, sizeof(control_frame), sizeof(data));
         while (g_qspi_ctl.spi_rcv_done == 0);
-        
+
         if (data[ITEM_0] != 0 && data[ITEM_3] < 0xFF) {
             flash_size = ((data[ITEM_3] << BIT_24) + (data[ITEM_2] << BIT_16) +
                           (data[ITEM_1] << BIT_8) + (data[ITEM_0] << BIT_0) + 1) / BIT_8;
@@ -201,7 +201,7 @@ static uint32_t spi_flash_device_size(void)
             .data_mode        = QSPI_DATA_MODE_SPI,
             .length           = sizeof(data),
         };
-        
+
         g_qspi_ctl.qspi_rcv_done = 0;
         app_qspi_command_receive_async(g_qspi_ctl.qspi_id, &command, data);
         while (g_qspi_ctl.qspi_rcv_done == 0);
@@ -228,7 +228,7 @@ static uint32_t spim_flash_write(uint32_t address, uint8_t *buffer, uint32_t nby
     g_qspi_ctl.spi_tmt_done = 0;
     app_spi_write_memory_async(g_qspi_ctl.spi_id, control_frame, buffer, sizeof(control_frame), nbytes);
     while (g_qspi_ctl.spi_tmt_done == 0);
-    
+
     return nbytes;
 }
 
@@ -245,7 +245,7 @@ static uint32_t qspi_flash_write(uint32_t address, uint8_t *buffer, uint32_t nby
         .data_mode        = QSPI_DATA_MODE_SPI,
         .length           = nbytes,
     };
-    
+
     g_qspi_ctl.qspi_tmt_done = 0;
     app_qspi_command_transmit_async(g_qspi_ctl.qspi_id, &command, buffer);
     while (g_qspi_ctl.qspi_tmt_done == 0);
@@ -265,7 +265,7 @@ static uint32_t spim_flash_read(uint32_t address, uint8_t *buffer, uint32_t nbyt
     g_qspi_ctl.spi_rcv_done = 0;
     app_spi_read_memory_async(g_qspi_ctl.spi_id, control_frame, buffer, sizeof(control_frame), nbytes);
     while (g_qspi_ctl.spi_rcv_done == 0);
-    
+
     return nbytes;
 }
 
@@ -331,110 +331,110 @@ bool spi_flash_init(flash_init_t *p_flash_init)
     memcpy_s(&g_flash_init, sizeof (g_flash_init), p_flash_init, sizeof(flash_init_t));
 
     if (FLASH_SPIM_ID == p_flash_init->spi_type) {
-       app_spi_params_t spim_params = DEFAULT_SPIM_PARAM_CONFIG;
-        
-       spim_params.pin_cfg.cs.type     = p_flash_init->flash_io.spi_cs.gpio;
-       spim_params.pin_cfg.cs.pin      = p_flash_init->flash_io.spi_cs.pin;
-       spim_params.pin_cfg.cs.mux      = p_flash_init->flash_io.spi_cs.mux;
-       spim_params.pin_cfg.cs.pull     = APP_IO_NOPULL;
-       spim_params.pin_cfg.cs.enable   = APP_SPI_PIN_ENABLE;
-       spim_params.pin_cfg.clk.type    = p_flash_init->flash_io.spi_clk.gpio;
-       spim_params.pin_cfg.clk.pin     = p_flash_init->flash_io.spi_clk.pin;
-       spim_params.pin_cfg.clk.mux     = p_flash_init->flash_io.spi_clk.mux;
-       spim_params.pin_cfg.clk.pull    = APP_IO_NOPULL;
-       spim_params.pin_cfg.clk.enable  = APP_SPI_PIN_ENABLE;
-       spim_params.pin_cfg.mosi.type   = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
-       spim_params.pin_cfg.mosi.pin    = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
-       spim_params.pin_cfg.mosi.mux    = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
-       spim_params.pin_cfg.mosi.pull   = APP_IO_NOPULL;
-       spim_params.pin_cfg.mosi.enable = APP_SPI_PIN_ENABLE;
-       spim_params.pin_cfg.miso.type   = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
-       spim_params.pin_cfg.miso.pin    = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
-       spim_params.pin_cfg.miso.mux    = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
-       spim_params.pin_cfg.miso.pull   = APP_IO_NOPULL;
-       spim_params.pin_cfg.miso.enable = APP_SPI_PIN_ENABLE;
+        app_spi_params_t spim_params = DEFAULT_SPIM_PARAM_CONFIG;
 
-       g_qspi_ctl.spi_id = APP_SPI_ID_MASTER;
+        spim_params.pin_cfg.cs.type     = p_flash_init->flash_io.spi_cs.gpio;
+        spim_params.pin_cfg.cs.pin      = p_flash_init->flash_io.spi_cs.pin;
+        spim_params.pin_cfg.cs.mux      = p_flash_init->flash_io.spi_cs.mux;
+        spim_params.pin_cfg.cs.pull     = APP_IO_NOPULL;
+        spim_params.pin_cfg.cs.enable   = APP_SPI_PIN_ENABLE;
+        spim_params.pin_cfg.clk.type    = p_flash_init->flash_io.spi_clk.gpio;
+        spim_params.pin_cfg.clk.pin     = p_flash_init->flash_io.spi_clk.pin;
+        spim_params.pin_cfg.clk.mux     = p_flash_init->flash_io.spi_clk.mux;
+        spim_params.pin_cfg.clk.pull    = APP_IO_NOPULL;
+        spim_params.pin_cfg.clk.enable  = APP_SPI_PIN_ENABLE;
+        spim_params.pin_cfg.mosi.type   = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
+        spim_params.pin_cfg.mosi.pin    = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
+        spim_params.pin_cfg.mosi.mux    = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
+        spim_params.pin_cfg.mosi.pull   = APP_IO_NOPULL;
+        spim_params.pin_cfg.mosi.enable = APP_SPI_PIN_ENABLE;
+        spim_params.pin_cfg.miso.type   = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
+        spim_params.pin_cfg.miso.pin    = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
+        spim_params.pin_cfg.miso.mux    = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
+        spim_params.pin_cfg.miso.pull   = APP_IO_NOPULL;
+        spim_params.pin_cfg.miso.enable = APP_SPI_PIN_ENABLE;
 
-       app_spi_deinit(g_qspi_ctl.spi_id);
+        g_qspi_ctl.spi_id = APP_SPI_ID_MASTER;
 
-       if (app_spi_init(&spim_params, spi_app_spim_callback)) {
+        app_spi_deinit(g_qspi_ctl.spi_id);
+
+        if (app_spi_init(&spim_params, spi_app_spim_callback)) {
             return false;
         }
     } else if ((FLASH_QSPI_ID0 == p_flash_init->spi_type) || (FLASH_QSPI_ID1 == p_flash_init->spi_type)) {
-            app_qspi_params_t qspi_params = DEFAULT_QSPI_PARAM_CONFIG;
+        app_qspi_params_t qspi_params = DEFAULT_QSPI_PARAM_CONFIG;
 
-            if (FLASH_QSPI_ID0 == p_flash_init->spi_type) {
-                g_qspi_ctl.qspi_id = APP_QSPI_ID_0;
-            } else {
-                g_qspi_ctl.qspi_id = APP_QSPI_ID_1;
-            }
+        if (FLASH_QSPI_ID0 == p_flash_init->spi_type) {
+            g_qspi_ctl.qspi_id = APP_QSPI_ID_0;
+        } else {
+            g_qspi_ctl.qspi_id = APP_QSPI_ID_1;
+        }
 
-            qspi_params.id                     = g_qspi_ctl.qspi_id;
-            qspi_params.pin_cfg.cs.type        = p_flash_init->flash_io.spi_cs.gpio;
-            qspi_params.pin_cfg.cs.pin         = p_flash_init->flash_io.spi_cs.pin;
-            qspi_params.pin_cfg.cs.mux         = p_flash_init->flash_io.spi_cs.mux;
-            qspi_params.pin_cfg.cs.pull        = APP_IO_NOPULL;
-            qspi_params.pin_cfg.cs.enable      = APP_SPI_PIN_ENABLE;
-            qspi_params.pin_cfg.clk.type       = p_flash_init->flash_io.spi_clk.gpio;
-            qspi_params.pin_cfg.clk.pin        = p_flash_init->flash_io.spi_clk.pin;
-            qspi_params.pin_cfg.clk.mux        = p_flash_init->flash_io.spi_clk.mux;
-            qspi_params.pin_cfg.clk.pull       = APP_IO_NOPULL;
-            qspi_params.pin_cfg.clk.enable     = APP_SPI_PIN_ENABLE;
-            qspi_params.pin_cfg.io_0.type      = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
-            qspi_params.pin_cfg.io_0.pin       = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
-            qspi_params.pin_cfg.io_0.mux       = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
-            qspi_params.pin_cfg.io_0.pull      = APP_IO_NOPULL;
-            qspi_params.pin_cfg.io_0.enable    = APP_SPI_PIN_ENABLE;
-            qspi_params.pin_cfg.io_1.type      = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
-            qspi_params.pin_cfg.io_1.pin       = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
-            qspi_params.pin_cfg.io_1.mux       = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
-            qspi_params.pin_cfg.io_1.pull      = APP_IO_NOPULL;
-            qspi_params.pin_cfg.io_1.enable    = APP_SPI_PIN_ENABLE;
-            qspi_params.pin_cfg.io_2.type      = p_flash_init->flash_io.qspi_io2.gpio;
-            qspi_params.pin_cfg.io_2.pin       = p_flash_init->flash_io.qspi_io2.pin;
-            qspi_params.pin_cfg.io_2.mux       = p_flash_init->flash_io.qspi_io2.mux;
-            qspi_params.pin_cfg.io_2.pull      = APP_IO_NOPULL;
-            qspi_params.pin_cfg.io_2.enable    = APP_SPI_PIN_ENABLE;
-            qspi_params.pin_cfg.io_3.type      = p_flash_init->flash_io.qspi_io3.gpio;
-            qspi_params.pin_cfg.io_3.pin       = p_flash_init->flash_io.qspi_io3.pin;
-            qspi_params.pin_cfg.io_3.mux       = p_flash_init->flash_io.qspi_io3.mux;
-            qspi_params.pin_cfg.io_3.pull      = APP_IO_NOPULL;
-            qspi_params.pin_cfg.io_3.enable    = APP_SPI_PIN_ENABLE;
-            
-            app_qspi_deinit(g_qspi_ctl.qspi_id);
-            if (app_qspi_init(&qspi_params, spi_app_qspi_callback)) {
-                return false;
-            }
+        qspi_params.id                     = g_qspi_ctl.qspi_id;
+        qspi_params.pin_cfg.cs.type        = p_flash_init->flash_io.spi_cs.gpio;
+        qspi_params.pin_cfg.cs.pin         = p_flash_init->flash_io.spi_cs.pin;
+        qspi_params.pin_cfg.cs.mux         = p_flash_init->flash_io.spi_cs.mux;
+        qspi_params.pin_cfg.cs.pull        = APP_IO_NOPULL;
+        qspi_params.pin_cfg.cs.enable      = APP_SPI_PIN_ENABLE;
+        qspi_params.pin_cfg.clk.type       = p_flash_init->flash_io.spi_clk.gpio;
+        qspi_params.pin_cfg.clk.pin        = p_flash_init->flash_io.spi_clk.pin;
+        qspi_params.pin_cfg.clk.mux        = p_flash_init->flash_io.spi_clk.mux;
+        qspi_params.pin_cfg.clk.pull       = APP_IO_NOPULL;
+        qspi_params.pin_cfg.clk.enable     = APP_SPI_PIN_ENABLE;
+        qspi_params.pin_cfg.io_0.type      = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
+        qspi_params.pin_cfg.io_0.pin       = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
+        qspi_params.pin_cfg.io_0.mux       = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
+        qspi_params.pin_cfg.io_0.pull      = APP_IO_NOPULL;
+        qspi_params.pin_cfg.io_0.enable    = APP_SPI_PIN_ENABLE;
+        qspi_params.pin_cfg.io_1.type      = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
+        qspi_params.pin_cfg.io_1.pin       = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
+        qspi_params.pin_cfg.io_1.mux       = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
+        qspi_params.pin_cfg.io_1.pull      = APP_IO_NOPULL;
+        qspi_params.pin_cfg.io_1.enable    = APP_SPI_PIN_ENABLE;
+        qspi_params.pin_cfg.io_2.type      = p_flash_init->flash_io.qspi_io2.gpio;
+        qspi_params.pin_cfg.io_2.pin       = p_flash_init->flash_io.qspi_io2.pin;
+        qspi_params.pin_cfg.io_2.mux       = p_flash_init->flash_io.qspi_io2.mux;
+        qspi_params.pin_cfg.io_2.pull      = APP_IO_NOPULL;
+        qspi_params.pin_cfg.io_2.enable    = APP_SPI_PIN_ENABLE;
+        qspi_params.pin_cfg.io_3.type      = p_flash_init->flash_io.qspi_io3.gpio;
+        qspi_params.pin_cfg.io_3.pin       = p_flash_init->flash_io.qspi_io3.pin;
+        qspi_params.pin_cfg.io_3.mux       = p_flash_init->flash_io.qspi_io3.mux;
+        qspi_params.pin_cfg.io_3.pull      = APP_IO_NOPULL;
+        qspi_params.pin_cfg.io_3.enable    = APP_SPI_PIN_ENABLE;
 
-            // set qspi hold/wp pin to high
-            app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
-            
-            io_init.mode = APP_IO_MODE_OUT_PUT;
-            io_init.pull = APP_IO_PULLUP;
-            io_init.pin  = qspi_params.pin_cfg.io_2.pin;
-            io_init.mux  = APP_IO_MUX_7;
-            if (app_io_init(qspi_params.pin_cfg.io_2.type, &io_init)) {
-                return false;
-            }
+        app_qspi_deinit(g_qspi_ctl.qspi_id);
+        if (app_qspi_init(&qspi_params, spi_app_qspi_callback)) {
+            return false;
+        }
 
-            io_init.mode = APP_IO_MODE_OUT_PUT;
-            io_init.pull = APP_IO_PULLUP;
-            io_init.pin  = qspi_params.pin_cfg.io_3.pin;
-            io_init.mux  = APP_IO_MUX_7;
-            if (app_io_init(qspi_params.pin_cfg.io_3.type, &io_init)) {
-                return false;
-            }
-            
-            if (app_io_write_pin(qspi_params.pin_cfg.io_2.type, qspi_params.pin_cfg.io_2.pin, APP_IO_PIN_SET)) {
-                return false;
-            }
+        // set qspi hold/wp pin to high
+        app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
 
-            if (app_io_write_pin(qspi_params.pin_cfg.io_3.type, qspi_params.pin_cfg.io_3.pin, APP_IO_PIN_SET)) {
-                return false;
-            }
+        io_init.mode = APP_IO_MODE_OUT_PUT;
+        io_init.pull = APP_IO_PULLUP;
+        io_init.pin  = qspi_params.pin_cfg.io_2.pin;
+        io_init.mux  = APP_IO_MUX_7;
+        if (app_io_init(qspi_params.pin_cfg.io_2.type, &io_init)) {
+            return false;
+        }
+
+        io_init.mode = APP_IO_MODE_OUT_PUT;
+        io_init.pull = APP_IO_PULLUP;
+        io_init.pin  = qspi_params.pin_cfg.io_3.pin;
+        io_init.mux  = APP_IO_MUX_7;
+        if (app_io_init(qspi_params.pin_cfg.io_3.type, &io_init)) {
+            return false;
+        }
+
+        if (app_io_write_pin(qspi_params.pin_cfg.io_2.type, qspi_params.pin_cfg.io_2.pin, APP_IO_PIN_SET)) {
+            return false;
+        }
+
+        if (app_io_write_pin(qspi_params.pin_cfg.io_3.type, qspi_params.pin_cfg.io_3.pin, APP_IO_PIN_SET)) {
+            return false;
+        }
     }
-    
+
     return true;
 }
 
@@ -442,7 +442,7 @@ uint32_t spi_flash_write(uint32_t address, uint8_t *buffer, uint32_t nbytes)
 {
     uint32_t page_ofs, write_size, write_cont = nbytes;
     hal_status_t status      = HAL_OK;
-    
+
     while (write_cont) {
         page_ofs = address & 0xFF;
         write_size = EXFLASH_SIZE_PAGE_BYTES - page_ofs;
@@ -463,7 +463,7 @@ uint32_t spi_flash_write(uint32_t address, uint8_t *buffer, uint32_t nbytes)
         }
 
         while (spi_flash_read_status() & 0x1);
-        
+
         address += write_size;
         buffer += write_size;
     }
@@ -480,7 +480,7 @@ uint32_t spi_flash_read(uint32_t address, uint8_t *buffer, uint32_t nbytes)
     } else {
         count = qspi_flash_read(address, buffer, nbytes);
     }
-    
+
     return count;
 }
 
@@ -494,7 +494,7 @@ bool spi_flash_sector_erase(uint32_t address, uint32_t size)
     while (erase_cont) {
         sector_ofs = erase_addr & 0xFFF;
         erase_size = EXFLASH_SIZE_SECTOR_BYTES - sector_ofs;
-    
+
         if (erase_cont < erase_size) {
             erase_size = erase_cont;
             erase_cont = 0;
@@ -503,7 +503,7 @@ bool spi_flash_sector_erase(uint32_t address, uint32_t size)
         }
 
         spi_flash_write_enable();
-    
+
         if (FLASH_SPIM_ID == g_flash_init.spi_type) {
             status = spim_flash_sector_erase(erase_addr);
         } else {
@@ -511,7 +511,7 @@ bool spi_flash_sector_erase(uint32_t address, uint32_t size)
         }
 
         while (spi_flash_read_status() & 0x1);
-        
+
         erase_addr += erase_size;
     }
 
@@ -524,7 +524,7 @@ bool spi_flash_chip_erase(void)
     uint8_t control_frame[1] = {SPI_FLASH_CMD_CE};
 
     spi_flash_write_enable();
-    
+
     if (FLASH_SPIM_ID == g_flash_init.spi_type) {
         g_qspi_ctl.spi_tmt_done = 0;
         app_spi_transmit_async(g_qspi_ctl.spi_id, control_frame, sizeof(control_frame));
@@ -559,7 +559,7 @@ void spi_flash_chip_reset(void)
     } else {
         hal_qspi_transmit(&g_qspi_handle, control_frame, sizeof(control_frame), MS_5000);
     }
-    
+
     return;
 }
 
@@ -569,23 +569,23 @@ uint32_t spi_flash_device_id(void)
 
     if (FLASH_SPIM_ID == g_flash_init.spi_type) {
         uint8_t control_frame[1] = {SPI_FLASH_CMD_RDID};
-        
+
         g_qspi_ctl.spi_rcv_done = 0;
         app_spi_read_memory_async(g_qspi_ctl.spi_id, control_frame, data, sizeof(control_frame), sizeof(data));
         while (g_qspi_ctl.spi_rcv_done == 0);
     } else {
         qspi_command_t command = {
-        .instruction      = SPI_FLASH_CMD_RDID,
-        .address          = 0,
-        .instruction_size = QSPI_INSTSIZE_08_BITS,
-        .address_size     = QSPI_ADDRSIZE_00_BITS,
-        .data_size        = QSPI_DATASIZE_08_BITS,
-        .dummy_cycles     = 0,
-        .instruction_address_mode = QSPI_INST_ADDR_ALL_IN_SPI,
-        .data_mode        = QSPI_DATA_MODE_SPI,
-        .length           = 3,
+            .instruction      = SPI_FLASH_CMD_RDID,
+            .address          = 0,
+            .instruction_size = QSPI_INSTSIZE_08_BITS,
+            .address_size     = QSPI_ADDRSIZE_00_BITS,
+            .data_size        = QSPI_DATASIZE_08_BITS,
+            .dummy_cycles     = 0,
+            .instruction_address_mode = QSPI_INST_ADDR_ALL_IN_SPI,
+            .data_mode        = QSPI_DATA_MODE_SPI,
+            .length           = 3,
         };
-        
+
         g_qspi_ctl.qspi_rcv_done = 0;
         app_qspi_command_receive_async(g_qspi_ctl.qspi_id, &command, data);
         while (g_qspi_ctl.qspi_rcv_done == 0);
@@ -602,7 +602,7 @@ void spi_flash_device_info(uint32_t *id, uint32_t *size)
 
     *id   = spi_flash_device_id();
     *size = spi_flash_device_size();
-    
+
     return;
 }
 

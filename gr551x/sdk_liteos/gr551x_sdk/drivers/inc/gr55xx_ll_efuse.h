@@ -602,7 +602,7 @@ __STATIC_INLINE void ll_efuse_disable_power(efuse_regs_t *EFUSEx)
   * @retval None
   */
 __STATIC_INLINE void ll_efuse_set_controller_power_timing(efuse_regs_t *EFUSEx, uint16_t vddq_0,
-                                                          uint16_t vddq_1, uint16_t vddq_2)
+        uint16_t vddq_1, uint16_t vddq_2)
 {
     WRITE_REG(MCU_SUB->EFUSE_PWR_DELTA[0], vddq_0 + (vddq_1 << ITEM_16));
     WRITE_REG(MCU_SUB->EFUSE_PWR_DELTA[1], vddq_2);

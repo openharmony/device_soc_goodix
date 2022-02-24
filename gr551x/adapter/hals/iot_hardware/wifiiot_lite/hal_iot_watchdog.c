@@ -17,16 +17,13 @@
 
 void IoTWatchDogEnable(void)
 {
-
 }
 
 void IoTWatchDogKick(void)
 {
-
 }
 
 void IoTWatchDogDisable(void)
 {
-
 }
 

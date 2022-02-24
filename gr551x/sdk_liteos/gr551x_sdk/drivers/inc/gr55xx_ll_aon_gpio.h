@@ -998,7 +998,7 @@ __STATIC_INLINE uint32_t ll_aon_gpio_read_flag_it(uint32_t pin_mask)
     uint32_t ext2 = READ_BITS(GPIO2->INTSTAT, pin_mask);
     uint32_t wkup = (READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_EXT_WKUP_STATUS) >> \
                      AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
-                     pin_mask & READ_BITS(AON->EXT_WKUP_CTL, LL_AON_GPIO_PIN_ALL);
+                    pin_mask & READ_BITS(AON->EXT_WKUP_CTL, LL_AON_GPIO_PIN_ALL);
     return (uint32_t)(ext2 | wkup);
 }
 

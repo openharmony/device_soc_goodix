@@ -200,7 +200,7 @@ typedef struct _i2c_handle {
     __IO uint32_t          previous_state;    /**< I2C communication Previous state           */
 
     hal_status_t(*xfer_isr)(struct _i2c_handle *p_i2c, uint32_t it_source, uint32_t abort_sources);
-                                              /**< I2C transfer IRQ handler function pointer  */
+    /**< I2C transfer IRQ handler function pointer  */
 
     dma_handle_t          *p_dmatx;            /**< I2C Tx DMA handle parameters              */
 
@@ -786,7 +786,7 @@ hal_status_t hal_i2c_mem_read_it(i2c_handle_t *p_i2c, uint16_t dev_address, uint
  ****************************************************************************************
  */
 hal_status_t hal_i2c_master_sequential_transmit_it(i2c_handle_t *p_i2c, uint16_t dev_address,
-                                                   uint8_t *p_data, uint16_t size, uint32_t xfer_options);
+        uint8_t *p_data, uint16_t size, uint32_t xfer_options);
 
 /**
  ****************************************************************************************
@@ -804,7 +804,7 @@ hal_status_t hal_i2c_master_sequential_transmit_it(i2c_handle_t *p_i2c, uint16_t
  ****************************************************************************************
  */
 hal_status_t hal_i2c_master_sequential_receive_it(i2c_handle_t *p_i2c, uint16_t dev_address,
-                                                  uint8_t *p_data, uint16_t size, uint32_t xfer_options);
+        uint8_t *p_data, uint16_t size, uint32_t xfer_options);
 
 /**
  ****************************************************************************************
@@ -821,7 +821,7 @@ hal_status_t hal_i2c_master_sequential_receive_it(i2c_handle_t *p_i2c, uint16_t 
  ****************************************************************************************
  */
 hal_status_t hal_i2c_slave_sequential_transmit_it(i2c_handle_t *p_i2c, uint8_t *p_data,
-                                                  uint16_t size, uint32_t xfer_options);
+        uint16_t size, uint32_t xfer_options);
 
 /**
  ****************************************************************************************
@@ -838,7 +838,7 @@ hal_status_t hal_i2c_slave_sequential_transmit_it(i2c_handle_t *p_i2c, uint8_t *
  ****************************************************************************************
  */
 hal_status_t hal_i2c_slave_sequential_receive_it(i2c_handle_t *p_i2c, uint8_t *p_data,
-                                                 uint16_t size, uint32_t xfer_options);
+        uint16_t size, uint32_t xfer_options);
 
 /**
  ****************************************************************************************

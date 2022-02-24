@@ -142,7 +142,7 @@ typedef struct _hmac_handle {
     __IO uint32_t         error_code;       /**< HMAC Error code                          */
 
     uint32_t              timeout;          /**< Timeout for the HMAC operation           */
-		
+
     uint32_t              retention[17];    /**< HMAC important register information.     */
 } hmac_handle_t;
 

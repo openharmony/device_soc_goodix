@@ -145,7 +145,7 @@ typedef struct _aes_handle {
     __IO uint32_t        error_code;            /**< AES Error code                   */
 
     uint32_t             timeout;               /**< Timeout for the AES operation    */
-	
+
     uint32_t             retention[18];         /**< AES important register information. */
 } aes_handle_t;
 /** @} */

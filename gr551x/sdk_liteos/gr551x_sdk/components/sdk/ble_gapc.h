@@ -340,7 +340,7 @@ typedef struct {
 typedef struct {
     uint16_t interval_min;  /**< Minimum value for the connection interval.
                                  This shall be less than or equal to Conn_Interval_Max.
-                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s*/
+                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s */
     uint16_t interval_max;  /**< Maximum value for the connection interval.
                                  This shall be greater than or equal to Conn_Interval_Min.
                                  Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s. */
@@ -354,7 +354,7 @@ typedef struct {
 typedef struct {
     uint16_t interval_min;  /**< Minimum value for the connection interval.
                                  This shall be less than or equal to Conn_Interval_Max.
-                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s*/
+                                 Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s */
     uint16_t interval_max;  /**< Maximum value for the connection interval.
                                  This shall be greater than or equal to Conn_Interval_Min.
                                  Range: 0x0006 to 0x0C80, unit: 1.25 ms, time range: 7.5 ms to 4 s. */
@@ -767,7 +767,6 @@ typedef struct {
      ****************************************************************************************
      */
     void (*app_gap_rslv_addr_read_cb)(uint8_t status, const gap_rslv_addr_read_t *p_read_rslv_addr);
-
 } gap_cb_fun_t;
 
 /** @} */

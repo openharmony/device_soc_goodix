@@ -6,7 +6,7 @@
  * @brief  Interrupt Service Routines.
  *
  *****************************************************************************************
- 
+
  * @attention
   #####Copyright (c) 2019 GOODIX
   All rights reserved.
@@ -63,9 +63,12 @@ SECTION_RAM_CODE __asm void SVC_Handler (void)
     PRESERVE8
     IMPORT   SVC_handler_proc
 
-    TST      LR, #4                  ; Called from Handler Mode?
-    MRSNE    R12, PSP                ; Yes, use PSP
-    MOVEQ    R12, SP                 ; No, use MSP
+    TST      LR, #4                  ;
+    Called from Handler Mode?
+    MRSNE    R12, PSP                ;
+    Yes, use PSP
+    MOVEQ    R12, SP                 ;
+    No, use MSP
     PUSH     {R0-R3, LR}
     MOV      R0, R12
     BL       SVC_handler_proc
@@ -73,9 +76,11 @@ SECTION_RAM_CODE __asm void SVC_Handler (void)
     POP      {R0-R3, LR}
     CMP      R12, #0
     BLXNE    R12
-    BX       LR                      ; RETI
-SVC_Dead
-    B        SVC_Dead                ; None Existing SVC
+    BX       LR                      ;
+    RETI
+    SVC_Dead
+    B        SVC_Dead                ;
+    None Existing SVC
     ALIGN
 }
 #endif
@@ -102,20 +107,20 @@ SECTION_RAM_CODE uint32_t SVC_handler_proc(uint32_t *svc_args)
 SECTION_RAM_CODE void __attribute__((naked))SVC_Handler (void)
 {
     asm volatile (
-                  "TST R14,#4\n\t"
-                  "IT NE\n\t"
-                  "MRSNE   R12, PSP\n\t"
-                  "IT EQ\n"
-                  "MOVEQ   R12, SP \n\t"
-                  "PUSH    {R0-R3,LR} \n\t"
-                  "MOV  R0, R12 \n\t"
-                  "BL  SVC_handler_proc \n\t"
-                  "MOV  R12, R0 \n\t"
-                  "POP {R0-R3, LR} \n\t"
-                  "CMP R12, #0\n\t"
-                  "IT NE\n\t"
-                  "BLXNE R12\n\t"
-                  "BX      LR\n\t");
+        "TST R14,#4\n\t"
+        "IT NE\n\t"
+        "MRSNE   R12, PSP\n\t"
+        "IT EQ\n"
+        "MOVEQ   R12, SP \n\t"
+        "PUSH    {R0-R3,LR} \n\t"
+        "MOV  R0, R12 \n\t"
+        "BL  SVC_handler_proc \n\t"
+        "MOV  R12, R0 \n\t"
+        "POP {R0-R3, LR} \n\t"
+        "CMP R12, #0\n\t"
+        "IT NE\n\t"
+        "BLXNE R12\n\t"
+        "BX      LR\n\t");
 }
 #endif
 
@@ -141,7 +146,7 @@ SECTION_RAM_CODE __asm void HardFault_Handler (void)
     MOV     r1, sp
     BL      cortex_backtrace_fault_handler
 #endif
-Fault_Loop
+    Fault_Loop
     BL      Fault_Loop
     ALIGN
 }
@@ -151,7 +156,7 @@ uint32_t __R4_R11_REG[8];
 void print_callstack_handler(uint32_t sp)
 {
     printf("================================\r\n");
-    printf("  r0: %08x     r1: %08x\r\n", (uint32_t *)sp)[ITEM_0], ((uint32_t *)sp)[ITEM_1]);
+    printf("  r0: %08x     r1: %08x\r\n", ((uint32_t *)sp)[ITEM_0], ((uint32_t *)sp)[ITEM_1]);
     printf("  r2: %08x     r3: %08x\r\n", ((uint32_t *)sp)[ITEM_2], ((uint32_t *)sp)[ITEM_3]);
     printf("  r4: %08x     r5: %08x\r\n", __R4_R11_REG[ITEM_0], __R4_R11_REG[ITEM_1]);
     printf("  r6: %08x     r7: %08x\r\n", __R4_R11_REG[ITEM_2], __R4_R11_REG[ITEM_3]);
@@ -168,12 +173,12 @@ __asm void DebugMon_Handler(void)
     IMPORT  print_callstack_handler
     IMPORT  __R4_R11_REG
     LDR R0, =__R4_R11_REG
-    STMIA R0!, {R4-R11}
-    MOV R0, SP
-    MOV r12, lr
-    BL  print_callstack_handler
-    BX  r12
-    ALIGN
+             STMIA R0!, {R4-R11}
+             MOV R0, SP
+             MOV r12, lr
+             BL  print_callstack_handler
+             BX  r12
+             ALIGN
 }
 #endif
 

@@ -64,10 +64,7 @@
  @brief Definitions and prototypes for the GAP Management interface.
  */
 
-/** @addtogroup BLE_GAPM_DEFINES Defines
- * @{ */
-
-#define CO_BIT(pos)(1UL<<(pos))                 /**< Bit operation helper. */
+#define CO_BIT(pos)    (1UL << (pos))           /**< Bit operation helper. */
 #define MAX_ADV_NUM              5              /**< Maximal advertising instance number. */
 #define MAX_PER_SYNC_NUM         5              /**< Maximal periodic syncronization instance number. */
 #define MAX_BOND_NUM             10             /**< Maximal bonding number. */
@@ -776,13 +773,13 @@ typedef struct {
  * @brief The BLE reslove rpa address callback.
  */
 typedef void (*reslv_rpa_addr_callback_t) (uint8_t status, gap_bdaddr_t *iden_addr,
-                                           uint8_t src_info);
+        uint8_t src_info);
 
 /**
  * @brief The BLE rpa address report callback.
  */
 typedef void (*rpa_addr_report_callback_t) (ble_actv_type_t type, uint8_t index,
-                                            const uint8_t *rpa_addr);
+        const uint8_t *rpa_addr);
 
 /** @} */
 

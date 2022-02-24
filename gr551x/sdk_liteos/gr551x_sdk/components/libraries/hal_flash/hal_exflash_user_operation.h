@@ -36,7 +36,7 @@
 
 extern exflash_handle_t g_exflash_handle;
 extern hal_status_t hal_xqspi_command_receive_patch(xqspi_handle_t *p_xqspi, xqspi_command_t *p_cmd, \
-                                                    uint8_t *p_data, uint32_t retry);
+        uint8_t *p_data, uint32_t retry);
 
 uint32_t hal_flash_read_identification_id(void);
 

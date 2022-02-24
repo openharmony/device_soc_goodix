@@ -2639,7 +2639,7 @@ __STATIC_INLINE void ll_cgc_disable_force_off_secu_div4_pclk(void)
     GLOBAL_EXCEPTION_DISABLE();
 
     CLEAR_BITS(MCU_SUB->MCU_PERIPH_CG, MCU_SUB_FORCE_SECU_DIV4_PCLK);
-	
+
     GLOBAL_EXCEPTION_ENABLE();
 }
 

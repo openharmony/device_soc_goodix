@@ -6,7 +6,7 @@
  * @brief  Platform Initialization Routines.
  *
  *******************************************************************************
- 
+
  * @attention
   #####Copyright (c) 2019 GOODIX
   All rights reserved.
@@ -63,8 +63,11 @@
 #define FLASH_IO_1      (LL_GPIO_PIN_6)      /* XQSPI flash IO1       */
 #define FLASH_IO_2      (LL_GPIO_PIN_5)      /* XQSPI flash IO2 (WP)  */
 #define FLASH_IO_3      (LL_GPIO_PIN_3)      /* XQSPI flash IO3 (HOLD) */
-#define HAL_EXFLASH_IO_PULL_SET(_PIN_, _PULL_)  ll_gpio_set_pin_pull(GPIO1, _PIN_, _PULL_)
-    
+static inline void HAL_EXFLASH_IO_PULL_SET(uint32_t _PIN_, uint32_t _PULL_)
+{
+    ll_gpio_set_pin_pull(GPIO1, _PIN_, _PULL_);
+}
+
 static uint32_t SVC_TABLE_USER_SPACE[SVC_TABLE_NUM_MAX] __attribute__((section("SVC_TABLE")));
 
 #if (CFG_LCP_SUPPORT && (CHIP_TYPE == 0))
@@ -80,7 +83,7 @@ static void nvds_setup(void)
 #ifdef GR5515_E
     g_nvds_buf = (uint8_t *)&s_nvds_cache;
 #endif
-  
+
 #ifdef NVDS_START_ADDR
     uint8_t err_code = nvds_init(NVDS_START_ADDR, NVDS_NUM_SECTOR);
 #else
@@ -89,20 +92,19 @@ static void nvds_setup(void)
 
     switch (err_code) {
         case NVDS_FAIL:
-        case NVDS_STORAGE_ACCESS_FAILED:
-            {
-                uint32_t start_addr  = nvds_get_start_addr();
-                uint32_t sector_size = hal_flash_sector_size();
-                if (hal_flash_erase(start_addr, NVDS_NUM_SECTOR * sector_size)) {
-                    err_code = nvds_init(start_addr, NVDS_NUM_SECTOR);
-                    if (NVDS_SUCCESS == err_code) {
-                        break;
-                    }
+        case NVDS_STORAGE_ACCESS_FAILED: {
+            uint32_t start_addr  = nvds_get_start_addr();
+            uint32_t sector_size = hal_flash_sector_size();
+            if (hal_flash_erase(start_addr, NVDS_NUM_SECTOR * sector_size)) {
+                err_code = nvds_init(start_addr, NVDS_NUM_SECTOR);
+                if (NVDS_SUCCESS == err_code) {
+                    break;
                 }
-                /* Flash fault, cannot startup.
-                 * TODO: Output log via UART or Dump an error code to flash. */
-                while (1) {}
             }
+            /* Flash fault, cannot startup.
+             * TODO: Output log via UART or Dump an error code to flash. */
+            while (1) {}
+        }
         case NVDS_SUCCESS:
             break;
         default:
@@ -134,7 +136,7 @@ void ble_sdk_env_init(void)
 static void BLE_power_check(void)
 {
     if ((AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_TIMER) ||
-       (AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_CORE)) {
+            (AON->PWR_RET01 & AON_PWR_REG01_PWR_EN_PD_COMM_CORE)) {
         ll_pwr_enable_comm_core_reset();
         ll_pwr_enable_comm_timer_reset();
         ll_pwr_disable_comm_core_power();
@@ -305,4 +307,3 @@ int __low_level_init(void)
     return 0;
 }
 #endif
-

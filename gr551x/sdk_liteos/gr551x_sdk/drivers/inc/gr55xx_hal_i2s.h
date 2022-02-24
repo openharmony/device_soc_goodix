@@ -698,7 +698,7 @@ hal_status_t hal_i2s_receive_it(i2s_handle_t *p_i2s, uint16_t *p_data, uint32_t 
  ****************************************************************************************
  */
 hal_status_t hal_i2s_transmit_receive_it(i2s_handle_t *p_i2s, uint16_t *p_tx_data,
-                                         uint16_t *p_rx_data, uint32_t length);
+        uint16_t *p_rx_data, uint32_t length);
 
 /**
  ****************************************************************************************
@@ -744,7 +744,7 @@ hal_status_t hal_i2s_receive_dma(i2s_handle_t *p_i2s, uint16_t *p_data, uint32_t
  ****************************************************************************************
  */
 hal_status_t hal_i2s_transmit_receive_dma(i2s_handle_t *p_i2s, uint16_t *p_tx_data,
-                                          uint16_t *p_rx_data, uint32_t length);
+        uint16_t *p_rx_data, uint32_t length);
 
 /**
  ****************************************************************************************

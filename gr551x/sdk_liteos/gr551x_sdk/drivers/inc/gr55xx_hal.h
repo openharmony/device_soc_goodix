@@ -56,6 +56,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx.h"
 #include "gr55xx_hal_conf.h"
+#include "gr55xx_hal_def.h"
 #include "gr55xx_delay.h"
 
 #ifdef __cplusplus
