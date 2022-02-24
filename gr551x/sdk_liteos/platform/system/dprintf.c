@@ -19,17 +19,16 @@
 
 #define BUFSIZE  256
 
-extern void _putchar(char character);
 int printf(char const  *fmt, ...)
 {
     char buf[BUFSIZE] = { 0 };
     va_list ap;
     va_start(ap, fmt);
     int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, fmt, ap);
-	if ( len < 0 ) {
-	    return len;	
-	}
-	
+    if ( len < 0 ) {
+        return len;
+    }
+
     va_end(ap);
     if (len > 0) {
         char const *s = buf;
@@ -42,7 +41,7 @@ int printf(char const  *fmt, ...)
 
 /*
 int sprintf(char *buf, const char *fmt, ...)
-{    
+{
     va_list args;
     int val;
 

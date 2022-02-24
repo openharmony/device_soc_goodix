@@ -445,7 +445,7 @@ do {                                                                    \
     .hw_flow_ctrl    = UART_HWCONTROL_NONE,             \
     .rx_timeout_mode = UART_RECEIVER_TIMEOUT_DISABLE,   \
 }
-                                 
+
 /** @} */
 
 /* Exported functions --------------------------------------------------------*/

@@ -21,9 +21,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "hal_file.h"
 #include "utils_file.h"
 #include "log.h"
+#include "hal_file.h"
 
 #define LOG_E(fmt, ...)  HILOG_ERROR(HILOG_MODULE_APP, fmt, ##__VA_ARGS__)
 #define LOG_I(fmt, ...)  HILOG_INFO(HILOG_MODULE_APP, fmt, ##__VA_ARGS__)
@@ -171,7 +171,7 @@ int HalFileWrite(int fd, const char *buf, unsigned int len)
 }
 
 int HalFileDelete(const char *path)
-{ 
+{
     char *file_path;
     uint16_t path_len;
 
@@ -254,7 +254,7 @@ int HalFileSeek(int fd, int offset, unsigned int whence)
     }
 
     ret = lseek(File[fd - 1].fs_fd, offset, whence);
-    if ((ret >  f_info.st_size) || (ret < 0)){
+    if ((ret >  f_info.st_size) || (ret < 0)) {
         return -1;
     }
 

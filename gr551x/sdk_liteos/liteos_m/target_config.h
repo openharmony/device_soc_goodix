@@ -86,7 +86,8 @@ extern unsigned char __los_heap_addr_start__[];
 extern unsigned char __los_heap_addr_end__[];
 #define LOSCFG_SYS_EXTERNAL_HEAP                            1
 #define LOSCFG_SYS_HEAP_ADDR                                ((void *)__los_heap_addr_start__)
-#define LOSCFG_SYS_HEAP_SIZE                                (((unsigned long)__los_heap_addr_end__) - ((unsigned long)__los_heap_addr_start__) + 1)
+#define LOSCFG_SYS_HEAP_SIZE    (((unsigned long)__los_heap_addr_end__) - \
+                                 ((unsigned long)__los_heap_addr_start__) + 1)
 #define OS_TASK_STACK_ADDR                                  (&m_aucSysMem0[0])
 
 /*=============================================================================

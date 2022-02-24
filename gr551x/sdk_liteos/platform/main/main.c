@@ -40,8 +40,7 @@ void SystemPeripheralsInit(void)
     uint8_t   addr[6];
     uint16_t  lenght = 6;
 
-    if (NVDS_TAG_NOT_EXISTED == nvds_get(0xC001, &lenght, (uint8_t*)addr))
-    {
+    if (NVDS_TAG_NOT_EXISTED == nvds_get(0xC001, &lenght, (uint8_t*)addr)) {
         SYS_SET_BD_ADDR(s_bd_addr);
     }
 
@@ -57,7 +56,7 @@ void HardwareRandomInit(void)
 }
 
 int HardwareRandomGet(uint32_t *p_random)
-{   
+{
     int ret = 0;
 
     ret = app_rng_gen_sync(g_random_seed, p_random);
@@ -66,7 +65,7 @@ int HardwareRandomGet(uint32_t *p_random)
     }
 
     return 0;
-} 
+}
 
 void OSVectorInit(void)
 {
@@ -107,7 +106,7 @@ void OSVectorInit(void)
     OsSetVector(ISO7816_IRQn, (HWI_PROC_FUNC)ISO7816_IRQHandler);
     OsSetVector(PRESENT_IRQn, (HWI_PROC_FUNC)PRESENT_IRQHandler);
     OsSetVector(CALENDAR_IRQn, (HWI_PROC_FUNC)CALENDAR_IRQHandler);
-    
+
     NVIC_SetPriorityGrouping(0x3);
 }
 

@@ -27,9 +27,9 @@ unsigned int IoTFlashWrite(unsigned int flashOffset, unsigned int size,
                            const unsigned char *ramData, unsigned char doErase)
 {
     if (doErase) {
-       if (hal_flash_erase(flashOffset, size) != true) {
+        if (hal_flash_erase(flashOffset, size) != true) {
             return IOT_FAILURE;
-       }
+        }
     }
 
     return hal_flash_write(flashOffset, ramData, size);

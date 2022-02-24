@@ -34,12 +34,12 @@
 /*----------------------------------------------------------------------------
   WEAK Functions
  *----------------------------------------------------------------------------*/
-__WEAK void sdk_init (void)
+__WEAK void sdk_init(void)
 {
     /* Prevent unused argument(s) compilation warning */
     return;
 }
-__WEAK void rom_init (void)
+__WEAK void rom_init(void)
 {
     /* Prevent unused argument(s) compilation warning */
     return;
@@ -49,9 +49,16 @@ __WEAK void rom_init (void)
   Define clocks
  *----------------------------------------------------------------------------*/
 #define SOFTWARE_REG_WAKEUP_FLAG_POS   (8)
-#define REG_PL_WR(addr, value)       (*(volatile uint32_t *)(addr)) = (value)
-#define REG_PL_RD(addr)              (*(volatile uint32_t *)(addr))
+static inline void REG_PL_WR(uint32_t addr, uint32_t value)
+{
+    (*((volatile uint32_t *)(addr))) = (value);
+}
+static inline uint32_t REG_PL_RD(uint32_t addr)
+{
+    return (*((volatile uint32_t *)(addr)));
+}
 
+#define SCB_CPACR_BASE_NUM           3UL
 #define READ_VERSION_ADDR()          REG_PL_RD(0x45004)
 #define CALIB_LP_CYCLE_COUNT           20
 
@@ -88,11 +95,12 @@ const uint32_t mcu_clk_2_qspi_clk[CLK_TYPE_NUM] = {
     [CPLL_S16M_CLK] = QSPI_16M_CLK,
     [XO_S16M_CLK] = QSPI_16M_CLK,
 };
+
 /*----------------------------------------------------------------------------
   System Core Clock Variable
  *----------------------------------------------------------------------------*/
 uint32_t SystemCoreClock = CLK_64M;  /* System Core Clock Frequency as 64Mhz     */
-                                        
+
 // lint -e{2,10,48,63}
 // The previous line of comment is to inhibit PC-Lint errors for next code block.
 void SystemCoreSetClock(mcu_clock_type_t clock_type)
@@ -105,7 +113,7 @@ void SystemCoreSetClock(mcu_clock_type_t clock_type)
         // When a 16M or 64M clock is switched to another clock, it needs to be switched to 32M first.
         AON->PWR_RET01 = (temp | (CPLL_T32M_CLK << AON_PWR_REG01_SYS_CLK_SEL_Pos) |
                           (QSPI_32M_CLK << AON_PWR_REG01_XF_SCK_CLK_SEL_Pos));
-        
+
         __asm ("nop;nop;nop;nop;");
         temp = AON->PWR_RET01 & (~(AON_PWR_REG01_SYS_CLK_SEL | AON_PWR_REG01_XF_SCK_CLK_SEL));
         AON->PWR_RET01 = (temp | (clock_type << AON_PWR_REG01_SYS_CLK_SEL_Pos) |
@@ -151,14 +159,14 @@ static void __sdk_init(void)
     sactter_copy_info_t sactter_copy_info = {0};
 
     for (int i = 0; i < (REGION_TABLE_LIMIT - REGION_TABLE_BASE) / (sizeof(sactter_copy_info_t)); i++) {
-        memcpy_s((void *)&sactter_copy_info, sizeof (sactter_copy_info),
+        memcpy_s((void *)&sactter_copy_info, sizeof (sactter_copy_info), \
                  (void *)(REGION_TABLE_BASE + i * sizeof(sactter_copy_info_t)), sizeof(sactter_copy_info_t));
 
         if ((sactter_copy_info.fun + 1) == SCATTERLOAD_COPY) {
             if (sactter_copy_info.ram_addr == DFU_DATA_START_ADDR) {
                 continue;
             }
-            memcpy_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len,
+            memcpy_s((void *)(sactter_copy_info.ram_addr), sactter_copy_info.len, \
                      (void *)(sactter_copy_info.rom_addr), sactter_copy_info.len);
         } else {
             if ((sactter_copy_info.fun + 1) == SCATTERLOAD_ZEROINIT) {
@@ -171,8 +179,8 @@ static void __sdk_init(void)
 void SystemInit(void)
 {
 #if (__FPU_USED == 1)
-    SCB->CPACR |= ((3UL << ITEM_10*2) |                 /* set CP10 Full Access */
-                    (3UL << ITEM_11*2)  );              /* set CP11 Full Access */
+    SCB->CPACR |= ((SCB_CPACR_BASE_NUM << ITEM_10*ITEM_2) |                /* set CP10 Full Access */
+                   (SCB_CPACR_BASE_NUM << ITEM_11*ITEM_2)  );              /* set CP11 Full Access */
 #endif
 
 #ifdef UNALIGNED_SUPPORT_DISABLE
@@ -193,9 +201,9 @@ void system_platform_init(void)
 #if (!defined(ROM_RUN_IN_FLASH)) && defined(GR5515_E)
     sdk_init();
 #else
-    #if defined(GR5515_E)
+#if defined(GR5515_E)
     rom_init();
-    #endif
+#endif
 #endif
 
     platform_init();

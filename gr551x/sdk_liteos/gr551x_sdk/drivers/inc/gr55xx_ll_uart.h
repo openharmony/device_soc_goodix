@@ -533,9 +533,9 @@ __STATIC_INLINE uint32_t ll_uart_get_parity(uart_regs_t *UARTx)
   * @retval None
   */
 __STATIC_INLINE void ll_uart_config_character(uart_regs_t *UARTx,
-                                              uint32_t     data_bits,
-                                              uint32_t     parity,
-                                              uint32_t     stop_bits)
+        uint32_t     data_bits,
+        uint32_t     parity,
+        uint32_t     stop_bits)
 {
     MODIFY_REG(UARTx->LCR, UART_LCR_PARITY | UART_LCR_STOP | UART_LCR_DLS, parity | stop_bits | data_bits);
 }

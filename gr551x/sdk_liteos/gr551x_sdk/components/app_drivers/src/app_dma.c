@@ -83,7 +83,7 @@ static void dma_wake_up_ind(void);
  */
 static bool             s_sleep_cb_registered_flag = false;
 static struct dma_env_t s_dma_env[DMA_HANDLE_MAX];
-static pwr_id_t         s_dma_pwr_id;
+static int16_t          s_dma_pwr_id;
 
 static const app_sleep_callbacks_t dma_sleep_cb = {
     .app_prepare_for_sleep  = dma_prepare_for_sleep,
@@ -167,7 +167,7 @@ void dma_tfr_callback(struct _dma_handle *hdma)
 
     for (i = 0; i < DMA_HANDLE_MAX; i++) {
         if ((s_dma_env[i].dma_state == APP_DMA_ACTIVITY) &&
-            (s_dma_env[i].handle.channel == hdma->channel)) {
+                (s_dma_env[i].handle.channel == hdma->channel)) {
             if (s_dma_env[i].evt_handler != NULL) {
                 s_dma_env[i].evt_handler(APP_DMA_EVT_TFR);
             }
@@ -182,13 +182,33 @@ void dma_err_callback(struct _dma_handle * hdma)
 
     for (i = 0; i < DMA_HANDLE_MAX; i++) {
         if ((s_dma_env[i].dma_state == APP_DMA_ACTIVITY) &&
-            (s_dma_env[i].handle.channel == hdma->channel)) {
+                (s_dma_env[i].handle.channel == hdma->channel)) {
             if (s_dma_env[i].evt_handler != NULL) {
                 s_dma_env[i].evt_handler(APP_DMA_EVT_ERROR);
             }
             break;
         }
     }
+}
+
+
+static void dma_handle_config(uint8_t *p_i, int16_t *p_id, app_dma_params_t *p_params)
+{
+    GLOBAL_EXCEPTION_DISABLE();
+    for (*p_i = 0; (*p_i) < DMA_HANDLE_MAX; (*p_i)++) {
+        if (s_dma_env[*p_i].dma_state == APP_DMA_INVALID || \
+            s_dma_env[*p_i].handle.channel == p_params->channel_number) {
+            if (HAL_DMA_STATE_BUSY == s_dma_env[*p_i].handle.state) {
+                *p_i = DMA_HANDLE_MAX;
+                break;
+            } else {
+                *p_id = *p_i;
+                s_dma_env[*p_i].dma_state = APP_DMA_ACTIVITY;
+                break;
+            }
+        }
+    }
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 int16_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_handler)
@@ -201,21 +221,8 @@ int16_t app_dma_init(app_dma_params_t *p_params, app_dma_evt_handler_t evt_handl
         if (!IS_DMA_ALL_INSTANCE(p_params->channel_number)) {
             return -1;
         }
-        GLOBAL_EXCEPTION_DISABLE();
-        for (i = 0; i < DMA_HANDLE_MAX; i++) {
-            if (s_dma_env[i].dma_state == APP_DMA_INVALID || \
-                s_dma_env[i].handle.channel == p_params->channel_number) {
-                if (HAL_DMA_STATE_BUSY == s_dma_env[i].handle.state) {
-                    i = DMA_HANDLE_MAX;
-                    break;
-                } else {
-                    id = i;
-                    s_dma_env[i].dma_state = APP_DMA_ACTIVITY;
-                    break;
-                }
-            }
-        }
-        GLOBAL_EXCEPTION_ENABLE();
+
+        dma_handle_config(&i, &id, p_params);
 
         if (i < DMA_HANDLE_MAX) {
             if (s_sleep_cb_registered_flag == false) { // register sleep callback

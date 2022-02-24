@@ -246,7 +246,7 @@ static uint16_t app_i2c_config_dma(app_i2c_params_t *p_params)
     tx_dma_params.channel_number             = p_params->use_mode.tx_dma_channel;
     tx_dma_params.init.src_request           = DMA_REQUEST_MEM;
     tx_dma_params.init.dst_request           = (p_params->id == APP_I2C_ID_0) ? \
-                                               DMA_REQUEST_I2C0_TX : DMA_REQUEST_I2C1_TX;
+            DMA_REQUEST_I2C0_TX : DMA_REQUEST_I2C1_TX;
     tx_dma_params.init.direction             = DMA_MEMORY_TO_PERIPH;
     tx_dma_params.init.src_increment         = DMA_SRC_INCREMENT;
     tx_dma_params.init.dst_increment         = DMA_DST_NO_CHANGE;
@@ -264,7 +264,7 @@ static uint16_t app_i2c_config_dma(app_i2c_params_t *p_params)
 
     rx_dma_params.channel_number             = p_params->use_mode.rx_dma_channel;
     rx_dma_params.init.src_request           = (p_params->id == APP_I2C_ID_0) ? \
-                                               DMA_REQUEST_I2C0_RX : DMA_REQUEST_I2C1_RX;
+            DMA_REQUEST_I2C0_RX : DMA_REQUEST_I2C1_RX;
     rx_dma_params.init.dst_request           = DMA_REQUEST_MEM;
     rx_dma_params.init.direction             = DMA_PERIPH_TO_MEMORY;
     rx_dma_params.init.src_increment         = DMA_SRC_NO_CHANGE;
@@ -318,6 +318,83 @@ static void app_i2c_event_call(i2c_handle_t *p_i2c, app_i2c_evt_type_t evt_type)
     }
 }
 
+static uint16_t params_check(app_i2c_params_t *p_params)
+{
+    uint8_t id = p_params->id;
+
+    if (p_params == NULL) {
+        return APP_DRV_ERR_POINTER_NULL;
+    }
+
+    if (id >= APP_I2C_ID_MAX) {
+        return APP_DRV_ERR_INVALID_ID;
+    }
+
+    return APP_DRV_SUCCESS;
+}
+
+#ifdef  ENV_RTOS_USE_SEMP
+static uint16_t semp_init_config(uint8_t id)
+{
+    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+
+    if (s_i2c_env[id].sem_tx == NULL) {
+        app_err_code = app_driver_sem_init(&s_i2c_env[id].sem_tx);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+    if (s_i2c_env[id].sem_rx == NULL) {
+        app_err_code = app_driver_sem_init(&s_i2c_env[id].sem_rx);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+
+    return APP_DRV_SUCCESS;
+}
+#endif
+
+#ifdef ENV_RTOS_USE_MUTEX
+static uint16_t mutex_init_config(uint8_t id)
+{
+    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+
+    if (s_i2c_env[id].mutex_async == NULL) {
+        app_err_code = app_driver_mutex_init(&s_i2c_env[id].mutex_async);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+    if (s_i2c_env[id].mutex_sync == NULL) {
+        app_err_code = app_driver_mutex_init(&s_i2c_env[id].mutex_sync);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+
+    return APP_DRV_SUCCESS;
+}
+#endif
+
+static void sync_params_to_env(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_handler, uint8_t id)
+{
+    s_i2c_env[id].use_mode.type = p_params->use_mode.type;
+    s_i2c_env[id].use_mode.rx_dma_channel = p_params->use_mode.rx_dma_channel;
+    s_i2c_env[id].use_mode.tx_dma_channel = p_params->use_mode.tx_dma_channel;
+    s_i2c_env[id].role = p_params->role;
+    memcpy_s(&s_i2c_env[id].pin_cfg, sizeof (s_i2c_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_i2c_pin_cfg_t));
+    s_i2c_env[id].evt_handler = evt_handler;
+
+    memcpy_s(&s_i2c_env[id].handle.init, sizeof (s_i2c_env[id].handle.init), &p_params->init, sizeof(i2c_init_t));
+    s_i2c_env[id].handle.p_instance = (i2c_regs_t *)s_i2c_instance[id];
+}
+
+static uint16_t register_cb(void)
+{
+    if (s_sleep_cb_registered_flag == false) { // register sleep callback
+        s_sleep_cb_registered_flag = true;
+        s_i2c_pwr_id = pwr_register_sleep_cb(&i2c_sleep_cb, APP_DRIVER_I2C_WAPEUP_PRIORITY);
+        if (s_i2c_pwr_id < 0) {
+            return APP_DRV_ERR_INVALID_PARAM;
+        }
+    }
+
+    return APP_DRV_SUCCESS;
+}
+
 /*
  * GLOBAL FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -328,34 +405,17 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
     app_drv_err_t app_err_code;
     hal_status_t  hal_err_code;
 
-    if (p_params == NULL) {
-        return APP_DRV_ERR_POINTER_NULL;
-    }
-
-    if (id >= APP_I2C_ID_MAX) {
-        return APP_DRV_ERR_INVALID_ID;
-    }
+    app_err_code = params_check(p_params);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if (s_i2c_env[id].sem_tx == NULL) {
-        app_err_code = app_driver_sem_init(&s_i2c_env[id].sem_tx);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
-    if (s_i2c_env[id].sem_rx == NULL) {
-        app_err_code = app_driver_sem_init(&s_i2c_env[id].sem_rx);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
+    app_err_code = semp_init_config(id);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if (s_i2c_env[id].mutex_async == NULL) {
-        app_err_code = app_driver_mutex_init(&s_i2c_env[id].mutex_async);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
-    if (s_i2c_env[id].mutex_sync == NULL) {
-        app_err_code = app_driver_mutex_init(&s_i2c_env[id].mutex_sync);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
+    app_err_code = mutex_init_config(id);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 #endif
 
     app_systick_init();
@@ -375,28 +435,17 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
         hal_nvic_enable_irq(s_i2c_irq[id]);
     }
 
-    s_i2c_env[id].use_mode.type = p_params->use_mode.type;
-    s_i2c_env[id].use_mode.rx_dma_channel = p_params->use_mode.rx_dma_channel;
-    s_i2c_env[id].use_mode.tx_dma_channel = p_params->use_mode.tx_dma_channel;
-    s_i2c_env[id].role = p_params->role;
-    memcpy_s(&s_i2c_env[id].pin_cfg, sizeof (s_i2c_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_i2c_pin_cfg_t));
-    s_i2c_env[id].evt_handler = evt_handler;
+    sync_params_to_env(p_params, evt_handler, id);
 
-    memcpy_s(&s_i2c_env[id].handle.init, sizeof (s_i2c_env[id].handle.init), &p_params->init, sizeof(i2c_init_t));
-    s_i2c_env[id].handle.p_instance = (i2c_regs_t *)s_i2c_instance[id];
     hal_err_code = hal_i2c_deinit(&s_i2c_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
     hal_err_code = hal_i2c_init(&s_i2c_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    if (s_sleep_cb_registered_flag == false) { // register sleep callback
-        s_sleep_cb_registered_flag = true;
-        s_i2c_pwr_id = pwr_register_sleep_cb(&i2c_sleep_cb, APP_DRIVER_I2C_WAPEUP_PRIORITY);
-        if (s_i2c_pwr_id < 0) {
-            return APP_DRV_ERR_INVALID_PARAM;
-        }
-    }
+    hal_err_code = register_cb();
+    APP_DRV_ERR_CODE_CHECK(hal_err_code);
+
     s_i2c_env[id].i2c_state = APP_I2C_ACTIVITY;
     s_i2c_env[id].start_flag = false;
 
@@ -450,7 +499,7 @@ uint16_t app_i2c_deinit(app_i2c_id_t id)
 
     GLOBAL_EXCEPTION_DISABLE();
     if (s_i2c_env[APP_I2C_ID_0].i2c_state == APP_I2C_INVALID &&
-        s_i2c_env[APP_I2C_ID_1].i2c_state == APP_I2C_INVALID) {
+            s_i2c_env[APP_I2C_ID_1].i2c_state == APP_I2C_INVALID) {
         pwr_unregister_sleep_cb(s_i2c_pwr_id);
         s_sleep_cb_registered_flag = false;
     }
@@ -470,9 +519,9 @@ uint16_t app_i2c_receive_sync(app_i2c_id_t id, uint16_t target_address, \
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -495,29 +544,80 @@ uint16_t app_i2c_receive_sync(app_i2c_id_t id, uint16_t target_address, \
     if (err_code != HAL_OK) {
         return (uint16_t)err_code;
     }
-    
+
     return APP_DRV_SUCCESS;
 }
 
 #ifdef  ENV_RTOS_USE_SEMP
+static uint16_t sem_sync_params_check(app_i2c_id_t id, uint8_t *p_data, uint16_t size)
+{
+    if (id >= APP_I2C_ID_MAX ||
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
+            s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
+#ifdef ENV_RTOS_USE_MUTEX
+        APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(id);
+#endif
+        return APP_DRV_ERR_INVALID_PARAM;
+    }
+    return APP_DRV_SUCCESS;
+}
+
+static hal_status_t master_or_slave_receive_process(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
+{
+    hal_status_t err_code = HAL_OK;
+
+    switch (s_i2c_env[id].role) {
+        case APP_I2C_ROLE_MASTER:
+            switch (s_i2c_env[id].use_mode.type) {
+                case APP_I2C_TYPE_INTERRUPT:
+                    err_code = hal_i2c_master_receive_it(&s_i2c_env[id].handle, target_address, p_data, size);
+                    break;
+
+                case APP_I2C_TYPE_DMA:
+                    err_code = hal_i2c_master_receive_dma(&s_i2c_env[id].handle, target_address, p_data, size);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+
+        case APP_I2C_ROLE_SLAVE:
+            switch (s_i2c_env[id].use_mode.type) {
+                case APP_I2C_TYPE_INTERRUPT:
+                    err_code = hal_i2c_slave_receive_it(&s_i2c_env[id].handle, p_data, size);
+                    break;
+
+                case APP_I2C_TYPE_DMA:
+                    err_code = hal_i2c_slave_receive_dma(&s_i2c_env[id].handle, p_data, size);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+
+        default:
+            break;
+    }
+    return err_code;
+}
+#endif
+
+#ifdef  ENV_RTOS_USE_SEMP
 uint16_t app_i2c_receive_sem_sync(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
 {
+    app_drv_err_t app_err_code;
     hal_status_t err_code = HAL_OK;
 
 #ifdef ENV_RTOS_USE_MUTEX
     APP_I2C_DRV_ASYNC_MUTEX_LOCK(id);
 #endif
 
-    if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
-        s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
-#ifdef ENV_RTOS_USE_MUTEX
-        APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(id);
-#endif
-        return APP_DRV_ERR_INVALID_PARAM;
-    }
+    app_err_code = sem_sync_params_check(id, p_data, size);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     i2c_wake_up(id);
@@ -525,40 +625,7 @@ uint16_t app_i2c_receive_sem_sync(app_i2c_id_t id, uint16_t target_address, uint
 
     if (s_i2c_env[id].start_flag == false) {
         s_i2c_env[id].start_flag = true;
-        switch (s_i2c_env[id].role) {
-            case APP_I2C_ROLE_MASTER:
-                switch (s_i2c_env[id].use_mode.type) {
-                    case APP_I2C_TYPE_INTERRUPT:
-                        err_code = hal_i2c_master_receive_it(&s_i2c_env[id].handle, target_address, p_data, size);
-                        break;
-
-                    case APP_I2C_TYPE_DMA:
-                        err_code = hal_i2c_master_receive_dma(&s_i2c_env[id].handle, target_address, p_data, size);
-                        break;
-
-                    default:
-                        break;
-                }
-                break;
-
-            case APP_I2C_ROLE_SLAVE:
-                switch (s_i2c_env[id].use_mode.type) {
-                    case APP_I2C_TYPE_INTERRUPT:
-                        err_code = hal_i2c_slave_receive_it(&s_i2c_env[id].handle, p_data, size);
-                        break;
-
-                    case APP_I2C_TYPE_DMA:
-                        err_code = hal_i2c_slave_receive_dma(&s_i2c_env[id].handle, p_data, size);
-                        break;
-
-                    default:
-                        break;
-                }
-                break;
-
-            default:
-                break;
-        }
+        err_code = master_or_slave_receive_process(id, target_address, p_data, size);
         if (err_code != HAL_OK) {
 #ifdef ENV_RTOS_USE_MUTEX
             APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(id);
@@ -572,7 +639,7 @@ uint16_t app_i2c_receive_sem_sync(app_i2c_id_t id, uint16_t target_address, uint
 #endif
         return APP_DRV_ERR_BUSY;
     }
-    
+
     app_driver_sem_pend(s_i2c_env[id].sem_rx, OS_WAIT_FOREVER);
 
 #ifdef ENV_RTOS_USE_MUTEX
@@ -588,10 +655,10 @@ uint16_t app_i2c_receive_async(app_i2c_id_t id, uint16_t target_address, uint8_t
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
-        s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
+            s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -642,7 +709,7 @@ uint16_t app_i2c_receive_async(app_i2c_id_t id, uint16_t target_address, uint8_t
     } else {
         return APP_DRV_ERR_BUSY;
     }
-    
+
     return APP_DRV_SUCCESS;
 }
 
@@ -652,9 +719,9 @@ uint16_t app_i2c_transmit_sync(app_i2c_id_t id, uint16_t target_address, \
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -683,6 +750,49 @@ uint16_t app_i2c_transmit_sync(app_i2c_id_t id, uint16_t target_address, \
 }
 
 #ifdef  ENV_RTOS_USE_SEMP
+static hal_status_t master_or_slave_transmit_process(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
+{
+    hal_status_t err_code = HAL_OK;
+
+    switch (s_i2c_env[id].role) {
+        case APP_I2C_ROLE_MASTER:
+            switch (s_i2c_env[id].use_mode.type) {
+                case APP_I2C_TYPE_INTERRUPT:
+                    err_code = hal_i2c_master_transmit_it(&s_i2c_env[id].handle, target_address, p_data, size);
+                    break;
+
+                case APP_I2C_TYPE_DMA:
+                    err_code = hal_i2c_master_transmit_dma(&s_i2c_env[id].handle, target_address, p_data, size);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+
+        case APP_I2C_ROLE_SLAVE:
+            switch (s_i2c_env[id].use_mode.type) {
+                case APP_I2C_TYPE_INTERRUPT:
+                    err_code = hal_i2c_slave_transmit_it(&s_i2c_env[id].handle, p_data, size);
+                    break;
+
+                case APP_I2C_TYPE_DMA:
+                    err_code = hal_i2c_slave_transmit_dma(&s_i2c_env[id].handle, p_data, size);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+
+        default:
+            break;
+    }
+    return err_code;
+}
+#endif
+
+#ifdef  ENV_RTOS_USE_SEMP
 uint16_t app_i2c_transmit_sem_sync(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
 {
     hal_status_t err_code;
@@ -691,16 +801,8 @@ uint16_t app_i2c_transmit_sem_sync(app_i2c_id_t id, uint16_t target_address, uin
     APP_I2C_DRV_ASYNC_MUTEX_LOCK(id);
 #endif
 
-    if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
-        s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
-#ifdef ENV_RTOS_USE_MUTEX
-        APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(id);
-#endif
-        return APP_DRV_ERR_INVALID_PARAM;
-    }
+    app_err_code = sem_sync_params_check(id, p_data, size);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     i2c_wake_up(id);
@@ -708,40 +810,7 @@ uint16_t app_i2c_transmit_sem_sync(app_i2c_id_t id, uint16_t target_address, uin
 
     if (s_i2c_env[id].start_flag == false) {
         s_i2c_env[id].start_flag = true;
-        switch (s_i2c_env[id].role) {
-            case APP_I2C_ROLE_MASTER:
-                switch (s_i2c_env[id].use_mode.type) {
-                    case APP_I2C_TYPE_INTERRUPT:
-                        err_code = hal_i2c_master_transmit_it(&s_i2c_env[id].handle, target_address, p_data, size);
-                        break;
-
-                    case APP_I2C_TYPE_DMA:
-                        err_code = hal_i2c_master_transmit_dma(&s_i2c_env[id].handle, target_address, p_data, size);
-                        break;
-
-                    default:
-                        break;
-                }
-                break;
-
-            case APP_I2C_ROLE_SLAVE:
-                switch (s_i2c_env[id].use_mode.type) {
-                    case APP_I2C_TYPE_INTERRUPT:
-                        err_code = hal_i2c_slave_transmit_it(&s_i2c_env[id].handle, p_data, size);
-                        break;
-
-                    case APP_I2C_TYPE_DMA:
-                        err_code = hal_i2c_slave_transmit_dma(&s_i2c_env[id].handle, p_data, size);
-                        break;
-
-                    default:
-                        break;
-                }
-                break;
-
-            default:
-                break;
-        }
+        err_code = master_or_slave_transmit_process(id, target_address, p_data, size);
         if (err_code != HAL_OK) {
 #ifdef ENV_RTOS_USE_MUTEX
             APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(id);
@@ -770,10 +839,10 @@ uint16_t app_i2c_transmit_async(app_i2c_id_t id, uint16_t target_address, uint8_
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
-        s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
+            s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -836,9 +905,9 @@ uint16_t app_i2c_mem_read_sync(app_i2c_id_t id, uint16_t dev_address, \
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -860,10 +929,10 @@ uint16_t app_i2c_mem_read_async(app_i2c_id_t id, uint16_t dev_address, \
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
-        s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
+            s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -906,9 +975,9 @@ uint16_t app_i2c_mem_write_sync(app_i2c_id_t id, uint16_t dev_address, \
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -931,10 +1000,10 @@ uint16_t app_i2c_mem_write_async(app_i2c_id_t id, uint16_t dev_address, \
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_I2C_ID_MAX ||
-        p_data == NULL ||
-        size == 0 ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
-        s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
+            p_data == NULL ||
+            size == 0 ||
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID ||
+            s_i2c_env[id].use_mode.type == APP_I2C_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -966,14 +1035,14 @@ uint16_t app_i2c_mem_write_async(app_i2c_id_t id, uint16_t dev_address, \
     } else {
         return APP_DRV_ERR_BUSY;
     }
-    
+
     return APP_DRV_SUCCESS;
 }
 
 i2c_handle_t *app_i2c_get_handle(app_i2c_id_t id)
 {
     if (id >= APP_I2C_ID_MAX ||
-        s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
+            s_i2c_env[id].i2c_state == APP_I2C_INVALID) {
         return NULL;
     }
 

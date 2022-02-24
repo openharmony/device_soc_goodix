@@ -24,17 +24,17 @@
  ****************************************************************************************
  */
 
-#ifndef __SCATTER_CONFIG_H__
-#define __SCATTER_CONFIG_H__
+#ifndef SCATTER_CONFIG_H
+#define SCATTER_CONFIG_H
 
 #include "custom_config.h"
 
 /*****************************************************************
- * if CSTACK_HEAP_SIZE is not defined in custom_config.h, 
+ * if CSTACK_HEAP_SIZE is not defined in custom_config.h,
  * keep default setting to 32KB
  */
 #ifndef CSTACK_HEAP_SIZE
-    #define CSTACK_HEAP_SIZE     0x8000
+#define CSTACK_HEAP_SIZE     0x8000
 #endif
 
 #define FLASH_START_ADDR         0x01000000
@@ -57,9 +57,9 @@
 #endif
 
 #if (CHIP_TYPE == 0)
-    #define RAM_SIZE            0x00040000
+#define RAM_SIZE            0x00040000
 #else
-    #define RAM_SIZE            0x00020000
+#define RAM_SIZE            0x00020000
 #endif
 
 #define RAM_END_ADDR            (RAM_START_ADDR + RAM_SIZE)
@@ -71,7 +71,7 @@
 #if (APP_CODE_RUN_ADDR == APP_CODE_LOAD_ADDR && \
         APP_CODE_RUN_ADDR >= FLASH_START_ADDR && \
         APP_CODE_RUN_ADDR < FLASH_START_ADDR + FLASH_SIZE)
-    #define XIP_MODE    
+#define XIP_MODE
 #endif
 /****************************************************************/
 
@@ -81,81 +81,81 @@
  * in ROM's configs.opt
  */
 #ifndef CFG_MAX_CONNECTIONS
-    #error "CFG_MAX_CONNECTIONS is not defined in app's custom_config.h ."
+#error "CFG_MAX_CONNECTIONS is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_CONNECTIONS <= 10)
-    #define USER_MAX_CONNECTIONS CFG_MAX_CONNECTIONS
+#define USER_MAX_CONNECTIONS CFG_MAX_CONNECTIONS
 #else
-    #define USER_MAX_CONNECTIONS (1)
+#define USER_MAX_CONNECTIONS (1)
 #endif
 
 #ifndef CFG_MAX_ADVS
-    #error "CFG_MAX_ADVS is not defined in app's custom_config.h ."
+#error "CFG_MAX_ADVS is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_ADVS <= 5)
-    #define USER_MAX_ADVS CFG_MAX_ADVS
+#define USER_MAX_ADVS CFG_MAX_ADVS
 #else
-    #define USER_MAX_ADVS (1)
+#define USER_MAX_ADVS (1)
 #endif
 
 #ifndef CFG_MAX_PER_ADVS
-    #error "CFG_MAX_PER_ADVS is not defined in app's custom_config.h ."
+#error "CFG_MAX_PER_ADVS is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_PER_ADVS <= 5)
-    #define USER_MAX_PER_ADVS CFG_MAX_PER_ADVS
+#define USER_MAX_PER_ADVS CFG_MAX_PER_ADVS
 #else
-    #define USER_MAX_PER_ADVS (0)
+#define USER_MAX_PER_ADVS (0)
 #endif
 
 #if ((USER_MAX_ADVS+USER_MAX_PER_ADVS) > 5)
-    #error "The number of BLE Legacy/Extended/Periodic Advertising exceeds the limit."
+#error "The number of BLE Legacy/Extended/Periodic Advertising exceeds the limit."
 #endif
 
 #ifndef CFG_MAX_SCAN
-    #error "CFG_MAX_SCAN is not defined in app's custom_config.h ."
+#error "CFG_MAX_SCAN is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_SCAN <= 1)
-    #define USER_MAX_SCAN CFG_MAX_SCAN
+#define USER_MAX_SCAN CFG_MAX_SCAN
 #else
-    #define USER_MAX_SCAN (1)
+#define USER_MAX_SCAN (1)
 #endif
 
 #ifndef CFG_MAX_SYNCS
-    #error "CFG_MAX_SYNCS is not defined in app's custom_config.h ."
+#error "CFG_MAX_SYNCS is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_SYNCS <= 5)
-    #define USER_MAX_SYNCS CFG_MAX_SYNCS
+#define USER_MAX_SYNCS CFG_MAX_SYNCS
 #else
-    #define USER_MAX_SYNCS (0)
+#define USER_MAX_SYNCS (0)
 #endif
 
 #if ((USER_MAX_CONNECTIONS+USER_MAX_ADVS+2*USER_MAX_PER_ADVS+USER_MAX_SCAN+USER_MAX_SYNCS) > 12)
-    #error "The number of BLE Activities exceeds the limit."
+#error "The number of BLE Activities exceeds the limit."
 #endif
 
 #ifndef CFG_MAX_BOND_DEVS
-    #error "CFG_MAX_BOND_DEVS is not defined in app's custom_config.h ."
+#error "CFG_MAX_BOND_DEVS is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_BOND_DEVS <= 10)
-    #define USER_MAX_BOND_DEVS CFG_MAX_BOND_DEVS
+#define USER_MAX_BOND_DEVS CFG_MAX_BOND_DEVS
 #else
-    #define USER_MAX_BOND_DEVS (1)
+#define USER_MAX_BOND_DEVS (1)
 #endif
 
 #ifndef CFG_MAX_PRFS
-    #error "CFG_MAX_PRFS is not defined in app's custom_config.h ."
+#error "CFG_MAX_PRFS is not defined in app's custom_config.h ."
 #endif
 
 #if (CFG_MAX_PRFS <= 64)
-    #define USER_MAX_PRFS CFG_MAX_PRFS
+#define USER_MAX_PRFS CFG_MAX_PRFS
 #else
-    #define USER_MAX_PRFS (1)
+#define USER_MAX_PRFS (1)
 #endif
 
 /* The macro is used to compute size of the heap block in bytes. */
@@ -163,9 +163,10 @@
 #define MEM_CALC_HEAP_LEN(len)              ((((len) + (sizeof(uint32_t) - 1)) / sizeof(uint32_t)) + MEM_HEAP_HEADER)
 #define MEM_CALC_HEAP_LEN_IN_BYTES(len)     (MEM_CALC_HEAP_LEN(len) * sizeof(uint32_t))
 
-#define ENV_HEAP_SIZE       MEM_CALC_HEAP_LEN_IN_BYTES(292 * USER_MAX_CONNECTIONS \
-                                                     + 426 * (USER_MAX_CONNECTIONS+USER_MAX_ADVS+2*USER_MAX_PER_ADVS+USER_MAX_SCAN+USER_MAX_SYNCS) \
-                                                     + 600)
+#define ENV_HEAP_SIZE       MEM_CALC_HEAP_LEN_IN_BYTES(292 * USER_MAX_CONNECTIONS + \
+                                                       426 * (USER_MAX_CONNECTIONS + USER_MAX_ADVS + \
+                                                       2 * USER_MAX_PER_ADVS+USER_MAX_SCAN+USER_MAX_SYNCS) + \
+                                                       600)
 /* The size of heap for ATT database depends on the number of attributes in
  * profiles. The value can be tuned based on supported profiles. */
 #if (CFG_MESH_SUPPORT == 1)
@@ -175,25 +176,26 @@
 #define ATT_DB_HEAP_SIZE    MEM_CALC_HEAP_LEN_IN_BYTES(1024)
 #endif
 
-#define KE_MSG_HEAP_SIZE    MEM_CALC_HEAP_LEN_IN_BYTES(1650 * (USER_MAX_SCAN+USER_MAX_SYNCS) \
-                                                     + 112 *(USER_MAX_CONNECTIONS+USER_MAX_ADVS+2*USER_MAX_PER_ADVS) \
-                                                     + 408 *(USER_MAX_CONNECTIONS+USER_MAX_ADVS+2*USER_MAX_PER_ADVS+USER_MAX_SCAN+USER_MAX_SYNCS) \
-                                                     + 3072)
+#define KE_MSG_HEAP_SIZE    MEM_CALC_HEAP_LEN_IN_BYTES(1650 * (USER_MAX_SCAN+USER_MAX_SYNCS) + \
+                                                       112 *(USER_MAX_CONNECTIONS + USER_MAX_ADVS + \
+                                                       2*USER_MAX_PER_ADVS) + 408 *(USER_MAX_CONNECTIONS + \
+                                                       USER_MAX_ADVS + 2 * USER_MAX_PER_ADVS + \
+                                                       USER_MAX_SCAN + USER_MAX_SYNCS)+ 3072)
 /* The size of non-retention heap is customized. This heap will used by BLE
  * stack only when other three heaps are full. */
 #define NON_RET_HEAP_SIZE   MEM_CALC_HEAP_LEN_IN_BYTES(328 * 2)
 
-#define PRF_BUF_SIZE 	(92*USER_MAX_PRFS + 4)
-#define BOND_BUF_SIZE 	(8*USER_MAX_BOND_DEVS + 4)
-#define CONN_BUF_SIZE 	(372*USER_MAX_CONNECTIONS + 4)
+#define PRF_BUF_SIZE    (92*USER_MAX_PRFS + 4)
+#define BOND_BUF_SIZE   (8*USER_MAX_BOND_DEVS + 4)
+#define CONN_BUF_SIZE   (372*USER_MAX_CONNECTIONS + 4)
 
 
 /**************************************************************************/
 /* sections on retention RAM cells */
 #ifdef CFG_FERP
-    #define STACK_END_ADDR         (RAM_END_ADDR-FERP_SIZE)
+#define STACK_END_ADDR         (RAM_END_ADDR-FERP_SIZE)
 #else
-    #define STACK_END_ADDR         (RAM_END_ADDR)
+#define STACK_END_ADDR         (RAM_END_ADDR)
 #endif
 
 #ifndef GR5515_E
@@ -218,6 +220,4 @@
 #define APP_RAM_SIZE            0x00030000
 #endif
 
-#endif // __SCATTER_CONFIG_H__
-
-
+#endif // SCATTER_CONFIG_H

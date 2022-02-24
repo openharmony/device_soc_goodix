@@ -126,13 +126,14 @@ static void app_assert_info_output(uint8_t assert_type)
         }
     } else if (assert_type == APP_ASSERT_WARNING) {
         ret = sprintf_s(assert_info, sizeof(assert_info), "[WARNING] Param0:%d,Param1:%d", s_assert_info.param0,
-                  s_assert_info.param1);
+                        s_assert_info.param1);
         if (ret < 0) {
             return;
         }
-    } else if (assert_type == APP_ASSERT_PARAM) { \
+    } else if (assert_type == APP_ASSERT_PARAM) {
+        \
         ret = sprintf_s(assert_info, sizeof(assert_info), "[PARAM] Param0:%d,Param1:%d", \
-                  s_assert_info.param0, s_assert_info.param1);
+                        s_assert_info.param0, s_assert_info.param1);
         if (ret < 0) {
             return;
         }

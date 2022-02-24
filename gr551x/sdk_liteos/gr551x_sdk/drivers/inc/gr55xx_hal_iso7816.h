@@ -161,9 +161,9 @@ typedef struct _iso7816_handle_t {
   * @{
   */
 
- /**
-  * @brief HAL_ISO7816 Callback function definition
-  */
+/**
+ * @brief HAL_ISO7816 Callback function definition
+ */
 
 typedef struct _iso7816_callback {
     void (*iso7816_msp_init)(iso7816_handle_t *p_iso7816);                /**< ISO7816 init MSP callback */
@@ -359,7 +359,7 @@ hal_status_t hal_iso7816_receive(iso7816_handle_t *p_iso7816, uint16_t rx_size, 
  * @retval ::HAL_TIMEOUT: Timeout occurred.
  */
 hal_status_t hal_iso7816_transmit_receive(iso7816_handle_t *p_iso7816, uint16_t tx_size, uint16_t rx_size,
-                                          uint32_t timeout);
+        uint32_t timeout);
 
 /**
  * @brief Transimit data in non-blocking mode with Interrupt

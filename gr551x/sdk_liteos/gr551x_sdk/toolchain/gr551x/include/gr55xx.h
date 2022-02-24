@@ -54,7 +54,7 @@
    application
   */
 #if !defined (GR551xx)
-    #define GR551xx
+#define GR551xx
 #endif
 
 /** @} */
@@ -63,13 +63,13 @@
   * @{
   */
 #if defined(GR551xx)
-    #include "gr551xx.h"
+#include "gr551xx.h"
 
-    #define GR55XX_RAM_ADDRESS             0x30000000
-    #define GR55XX_FLASH_ADDRESS           0x01000000
-    #define GR55XX_ALIAS_ADDRESS           0x00800000
+#define GR55XX_RAM_ADDRESS             0x30000000
+#define GR55XX_FLASH_ADDRESS           0x01000000
+#define GR55XX_ALIAS_ADDRESS           0x00800000
 #else
-    #error "Please select first the target GR55xx device used in your application (in gr551xx.h file)"
+#error "Please select first the target GR55xx device used in your application (in gr551xx.h file)"
 #endif
 
 /** @} */
@@ -91,7 +91,10 @@ typedef enum {
     DISABLE = 0,
     ENABLE = !DISABLE
 } functional_state_t;
-#define IS_FUNCTIONAL_STATE(STATE) (((STATE) == DISABLE) || ((STATE) == ENABLE))
+static inline uint32_t IS_FUNCTIONAL_STATE(uint32_t STATE)
+{
+    return (((STATE) == DISABLE) || ((STATE) == ENABLE));
+}
 
 typedef enum {
     ERROR = 0,
@@ -141,26 +144,26 @@ typedef enum {
 
 #ifndef SECTION_RAM_CODE
 #if (!defined(ROM_RUN_IN_FLASH)) && defined(CFG_LAYER_TAG_ROM)
-    #define SECTION_RAM_CODE
+#define SECTION_RAM_CODE
 #else
 #if defined ( __ICCARM__ )
-    #define SECTION_RAM_CODE __ramfunc
+#define SECTION_RAM_CODE __ramfunc
 #else
-    /**< To prevent doxygen from misidentifying the function name */
-    #define SECTION_RAM_CODE __attribute__((section("RAM_CODE")))
+/**< To prevent doxygen from misidentifying the function name */
+#define SECTION_RAM_CODE __attribute__((section("RAM_CODE")))
 #endif
 #endif
 #endif
 
 #ifndef TINY_RAM_SECTION
 #if defined(GR5515_D) || defined(GR5515_E)
-    #define TINY_RAM_SECTION SECTION_RAM_CODE
+#define TINY_RAM_SECTION SECTION_RAM_CODE
 #else
 #if defined ( __ICCARM__ )
-    #define TINY_RAM_SECTION __ramfunc
+#define TINY_RAM_SECTION __ramfunc
 #else
-    /**< To prevent doxygen from misidentifying the function name */
-    #define TINY_RAM_SECTION __attribute__((section("TINY_RAM_SPACE")))
+/**< To prevent doxygen from misidentifying the function name */
+#define TINY_RAM_SECTION __attribute__((section("TINY_RAM_SPACE")))
 #endif
 #endif
 #endif

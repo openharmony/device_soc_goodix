@@ -307,8 +307,8 @@ uint16_t app_rng_gen_sync(uint16_t *p_seed, uint32_t *p_random32bit)
     hal_status_t err_code;
 
     if (s_rng_env.rng_state == APP_RNG_INVALID ||
-        p_seed == NULL ||
-        p_random32bit == NULL) {
+            p_seed == NULL ||
+            p_random32bit == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -334,8 +334,8 @@ uint16_t app_rng_gen_sem_sync(uint16_t *p_seed)
 #endif
 
     if (s_rng_env.rng_state == APP_RNG_INVALID ||
-        s_rng_env.ues_type == APP_RNG_TYPE_POLLING ||
-        p_seed == NULL) {
+            s_rng_env.ues_type == APP_RNG_TYPE_POLLING ||
+            p_seed == NULL) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_RNG_DRV_ASYNC_MUTEX_UNLOCK;
 #endif
@@ -369,8 +369,8 @@ uint16_t app_rng_gen_async(uint16_t *p_seed)
     hal_status_t err_code;
 
     if (s_rng_env.rng_state == APP_RNG_INVALID ||
-        s_rng_env.ues_type == APP_RNG_TYPE_POLLING ||
-        p_seed == NULL) {
+            s_rng_env.ues_type == APP_RNG_TYPE_POLLING ||
+            p_seed == NULL) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 

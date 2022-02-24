@@ -189,7 +189,7 @@ void ble_idle_time_notify_cb_register(void (*callback)(uint32_t hs));
  *****************************************************************************************
  */
 void ble_activity_start_notify_cb_register(void (*callback)(gap_activity_role_t e_role,
-                                                                uint8_t index));
+        uint8_t index));
 
 /**
  *****************************************************************************************
@@ -208,7 +208,7 @@ void ble_activity_start_notify_cb_register(void (*callback)(gap_activity_role_t 
  *****************************************************************************************
  */
 void ble_activity_end_notify_cb_register(void (*callback)(gap_activity_role_t e_role,
-                                                           uint8_t index));
+        uint8_t index));
 
 /**
  *****************************************************************************************

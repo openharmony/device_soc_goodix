@@ -252,12 +252,11 @@
  * @defgroup BLE_ERROR_TYPEDEF Typedefs
  * @{
  */
- #if 1
+
 /**@brief Callback function error parameter type. */
-typedef uint8_t   ble_err_t;
+typedef unsigned char   ble_err_t;
 /**@brief SDK API result type. */
-typedef uint16_t  sdk_err_t;
-#endif
+typedef unsigned short  sdk_err_t;
 /**@} */
 /**@} */
 

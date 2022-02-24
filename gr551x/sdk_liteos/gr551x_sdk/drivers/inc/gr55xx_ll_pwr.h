@@ -420,9 +420,9 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_ext_wakeup_pin(uint3
 SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_set_ext_wakeup_type(uint32_t wakeup_pin, uint32_t wakeup_type)
 {
     uint32_t invert = ((wakeup_type & LL_PWR_EXTWKUP_INVERT_LSB) == LL_PWR_EXTWKUP_INVERT_LSB) ? \
-                        (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) : 0;
+                      (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) : 0;
     uint32_t type = ((wakeup_type & LL_PWR_EXTWKUP_TYPE_LSB) == LL_PWR_EXTWKUP_TYPE_LSB) ? \
-                      (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos) : 0;
+                    (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos) : 0;
     GLOBAL_EXCEPTION_DISABLE();
     MODIFY_REG(AON->EXT_WKUP_CTL,
                (wakeup_pin << AON_EXT_WKUP_CTL_INVERT_Pos) | (wakeup_pin << AON_EXT_WKUP_CTL_TYPE_Pos),
@@ -456,7 +456,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_set_ext_wakeup_type(uint32_t wakeup
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_get_ext_wakeup_type(uint32_t wakeup_pin)
 {
     return ((uint32_t)(READ_BITS(AON->EXT_WKUP_CTL, AON_EXT_WKUP_CTL_INVERT | AON_EXT_WKUP_CTL_TYPE) >> \
-            POSITION_VAL(wakeup_pin)));
+                       POSITION_VAL(wakeup_pin)));
 }
 
 /**
@@ -739,7 +739,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_comm_timer_power(void)
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_comm_timer_power(void)
 {
     return ((uint32_t)(READ_BITS(AON->PWR_RET01, AON_PWR_REG01_PWR_EN_PD_COMM_TIMER) == \
-            AON_PWR_REG01_PWR_EN_PD_COMM_TIMER));
+                       AON_PWR_REG01_PWR_EN_PD_COMM_TIMER));
 }
 
 /**
@@ -788,7 +788,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_comm_core_power(void)
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_comm_core_power(void)
 {
     return ((uint32_t)(READ_BITS(AON->PWR_RET01, AON_PWR_REG01_PWR_EN_PD_COMM_CORE) == \
-            AON_PWR_REG01_PWR_EN_PD_COMM_CORE));
+                       AON_PWR_REG01_PWR_EN_PD_COMM_CORE));
 }
 
 /**
@@ -895,7 +895,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_osc_sleep(void)
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_osc_sleep(void)
 {
     return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN) == \
-            AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN));
+                       AON_COMM_DEEPSLCNTL_OSC_SLEEP_EN));
 }
 
 /**
@@ -943,7 +943,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_radio_sleep(void)
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_radio_sleep(void)
 {
     return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN) == \
-            AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN));
+                       AON_COMM_DEEPSLCNTL_RADIO_SLEEP_EN));
 }
 
 /**
@@ -992,7 +992,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_comm_core_deep_sleep(void)
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_comm_core_deep_sleep(void)
 {
     return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON) == \
-            AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON));
+                       AON_COMM_DEEPSLCNTL_DEEP_SLEEP_ON));
 }
 
 /**
@@ -1026,7 +1026,7 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_enable_comm_soft_wakeup_req(void)
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_enabled_soft_wakeup_req(void)
 {
     return ((uint32_t)(READ_BITS(AON->MSIO_PAD_CFG_1, AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ) == \
-            AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ));
+                       AON_COMM_DEEPSLCNTL_SOFT_WAKEUP_REQ));
 }
 
 /**
@@ -1140,8 +1140,8 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_get_comm_sleep_duration(void)
 SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_set_comm_wakeup_timing(uint32_t twext, uint32_t twosc, uint32_t twrm)
 {
     WRITE_REG(AON->PWR_RET29, (twext << AON_COMM_TMR_ENBPRESET_TWEXT_Pos) |
-                              (twosc << AON_COMM_TMR_ENBPRESET_TWOSC_Pos) |
-                              (twrm  << AON_COMM_TMR_ENBPRESET_TWRM_Pos));
+              (twosc << AON_COMM_TMR_ENBPRESET_TWOSC_Pos) |
+              (twrm  << AON_COMM_TMR_ENBPRESET_TWRM_Pos));
 }
 
 
@@ -1199,7 +1199,7 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_read_comm_wakeup_timing_twosc(v
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_get_ext_wakeup_status(void)
 {
     return ((uint32_t)(READ_BITS(AON->SLP_EVENT, AON_SLP_EVENT_EXT_WKUP_STATUS) >> \
-            AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
+                       AON_SLP_EVENT_EXT_WKUP_STATUS_Pos) & \
             (uint32_t)(READ_BITS(AON->EXT_WKUP_CTL, LL_PWR_EXTWKUP_PIN_ALL)));
 }
 
@@ -1296,7 +1296,15 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_pwr_is_active_flag_comm_deep_sleep_
 SECTION_RAM_CODE __STATIC_INLINE void ll_pwr_disable_cache_module(void)
 {
     SET_BITS(XQSPI->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS);
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
 }
 
 /** @} */

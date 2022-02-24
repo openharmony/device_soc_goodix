@@ -225,7 +225,7 @@ uint16_t app_pwm_init(app_pwm_params_t *p_params)
     memcpy_s(&s_pwm_env[id].handle.init, sizeof (s_pwm_env[id].handle.init), &p_params->init, sizeof(pwm_init_t));
 
     pwm_gpio_config(s_pwm_env[id].pin_cfg);
-    
+
     s_pwm_env[id].handle.p_instance = (pwm_regs_t *)s_pwm_instance[id];
 
     hal_err_code = hal_pwm_deinit(&s_pwm_env[id].handle);
@@ -261,10 +261,10 @@ uint16_t app_pwm_deinit(app_pwm_id_t id)
     if (s_pwm_env[id].pwm_state == APP_PWM_INVALID) {
         return APP_DRV_ERR_INVALID_ID;
     }
-    
+
     GLOBAL_EXCEPTION_DISABLE();
     if (s_pwm_env[APP_PWM_ID_0].pwm_state == APP_PWM_INVALID &&
-       s_pwm_env[APP_PWM_ID_1].pwm_state == APP_PWM_INVALID) {
+            s_pwm_env[APP_PWM_ID_1].pwm_state == APP_PWM_INVALID) {
         pwr_unregister_sleep_cb(s_pwm_pwr_id);
         s_sleep_cb_registered_flag = false;
     }
@@ -279,10 +279,10 @@ uint16_t app_pwm_deinit(app_pwm_id_t id)
     if (s_pwm_env[id].pin_cfg.channel_c.enable == APP_PWM_PIN_ENABLE) {
         app_io_deinit(s_pwm_env[id].pin_cfg.channel_c.type, s_pwm_env[id].pin_cfg.channel_c.pin);
     }
-    
+
     err_code = hal_pwm_deinit(&s_pwm_env[id].handle);
     HAL_ERR_CODE_CHECK(err_code);
-    
+
     s_pwm_env[id].pwm_state = APP_PWM_INVALID;
     s_pwm_env[id].pwm_module_state = APP_PWM_STOP;
 

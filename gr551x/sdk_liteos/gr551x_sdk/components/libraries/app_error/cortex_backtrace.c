@@ -113,21 +113,26 @@ void fault_trace_nvds_save_flush(void)
 #elif SYS_FAULT_TRACE_MODE == 2  // only Save to NVDS
 #define FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();fault_trace_nvds_save_prepare()
 #define FAULT_TRACE_OUTPUT(format, ...)  do {
-                                                fault_trace_nvds_add(format, ##__VA_ARGS__); \
-                                                fault_trace_nvds_add("\r\n")；
-                                            } while (0)
+fault_trace_nvds_add(format, ##__VA_ARGS__);
+\
+fault_trace_nvds_add("\r\n")；
+} while (0)
 #define  FAULT_TRACE_OUTPUT_FLUSH()       fault_trace_nvds_save_flush()
 #elif SYS_FAULT_TRACE_MODE == 3  // UART Print and Save to NVDS
 #define FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();fault_trace_nvds_save_prepare()
 #define FAULT_TRACE_OUTPUT(format, ...)  do {
-                                                APP_ERROR_INFO_PRINT(format,##__VA_ARGS__); \
-                                                fault_trace_nvds_add(format,##__VA_ARGS__); \
-                                                fault_trace_nvds_add("\r\n")；
-                                            } while (0)
+APP_ERROR_INFO_PRINT(format,##__VA_ARGS__);
+\
+fault_trace_nvds_add(format,##__VA_ARGS__);
+\
+fault_trace_nvds_add("\r\n")；
+} while (0)
 #define  FAULT_TRACE_OUTPUT_FLUSH()  do {
-                                            app_log_flush(); \
-                                            fault_trace_nvds_save_flush(); \
-                                        } while (0)
+    app_log_flush();
+\
+fault_trace_nvds_save_flush();
+\
+} while (0)
 #else
 #define FAULT_TRACE_OUTPUT_PREPARE()
 #define FAULT_TRACE_OUTPUT(...)
@@ -391,297 +396,288 @@ void deal_mvalue(void)
             if ((s_regs.mfsr.bits.IACCVIOL) || (s_regs.mfsr.bits.DACCVIOL)) {
                 FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MMAR], s_regs.mmar);
             }
-        }   
-}
-
-void deal_bvalue(void)
-{
-    if (s_regs.bfsr.bits.IBUSERR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IBUSERR]);
+        }
     }
 
-    if (s_regs.bfsr.bits.PRECISERR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_PRECISERR]);
-    }
+    void deal_bvalue(void) {
+        if (s_regs.bfsr.bits.IBUSERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IBUSERR]);
+        }
 
-    if (s_regs.bfsr.bits.IMPREISERR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IMPREISERR]);
-    }
+        if (s_regs.bfsr.bits.PRECISERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_PRECISERR]);
+        }
 
-    if (s_regs.bfsr.bits.UNSTKERR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_UNSTKERR]);
-    }
+        if (s_regs.bfsr.bits.IMPREISERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IMPREISERR]);
+        }
 
-    if (s_regs.bfsr.bits.STKERR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_STKERR]);
-    }
+        if (s_regs.bfsr.bits.UNSTKERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_UNSTKERR]);
+        }
+
+        if (s_regs.bfsr.bits.STKERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_STKERR]);
+        }
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
-    if (s_regs.bfsr.bits.LSPERR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_LSPERR]);
-    }
+        if (s_regs.bfsr.bits.LSPERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_LSPERR]);
+        }
 #endif
 
-    if (s_regs.bfsr.bits.BFARVALID) {
-        if (s_regs.bfsr.bits.PRECISERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFAR], s_regs.bfar);
-        }
-    }  
-}
-
-void deal_uvalue(void)
-{
-    if (s_regs.ufsr.bits.UNDEFINSTR) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNDEFINSTR]);
-    }
-
-    if (s_regs.ufsr.bits.INVSTATE) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVSTATE]);
-    }
-
-    if (s_regs.ufsr.bits.INVPC) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVPC]);
-    }
-
-    if (s_regs.ufsr.bits.NOCP) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_NOCP]);
-    }
-
-    if (s_regs.ufsr.bits.UNALIGNED) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNALIGNED]);
-    }
-
-    if (s_regs.ufsr.bits.DIVBYZERO0) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_DIVBYZERO0]);
-    }
-}
-
-void deal_dvalue(void)
-{
-	if (s_regs.dfsr.bits.HALTED) {
-		FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_HALTED]);
-	}
-
-	if (s_regs.dfsr.bits.BKPT) {
-		FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_BKPT]);
-	}
-
-	if (s_regs.dfsr.bits.DWTTRAP) {
-		FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_DWTTRAP]);
-	}
-
-	if (s_regs.dfsr.bits.VCATCH) {
-		FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_VCATCH]);
-	}
-
-	if (s_regs.dfsr.bits.EXTERNAL) {
-		FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_EXTERNAL]);
-	}
-}
-
-/**
- *****************************************************************************************
- * Fault diagnosis then print cause of fault
- *****************************************************************************************
- */
-static void cb_fault_diagnosis(void)
-{
-    FAULT_TRACE_OUTPUT("Fault reason:");
-
-    if (s_regs.hfsr.bits.VECTBL) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_HFSR_VECTBL]);
-    }
-
-    if (s_regs.hfsr.bits.FORCED) {
-        // Memory Management Fault.
-        if (s_regs.mfsr.value) {
-            deal_uvalue();
-        }
-        // Bus Fault
-        if (s_regs.bfsr.value) {
-            deal_bvalue();
-        }
-       // Usage Fault
-        if (s_regs.ufsr.value) {
-            deal_uvalue();
+        if (s_regs.bfsr.bits.BFARVALID) {
+            if (s_regs.bfsr.bits.PRECISERR) {
+                FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFAR], s_regs.bfar);
+            }
         }
     }
 
-    // Debug Fault
-    if (s_regs.hfsr.bits.DEBUGEVT) {
-        if (s_regs.dfsr.value) {
-            deal_dvalue();
+    void deal_uvalue(void) {
+        if (s_regs.ufsr.bits.UNDEFINSTR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNDEFINSTR]);
+        }
+
+        if (s_regs.ufsr.bits.INVSTATE) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVSTATE]);
+        }
+
+        if (s_regs.ufsr.bits.INVPC) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVPC]);
+        }
+
+        if (s_regs.ufsr.bits.NOCP) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_NOCP]);
+        }
+
+        if (s_regs.ufsr.bits.UNALIGNED) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNALIGNED]);
+        }
+
+        if (s_regs.ufsr.bits.DIVBYZERO0) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_DIVBYZERO0]);
         }
     }
-}
+
+    void deal_dvalue(void) {
+        if (s_regs.dfsr.bits.HALTED) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_HALTED]);
+        }
+
+        if (s_regs.dfsr.bits.BKPT) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_BKPT]);
+        }
+
+        if (s_regs.dfsr.bits.DWTTRAP) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_DWTTRAP]);
+        }
+
+        if (s_regs.dfsr.bits.VCATCH) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_VCATCH]);
+        }
+
+        if (s_regs.dfsr.bits.EXTERNAL) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_EXTERNAL]);
+        }
+    }
+
+    /**
+     *****************************************************************************************
+     * Fault diagnosis then print cause of fault
+     *****************************************************************************************
+     */
+    static void cb_fault_diagnosis(void) {
+        FAULT_TRACE_OUTPUT("Fault reason:");
+
+        if (s_regs.hfsr.bits.VECTBL) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_HFSR_VECTBL]);
+        }
+
+        if (s_regs.hfsr.bits.FORCED) {
+            // Memory Management Fault.
+            if (s_regs.mfsr.value) {
+                deal_uvalue();
+            }
+            // Bus Fault
+            if (s_regs.bfsr.value) {
+                deal_bvalue();
+            }
+            // Usage Fault
+            if (s_regs.ufsr.value) {
+                deal_uvalue();
+            }
+        }
+
+        // Debug Fault
+        if (s_regs.hfsr.bits.DEBUGEVT) {
+            if (s_regs.dfsr.value) {
+                deal_dvalue();
+            }
+        }
+    }
 #endif
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
 #define FPSCR_OFFSET 18
-static uint32_t cb_statck_fpu_reg_del(uint32_t fault_handler_lr, uint32_t sp)
-{
-    bool statck_has_fpu_regs = (fault_handler_lr & (1UL << 4)) == 0 ? true : false;
+    static uint32_t cb_statck_fpu_reg_del(uint32_t fault_handler_lr, uint32_t sp) {
+        bool statck_has_fpu_regs = (fault_handler_lr & (1UL << 4)) == 0 ? true : false;
 
-    // The stack has S0~S15 and FPSCR registers when statck_has_fpu_regs is true, double word align.
-    return statck_has_fpu_regs == true ? sp + sizeof(size_t) * FPSCR_OFFSET : sp;
-}
+        // The stack has S0~S15 and FPSCR registers when statck_has_fpu_regs is true, double word align.
+        return statck_has_fpu_regs == true ? sp + sizeof(size_t) * FPSCR_OFFSET : sp;
+    }
 #endif
 
-static uint32_t cb_backtrace_call_stack_depth(uint32_t *p_buffer, uint32_t size, uint32_t sp)
-{
-    uint32_t stack_start_addr = s_main_stack_start_addr;
-    uint32_t depth            = 0;
-    uint32_t stack_size       = s_main_stack_size;
-    uint32_t pc;
-    uint32_t i;
+    static uint32_t cb_backtrace_call_stack_depth(uint32_t *p_buffer, uint32_t size, uint32_t sp) {
+        uint32_t stack_start_addr = s_main_stack_start_addr;
+        uint32_t depth            = 0;
+        uint32_t stack_size       = s_main_stack_size;
+        uint32_t pc;
+        uint32_t i;
 
-    if (s_is_stack_overflow) {
-        if (sp < stack_start_addr) {
-            sp = stack_start_addr;
-        } else if (sp > stack_start_addr + stack_size) {
-            sp = stack_start_addr + stack_size;
-        }
-    }
-    // Copy called function address.
-    for (; sp < stack_start_addr + stack_size; sp += sizeof(uint32_t)) {
-        // The *sp value may be LR, so need decrease a word to PC.
-        pc = *((uint32_t *)sp) - sizeof(uint32_t);
-
-        // The Cortex-M using thumb instruction, so the pc must be an odd number.
-        if (pc % TWO == 0) {
-            continue;
-        }
-
-        for (i = 0; i < s_code_section_count; i++) {
-            if ((pc >= (s_code_section_infos[i].code_start_addr)) && \
-                (pc <= (s_code_section_infos[i].code_end_addr)) && \
-                (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
-                (depth < size) &&
-                ((depth != TWO) || (!is_regs_saved_lr_valid) || (pc != p_buffer[1]))) {
-                // The second depth function may be already saved, so need ignore repeat.
-                p_buffer[depth++] = pc;
-            } else if ((depth == TWO) && is_regs_saved_lr_valid && (pc == p_buffer[1])) {
-                continue;
+        if (s_is_stack_overflow) {
+            if (sp < stack_start_addr) {
+                sp = stack_start_addr;
+            } else if (sp > stack_start_addr + stack_size) {
+                sp = stack_start_addr + stack_size;
             }
         }
-    }
+        // Copy called function address.
+        for (; sp < stack_start_addr + stack_size; sp += sizeof(uint32_t)) {
+            // The *sp value may be LR, so need decrease a word to PC.
+            pc = *((uint32_t *)sp) - sizeof(uint32_t);
 
-    return depth;
-}
+            // The Cortex-M using thumb instruction, so the pc must be an odd number.
+            if (pc % TWO == 0) {
+                continue;
+            }
 
-/**
- *****************************************************************************************
- * Backtrace function call stack
- *
- * @param[in] p_buffer: Pointer to call stack buffer.
- * @param[in] size:     Size of call stack buffer.
- * @param[in] sp:      Stack pointer
- *
- * @return Depth
- *****************************************************************************************
- */
-static uint32_t cb_backtrace_call_stack(uint32_t *p_buffer, uint32_t size, uint32_t sp)
-{
-    uint32_t stack_start_addr = s_main_stack_start_addr;
-    uint32_t depth            = 0;
-    uint32_t stack_size       = s_main_stack_size;
-    uint32_t pc;
-    uint32_t i;
-
-    bool is_regs_saved_lr_valid = false;
-    if (s_is_on_fault) {
-        if (!s_is_stack_overflow) {
-            // First depth is PC
-            p_buffer[depth++] = s_regs.saved.pc;
-
-            // Second depth is from LR, so need decrease a word to PC
-            pc = s_regs.saved.lr - sizeof(uint32_t);
             for (i = 0; i < s_code_section_count; i++) {
-                if ((pc >= s_code_section_infos[i].code_start_addr) &&
-                    (pc <= s_code_section_infos[i].code_end_addr) &&
-                    (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) &&
-                    (depth < size)) {
+                if ((pc >= (s_code_section_infos[i].code_start_addr)) && \
+                        (pc <= (s_code_section_infos[i].code_end_addr)) && \
+                        (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
+                        (depth < size) &&
+                        ((depth != TWO) || (!is_regs_saved_lr_valid) || (pc != p_buffer[1]))) {
+                    // The second depth function may be already saved, so need ignore repeat.
                     p_buffer[depth++] = pc;
-                    is_regs_saved_lr_valid = true;
+                } else if ((depth == TWO) && is_regs_saved_lr_valid && (pc == p_buffer[1])) {
+                    continue;
                 }
             }
         }
+
+        return depth;
+    }
+
+    /**
+     *****************************************************************************************
+     * Backtrace function call stack
+     *
+     * @param[in] p_buffer: Pointer to call stack buffer.
+     * @param[in] size:     Size of call stack buffer.
+     * @param[in] sp:      Stack pointer
+     *
+     * @return Depth
+     *****************************************************************************************
+     */
+    static uint32_t cb_backtrace_call_stack(uint32_t *p_buffer, uint32_t size, uint32_t sp) {
+        uint32_t stack_start_addr = s_main_stack_start_addr;
+        uint32_t depth            = 0;
+        uint32_t stack_size       = s_main_stack_size;
+        uint32_t pc;
+        uint32_t i;
+
+        bool is_regs_saved_lr_valid = false;
+        if (s_is_on_fault) {
+            if (!s_is_stack_overflow) {
+                // First depth is PC
+                p_buffer[depth++] = s_regs.saved.pc;
+
+                // Second depth is from LR, so need decrease a word to PC
+                pc = s_regs.saved.lr - sizeof(uint32_t);
+                for (i = 0; i < s_code_section_count; i++) {
+                    if ((pc >= s_code_section_infos[i].code_start_addr) &&
+                            (pc <= s_code_section_infos[i].code_end_addr) &&
+                            (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) &&
+                            (depth < size)) {
+                        p_buffer[depth++] = pc;
+                        is_regs_saved_lr_valid = true;
+                    }
+                }
+            }
 #if APP_IS_USING_FREEROTS
-        // Program is running on thread before fault.
-        if (s_is_on_thread_before_fault) {
-            cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
-        }
-    } else {
-        // OS environment.
-        if (cb_sp_get() == cb_psp_get()) {
-            cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
-        }
+            // Program is running on thread before fault.
+            if (s_is_on_thread_before_fault) {
+                cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
+            }
+        } else {
+            // OS environment.
+            if (cb_sp_get() == cb_psp_get()) {
+                cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
+            }
 #endif
-    }
-    depth = cb_backtrace_call_stack_depth(p_buffer, size, sp);
-
-    return depth;
-}
-
-/**
- *****************************************************************************************
- * Dump function call stack
- *
- * @param[in] sp:Pointer to stack.
- *****************************************************************************************
- */
-static void cb_call_stack_print(uint32_t sp)
-{
-    int ret;
-    uint32_t i;
-    uint32_t cur_depth = 0;
-    uint32_t call_stack_buf[APP_ERROR_CALL_STACK_DEPTH_MAX] = {0};
-
-    cur_depth = cb_backtrace_call_stack(call_stack_buf, APP_ERROR_CALL_STACK_DEPTH_MAX, sp);
-
-    for (i = 0; i < cur_depth; i++) {
-        ret = sprintf_s(s_call_stack_info + i * CALL_STACK_INFO_CNT,
-                        NVDS_FAULT_INFO_LEN_MAX, "%08lx", call_stack_buf[i]);
-        if (ret < 0) {
-            return;
         }
-        s_call_stack_info[i * CALL_STACK_INFO_CNT + BIT_8] = '<';
-        s_call_stack_info[i * CALL_STACK_INFO_CNT + BIT_9] = '-';
-        s_call_stack_info[i * CALL_STACK_INFO_CNT + BIT_10] = '-';
+        depth = cb_backtrace_call_stack_depth(p_buffer, size, sp);
+
+        return depth;
     }
 
-    if (cur_depth) {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_CALL_STACK_INFO], \
-                                    cur_depth * CALL_STACK_INFO_CNT, s_call_stack_info);
-    } else {
-        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_CALL_STACK_ERR]);
+    /**
+     *****************************************************************************************
+     * Dump function call stack
+     *
+     * @param[in] sp:Pointer to stack.
+     *****************************************************************************************
+     */
+    static void cb_call_stack_print(uint32_t sp) {
+        int ret;
+        uint32_t i;
+        uint32_t cur_depth = 0;
+        uint32_t call_stack_buf[APP_ERROR_CALL_STACK_DEPTH_MAX] = {0};
+
+        cur_depth = cb_backtrace_call_stack(call_stack_buf, APP_ERROR_CALL_STACK_DEPTH_MAX, sp);
+
+        for (i = 0; i < cur_depth; i++) {
+            ret = sprintf_s(s_call_stack_info + i * CALL_STACK_INFO_CNT,
+                            NVDS_FAULT_INFO_LEN_MAX, "%08lx", call_stack_buf[i]);
+            if (ret < 0) {
+                return;
+            }
+            s_call_stack_info[i * CALL_STACK_INFO_CNT + BIT_8] = '<';
+            s_call_stack_info[i * CALL_STACK_INFO_CNT + BIT_9] = '-';
+            s_call_stack_info[i * CALL_STACK_INFO_CNT + BIT_10] = '-';
+        }
+
+        if (cur_depth) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_CALL_STACK_INFO], \
+                               cur_depth * CALL_STACK_INFO_CNT, s_call_stack_info);
+        } else {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_CALL_STACK_ERR]);
+        }
     }
-}
 
-/*
- * GLOBAL FUNCTION DEFINITIONS
- *****************************************************************************************
- */
+    /*
+     * GLOBAL FUNCTION DEFINITIONS
+     *****************************************************************************************
+     */
 
-/**
- *****************************************************************************************
- * @brief Add Code sections for stack analysis.
- *****************************************************************************************
- */
-bool cortex_backtrace_code_section_add(uint32_t code_start_addr, uint32_t code_end_addr)
-{
-    if (s_code_section_count < FAULT_CODE_SECTON_CNT_MAX) {
-        return false;
+    /**
+     *****************************************************************************************
+     * @brief Add Code sections for stack analysis.
+     *****************************************************************************************
+     */
+    bool cortex_backtrace_code_section_add(uint32_t code_start_addr, uint32_t code_end_addr) {
+        if (s_code_section_count < FAULT_CODE_SECTON_CNT_MAX) {
+            return false;
+        }
+
+        s_code_section_infos[s_code_section_count].code_start_addr = code_start_addr;
+        s_code_section_infos[s_code_section_count].code_end_addr = code_end_addr - TWO;
+        ++s_code_section_count;
+
+        return true;
     }
 
-    s_code_section_infos[s_code_section_count].code_start_addr = code_start_addr;
-    s_code_section_infos[s_code_section_count].code_end_addr = code_end_addr - TWO;
-    ++s_code_section_count;
-
-    return true;
-}
-
-void stack_cfg(uint32_t fault_handler_sp)
+    void stack_cfg(uint32_t fault_handler_sp)
     uint32_t    stack_pointer   = fault_handler_sp;
     uint32_t    saved_regs_addr = stack_pointer;
     const char *regs_name[]     = { "R0 ", "R1 ", "R2 ", "R3 ", "R12", "LR ", "PC ", "PSR" };
@@ -698,7 +694,7 @@ void stack_cfg(uint32_t fault_handler_sp)
     // Check which stack was used before (MSP or PSP).
     if (s_is_on_thread_before_fault) {
         FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_FAULT_ON_THREAD],
-                             cb_cur_thread_name_get() ? cb_cur_thread_name_get() : "NO_NAME");
+                           cb_cur_thread_name_get() ? cb_cur_thread_name_get() : "NO_NAME");
         stack_pointer   = cb_psp_get();
         saved_regs_addr = stack_pointer;
 #if APP_ERROR_DUMP_STACK_INFO_ENABLE
@@ -763,13 +759,13 @@ void reg_cfg(void)
         s_regs.saved.psr.value = ((uint32_t *)saved_regs_addr)[DRG_R7];  // Program status word PSR
 
         FAULT_TRACE_OUTPUT("  %s: %08x     %s: %08x", regs_name[0], s_regs.saved.r0, \
-                                                               regs_name[1], s_regs.saved.r1);
+                           regs_name[1], s_regs.saved.r1);
         FAULT_TRACE_OUTPUT("  %s: %08x     %s: %08x", regs_name[2], s_regs.saved.r2, \
-                                                               regs_name[3], s_regs.saved.r3);
+                           regs_name[3], s_regs.saved.r3);
         FAULT_TRACE_OUTPUT("  %s: %08x     %s: %08x", regs_name[4], s_regs.saved.r12, \
-                                                               regs_name[5], s_regs.saved.lr);
+                           regs_name[5], s_regs.saved.lr);
         FAULT_TRACE_OUTPUT("  %s: %08x     %s: %08x", regs_name[6], s_regs.saved.pc,  \
-                                                               regs_name[7], s_regs.saved.psr.value);
+                           regs_name[7], s_regs.saved.psr.value);
         FAULT_TRACE_OUTPUT("=========");
     }
 

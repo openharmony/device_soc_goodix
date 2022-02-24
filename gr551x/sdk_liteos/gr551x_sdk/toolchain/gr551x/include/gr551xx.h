@@ -43,24 +43,24 @@ extern "C" {
 #endif
 
 #if   defined (__CC_ARM)
-    #pragma push
-    #pragma anon_unions
+#pragma push
+#pragma anon_unions
 #elif defined (__ICCARM__)
-    #pragma language=extended
+#pragma language=extended
 #elif defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wc11-extensions"
-    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc11-extensions"
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
 #elif defined (__GNUC__)
-    /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #elif defined (__TMS470__)
-    /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #elif defined (__TASKING__)
-    #pragma warning 586
+#pragma warning 586
 #elif defined (__CSMC__)
-    /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #else
-    #warning Not supported compiler type
+#warning Not supported compiler type
 #endif
 
 
@@ -348,7 +348,7 @@ typedef struct {
     __OM  uint32_t RXFIFO_FLUSH;            /**< RX FIFO flush,                             Address offset: 0x030 */
     __OM  uint32_t TXFIFO_FLUSH;            /**< TX FIFO flush,                             Address offset: 0x034 */
     __IM  uint32_t RESERVED[2];             /**< Reversed,                                  Address offset: 0x038 */
-}I2S_CHANNEL_REGS;
+} I2S_CHANNEL_REGS;
 
 typedef struct _i2s_regs {
     __IOM uint32_t   ENABLE;                /**< I2S enable,                                Address offset: 0x000 */
@@ -722,21 +722,21 @@ typedef struct _rng_regs {
 
 /* ====================================  End of section using anonymous unions  ==================================== */
 #if   defined (__CC_ARM)
-    #pragma pop
+#pragma pop
 #elif defined (__ICCARM__)
-    /* leave anonymous unions enabled */
+/* leave anonymous unions enabled */
 #elif (__ARMCC_VERSION >= 6010050)
-    #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 #elif defined (__GNUC__)
-    /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #elif defined (__TMS470__)
-    /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #elif defined (__TASKING__)
-    #pragma warning restore
+#pragma warning restore
 #elif defined (__CSMC__)
-    /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #else
-    #warning Not supported compiler type
+#warning Not supported compiler type
 #endif
 
 
@@ -6362,68 +6362,108 @@ typedef struct _rng_regs {
   * @{
   */
 /****************************** GPIO instances ********************************/
-#define IS_GPIO_ALL_INSTANCE(__INSTANCE__)      (((__INSTANCE__) == GPIO0) || \
-                                                 ((__INSTANCE__) == GPIO1))
+static inline uint32_t IS_GPIO_ALL_INSTANCE(gpio_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == GPIO0) || ((__INSTANCE__) == GPIO1));
+}
 
 /****************************** I2C instances *********************************/
-#define IS_I2C_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == I2C0) || \
-                                                 ((__INSTANCE__) == I2C1))
+static inline uint32_t IS_I2C_ALL_INSTANCE(i2c_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == I2C0) || ((__INSTANCE__) == I2C1));
+}
 
 /****************************** I2S instances *********************************/
-#define IS_I2S_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == I2S_M) || \
-                                                 ((__INSTANCE__) == I2S_S))
+static inline uint32_t IS_I2S_ALL_INSTANCE(i2s_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == I2S_M) || ((__INSTANCE__) == I2S_S));
+}
 
 /****************************** UART instances ********************************/
-#define IS_UART_ALL_INSTANCE(__INSTANCE__)      (((__INSTANCE__) == UART0) || \
-                                                 ((__INSTANCE__) == UART1))
+static inline uint32_t IS_UART_ALL_INSTANCE(uart_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == UART0) || ((__INSTANCE__) == UART1));
+}
 
 /******************** UART instances : Support of DMA *************************/
-#define IS_UART_DMA_INSTANCE(__INSTANCE__)      (((__INSTANCE__) == UART0))
+static inline uint32_t IS_UART_DMA_INSTANCE(uart_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == UART0));
+}
 
 /****************************** TIM instances *********************************/
-#define IS_TIMER_ALL_INSTANCE(__INSTANCE__)     (((__INSTANCE__) == TIMER0) || \
-                                                 ((__INSTANCE__) == TIMER1))
+static inline uint32_t IS_UART_TIM_INSTANCE(timer_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == TIMER0) || ((__INSTANCE__) == TIMER1));
+}
 
 /****************************** DUAL TIM instances ****************************/
-#define IS_DUAL_TIM_ALL_INSTANCE(__INSTANCE__)  (((__INSTANCE__) == DUAL_TIMER0) || \
-                                                 ((__INSTANCE__) == DUAL_TIMER1))
+static inline uint32_t IS_DUAL_TIM_ALL_INSTANCE(dual_timer_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == DUAL_TIMER0) || ((__INSTANCE__) == DUAL_TIMER1));
+}
 
 /****************************** PWM instances *********************************/
-#define IS_PWM_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == PWM0) || \
-                                                 ((__INSTANCE__) == PWM1))
+static inline uint32_t IS_PWM_ALL_INSTANCE(pwm_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == PWM0) || ((__INSTANCE__) == PWM1));
+}
 
 /****************************** WDT instances *********************************/
-#define IS_WDT_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == WDT))
+static inline uint32_t IS_WDT_ALL_INSTANCE(wdt_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == WDT));
+}
 
 /****************************** SPI instances *********************************/
-#define IS_SPI_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == SPIM) || \
-                                                 ((__INSTANCE__) == SPIS))
+static inline uint32_t IS_SPI_ALL_INSTANCE(ssi_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == SPIM) || ((__INSTANCE__) == SPIS));
+}
 
 /****************************** QSPI instances ********************************/
-#define IS_QSPI_ALL_INSTANCE(__INSTANCE__)      (((__INSTANCE__) == QSPI0) || \
-                                                 ((__INSTANCE__) == QSPI1))
+static inline uint32_t IS_QSPI_ALL_INSTANCE(ssi_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == QSPI0) || ((__INSTANCE__) == QSPI1));
+}
 
 /****************************** PKC instances *********************************/
-#define IS_PKC_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == PKC))
+static inline uint32_t IS_PKC_ALL_INSTANCE(pkc_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == PKC));
+}
 
 /****************************** AES Instances *********************************/
-#define IS_AES_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == AES))
+static inline uint32_t IS_AES_ALL_INSTANCE(aes_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == AES));
+}
 
 /****************************** HMAC Instances ********************************/
-#define IS_HMAC_ALL_INSTANCE(__INSTANCE__)      (((__INSTANCE__) == HMAC))
+static inline uint32_t IS_HMAC_ALL_INSTANCE(hmac_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == HMAC));
+}
 
 /****************************** XQSPI Instances *******************************/
-#define IS_XQSPI_ALL_INSTANCE(__INSTANCE__)     (((__INSTANCE__) == XQSPI))
+static inline uint32_t IS_XQSPI_ALL_INSTANCE(xqspi_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == XQSPI));
+}
 
 /****************************** EFUSE Instances *******************************/
-#define IS_EFUSE_ALL_INSTANCE(__INSTANCE__)     (((__INSTANCE__) == EFUSE))
+static inline uint32_t IS_EFUSE_ALL_INSTANCE(efuse_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == EFUSE));
+}
 
 /****************************** RNG Instances *******************************/
-#define IS_RNG_ALL_INSTANCE(__INSTANCE__)       (((__INSTANCE__) == RNG))
-
+static inline uint32_t IS_RNG_ALL_INSTANCE(rng_regs_t *__INSTANCE__)
+{
+    return (((__INSTANCE__) == RNG));
+}
 
 /** @} */ /* End of group Exported_macros */
-
 
 #ifdef __cplusplus
 }

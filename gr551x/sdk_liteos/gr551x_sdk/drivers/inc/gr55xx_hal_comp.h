@@ -90,7 +90,7 @@ typedef enum {
 /** @defgroup COMP_Configuration COMP Configuration
   * @{
   */
-  
+
 /**
   * @brief   COMP init structure definition
   */
@@ -294,34 +294,34 @@ void hal_comp_msp_deinit(comp_handle_t *p_comp);
  * @{
  */
 
- /**
- ****************************************************************************************
- * @brief  Start the comparator.
- *
- * @param[in]  p_comp: Pointer to a COMP handle which contains the configuration information for
- *                    the specified COMP module.
- *
- * @retval ::HAL_OK: Operation is OK.
- * @retval ::HAL_ERROR: Parameter error or operation not supported.
- * @retval ::HAL_BUSY: Driver is busy.
- * @retval ::HAL_TIMEOUT: Timeout occurred.
- ****************************************************************************************
- */
+/**
+****************************************************************************************
+* @brief  Start the comparator.
+*
+* @param[in]  p_comp: Pointer to a COMP handle which contains the configuration information for
+*                    the specified COMP module.
+*
+* @retval ::HAL_OK: Operation is OK.
+* @retval ::HAL_ERROR: Parameter error or operation not supported.
+* @retval ::HAL_BUSY: Driver is busy.
+* @retval ::HAL_TIMEOUT: Timeout occurred.
+****************************************************************************************
+*/
 hal_status_t hal_comp_start(comp_handle_t *p_comp);
 
- /**
- ****************************************************************************************
- * @brief  Stop the comparator.
- *
- * @param[in]  p_comp: Pointer to a COMP handle which contains the configuration information for
- *                    the specified COMP module.
- *
- * @retval ::HAL_OK: Operation is OK.
- * @retval ::HAL_ERROR: Parameter error or operation not supported.
- * @retval ::HAL_BUSY: Driver is busy.
- * @retval ::HAL_TIMEOUT: Timeout occurred.
- ****************************************************************************************
- */
+/**
+****************************************************************************************
+* @brief  Stop the comparator.
+*
+* @param[in]  p_comp: Pointer to a COMP handle which contains the configuration information for
+*                    the specified COMP module.
+*
+* @retval ::HAL_OK: Operation is OK.
+* @retval ::HAL_ERROR: Parameter error or operation not supported.
+* @retval ::HAL_BUSY: Driver is busy.
+* @retval ::HAL_TIMEOUT: Timeout occurred.
+****************************************************************************************
+*/
 hal_status_t hal_comp_stop(comp_handle_t *p_comp);
 
 /** @} */

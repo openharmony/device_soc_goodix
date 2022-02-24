@@ -31,11 +31,11 @@
 #define USER_I2C0_SDA_PIN_MUX      APP_IO_MUX_2
 #define USER_I2C0_SDA_PIN_PULL     APP_IO_PULLUP
 #define USER_I2C0_SPEED            I2C_SPEED_400K
-#define I2C0_IO_CONFIG             {{USER_I2C0_SCL_PIN_TYPE, USER_I2C0_SCL_PIN_MUX, USER_I2C0_SCL_PIN, USER_I2C0_SCL_PIN_PULL}, \
-                                    {USER_I2C0_SDA_PIN_TYPE, USER_I2C0_SDA_PIN_MUX, USER_I2C0_SDA_PIN, USER_I2C0_SDA_PIN_PULL}}
+#define I2C0_IO_CONFIG  {{USER_I2C0_SCL_PIN_TYPE, USER_I2C0_SCL_PIN_MUX, USER_I2C0_SCL_PIN, USER_I2C0_SCL_PIN_PULL}, \
+                         {USER_I2C0_SDA_PIN_TYPE, USER_I2C0_SDA_PIN_MUX, USER_I2C0_SDA_PIN, USER_I2C0_SDA_PIN_PULL}}
 #define I2C0_MODE_CONFIG           {APP_I2C_TYPE_INTERRUPT, DMA_Channel0, DMA_Channel0}
 #define I2C0_I2C_CONFIG            {USER_I2C0_SPEED, 0x00, I2C_ADDRESSINGMODE_7BIT, I2C_GENERALCALL_DISABLE}
-#define I2C0_PARAM_CONFIG          {APP_I2C_ID_0, APP_I2C_ROLE_MASTER, I2C0_IO_CONFIG, I2C0_MODE_CONFIG, I2C0_I2C_CONFIG}
+#define I2C0_PARAM_CONFIG    {APP_I2C_ID_0, APP_I2C_ROLE_MASTER, I2C0_IO_CONFIG, I2C0_MODE_CONFIG, I2C0_I2C_CONFIG}
 
 /* I2C1 config params */
 /* SCL : GPIO8 */
@@ -51,11 +51,11 @@
 #define USER_I2C1_SDA_PIN_PULL      APP_IO_PULLUP
 #define USER_I2C1_SPEED             I2C_SPEED_400K
 
-#define I2C1_IO_CONFIG              {{USER_I2C1_SCL_PIN_TYPE, USER_I2C1_SCL_PIN_MUX, USER_I2C1_SCL_PIN, USER_I2C1_SCL_PIN_PULL}, \
-                                     {USER_I2C1_SDA_PIN_TYPE, USER_I2C1_SDA_PIN_MUX, USER_I2C1_SDA_PIN, USER_I2C1_SDA_PIN_PULL}}
+#define I2C1_IO_CONFIG  {{USER_I2C1_SCL_PIN_TYPE, USER_I2C1_SCL_PIN_MUX, USER_I2C1_SCL_PIN, USER_I2C1_SCL_PIN_PULL}, \
+                         {USER_I2C1_SDA_PIN_TYPE, USER_I2C1_SDA_PIN_MUX, USER_I2C1_SDA_PIN, USER_I2C1_SDA_PIN_PULL}}
 #define I2C1_MODE_CONFIG            {APP_I2C_TYPE_INTERRUPT, DMA_Channel0, DMA_Channel0}
 #define I2C1_I2C_CONFIG             {USER_I2C1_SPEED, 0x00, I2C_ADDRESSINGMODE_7BIT, I2C_GENERALCALL_DISABLE}
-#define I2C1_PARAM_CONFIG           {APP_I2C_ID_1, APP_I2C_ROLE_MASTER, I2C1_IO_CONFIG, I2C1_MODE_CONFIG, I2C1_I2C_CONFIG}
+#define I2C1_PARAM_CONFIG    {APP_I2C_ID_1, APP_I2C_ROLE_MASTER, I2C1_IO_CONFIG, I2C1_MODE_CONFIG, I2C1_I2C_CONFIG}
 #define I2C_SYNC_TIMEOUT            20
 
 #define I2C_BAUDRATE_100K           100
@@ -71,7 +71,7 @@ static uint32_t i2c_tx_mutex[APP_I2C_ID_MAX];
 static uint32_t i2c_rx_mutex[APP_I2C_ID_MAX];
 
 unsigned int IoTI2cWrite(unsigned int id, unsigned short deviceAddr, const unsigned char *data, unsigned int dataLen)
-{   
+{
     int ret = 0;
 
     if (id > APP_I2C_ID_MAX) {
@@ -170,13 +170,13 @@ unsigned int IoTI2cSetBaudrate(unsigned int id, unsigned int baudrate)
     }
 
     memcpy_s(&i2c_params, sizeof(app_i2c_params_t), &i2c_cfg_params[id], sizeof(app_i2c_params_t));
-    if (baudrate == 100) {
+    if (baudrate == I2C_BAUDRATE_100K) {
         i2c_params.init.speed = I2C_SPEED_100K;
-    } else if (baudrate == 400) {
+    } else if (baudrate == I2C_BAUDRATE_400K) {
         i2c_params.init.speed = I2C_SPEED_400K;
-    }  else if (baudrate == 1000) {
+    }  else if (baudrate == I2C_BAUDRATE_1000K) {
         i2c_params.init.speed = I2C_SPEED_1000K;
-    } else if (baudrate == 2000) {
+    } else if (baudrate == I2C_BAUDRATE_2000K) {
         i2c_params.init.speed = I2C_SPEED_2000K;
     } else {
         return IOT_FAILURE;

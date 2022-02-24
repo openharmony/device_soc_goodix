@@ -137,16 +137,16 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
         for (uint8_t i = 0; ; i++) {
             if (p_error_info->value.error_code == s_error_code_info[i].error_code) {
                 ret = sprintf_s(s_error_print_info, sizeof (s_error_print_info),
-                          "Error code 0x%04X: %s",
-                          p_error_info->value.error_code,
-                          s_error_code_info[i].error_info);
+                                "Error code 0x%04X: %s",
+                                p_error_info->value.error_code,
+                                s_error_code_info[i].error_info);
                 if (ret < 0) {
                     return;
                 }
                 break;
             } else if (i == APP_ERROR_CODE_NB) {
                 ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
-                          "Error code 0x%04X: No found information.", p_error_info->value.error_code);
+                                "Error code 0x%04X: No found information.", p_error_info->value.error_code);
                 if (ret < 0) {
                     return;
                 }
@@ -155,8 +155,8 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
         }
     } else if (APP_ERROR_BOOL_COMPARE == p_error_info->error_type) {
         ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info),
-                  "(%s) is not established.",
-                  p_error_info->value.expr);
+                        "(%s) is not established.",
+                        p_error_info->value.expr);
         if (ret < 0) {
             return;
         }

@@ -174,27 +174,38 @@ typedef struct _dma_init {
   * @brief  DMA handle Structure definition
   */
 typedef struct _dma_handle {
-    dma_channel_t           channel;                                              /**< DMA Channel Number                  */
+    dma_channel_t
+    channel;                                              /**< DMA Channel Number                  */
 
-    dma_init_t              init;                                                 /**< DMA communication parameters        */
+    dma_init_t
+    init;                                                 /**< DMA communication parameters        */
 
-    hal_lock_t              lock;                                                 /**< DMA locking object                  */
+    hal_lock_t
+    lock;                                                 /**< DMA locking object                  */
 
-    __IO hal_dma_state_t    state;                                                /**< DMA transfer state                  */
+    __IO hal_dma_state_t
+    state;                                                /**< DMA transfer state                  */
 
-    void                    *p_parent;                                            /**< Parent object state                 */
+    void
+    *p_parent;                                            /**< Parent object state                 */
 
-    void                    (* xfer_tfr_callback)(struct _dma_handle *p_dma);     /**< DMA transfer complete callback      */
+    void                    (* xfer_tfr_callback)(struct _dma_handle
+            *p_dma);     /**< DMA transfer complete callback      */
 
-    void                    (* xfer_blk_callback)(struct _dma_handle *p_dma);     /**< DMA block complete callback         */
+    void                    (* xfer_blk_callback)(struct _dma_handle
+            *p_dma);     /**< DMA block complete callback         */
 
-    void                    (* xfer_error_callback)(struct _dma_handle *p_dma);   /**< DMA transfer error callback         */
+    void                    (* xfer_error_callback)(struct _dma_handle
+            *p_dma);   /**< DMA transfer error callback         */
 
-    void                    (* xfer_abort_callback)(struct _dma_handle *p_dma);   /**< DMA transfer abort callback         */
+    void                    (* xfer_abort_callback)(struct _dma_handle
+            *p_dma);   /**< DMA transfer abort callback         */
 
-    __IO uint32_t           error_code;                                           /**< DMA Error code                      */
+    __IO uint32_t
+    error_code;                                           /**< DMA Error code                      */
 
-    uint32_t                retention[5];                                         /**< DMA important register information. */
+    uint32_t
+    retention[5];                                         /**< DMA important register information. */
 } dma_handle_t;
 
 /** @} */

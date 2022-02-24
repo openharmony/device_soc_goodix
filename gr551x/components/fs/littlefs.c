@@ -17,6 +17,7 @@
 #include "hal_flash.h"
 #include "hdf_log.h"
 
+#define SIZE_TO_KB 1024
 static uint32_t g_lfs_start_addr;
 
 int32_t littlefs_flash_init(const struct lfs_config *cfg)
@@ -30,25 +31,26 @@ int32_t littlefs_flash_init(const struct lfs_config *cfg)
     nvds_start_addr = EXFLASH_START_ADDR + flash_size - hal_flash_sector_size() * NVDS_NUM_SECTOR;
     g_lfs_start_addr  = nvds_start_addr - cfg->block_count * cfg->block_size;
 
-    HDF_LOGI("littlefs flash start addr=0x%x, all size=%dKB", g_lfs_start_addr, cfg->block_count * cfg->block_size / 1024);
+    HDF_LOGI("littlefs flash start addr=0x%x, all size=%dKB", g_lfs_start_addr,
+             cfg->block_count * cfg->block_size / SIZE_TO_KB);
 
     return 0;
 }
 
 int32_t littlefs_block_read(const struct lfs_config *c, lfs_block_t block,
-                            lfs_off_t off, void *buf, lfs_size_t size)
+                            lfs_off_t off, uint8_t *buf, lfs_size_t size)
 {
     uint32_t addr = g_lfs_start_addr + c->block_size * block + off;
 
-    return size == hal_flash_read(addr, (uint8_t*)buf, size) ? LFS_ERR_OK : LFS_ERR_IO;
+    return size == hal_flash_read(addr, buf, size) ? LFS_ERR_OK : LFS_ERR_IO;
 }
 
 int32_t littlefs_block_write(const struct lfs_config *c, lfs_block_t block,
-                             lfs_off_t off, const void *dst, lfs_size_t size)
+                             lfs_off_t off, const uint8_t *dst, lfs_size_t size)
 {
     uint32_t addr = g_lfs_start_addr + c->block_size * block + off;
 
-    return size == hal_flash_write(addr, (uint8_t*)dst, size) ? LFS_ERR_OK : LFS_ERR_IO;
+    return size == hal_flash_write(addr, dst, size) ? LFS_ERR_OK : LFS_ERR_IO;
 }
 
 int32_t littlefs_block_erase(const struct lfs_config *c, lfs_block_t block)

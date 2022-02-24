@@ -661,7 +661,7 @@ hal_status_t hal_xqspi_command_receive(xqspi_handle_t *p_xqspi, xqspi_command_t 
 
 #if defined RTL_SIM
 hal_status_t hal_xqspi_command_receive_rtl(xqspi_handle_t *p_xqspi, xqspi_command_t *p_cmd,
-                                           uint8_t *p_data, uint32_t retry);
+        uint8_t *p_data, uint32_t retry);
 #endif
 
 
@@ -811,7 +811,7 @@ uint32_t hal_xqspi_get_rx_fifo_threshold(xqspi_handle_t *p_xqspi);
  * @param[in]  status: Presen status can be one of the following values:
  *         @arg @ref XQSPI_DISABLE_PRESENT      Disable Present
  *         @arg @ref XQSPI_ENABLE_PRESENT       Enable Present
- 
+
  ****************************************************************************************
  */
 void hal_xqspi_set_xip_present_status(xqspi_handle_t *p_xqspi, uint32_t status);

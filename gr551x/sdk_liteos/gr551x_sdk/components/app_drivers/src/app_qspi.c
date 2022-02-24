@@ -84,7 +84,7 @@
  * QUAD_WRITE_32b_PATCH : just exist in QUAD/DATASIZE_32BITS/DMA scene
  *   if enable, MUST Control the CS By Software.
  */
-#define QSPI_QUAD_WRITE_32b_PATCH_EN				0u
+#define QSPI_QUAD_WRITE_32b_PATCH_EN                0u
 
 /********************************************************************
  * DATA Endian Mode Optional Value :
@@ -93,7 +93,7 @@
  *   2 : data[3] | (data[2] << 8) | (data[1] << 16) | (data[0] << 24)
  *   3 : data[2] | (data[3] << 8) | (data[0] << 16) | (data[1] << 24)
  */
-#define QSPI_QUAD_WRITE_DATA_ENDIAN_MODE			0u
+#define QSPI_QUAD_WRITE_DATA_ENDIAN_MODE            0u
 
 /*
  * STRUCT DEFINE
@@ -226,7 +226,7 @@ SECTION_RAM_CODE static void qspi_wake_up_ind(void)
             GLOBAL_EXCEPTION_ENABLE();
 
             if (s_qspi_env[i].use_mode.type == APP_QSPI_TYPE_INTERRUPT ||
-                s_qspi_env[i].use_mode.type == APP_QSPI_TYPE_DMA) {
+                    s_qspi_env[i].use_mode.type == APP_QSPI_TYPE_DMA) {
                 hal_nvic_clear_pending_irq(s_qspi_irq[i]);
                 hal_nvic_enable_irq(s_qspi_irq[i]);
             }
@@ -244,7 +244,7 @@ static void qspi_wake_up(app_qspi_id_t id)
         GLOBAL_EXCEPTION_ENABLE();
 
         if (s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_INTERRUPT ||
-            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_DMA) {
+                s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_DMA) {
             hal_nvic_clear_pending_irq(s_qspi_irq[id]);
             hal_nvic_enable_irq(s_qspi_irq[id]);
         }
@@ -388,6 +388,81 @@ static void app_qspi_config_dma_qwrite_32b_patch(app_qspi_id_t id, bool enable_p
 #endif
 }
 
+static uint16_t params_check(app_qspi_params_t *p_params)
+{
+    uint8_t id = p_params->id;
+
+    if (p_params == NULL) {
+        return APP_DRV_ERR_POINTER_NULL;
+    }
+
+    if (id >= APP_QSPI_ID_MAX) {
+        return APP_DRV_ERR_INVALID_ID;
+    }
+
+    return APP_DRV_SUCCESS;
+}
+
+#ifdef  ENV_RTOS_USE_SEMP
+static uint16_t semp_init_config(uint8_t id)
+{
+    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+
+    if (s_qspi_env[id].sem_rx == NULL) {
+        app_err_code = app_driver_sem_init(&s_qspi_env[id].sem_rx);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+    if (s_qspi_env[id].sem_tx == NULL) {
+        app_err_code = app_driver_sem_init(&s_qspi_env[id].sem_tx);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+
+    return APP_DRV_SUCCESS;
+}
+#endif
+
+#ifdef ENV_RTOS_USE_MUTEX
+static uint16_t mutex_init_config(uint8_t id)
+{
+    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+
+    if (s_qspi_env[id].mutex_async == NULL) {
+        app_err_code = app_driver_mutex_init(&s_qspi_env[id].mutex_async);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+    if (s_qspi_env[id].mutex_sync == NULL) {
+        app_err_code = app_driver_mutex_init(&s_qspi_env[id].mutex_sync);
+        APP_DRV_ERR_CODE_CHECK(app_err_code);
+    }
+
+    return APP_DRV_SUCCESS;
+}
+#endif
+
+static void sync_params_to_env(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_handler, uint8_t id)
+{
+    s_qspi_env[id].use_mode.type = p_params->use_mode.type;
+    s_qspi_env[id].use_mode.dma_channel = p_params->use_mode.dma_channel;
+    memcpy_s(&s_qspi_env[id].pin_cfg, sizeof (s_qspi_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_qspi_pin_cfg_t));
+    s_qspi_env[id].evt_handler = evt_handler;
+
+    memcpy_s(&s_qspi_env[id].handle.init, sizeof (s_qspi_env[id].handle.init), &p_params->init, sizeof(qspi_init_t));
+    s_qspi_env[id].handle.p_instance = (ssi_regs_t *)s_qspi_instance[id];
+}
+
+static uint16_t register_cb(void)
+{
+    if (!s_sleep_cb_registered_flag) { // register sleep callback
+        s_sleep_cb_registered_flag = true;
+        s_qspi_pwr_id = pwr_register_sleep_cb(&qspi_sleep_cb, APP_DRIVER_QSPI_WAPEUP_PRIORITY);
+        if (s_qspi_pwr_id < 0) {
+            return APP_DRV_ERR_INVALID_PARAM;
+        }
+    }
+
+    return APP_DRV_SUCCESS;
+}
+
 /*
  * GLOBAL FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -398,34 +473,17 @@ uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_h
     app_drv_err_t app_err_code;
     hal_status_t  hal_err_code;
 
-    if (p_params == NULL) {
-        return APP_DRV_ERR_POINTER_NULL;
-    }
-
-    if (id >= APP_QSPI_ID_MAX) {
-        return APP_DRV_ERR_INVALID_ID;
-    }
+    app_err_code = params_check(p_params);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if (s_qspi_env[id].sem_rx == NULL) {
-        app_err_code = app_driver_sem_init(&s_qspi_env[id].sem_rx);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
-    if (s_qspi_env[id].sem_tx == NULL) {
-        app_err_code = app_driver_sem_init(&s_qspi_env[id].sem_tx);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
+    app_err_code = semp_init_config(id);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if (s_qspi_env[id].mutex_async == NULL) {
-        app_err_code = app_driver_mutex_init(&s_qspi_env[id].mutex_async);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
-    if (s_qspi_env[id].mutex_sync == NULL) {
-        app_err_code = app_driver_mutex_init(&s_qspi_env[id].mutex_sync);
-        APP_DRV_ERR_CODE_CHECK(app_err_code);
-    }
+    app_err_code = mutex_init_config(id);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 #endif
 
     app_systick_init();
@@ -444,31 +502,60 @@ uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_h
         hal_nvic_enable_irq(s_qspi_irq[id]);
     }
 
-    s_qspi_env[id].use_mode.type = p_params->use_mode.type;
-    s_qspi_env[id].use_mode.dma_channel = p_params->use_mode.dma_channel;
-    memcpy_s(&s_qspi_env[id].pin_cfg, sizeof (s_qspi_env[id].pin_cfg), &p_params->pin_cfg, sizeof(app_qspi_pin_cfg_t));
-    s_qspi_env[id].evt_handler = evt_handler;
+    sync_params_to_env(p_params, evt_handler, id);
 
-    memcpy_s(&s_qspi_env[id].handle.init, sizeof (s_qspi_env[id].handle.init), &p_params->init, sizeof(qspi_init_t));
-    s_qspi_env[id].handle.p_instance = (ssi_regs_t *)s_qspi_instance[id];
     hal_err_code = hal_qspi_deinit(&s_qspi_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
     hal_err_code =hal_qspi_init(&s_qspi_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    if (!s_sleep_cb_registered_flag) { // register sleep callback 
-        s_sleep_cb_registered_flag = true;
-        s_qspi_pwr_id = pwr_register_sleep_cb(&qspi_sleep_cb, APP_DRIVER_QSPI_WAPEUP_PRIORITY);
-        if (s_qspi_pwr_id < 0) {
-            return APP_DRV_ERR_INVALID_PARAM;
-        }
-    }
+    app_err_code = register_cb();
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
     s_qspi_env[id].qspi_state = APP_QSPI_ACTIVITY;
     s_qspi_env[id].start_flag = false;
 
     return APP_DRV_SUCCESS;
+}
+
+#ifdef  ENV_RTOS_USE_SEMP
+static void semp_deinit_config(uint8_t id)
+{
+    if (s_qspi_env[id].sem_tx != NULL) {
+        app_driver_sem_deinit(s_qspi_env[id].sem_tx);
+        s_qspi_env[id].sem_tx = NULL;
+    }
+    if (s_qspi_env[id].sem_rx != NULL) {
+        app_driver_sem_deinit(s_qspi_env[id].sem_rx);
+        s_qspi_env[id].sem_rx = NULL;
+    }
+}
+#endif
+
+#ifdef ENV_RTOS_USE_MUTEX
+static uint16_t mutex_deinit_config(uint8_t id)
+{
+    if (s_qspi_env[id].mutex_sync != NULL) {
+        app_driver_mutex_deinit(s_qspi_env[id].mutex_sync);
+        s_qspi_env[id].mutex_sync = NULL;
+    }
+    if (s_qspi_env[id].mutex_async != NULL) {
+        app_driver_mutex_deinit(s_qspi_env[id].mutex_async);
+        s_qspi_env[id].mutex_async = NULL;
+    }
+}
+#endif
+
+static void unregister_cb(void)
+{
+    GLOBAL_EXCEPTION_DISABLE();
+    if (s_qspi_env[APP_QSPI_ID_0].qspi_state == APP_QSPI_INVALID &&
+        s_qspi_env[APP_QSPI_ID_1].qspi_state == APP_QSPI_INVALID) {
+        pwr_unregister_sleep_cb(s_qspi_pwr_id);
+        s_sleep_cb_registered_flag = false;
+    }
+    GLOBAL_EXCEPTION_ENABLE();
 }
 
 uint16_t app_qspi_deinit(app_qspi_id_t id)
@@ -481,25 +568,11 @@ uint16_t app_qspi_deinit(app_qspi_id_t id)
     }
 
 #ifdef  ENV_RTOS_USE_SEMP
-    if (s_qspi_env[id].sem_tx != NULL) {
-        app_driver_sem_deinit(s_qspi_env[id].sem_tx);
-        s_qspi_env[id].sem_tx = NULL;
-    }
-    if (s_qspi_env[id].sem_rx != NULL) {
-        app_driver_sem_deinit(s_qspi_env[id].sem_rx);
-        s_qspi_env[id].sem_rx = NULL;
-    }
+    semp_deinit_config(id);
 #endif
 
 #ifdef ENV_RTOS_USE_MUTEX
-    if (s_qspi_env[id].mutex_sync != NULL) {
-        app_driver_mutex_deinit(s_qspi_env[id].mutex_sync);
-        s_qspi_env[id].mutex_sync = NULL;
-    }
-    if (s_qspi_env[id].mutex_async != NULL) {
-        app_driver_mutex_deinit(s_qspi_env[id].mutex_async);
-        s_qspi_env[id].mutex_async = NULL;
-    }
+    mutex_deinit_config(id);
 #endif
 
     if (s_qspi_env[id].pin_cfg.cs.enable == APP_QSPI_PIN_ENABLE) {
@@ -533,13 +606,7 @@ uint16_t app_qspi_deinit(app_qspi_id_t id)
     s_qspi_env[id].qspi_state = APP_QSPI_INVALID;
     s_qspi_env[id].start_flag = false;
 
-    GLOBAL_EXCEPTION_DISABLE();
-    if (s_qspi_env[APP_QSPI_ID_0].qspi_state == APP_QSPI_INVALID &&
-        s_qspi_env[APP_QSPI_ID_1].qspi_state == APP_QSPI_INVALID) {
-        pwr_unregister_sleep_cb(s_qspi_pwr_id);
-        s_sleep_cb_registered_flag = false;
-    }
-    GLOBAL_EXCEPTION_ENABLE();
+    unregister_cb();
 
     app_systick_deinit();
 
@@ -554,9 +621,9 @@ uint16_t app_qspi_command_receive_sync(app_qspi_id_t id, app_qspi_command_t *p_c
     hal_status_t err_code;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -584,10 +651,10 @@ uint16_t app_qspi_command_receive_sem_sync(app_qspi_id_t id, app_qspi_command_t 
 #endif
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -643,10 +710,10 @@ uint16_t app_qspi_command_receive_high_speed_sync(app_qspi_id_t id, app_qspi_com
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -694,10 +761,10 @@ uint16_t app_qspi_command_receive_async(app_qspi_id_t id, app_qspi_command_t *p_
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -735,9 +802,9 @@ uint16_t app_qspi_command_transmit_sync(app_qspi_id_t id, app_qspi_command_t *p_
     hal_status_t err_code;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -756,24 +823,56 @@ uint16_t app_qspi_command_transmit_sync(app_qspi_id_t id, app_qspi_command_t *p_
 }
 
 #ifdef  ENV_RTOS_USE_SEMP
+static uint16_t sem_sync_params_check(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint8_t *p_data)
+{
+    if (id >= APP_QSPI_ID_MAX ||
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+#ifdef ENV_RTOS_USE_MUTEX
+        APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id);
+#endif
+        return APP_DRV_ERR_INVALID_PARAM;
+    }
+    return APP_DRV_SUCCESS;
+}
+
+static hal_status_t command_transmit_process(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint8_t *p_data)
+{
+    hal_status_t err_code = HAL_OK;
+
+    switch (s_qspi_env[id].use_mode.type) {
+        case APP_QSPI_TYPE_INTERRUPT:
+            err_code = hal_qspi_command_transmit_it(&s_qspi_env[id].handle, p_cmd, p_data);
+            break;
+
+        case APP_QSPI_TYPE_DMA:
+            app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN,
+                                                    QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
+            err_code = hal_qspi_command_transmit_dma(&s_qspi_env[id].handle, p_cmd, p_data);
+            app_qspi_config_dma_qwrite_32b_patch(id, 0, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
+            break;
+
+        default:
+            break;
+    }
+    return err_code;
+}
+#endif
+
+#ifdef  ENV_RTOS_USE_SEMP
 uint16_t app_qspi_command_transmit_sem_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint8_t *p_data)
 {
+    app_drv_err_t app_err_code;
     hal_status_t err_code = HAL_OK;
 
 #ifdef ENV_RTOS_USE_MUTEX
     APP_QSPI_DRV_ASYNC_MUTEX_LOCK(id);
 #endif
 
-    if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
-#ifdef ENV_RTOS_USE_MUTEX
-        APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id);
-#endif
-        return APP_DRV_ERR_INVALID_PARAM;
-    }
+    app_err_code = sem_sync_params_check(id, p_cmd, p_data);
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     qspi_wake_up(id);
@@ -782,21 +881,7 @@ uint16_t app_qspi_command_transmit_sem_sync(app_qspi_id_t id, app_qspi_command_t
     if (s_qspi_env[id].start_flag == false) {
         s_qspi_env[id].start_flag = true;
         QSPI_SMART_CS_LOW(id);
-        switch (s_qspi_env[id].use_mode.type) {
-            case APP_QSPI_TYPE_INTERRUPT:
-                err_code = hal_qspi_command_transmit_it(&s_qspi_env[id].handle, p_cmd, p_data);
-                break;
-
-            case APP_QSPI_TYPE_DMA:
-                app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN,
-                                                     QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
-                err_code = hal_qspi_command_transmit_dma(&s_qspi_env[id].handle, p_cmd, p_data);
-                app_qspi_config_dma_qwrite_32b_patch(id, 0, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
-                break;
-
-            default:
-                break;
-        }
+        err_code = command_transmit_process(id, p_cmd, p_data);
         if (err_code != HAL_OK) {
             QSPI_SMART_CS_HIGH(id);
 #ifdef ENV_RTOS_USE_MUTEX
@@ -829,10 +914,10 @@ uint16_t app_qspi_command_transmit_high_speed_sync(app_qspi_id_t id, app_qspi_co
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -884,10 +969,10 @@ uint16_t app_qspi_command_transmit_async(app_qspi_id_t id, app_qspi_command_t *p
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -930,8 +1015,8 @@ uint16_t app_qspi_command_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint
     hal_status_t err_code;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
+            p_cmd == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -958,9 +1043,9 @@ uint16_t app_qspi_command_sem_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd)
 #endif
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1017,9 +1102,9 @@ uint16_t app_qspi_command_high_speed_sync(app_qspi_id_t id, app_qspi_command_t *
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1068,9 +1153,9 @@ uint16_t app_qspi_command_async(app_qspi_id_t id, app_qspi_command_t *p_cmd)
     hal_status_t err_code;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_cmd == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_cmd == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1110,9 +1195,9 @@ uint16_t app_qspi_transmit_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t leng
     hal_status_t err_code;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_data == NULL ||
-        length == 0 ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
+            p_data == NULL ||
+            length == 0 ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1139,10 +1224,10 @@ uint16_t app_qspi_transmit_sem_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t 
 #endif
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_data == NULL ||
-        length == 0 ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_data == NULL ||
+            length == 0 ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1200,10 +1285,10 @@ uint16_t app_qspi_transmit_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, ui
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_data == NULL ||
-        length == 0 ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_data == NULL ||
+            length == 0 ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1253,10 +1338,10 @@ uint16_t app_qspi_transmit_async(app_qspi_id_t id, uint8_t *p_data, uint32_t len
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        p_data == NULL ||
-        length == 0 ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            p_data == NULL ||
+            length == 0 ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1297,9 +1382,9 @@ uint16_t app_qspi_receive_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t lengt
     hal_status_t err_code;
 
     if (id >= APP_QSPI_ID_MAX ||
-        length == 0 ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
+            length == 0 ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1326,10 +1411,10 @@ uint16_t app_qspi_receive_sem_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t l
 #endif
 
     if (id >= APP_QSPI_ID_MAX ||
-        length == 0 ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            length == 0 ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
 #ifdef ENV_RTOS_USE_MUTEX
         APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id);
 #endif
@@ -1386,10 +1471,10 @@ uint16_t app_qspi_receive_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, uin
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        length == 0 ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            length == 0 ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1438,10 +1523,10 @@ uint16_t app_qspi_receive_async(app_qspi_id_t id, uint8_t *p_data, uint32_t leng
     hal_status_t err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
-        length == 0 ||
-        p_data == NULL ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
-        s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
+            length == 0 ||
+            p_data == NULL ||
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID ||
+            s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_POLLING) {
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
@@ -1479,7 +1564,7 @@ uint16_t app_qspi_receive_async(app_qspi_id_t id, uint8_t *p_data, uint32_t leng
 qspi_handle_t *app_qspi_get_handle(app_qspi_id_t id)
 {
     if (id >= APP_QSPI_ID_MAX ||
-        s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
+            s_qspi_env[id].qspi_state == APP_QSPI_INVALID) {
         return NULL;
     }
 

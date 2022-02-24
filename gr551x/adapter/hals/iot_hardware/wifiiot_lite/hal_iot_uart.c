@@ -83,7 +83,6 @@ static const app_uart_evt_handler_t *evt_handler[APP_UART_ID_MAX] = {
     app_uart1_callback
 };
 
-/******************************************************************************/
 static void app_uart0_callback(app_uart_evt_t *p_evt)
 {
     if (p_evt->type == APP_UART_EVT_RX_DATA) {
@@ -104,29 +103,13 @@ static void app_uart1_callback(app_uart_evt_t *p_evt)
     }
 }
 
-unsigned int IoTUartInit(unsigned int id, const IotUartAttribute *param)
+struct app_uart_params_t* uart_cfg(unsigned int id, const IotUartAttribute *param)
 {
-    app_uart_tx_buf_t uart_buffer;
-    int ret = 0;
-    uint32_t uwRet = 0;
-
-    uart_buffer.tx_buf       = NULL;
-    uart_buffer.tx_buf_size  = 0;
-
-    if (NULL == param) {
-        return IOT_FAILURE;
-    }
-
-    if (id >= APP_UART_ID_MAX) {
-        return IOT_FAILURE;
-    }
-
     app_uart_params_t *params = &uart_param[id];
     params->init.baud_rate = param->baudRate;
     params->init.rx_timeout_mode = UART_RECEIVER_TIMEOUT_ENABLE;
 
-    switch(param->dataBits)
-    {
+    switch (param->dataBits) {
         case IOT_UART_DATA_BIT_5:
             params->init.data_bits  = UART_DATABITS_5;
             break;
@@ -139,7 +122,8 @@ unsigned int IoTUartInit(unsigned int id, const IotUartAttribute *param)
         case IOT_UART_DATA_BIT_8:
             params->init.data_bits  = UART_DATABITS_8;
             break;
-        default:break;
+        default:
+            break;
     }
 
     if (param->stopBits == IOT_UART_STOP_BIT_1) {
@@ -155,6 +139,27 @@ unsigned int IoTUartInit(unsigned int id, const IotUartAttribute *param)
     } else if (param->parity == IOT_UART_PARITY_EVEN) {
         params->init.parity = UART_PARITY_EVEN;
     }
+    return params;
+}
+
+unsigned int IoTUartInit(unsigned int id, const IotUartAttribute *param)
+{
+    app_uart_tx_buf_t uart_buffer;
+    app_uart_params_t *params;
+    int ret = 0;
+    uint32_t uwRet = 0;
+
+    uart_buffer.tx_buf       = NULL;
+    uart_buffer.tx_buf_size  = 0;
+
+    if (param == NULL) {
+        return IOT_FAILURE;
+    }
+
+    if (id >= APP_UART_ID_MAX) {
+        return IOT_FAILURE;
+    }
+    params = uart_cfg(id, param);
 
     ret = app_uart_init(params, evt_handler[id], &uart_buffer);
     if (ret != 0) {
@@ -209,7 +214,7 @@ int IoTUartRead(unsigned int id, unsigned char *data, unsigned int dataLen)
 }
 
 int IoTUartWrite(unsigned int id, const unsigned char *data, unsigned int dataLen)
-{   
+{
     int ret = 0;
 
     LOS_MuxPend(uart_tx_mutex[id], LOS_WAIT_FOREVER);

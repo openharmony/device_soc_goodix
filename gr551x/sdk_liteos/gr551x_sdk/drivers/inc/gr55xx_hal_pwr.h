@@ -69,7 +69,7 @@ extern "C" {
 /** @defgroup HAL_PWR_SLEEP_ELAPSED_HANDLER HAL PWR sleep elapsed handler define
   * @{
   */
-  
+
 /**
   * @brief   PWR Sleep Timer Elapsed callback
   */

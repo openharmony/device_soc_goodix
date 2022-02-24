@@ -156,7 +156,7 @@
 
 // <o> Enable callstack backtrace function
 // <i> Default: 0
-#ifndef ENABLE_BACKTRACE_FEA     
+#ifndef ENABLE_BACKTRACE_FEA
 #define ENABLE_BACKTRACE_FEA    0
 #endif
 

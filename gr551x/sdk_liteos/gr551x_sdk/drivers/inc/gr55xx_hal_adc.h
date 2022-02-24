@@ -91,7 +91,7 @@ typedef enum {
 /** @defgroup ADC_Configuration ADC Configuration
   * @{
   */
-  
+
 /**
   * @brief   ADC init structure definition
   */
@@ -420,21 +420,21 @@ void hal_adc_msp_deinit(adc_handle_t *p_adc);
  *  @brief ADC polling and DMA conversion management functions.
  * @{
  */
- 
- /**
- ****************************************************************************************
- * @brief  Set the FIFO threshold for DMA trigger.
- *
- * @param[in]  p_adc: Pointer to an ADC handle which contains the configuration information for
- *                    the specified ADC module.
- * @param[in]  threshold: FIFO threshold value ranging bwtween 0x0U ~ 0x64U.
- *
- * @retval ::HAL_OK: Operation is OK.
- * @retval ::HAL_ERROR: Parameter error or operation not supported.
- * @retval ::HAL_BUSY: Driver is busy.
- * @retval ::HAL_TIMEOUT: Timeout occurred.
- ****************************************************************************************
- */
+
+/**
+****************************************************************************************
+* @brief  Set the FIFO threshold for DMA trigger.
+*
+* @param[in]  p_adc: Pointer to an ADC handle which contains the configuration information for
+*                    the specified ADC module.
+* @param[in]  threshold: FIFO threshold value ranging bwtween 0x0U ~ 0x64U.
+*
+* @retval ::HAL_OK: Operation is OK.
+* @retval ::HAL_ERROR: Parameter error or operation not supported.
+* @retval ::HAL_BUSY: Driver is busy.
+* @retval ::HAL_TIMEOUT: Timeout occurred.
+****************************************************************************************
+*/
 hal_status_t hal_adc_set_dma_threshold(adc_handle_t *p_adc, uint32_t threshold);
 
 /**

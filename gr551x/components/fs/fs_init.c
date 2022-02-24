@@ -50,7 +50,8 @@ static uint32_t FsGetResource(struct fs_cfg *fs, const struct DeviceResourceNode
             HDF_LOGE("%s: failed to get mount_points", __func__);
             return HDF_FAILURE;
         }
-        if (resource->GetUint32ArrayElem(resourceNode, "partitions", i, (uint32_t *)&fs[i].lfs_cfg.context, 0) != HDF_SUCCESS) {
+        if (resource->GetUint32ArrayElem(resourceNode, "partitions", i,
+                                         (uint32_t *)&fs[i].lfs_cfg.context, 0) != HDF_SUCCESS) {
             HDF_LOGE("%s: failed to get partitions", __func__);
             return HDF_FAILURE;
         }
@@ -58,12 +59,14 @@ static uint32_t FsGetResource(struct fs_cfg *fs, const struct DeviceResourceNode
             HDF_LOGE("%s: failed to get block_size", __func__);
             return HDF_FAILURE;
         }
-        if (resource->GetUint32ArrayElem(resourceNode, "block_count", i, &fs[i].lfs_cfg.block_count, 0) != HDF_SUCCESS) {
+        if (resource->GetUint32ArrayElem(resourceNode, "block_count", i,
+                                         &fs[i].lfs_cfg.block_count, 0) != HDF_SUCCESS) {
             HDF_LOGE("%s: failed to get block_count", __func__);
             return HDF_FAILURE;
         }
         HDF_LOGD("%s: fs[%d] mount_point=%s, partition=%u, block_size=%u, block_count=%u", __func__, i,
-                 fs[i].mount_point, (uint32_t)fs[i].lfs_cfg.context, fs[i].lfs_cfg.block_size, fs[i].lfs_cfg.block_count);
+                 fs[i].mount_point, (uint32_t)fs[i].lfs_cfg.context, fs[i].lfs_cfg.block_size,
+                 fs[i].lfs_cfg.block_count);
     }
     return HDF_SUCCESS;
 }
