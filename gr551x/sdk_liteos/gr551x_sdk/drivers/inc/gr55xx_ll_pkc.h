@@ -149,9 +149,9 @@ typedef struct _ll_pkc_init {
   * @brief    Interrupt defines which can be used with LL_PKC_ReadReg and LL_PKC_WriteReg functions
   * @{
   */
-#define LL_PKC_INTEN_DONE                         PKC_INTEN_DONE      /**< Operation Done Interrupt source              */
-#define LL_PKC_INTEN_ERR                          PKC_INTEN_ERR       /**< Operation Error Interrupt source             */
-#define LL_PKC_INTEN_BAOVF                        PKC_INTEN_BAOVF     /**< Big Integer Result Overflow Interrupt source */
+#define LL_PKC_INTEN_DONE    PKC_INTEN_DONE    /**< Operation Done Interrupt source */
+#define LL_PKC_INTEN_ERR     PKC_INTEN_ERR     /**< Operation Error Interrupt source */
+#define LL_PKC_INTEN_BAOVF   PKC_INTEN_BAOVF   /**< Big Integer Result Overflow Interrupt source */
 /** @} */
 
 /** @defgroup PKC_LL_EC_BITS_LENGTH Bits Length
@@ -165,12 +165,14 @@ typedef struct _ll_pkc_init {
 /** @defgroup PKC_LL_EC_OPERATION_MODE Operation Mode
   * @{
   */
-#define LL_PKC_operation_mode_MULTIPLY            (0x00000000U)                    /**< Multiplication operation mode */
-#define LL_PKC_operation_mode_INVERTION           (1UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Inversion operation mode      */
-#define LL_PKC_operation_mode_ADD                 (2UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Addition operation mode       */
-#define LL_PKC_operation_mode_SUB                 (3UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Subtraction operation mode    */
-#define LL_PKC_operation_mode_COMPARE             (4UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Comparison operation mode     */
-#define LL_PKC_operation_mode_LEFTSHIFT           (5UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Left Shift operation mode     */
+#define LL_PKC_operation_mode_MULTIPLY            (0x00000000U)                    /**< Multiplication operation
+                                                                                      mode */
+#define LL_PKC_operation_mode_INVERTION           (1UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Inversion operation
+                                                                                      mode */
+#define LL_PKC_operation_mode_ADD                 (2UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Addition operation mode    */
+#define LL_PKC_operation_mode_SUB                 (3UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Subtraction operation mode */
+#define LL_PKC_operation_mode_COMPARE             (4UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Comparison operation mode  */
+#define LL_PKC_operation_mode_LEFTSHIFT           (5UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Left Shift operation mode  */
 #define LL_PKC_operation_mode_BIGINTEGERMULTIPLY  (6UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Big Number Multiplication
                                                                                         operation mode */
 #define LL_PKC_operation_mode_BIGINTEGERADD       (7UL << PKC_SW_CTRL_OPMODE_Pos)  /**< Big Number Addition operation

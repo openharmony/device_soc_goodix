@@ -79,22 +79,29 @@ typedef struct _ll_msio_init {
 
     uint32_t direction;     /**< Specifies the direction for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_DIRECTION.
-                                 MSIO HW MSIO_InitStructuration can be modified afterwards using unitary function
+                                 MSIO HW MSIO_InitStructuration can be
+                                 modified afterwards using unitary
+                                 function
                                  @ref ll_msio_set_pin_direction(). */
 
     uint32_t mode;          /**< Specifies the operating mode for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_MODE.
-                                 MSIO HW MSIO_InitStructuration can be modified afterwards using unitary function
+                                 MSIO HW MSIO_InitStructuration can be
+                                 modified afterwards using unitary
+                                 function
                                  @ref ll_msio_set_pin_mode(). */
 
     uint32_t pull;          /**< Specifies the operating Pull-up/Pull down for the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_PULL.
-                                 MSIO HW configuration can be modified afterwards using unitary function
+                                 MSIO HW configuration can be modified
+                                 afterwards using unitary function
                                  @ref ll_msio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                  This parameter can be a value of @ref MSIO_LL_EC_MUX.
-                                 GPIO HW MSIO_InitStructuration can be modified afterwards using unitary function
+                                 GPIO HW MSIO_InitStructuration can be
+                                 modified afterwards using unitary
+                                 function
                                  @ref ll_msio_set_pin_mux(). */
 } ll_msio_init_t;
 

@@ -52,16 +52,6 @@
  *****************************************************************************************
  */
 
-#ifdef ENV_RTOS_USE_MUTEX
-
-#define APP_I2C_DRV_SYNC_MUTEX_LOCK(id)     app_driver_mutex_pend(s_i2c_env[id].mutex_sync, MUTEX_WAIT_FOREVER)
-#define APP_I2C_DRV_SYNC_MUTEX_UNLOCK(id)   app_driver_mutex_post(s_i2c_env[id].mutex_sync)
-
-#define APP_I2C_DRV_ASYNC_MUTEX_LOCK(id)    app_driver_mutex_pend(s_i2c_env[id].mutex_async, MUTEX_WAIT_FOREVER)
-#define APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(id)  app_driver_mutex_post(s_i2c_env[id].mutex_async)
-
-#endif
-
 /*
  * STRUCT DEFINE
  *****************************************************************************************
@@ -137,13 +127,40 @@ struct i2c_env_t s_i2c_env[APP_I2C_ID_MAX] = {
     },
 };
 static bool      s_sleep_cb_registered_flag = false;
-static pwr_id_t  s_i2c_pwr_id;
+static int16_t  s_i2c_pwr_id;
 
 static const app_sleep_callbacks_t i2c_sleep_cb = {
     .app_prepare_for_sleep = i2c_prepare_for_sleep,
     .app_sleep_canceled    = i2c_sleep_canceled,
     .app_wake_up_ind       = i2c_wake_up_ind
 };
+
+#ifdef ENV_RTOS_USE_MUTEX
+static inline void APP_I2C_DRV_SYNC_MUTEX_LOCK(app_i2c_id_t id);
+static inline void APP_I2C_DRV_SYNC_MUTEX_UNLOCK(app_i2c_id_t id);
+static inline void APP_I2C_DRV_ASYNC_MUTEX_LOCK(app_i2c_id_t id);
+static inline void APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(app_i2c_id_t id);
+
+static inline void APP_I2C_DRV_SYNC_MUTEX_LOCK(app_i2c_id_t id)
+{
+    app_driver_mutex_pend(s_i2c_env[id].mutex_sync, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_I2C_DRV_SYNC_MUTEX_UNLOCK(app_i2c_id_t id)
+{
+    app_driver_mutex_post(s_i2c_env[id].mutex_sync);
+}
+
+static inline void APP_I2C_DRV_ASYNC_MUTEX_LOCK(app_i2c_id_t id)
+{
+    app_driver_mutex_pend(s_i2c_env[id].mutex_async, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_I2C_DRV_ASYNC_MUTEX_UNLOCK(app_i2c_id_t id)
+{
+    app_driver_mutex_post(s_i2c_env[id].mutex_async);
+}
+#endif
 
 /*
  * LOCAL FUNCTION DEFINITIONS
@@ -443,8 +460,8 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
     hal_err_code = hal_i2c_init(&s_i2c_env[id].handle);
     HAL_ERR_CODE_CHECK(hal_err_code);
 
-    hal_err_code = register_cb();
-    APP_DRV_ERR_CODE_CHECK(hal_err_code);
+    app_err_code = register_cb();
+    APP_DRV_ERR_CODE_CHECK(app_err_code);
 
     s_i2c_env[id].i2c_state = APP_I2C_ACTIVITY;
     s_i2c_env[id].start_flag = false;
@@ -564,7 +581,8 @@ static uint16_t sem_sync_params_check(app_i2c_id_t id, uint8_t *p_data, uint16_t
     return APP_DRV_SUCCESS;
 }
 
-static hal_status_t master_or_slave_receive_process(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
+static hal_status_t master_or_slave_receive_process(app_i2c_id_t id, uint16_t target_address,
+                                                    uint8_t *p_data, uint16_t size)
 {
     hal_status_t err_code = HAL_OK;
 
@@ -750,7 +768,8 @@ uint16_t app_i2c_transmit_sync(app_i2c_id_t id, uint16_t target_address, \
 }
 
 #ifdef  ENV_RTOS_USE_SEMP
-static hal_status_t master_or_slave_transmit_process(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
+static hal_status_t master_or_slave_transmit_process(app_i2c_id_t id, uint16_t target_address,
+                                                     uint8_t *p_data, uint16_t size)
 {
     hal_status_t err_code = HAL_OK;
 

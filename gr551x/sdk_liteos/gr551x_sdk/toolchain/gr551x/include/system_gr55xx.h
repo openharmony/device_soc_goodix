@@ -70,7 +70,7 @@ typedef enum {
 /* ================                           Interrupt Number Definition                           ================ */
 /* ================================================================================================================= */
 typedef enum IRQn {
-    /* ==================================  ARM Cortex-M# Specific Interrupt Numbers  =================================== */
+/* ==================================  ARM Cortex-M# Specific Interrupt Numbers  =================================== */
 
     NonMaskableInt_IRQn       = -14,  /**< -14  Non maskable Interrupt, cannot be stopped or preempted               */
     HardFault_IRQn            = -13,  /**< -13  Hard Fault, all classes of Fault                                     */
@@ -84,7 +84,7 @@ typedef enum IRQn {
     PendSV_IRQn               =  -2,  /**< -2 Pendable request for system service                                    */
     SysTick_IRQn              =  -1,  /**< -1 System Tick Timer                                                      */
 
-    /* ======================================  <Device> Specific Interrupt Numbers  ==================================== */
+/* ======================================  <Device> Specific Interrupt Numbers  ==================================== */
     WDT_IRQn                  =   0,  /**< Watchdog Timer Interrupt                                                  */
     BLE_SDK_IRQn              =   1,  /**< BLE_SDK_SCHEDULE Interrupt                                                */
     BLE_IRQn                  =   2,  /**< BLE Interrupt                                                             */

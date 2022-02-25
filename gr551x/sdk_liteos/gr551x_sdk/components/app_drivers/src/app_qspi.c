@@ -51,34 +51,6 @@
  * DEFINES
  *****************************************************************************************
  */
-#ifdef ENV_RTOS_USE_MUTEX
-
-#define APP_QSPI_DRV_SYNC_MUTEX_LOCK(id)    app_driver_mutex_pend(s_qspi_env[id].mutex_sync, MUTEX_WAIT_FOREVER)
-#define APP_QSPI_DRV_SYNC_MUTEX_UNLOCK(id)  app_driver_mutex_post(s_qspi_env[id].mutex_sync)
-
-#define APP_QSPI_DRV_ASYNC_MUTEX_LOCK(id)   app_driver_mutex_pend(s_qspi_env[id].mutex_async, MUTEX_WAIT_FOREVER)
-#define APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(id) app_driver_mutex_post(s_qspi_env[id].mutex_async)
-
-#endif
-
-#define QSPI_SMART_CS_LOW(id)                                              \
-    do {                                                                   \
-            if (s_qspi_env[id].pin_cfg.cs.enable == APP_QSPI_PIN_ENABLE) { \
-                app_io_write_pin(s_qspi_env[id].pin_cfg.cs.type,           \
-                                s_qspi_env[id].pin_cfg.cs.pin,             \
-                                APP_IO_PIN_RESET);                         \
-            }                                                              \
-        } while (0)
-
-#define QSPI_SMART_CS_HIGH(id)                                             \
-    do {                                                                   \
-            if (s_qspi_env[id].pin_cfg.cs.enable == APP_QSPI_PIN_ENABLE) { \
-                app_io_write_pin(s_qspi_env[id].pin_cfg.cs.type,           \
-                                 s_qspi_env[id].pin_cfg.cs.pin,            \
-                                 APP_IO_PIN_SET);                          \
-            }                                                              \
-    } while (0)
-
 
 /********************************************************************
  * QUAD_WRITE_32b_PATCH : just exist in QUAD/DATASIZE_32BITS/DMA scene
@@ -181,6 +153,54 @@ static const app_sleep_callbacks_t qspi_sleep_cb = {
     .app_sleep_canceled    = qspi_sleep_canceled,
     .app_wake_up_ind       = qspi_wake_up_ind
 };
+
+static inline void QSPI_SMART_CS_LOW(app_qspi_id_t id);
+static inline void QSPI_SMART_CS_HIGH(app_qspi_id_t id);
+
+static inline void QSPI_SMART_CS_LOW(app_qspi_id_t id)
+{
+    if (s_qspi_env[id].pin_cfg.cs.enable == APP_QSPI_PIN_ENABLE) {
+        app_io_write_pin(s_qspi_env[id].pin_cfg.cs.type,
+                         s_qspi_env[id].pin_cfg.cs.pin,
+                         APP_IO_PIN_RESET);
+    }
+}
+
+static inline void QSPI_SMART_CS_HIGH(app_qspi_id_t id)
+{
+    if (s_qspi_env[id].pin_cfg.cs.enable == APP_QSPI_PIN_ENABLE) {
+        app_io_write_pin(s_qspi_env[id].pin_cfg.cs.type,
+                         s_qspi_env[id].pin_cfg.cs.pin,
+                         APP_IO_PIN_SET);
+    }
+}
+
+#ifdef ENV_RTOS_USE_MUTEX
+static inline void APP_QSPI_DRV_SYNC_MUTEX_LOCK(app_qspi_id_t id);
+static inline void APP_QSPI_DRV_SYNC_MUTEX_UNLOCK(app_qspi_id_t id);
+static inline void APP_QSPI_DRV_ASYNC_MUTEX_LOCK(app_qspi_id_t id);
+static inline void APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(app_qspi_id_t id);
+
+static inline void APP_QSPI_DRV_SYNC_MUTEX_LOCK(app_qspi_id_t id)
+{
+    app_driver_mutex_pend(s_qspi_env[id].mutex_sync, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_QSPI_DRV_SYNC_MUTEX_UNLOCK(app_qspi_id_t id)
+{
+    app_driver_mutex_post(s_qspi_env[id].mutex_sync);
+}
+
+static inline void APP_QSPI_DRV_ASYNC_MUTEX_LOCK(app_qspi_id_t id)
+{
+    app_driver_mutex_pend(s_qspi_env[id].mutex_async, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_QSPI_DRV_ASYNC_MUTEX_UNLOCK(app_qspi_id_t id)
+{
+    app_driver_mutex_post(s_qspi_env[id].mutex_async);
+}
+#endif
 
 /*
  * LOCAL FUNCTION DEFINITIONS
@@ -849,7 +869,7 @@ static hal_status_t command_transmit_process(app_qspi_id_t id, app_qspi_command_
 
         case APP_QSPI_TYPE_DMA:
             app_qspi_config_dma_qwrite_32b_patch(id, QSPI_QUAD_WRITE_32b_PATCH_EN,
-                                                    QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
+                                                 QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
             err_code = hal_qspi_command_transmit_dma(&s_qspi_env[id].handle, p_cmd, p_data);
             app_qspi_config_dma_qwrite_32b_patch(id, 0, QSPI_QUAD_WRITE_DATA_ENDIAN_MODE);
             break;

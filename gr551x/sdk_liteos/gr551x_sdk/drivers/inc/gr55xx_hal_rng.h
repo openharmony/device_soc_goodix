@@ -171,8 +171,8 @@ typedef struct _hal_rng_callback {
 /** @defgroup RNG_SEED_SOURCE LFSR seed source
   * @{
   */
-#define RNG_SEED_FR0_S0                 LL_RNG_SEED_FR0_S0            /**< LFSR seed is from the switching oscillator S0. */
-#define RNG_SEED_USER                   LL_RNG_SEED_USER              /**< LFSR seed is configured by users. */
+#define RNG_SEED_FR0_S0  LL_RNG_SEED_FR0_S0  /**< LFSR seed is from the switching oscillator S0. */
+#define RNG_SEED_USER    LL_RNG_SEED_USER    /**< LFSR seed is configured by users. */
 /** @} */
 
 

@@ -1212,7 +1212,8 @@ __STATIC_INLINE void ll_cgc_disable_wfi_off_aon_mcusub_hclk(void)
   */
 __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_aon_mcusub_hclk(void)
 {
-    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[ITEM_2], MCU_SUB_WFI_AON_MCUSUB_HCLK) == (MCU_SUB_WFI_AON_MCUSUB_HCLK));
+    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[ITEM_2], MCU_SUB_WFI_AON_MCUSUB_HCLK) == \
+            (MCU_SUB_WFI_AON_MCUSUB_HCLK));
 }
 
 /**
@@ -1258,7 +1259,8 @@ __STATIC_INLINE void ll_cgc_disable_wfi_off_xqspi_hclk(void)
   */
 __STATIC_INLINE uint32_t ll_cgc_is_enabled_wfi_off_xqspi_hclk(void)
 {
-    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[ITEM_2], MCU_SUB_WFI_XF_XQSPI_HCLK) == (MCU_SUB_WFI_XF_XQSPI_HCLK));
+    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[ITEM_2], MCU_SUB_WFI_XF_XQSPI_HCLK) == \
+            (MCU_SUB_WFI_XF_XQSPI_HCLK));
 }
 
 /**
@@ -2104,7 +2106,8 @@ __STATIC_INLINE void ll_cgc_disable_force_off_xqspi_hclk(void)
   */
 __STATIC_INLINE uint32_t ll_cgc_is_enabled_force_off_xqspi_hclk(void)
 {
-    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[ITEM_2], MCU_SUB_FORCE_XF_XQSPI_HCLK) == (MCU_SUB_FORCE_XF_XQSPI_HCLK));
+    return (READ_BITS(MCU_SUB->MCU_SUBSYS_CG_CTRL[ITEM_2], MCU_SUB_FORCE_XF_XQSPI_HCLK) == \
+            (MCU_SUB_FORCE_XF_XQSPI_HCLK));
 }
 
 /**

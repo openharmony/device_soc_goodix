@@ -55,7 +55,6 @@
  ****************************************************************************************
  */
 #include <stdint.h>       // standard definitions
-#include "ble_error.h"
 #include "ble_gapc.h"
 
 /**
@@ -773,13 +772,13 @@ typedef struct {
  * @brief The BLE reslove rpa address callback.
  */
 typedef void (*reslv_rpa_addr_callback_t) (uint8_t status, gap_bdaddr_t *iden_addr,
-        uint8_t src_info);
+    uint8_t src_info);
 
 /**
  * @brief The BLE rpa address report callback.
  */
 typedef void (*rpa_addr_report_callback_t) (ble_actv_type_t type, uint8_t index,
-        const uint8_t *rpa_addr);
+    const uint8_t *rpa_addr);
 
 /** @} */
 

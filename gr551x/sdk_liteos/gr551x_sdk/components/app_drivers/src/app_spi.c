@@ -54,39 +54,7 @@
  * DEFINES
  *****************************************************************************************
  */
-
-#define SPI_SMART_CS_LOW(id)                                              \
-    do {                                                                  \
-            if ((APP_SPI_ID_SLAVE != id) &&                               \
-               (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) { \
-                app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,           \
-                                s_spi_env[id].pin_cfg.cs.pin,             \
-                                APP_IO_PIN_RESET);                        \
-            }                                                             \
-        } while (0)
-
-#define SPI_SMART_CS_HIGH(id)                                             \
-    do {                                                                  \
-            if ((APP_SPI_ID_SLAVE != id) &&                               \
-               (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) { \
-                app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,           \
-                                 s_spi_env[id].pin_cfg.cs.pin,            \
-                                 APP_IO_PIN_SET);                         \
-            }                                                             \
-    } while (0)
-
-#ifdef ENV_RTOS_USE_MUTEX
-
-#define APP_SPI_DRV_SYNC_MUTEX_LOCK(id)     app_driver_mutex_pend(s_spi_env[id].mutex_sync, MUTEX_WAIT_FOREVER)
-#define APP_SPI_DRV_SYNC_MUTEX_UNLOCK(id)   app_driver_mutex_post(s_spi_env[id].mutex_sync)
-
-#define APP_SPI_DRV_ASYNC_MUTEX_LOCK(id)    app_driver_mutex_pend(s_spi_env[id].mutex_async, MUTEX_WAIT_FOREVER)
-#define APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(id)  app_driver_mutex_post(s_spi_env[id].mutex_async)
-
-#endif
-
 #define MS_1000           1000
-
 
 /*
  * STRUCT DEFINE
@@ -175,6 +143,56 @@ static const app_sleep_callbacks_t spi_sleep_cb = {
     .app_sleep_canceled    = spi_sleep_canceled,
     .app_wake_up_ind       = spi_wake_up_ind
 };
+
+static inline void SPI_SMART_CS_LOW(uint8_t id);
+static inline void SPI_SMART_CS_HIGH(uint8_t id);
+
+static inline void SPI_SMART_CS_LOW(uint8_t id)
+{
+    if ((APP_SPI_ID_SLAVE != id) &&
+        (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) {
+        app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,
+                         s_spi_env[id].pin_cfg.cs.pin,
+                         APP_IO_PIN_RESET);
+    }
+}
+
+static inline void SPI_SMART_CS_HIGH(uint8_t id)
+{
+    if ((APP_SPI_ID_SLAVE != id) &&
+        (s_spi_env[id].pin_cfg.cs.enable == APP_SPI_PIN_ENABLE)) {
+        app_io_write_pin(s_spi_env[id].pin_cfg.cs.type,
+                         s_spi_env[id].pin_cfg.cs.pin,
+                         APP_IO_PIN_SET);
+        }
+}
+
+#ifdef ENV_RTOS_USE_MUTEX
+static inline void APP_SPI_DRV_SYNC_MUTEX_LOCK(uint8_t id);
+static inline void APP_SPI_DRV_SYNC_MUTEX_UNLOCK(uint8_t id);
+static inline void APP_SPI_DRV_ASYNC_MUTEX_LOCK(uint8_t id);
+static inline void APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(uint8_t id);
+
+static inline void APP_SPI_DRV_SYNC_MUTEX_LOCK(uint8_t id)
+{
+    app_driver_mutex_pend(s_spi_env[id].mutex_sync, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_SPI_DRV_SYNC_MUTEX_UNLOCK(uint8_t id)
+{
+    app_driver_mutex_post(s_spi_env[id].mutex_sync);
+}
+
+static inline void APP_SPI_DRV_ASYNC_MUTEX_LOCK(uint8_t id)
+{
+    app_driver_mutex_pend(s_spi_env[id].mutex_async, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_SPI_DRV_ASYNC_MUTEX_UNLOCK(uint8_t id)
+{
+    app_driver_mutex_post(s_spi_env[id].mutex_async);
+}
+#endif
 
 /*
  * LOCAL FUNCTION DEFINITIONS

@@ -97,7 +97,9 @@ typedef struct _ll_pwm_init_t {
     uint32_t align;             /**< Specifies the PWM alignment pulses.
                                      This parameter can be a value of @ref PWM_LL_EC_ALIGN. */
 
-    uint32_t prescaler;         /**< Specifies the prescaler value which will be used configure PWM output frequency.
+    uint32_t prescaler;         /**< Specifies the prescaler value
+                                     which will be used configure PWM
+                                     output frequency.
                                      This parameter must be a number ranges between Min_Data = 0 and
                                      Max_Data = 0xFFFFFFFF.
                                      This parameter should be larger than 128.
@@ -105,14 +107,20 @@ typedef struct _ll_pwm_init_t {
                                      @ref ll_pwm_set_prescaler(). */
 
     uint32_t bprescaler;        /**< Specifies the required prescaler that the duty changes from 0% to 100% in
-                                     breath mode. This parameter must be a number ranges between Min_Data=0 and
-                                     Max_Data=0xFFFFFFFF. This parameter is recommended to be larger than 128*prescaler
+                                     breath mode. This parameter must
+                                     be a number ranges between
+                                     Min_Data=0 and
+                                     Max_Data=0xFFFFFFFF. This
+                                     parameter is recommended to be
+                                     larger than 128*prescaler
                                      to guarantee an ideal breath effect.
                                      This feature can be modified afterwards using unitary function
                                      @ref ll_pwm_set_breath_prescaler(). */
 
     uint32_t hprescaler;        /**< Specifies the required prescaler in breath hold state.
-                                     This parameter must be a number ranges between Min_Data=0 and Max_Data=0xFFFFFF.
+                                     This parameter must be a number
+                                     ranges between Min_Data=0 and
+                                     Max_Data=0xFFFFFF.
                                      This feature can be modified afterwards using unitary function
                                      @ref ll_pwm_set_hold_prescaler(). */
 

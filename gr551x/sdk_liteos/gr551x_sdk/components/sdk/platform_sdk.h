@@ -137,7 +137,7 @@ void system_lp_counter_set(uint8_t cnt_a, uint8_t cnt_b);
 
 /**
  ****************************************************************************************
- * @brief : Set Time to wakeup oscillator before BLE Activity.
+ * @brief : Set Time to wakeup oscillator before BLE Act-ivity.
  * @param[in] run_mode :  run mode.
  * @param[in] osc_us   :  Time Reserved for wakeup oscillator(unit: us).
  * @retval :  void
@@ -147,7 +147,7 @@ void ble_wakeup_osc_time_set(run_mode_t run_mode, uint16_t osc_us);
 
 /**
  ****************************************************************************************
- * @brief : Get Time to wakeup oscillator before BLE Activity.
+ * @brief : Get Time to wakeup oscillator before BLE Act-ivity.
  * @param[in] run_mode :  run mode.
  * @retval :  osc_us   :  Time Reserved for wakeup oscillator(unit: us).
  ****************************************************************************************

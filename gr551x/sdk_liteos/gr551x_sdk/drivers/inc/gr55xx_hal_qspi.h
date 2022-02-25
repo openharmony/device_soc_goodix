@@ -61,6 +61,9 @@
 extern "C" {
 #endif
 
+#define MAX 7
+#define QSPI_CYCLE_MAX 31
+
 /* Exported types ------------------------------------------------------------*/
 /** @addtogroup HAL_QSPI_ENUMERATIONS Enumerations
   * @{
@@ -374,43 +377,64 @@ typedef struct _hal_qspi_callback {
   * @param  __HANDLE__ QSPI handle.
   * @retval None
   */
-#define __HAL_QSPI_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_QSPI_STATE_RESET)
+__STATIC_INLINE void __HAL_QSPI_RESET_HANDLE_STATE(qspi_handle_t *__HANDLE__)
+{
+    __HANDLE__->state = HAL_QSPI_STATE_RESET;
+}
 
 /** @brief  Enable the specified QSPI peripheral.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
+__STATIC_INLINE void __HAL_QSPI_ENABLE(qspi_handle_t *__HANDLE__)
+{
+    SET_BITS(__HANDLE__->p_instance->SSI_EN, SSI_SSIEN_EN);
+}
 
 /** @brief  Disable the specified QSPI peripheral.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
+__STATIC_INLINE void __HAL_QSPI_DISABLE(qspi_handle_t *__HANDLE__)
+{
+    CLEAR_BITS(__HANDLE__->p_instance->SSI_EN, SSI_SSIEN_EN);
+}
 
 /** @brief  Enable the QSPI DMA TX Request.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_ENABLE_DMATX(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
+__STATIC_INLINE void __HAL_QSPI_ENABLE_DMATX(qspi_handle_t *__HANDLE__)
+{
+    SET_BITS(__HANDLE__->p_instance->DMAC, SSI_DMAC_TDMAE);
+}
 
 /** @brief  Enable the QSPI DMA RX Request.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_ENABLE_DMARX(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
+__STATIC_INLINE void __HAL_QSPI_ENABLE_DMARX(qspi_handle_t *__HANDLE__)
+{
+    SET_BITS(__HANDLE__->p_instance->DMAC, SSI_DMAC_RDMAE);
+}
 
 /** @brief  Disable the QSPI DMA TX Request.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_DISABLE_DMATX(__HANDLE__)                  CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
+__STATIC_INLINE void __HAL_QSPI_DISABLE_DMATX(qspi_handle_t *__HANDLE__)
+{
+    CLEAR_BITS(__HANDLE__->p_instance->DMAC, SSI_DMAC_TDMAE);
+}
 
 /** @brief  Disable the QSPI DMA RX Request.
   * @param  __HANDLE__ Specifies the QSPI Handle.
   * @retval None
   */
-#define __HAL_QSPI_DISABLE_DMARX(__HANDLE__)                  CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
+__STATIC_INLINE void __HAL_QSPI_DISABLE_DMARX(qspi_handle_t *__HANDLE__)
+{
+    CLEAR_BITS(__HANDLE__->p_instance->DMAC, SSI_DMAC_RDMAE);
+}
 
 /** @brief  Enable the specified QSPI interrupts.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -424,7 +448,10 @@ typedef struct _hal_qspi_callback {
   *            @arg @ref QSPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_QSPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)     SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+__STATIC_INLINE void __HAL_QSPI_ENABLE_IT(qspi_handle_t *__HANDLE__, uint32_t __INTERRUPT__)
+{
+    SET_BITS(__HANDLE__->p_instance->INTMASK, __INTERRUPT__);
+}
 
 /** @brief  Disable the specified QSPI interrupts.
   * @param  __HANDLE__ Specifies the QSPI handle.
@@ -438,7 +465,10 @@ typedef struct _hal_qspi_callback {
   *            @arg @ref QSPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_QSPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)  CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+__STATIC_INLINE void __HAL_QSPI_DISABLE_IT(qspi_handle_t *__HANDLE__, uint32_t __INTERRUPT__)
+{
+    CLEAR_BITS(__HANDLE__->p_instance->INTMASK, __INTERRUPT__);
+}
 
 /** @brief  Check whether the specified QSPI interrupt source is enabled or not.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -452,8 +482,10 @@ typedef struct _hal_qspi_callback {
   *            @arg @ref QSPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval The new state of __IT__ (TRUE or FALSE).
   */
-#define __HAL_QSPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) \
-    (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__INTERRUPT__)) == (__INTERRUPT__))
+__STATIC_INLINE bool __HAL_QSPI_GET_IT_SOURCE(qspi_handle_t *__HANDLE__, uint32_t __INTERRUPT__)
+{
+    return (READ_BITS(__HANDLE__->p_instance->INTSTAT, __INTERRUPT__) == __INTERRUPT__);
+}
 
 /** @brief  Check whether the specified QSPI flag is set or not.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -468,8 +500,10 @@ typedef struct _hal_qspi_callback {
   *            @arg @ref QSPI_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_QSPI_GET_FLAG(__HANDLE__, __FLAG__) \
-    ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
+__STATIC_INLINE bool __HAL_QSPI_GET_FLAG(qspi_handle_t *__HANDLE__, uint32_t __FLAG__)
+{
+    return ((READ_BITS(__HANDLE__->p_instance->STAT, __FLAG__) != 0) ? SET : RESET);
+}
 
 /** @brief  Clear the specified QSPI flag.
   * @param  __HANDLE__ Specifies the QSPI Handle.
@@ -484,7 +518,10 @@ typedef struct _hal_qspi_callback {
   *            @arg @ref QSPI_FLAG_BUSY Busy flag
   * @retval None
   */
-#define __HAL_QSPI_CLEAR_FLAG(__HANDLE__, __FLAG__)             READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__))
+__STATIC_INLINE void __HAL_QSPI_CLEAR_FLAG(qspi_handle_t *__HANDLE__, uint32_t __FLAG__)
+{
+    READ_BITS(__HANDLE__->p_instance->STAT, __FLAG__);
+}
 
 /** @} */
 
@@ -497,67 +534,85 @@ typedef struct _hal_qspi_callback {
   * @param  __PRESCALER__ QSPI Clock Prescaler.
   * @retval SET (__PRESCALER__ is valid) or RESET (__PRESCALER__ is invalid)
   */
-#define IS_QSPI_CLOCK_PRESCALER(__PRESCALER__)  ((__PRESCALER__) <= 0xFFFF)
+__STATIC_INLINE bool IS_QSPI_CLOCK_PRESCALER(uint32_t __PRESCALER__)
+{
+    return ((__PRESCALER__) <= 0xFFFF);
+}
 
 /** @brief  Check if QSPI FIFO Threshold is valid.
   * @param  __THR__ QSPI FIFO Threshold.
   * @retval SET (__THR__ is valid) or RESET (__THR__ is invalid)
   */
-#define IS_QSPI_FIFO_THRESHOLD(__THR__)         (((__THR__) >= 0) && ((__THR__) <= 7))
+__STATIC_INLINE bool IS_QSPI_FIFO_THRESHOLD(uint32_t __THR__)
+{
+    return (((__THR__) >= 0) && ((__THR__) <= MAX));
+}
 
 /** @brief  Check if QSPI Clock Mode is valid.
   * @param  __CLKMODE__ QSPI Clock Mode.
   * @retval SET (__CLKMODE__ is valid) or RESET (__CLKMODE__ is invalid)
   */
-#define IS_QSPI_CLOCK_MODE(__CLKMODE__)         (((__CLKMODE__) == QSPI_CLOCK_MODE_0) || \
-                                                 ((__CLKMODE__) == QSPI_CLOCK_MODE_1) || \
-                                                 ((__CLKMODE__) == QSPI_CLOCK_MODE_2) || \
-                                                 ((__CLKMODE__) == QSPI_CLOCK_MODE_3))
+__STATIC_INLINE bool IS_QSPI_CLOCK_MODE(uint32_t __CLKMODE__)
+{
+    return (((__CLKMODE__) == QSPI_CLOCK_MODE_0) || ((__CLKMODE__) == QSPI_CLOCK_MODE_1) || \
+            ((__CLKMODE__) == QSPI_CLOCK_MODE_2) || ((__CLKMODE__) == QSPI_CLOCK_MODE_3));
+}
 
 /** @brief  Check if QSPI Instruction Size is valid.
   * @param  __INST_SIZE__ QSPI Instruction Size.
   * @retval SET (__INST_SIZE__ is valid) or RESET (__INST_SIZE__ is invalid)
   */
-#define IS_QSPI_INSTRUCTION_SIZE(__INST_SIZE__) (((__INST_SIZE__) == QSPI_INSTSIZE_00_BITS) || \
-                                                 ((__INST_SIZE__) == QSPI_INSTSIZE_04_BITS) || \
-                                                 ((__INST_SIZE__) == QSPI_INSTSIZE_08_BITS) || \
-                                                 ((__INST_SIZE__) == QSPI_INSTSIZE_16_BITS))
+__STATIC_INLINE bool IS_QSPI_INSTRUCTION_SIZE(uint32_t __INST_SIZE__)
+{
+    return (((__INST_SIZE__) == QSPI_INSTSIZE_00_BITS) || \
+            ((__INST_SIZE__) == QSPI_INSTSIZE_04_BITS) || \
+            ((__INST_SIZE__) == QSPI_INSTSIZE_08_BITS) || \
+            ((__INST_SIZE__) == QSPI_INSTSIZE_16_BITS));
+}
 
 /** @brief  Check if QSPI Address Size is valid.
   * @param  __ADDR_SIZE__ QSPI Address Size .
   * @retval SET (__ADDR_SIZE__ is valid) or RESET (__ADDR_SIZE__ is invalid)
   */
-#define IS_QSPI_ADDRESS_SIZE(__ADDR_SIZE__)     (((__ADDR_SIZE__) == QSPI_ADDRSIZE_00_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_04_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_08_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_12_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_16_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_20_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_24_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_28_BITS) || \
-                                                 ((__ADDR_SIZE__) == QSPI_ADDRSIZE_32_BITS))
+__STATIC_INLINE bool IS_QSPI_ADDRESS_SIZE(uint32_t __ADDR_SIZE__)
+{
+    return (((__ADDR_SIZE__) == QSPI_ADDRSIZE_00_BITS) || ((__ADDR_SIZE__) == QSPI_ADDRSIZE_04_BITS) || \
+            ((__ADDR_SIZE__) == QSPI_ADDRSIZE_08_BITS) || ((__ADDR_SIZE__) == QSPI_ADDRSIZE_12_BITS) || \
+            ((__ADDR_SIZE__) == QSPI_ADDRSIZE_16_BITS) || ((__ADDR_SIZE__) == QSPI_ADDRSIZE_20_BITS) || \
+            ((__ADDR_SIZE__) == QSPI_ADDRSIZE_24_BITS) || ((__ADDR_SIZE__) == QSPI_ADDRSIZE_28_BITS) || \
+            ((__ADDR_SIZE__) == QSPI_ADDRSIZE_32_BITS));
+}
 
 /** @brief  Check if QSPI Dummy Cycle is valid.
   * @param  __DCY__ QSPI Dummy Cycle.
   * @retval SET (__DCY__ is valid) or RESET (__DCY__ is invalid)
   */
-#define IS_QSPI_DUMMY_CYCLES(__DCY__)           ((__DCY__) <= 31)
+__STATIC_INLINE bool IS_QSPI_DUMMY_CYCLES(uint32_t __DCY__)
+{
+    return ((__DCY__) <= QSPI_CYCLE_MAX);
+}
 
 /** @brief  Check if QSPI Instruction and Address Mode is valid.
   * @param  __MODE__ QSPI Instruction and Address Mode.
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
-#define IS_QSPI_INSTADDR_MODE(__MODE__)         (((__MODE__) == QSPI_INST_ADDR_ALL_IN_SPI)       || \
-                                                 ((__MODE__) == QSPI_INST_IN_SPI_ADDR_IN_SPIFRF) || \
-                                                 ((__MODE__) == QSPI_INST_ADDR_ALL_IN_SPIFRF))
+__STATIC_INLINE bool IS_QSPI_INSTADDR_MODE(uint32_t __MODE__)
+{
+    return (((__MODE__) == QSPI_INST_ADDR_ALL_IN_SPI)       || \
+            ((__MODE__) == QSPI_INST_IN_SPI_ADDR_IN_SPIFRF) || \
+            ((__MODE__) == QSPI_INST_ADDR_ALL_IN_SPIFRF));
+}
 
 /** @brief  Check if QSPI Data Mode is valid.
   * @param  __MODE__ QSPI Data Mode.
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
-#define IS_QSPI_DATA_MODE(__MODE__)             (((__MODE__) == QSPI_DATA_MODE_SPI)     || \
-                                                 ((__MODE__) == QSPI_DATA_MODE_DUALSPI) || \
-                                                 ((__MODE__) == QSPI_DATA_MODE_QUADSPI))
+__STATIC_INLINE bool IS_QSPI_DATA_MODE(uint32_t __MODE__)
+{
+    return (((__MODE__) == QSPI_DATA_MODE_SPI)     || \
+            ((__MODE__) == QSPI_DATA_MODE_DUALSPI) || \
+            ((__MODE__) == QSPI_DATA_MODE_QUADSPI));
+}
 
 /** @} */
 
@@ -577,7 +632,7 @@ typedef struct _hal_qspi_callback {
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the QSPIx peripheral:
+          de-initialize the QSPIx peripheral.
 
       (+) User must implement hal_qspi_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).

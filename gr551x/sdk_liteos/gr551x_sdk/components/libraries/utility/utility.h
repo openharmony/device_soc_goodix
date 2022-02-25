@@ -71,23 +71,38 @@ extern "C" {
 #define B_FAIL       ((uint8_t)0xFF)
 
 #ifndef BV
-#define BV(n)      (uint8_t)(1 << (n))
+static inline uint8_t BV(uint32_t n)
+{
+    return (uint8_t)(1 << n);
+}
 #endif
 
 #ifndef BF
-#define BF(x, b, s)  ((uint8_t)((x) & (b)) >> (s))
+static inline uint8_t BF(uint32_t x, uint32_t b, uint32_t s)
+{
+    return ((uint8_t)((x) & (b)) >> (s));
+}
 #endif
 
 #ifndef MIN
-#define MIN(n, m)   (((n) < (m)) ? (n) : (m))
+static inline uint32_t MIN(uint32_t n, uint32_t m)
+{
+    return (((n) < (m)) ? (n) : (m));
+}
 #endif
 
 #ifndef MAX
-#define MAX(n, m)   (((n) < (m)) ? (m) : (n))
+static inline uint32_t MAX(uint32_t n, uint32_t m)
+{
+    return (((n) < (m)) ? (m) : (n));
+}
 #endif
 
 #ifndef ABS
-#define ABS(n)     (((n) < 0) ? -(n) : (n))
+static inline uint32_t ABS(int32_t n)
+{
+    return (((n) < 0) ? -(n) : (n));
+}
 #endif
 
 #ifndef ALIGN_NUM
@@ -100,10 +115,10 @@ extern "C" {
 #define BREAK_U32(var, ByteNum) (uint8_t)((uint32_t)(((var) >> ((uint8_t)((ByteNum) * 8))) & 0x00FF))
 
 #define BUILD_U32(Byte0, Byte1, Byte2, Byte3) \
-          ((uint32_t)((uint32_t)((Byte0) & 0x00FF) + \
-          ((uint32_t)((Byte1) & 0x00FF) << 8) + \
-          ((uint32_t)((Byte2) & 0x00FF) << 16) + \
-          ((uint32_t)((Byte3) & 0x00FF) << 24)))
+        ((uint32_t)((uint32_t)((Byte0) & 0x00FF) + \
+        ((uint32_t)((Byte1) & 0x00FF) << 8) + \
+        ((uint32_t)((Byte2) & 0x00FF) << 16) + \
+        ((uint32_t)((Byte3) & 0x00FF) << 24)))
 
 #define HI_UINT32_T(a) (((a) >> 24) & 0xFF)
 #define L3_UINT32_T(a) (((a) >> 16) & 0xFF)

@@ -57,11 +57,6 @@
 #include "app_drv_config.h"
 #include "gr55xx_pwr.h"
 
-/**
-  * @brief PWR id
-  */
-typedef int16_t pwr_id_t;
-
 /** @addtogroup APP_PWR_DEFINE Defines
   * @{
   */

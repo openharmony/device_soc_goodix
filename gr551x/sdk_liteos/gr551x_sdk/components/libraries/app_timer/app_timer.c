@@ -87,9 +87,22 @@
 #define APP_TIMER_FAIL                 (-1)
 #define APP_TIMER_LOCK()               LOCAL_APP_TIMER_LOCK()
 #define APP_TIMER_UNLOCK()             LOCAL_APP_TIMER_UNLOCK()
-#define APP_TIMER_MS_TO_US(x)          ((x) * 1000UL)
-#define APP_TIMER_TICKS_TO_US(x)       ((x) * 1000000.0f / sys_lpclk_get())
-#define APP_TIMER_GET_CURRENT_TICKS(x) hal_pwr_get_timer_current_value(PWR_TIMER_TYPE_SLP_TIMER, (x))
+
+static inline uint32_t APP_TIMER_MS_TO_US(uint32_t x)
+{
+    return x * 1000UL;
+}
+
+static inline float APP_TIMER_TICKS_TO_US(uint32_t x)
+{
+    float ret = ((x) * 1000000.0f / sys_lpclk_get());
+    return ret;
+}
+
+static inline void APP_TIMER_GET_CURRENT_TICKS(uint32_t x)
+{
+    hal_pwr_get_timer_current_value(PWR_TIMER_TYPE_SLP_TIMER, x);
+}
 
 /**@brief App timer global state variable. */
 typedef struct app_timer_struct {

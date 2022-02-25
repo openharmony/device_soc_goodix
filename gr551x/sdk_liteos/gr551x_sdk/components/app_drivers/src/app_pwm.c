@@ -89,7 +89,7 @@ static uint16_t pwm_gpio_config(app_pwm_pin_cfg_t pin_cfg);
 struct pwm_env_t s_pwm_env[APP_PWM_ID_MAX];
 static const uint32_t s_pwm_instance[APP_PWM_ID_MAX] = {PWM0_BASE, PWM1_BASE};
 static bool  s_sleep_cb_registered_flag = false;
-static pwr_id_t   s_pwm_pwr_id;
+static uint16_t   s_pwm_pwr_id;
 
 static const app_sleep_callbacks_t pwm_sleep_cb = {
     .app_prepare_for_sleep = pwm_prepare_for_sleep,

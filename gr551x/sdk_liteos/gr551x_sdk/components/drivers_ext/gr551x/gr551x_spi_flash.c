@@ -322,6 +322,114 @@ bool qspi_flash_sector_erase(uint32_t address)
     return true;
 }
 
+uint32_t FLASH_SPIM_ID_init(flash_init_t *p_flash_init)
+{
+    app_spi_params_t spim_params = DEFAULT_SPIM_PARAM_CONFIG;
+
+    spim_params.pin_cfg.cs.type     = p_flash_init->flash_io.spi_cs.gpio;
+    spim_params.pin_cfg.cs.pin      = p_flash_init->flash_io.spi_cs.pin;
+    spim_params.pin_cfg.cs.mux      = p_flash_init->flash_io.spi_cs.mux;
+    spim_params.pin_cfg.cs.pull     = APP_IO_NOPULL;
+    spim_params.pin_cfg.cs.enable   = APP_SPI_PIN_ENABLE;
+    spim_params.pin_cfg.clk.type    = p_flash_init->flash_io.spi_clk.gpio;
+    spim_params.pin_cfg.clk.pin     = p_flash_init->flash_io.spi_clk.pin;
+    spim_params.pin_cfg.clk.mux     = p_flash_init->flash_io.spi_clk.mux;
+    spim_params.pin_cfg.clk.pull    = APP_IO_NOPULL;
+    spim_params.pin_cfg.clk.enable  = APP_SPI_PIN_ENABLE;
+    spim_params.pin_cfg.mosi.type   = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
+    spim_params.pin_cfg.mosi.pin    = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
+    spim_params.pin_cfg.mosi.mux    = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
+    spim_params.pin_cfg.mosi.pull   = APP_IO_NOPULL;
+    spim_params.pin_cfg.mosi.enable = APP_SPI_PIN_ENABLE;
+    spim_params.pin_cfg.miso.type   = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
+    spim_params.pin_cfg.miso.pin    = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
+    spim_params.pin_cfg.miso.mux    = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
+    spim_params.pin_cfg.miso.pull   = APP_IO_NOPULL;
+    spim_params.pin_cfg.miso.enable = APP_SPI_PIN_ENABLE;
+
+    g_qspi_ctl.spi_id = APP_SPI_ID_MASTER;
+
+    app_spi_deinit(g_qspi_ctl.spi_id);
+
+    if (app_spi_init(&spim_params, spi_app_spim_callback)) {
+        return;
+    }
+}
+
+uint32_t FLASH_SPIM_ID0_ID1_init(flash_init_t *p_flash_init, app_qspi_params_t *qspi_params)
+{
+    if (FLASH_QSPI_ID0 == p_flash_init->spi_type) {
+        g_qspi_ctl.qspi_id = APP_QSPI_ID_0;
+    } else {
+        g_qspi_ctl.qspi_id = APP_QSPI_ID_1;
+    }
+
+    qspi_params->id                     = g_qspi_ctl.qspi_id;
+    qspi_params->pin_cfg.cs.type        = p_flash_init->flash_io.spi_cs.gpio;
+    qspi_params->pin_cfg.cs.pin         = p_flash_init->flash_io.spi_cs.pin;
+    qspi_params->pin_cfg.cs.mux         = p_flash_init->flash_io.spi_cs.mux;
+    qspi_params->pin_cfg.cs.pull        = APP_IO_NOPULL;
+    qspi_params->pin_cfg.cs.enable      = APP_SPI_PIN_ENABLE;
+    qspi_params->pin_cfg.clk.type       = p_flash_init->flash_io.spi_clk.gpio;
+    qspi_params->pin_cfg.clk.pin        = p_flash_init->flash_io.spi_clk.pin;
+    qspi_params->pin_cfg.clk.mux        = p_flash_init->flash_io.spi_clk.mux;
+    qspi_params->pin_cfg.clk.pull       = APP_IO_NOPULL;
+    qspi_params->pin_cfg.clk.enable     = APP_SPI_PIN_ENABLE;
+    qspi_params->pin_cfg.io_0.type      = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
+    qspi_params->pin_cfg.io_0.pin       = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
+    qspi_params->pin_cfg.io_0.mux       = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
+    qspi_params->pin_cfg.io_0.pull      = APP_IO_NOPULL;
+    qspi_params->pin_cfg.io_0.enable    = APP_SPI_PIN_ENABLE;
+    qspi_params->pin_cfg.io_1.type      = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
+    qspi_params->pin_cfg.io_1.pin       = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
+    qspi_params->pin_cfg.io_1.mux       = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
+    qspi_params->pin_cfg.io_1.pull      = APP_IO_NOPULL;
+    qspi_params->pin_cfg.io_1.enable    = APP_SPI_PIN_ENABLE;
+    qspi_params->pin_cfg.io_2.type      = p_flash_init->flash_io.qspi_io2.gpio;
+    qspi_params->pin_cfg.io_2.pin       = p_flash_init->flash_io.qspi_io2.pin;
+    qspi_params->pin_cfg.io_2.mux       = p_flash_init->flash_io.qspi_io2.mux;
+    qspi_params->pin_cfg.io_2.pull      = APP_IO_NOPULL;
+    qspi_params->pin_cfg.io_2.enable    = APP_SPI_PIN_ENABLE;
+    qspi_params->pin_cfg.io_3.type      = p_flash_init->flash_io.qspi_io3.gpio;
+    qspi_params->pin_cfg.io_3.pin       = p_flash_init->flash_io.qspi_io3.pin;
+    qspi_params->pin_cfg.io_3.mux       = p_flash_init->flash_io.qspi_io3.mux;
+    qspi_params->pin_cfg.io_3.pull      = APP_IO_NOPULL;
+    qspi_params->pin_cfg.io_3.enable    = APP_SPI_PIN_ENABLE;
+}
+
+uint32_t IO_init(app_qspi_params_t qspi_params)
+{
+    if (app_qspi_init(&qspi_params, spi_app_qspi_callback)) {
+       return false;
+    }
+    // set qspi hold/wp pin to high
+    app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
+
+    io_init.mode = APP_IO_MODE_OUT_PUT;
+    io_init.pull = APP_IO_PULLUP;
+    io_init.pin  = qspi_params.pin_cfg.io_2.pin;
+    io_init.mux  = APP_IO_MUX_7;
+    if (app_io_init(qspi_params.pin_cfg.io_2.type, &io_init)) {
+        return false;
+    }
+
+    io_init.mode = APP_IO_MODE_OUT_PUT;
+    io_init.pull = APP_IO_PULLUP;
+    io_init.pin  = qspi_params.pin_cfg.io_3.pin;
+    io_init.mux  = APP_IO_MUX_7;
+    if (app_io_init(qspi_params.pin_cfg.io_3.type, &io_init)) {
+        return false;
+    }
+
+    if (app_io_write_pin(qspi_params.pin_cfg.io_2.type, qspi_params.pin_cfg.io_2.pin, APP_IO_PIN_SET)) {
+        return false;
+    }
+
+    if (app_io_write_pin(qspi_params.pin_cfg.io_3.type, qspi_params.pin_cfg.io_3.pin, APP_IO_PIN_SET)) {
+        return false;
+    }
+}
+
 /*
  * GLOBAL FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -331,108 +439,12 @@ bool spi_flash_init(flash_init_t *p_flash_init)
     memcpy_s(&g_flash_init, sizeof (g_flash_init), p_flash_init, sizeof(flash_init_t));
 
     if (FLASH_SPIM_ID == p_flash_init->spi_type) {
-        app_spi_params_t spim_params = DEFAULT_SPIM_PARAM_CONFIG;
-
-        spim_params.pin_cfg.cs.type     = p_flash_init->flash_io.spi_cs.gpio;
-        spim_params.pin_cfg.cs.pin      = p_flash_init->flash_io.spi_cs.pin;
-        spim_params.pin_cfg.cs.mux      = p_flash_init->flash_io.spi_cs.mux;
-        spim_params.pin_cfg.cs.pull     = APP_IO_NOPULL;
-        spim_params.pin_cfg.cs.enable   = APP_SPI_PIN_ENABLE;
-        spim_params.pin_cfg.clk.type    = p_flash_init->flash_io.spi_clk.gpio;
-        spim_params.pin_cfg.clk.pin     = p_flash_init->flash_io.spi_clk.pin;
-        spim_params.pin_cfg.clk.mux     = p_flash_init->flash_io.spi_clk.mux;
-        spim_params.pin_cfg.clk.pull    = APP_IO_NOPULL;
-        spim_params.pin_cfg.clk.enable  = APP_SPI_PIN_ENABLE;
-        spim_params.pin_cfg.mosi.type   = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
-        spim_params.pin_cfg.mosi.pin    = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
-        spim_params.pin_cfg.mosi.mux    = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
-        spim_params.pin_cfg.mosi.pull   = APP_IO_NOPULL;
-        spim_params.pin_cfg.mosi.enable = APP_SPI_PIN_ENABLE;
-        spim_params.pin_cfg.miso.type   = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
-        spim_params.pin_cfg.miso.pin    = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
-        spim_params.pin_cfg.miso.mux    = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
-        spim_params.pin_cfg.miso.pull   = APP_IO_NOPULL;
-        spim_params.pin_cfg.miso.enable = APP_SPI_PIN_ENABLE;
-
-        g_qspi_ctl.spi_id = APP_SPI_ID_MASTER;
-
-        app_spi_deinit(g_qspi_ctl.spi_id);
-
-        if (app_spi_init(&spim_params, spi_app_spim_callback)) {
-            return false;
-        }
+        FLASH_SPIM_ID_init(p_flash_init);
     } else if ((FLASH_QSPI_ID0 == p_flash_init->spi_type) || (FLASH_QSPI_ID1 == p_flash_init->spi_type)) {
         app_qspi_params_t qspi_params = DEFAULT_QSPI_PARAM_CONFIG;
-
-        if (FLASH_QSPI_ID0 == p_flash_init->spi_type) {
-            g_qspi_ctl.qspi_id = APP_QSPI_ID_0;
-        } else {
-            g_qspi_ctl.qspi_id = APP_QSPI_ID_1;
-        }
-
-        qspi_params.id                     = g_qspi_ctl.qspi_id;
-        qspi_params.pin_cfg.cs.type        = p_flash_init->flash_io.spi_cs.gpio;
-        qspi_params.pin_cfg.cs.pin         = p_flash_init->flash_io.spi_cs.pin;
-        qspi_params.pin_cfg.cs.mux         = p_flash_init->flash_io.spi_cs.mux;
-        qspi_params.pin_cfg.cs.pull        = APP_IO_NOPULL;
-        qspi_params.pin_cfg.cs.enable      = APP_SPI_PIN_ENABLE;
-        qspi_params.pin_cfg.clk.type       = p_flash_init->flash_io.spi_clk.gpio;
-        qspi_params.pin_cfg.clk.pin        = p_flash_init->flash_io.spi_clk.pin;
-        qspi_params.pin_cfg.clk.mux        = p_flash_init->flash_io.spi_clk.mux;
-        qspi_params.pin_cfg.clk.pull       = APP_IO_NOPULL;
-        qspi_params.pin_cfg.clk.enable     = APP_SPI_PIN_ENABLE;
-        qspi_params.pin_cfg.io_0.type      = p_flash_init->flash_io.spi_io0.qspi_io0.gpio;
-        qspi_params.pin_cfg.io_0.pin       = p_flash_init->flash_io.spi_io0.qspi_io0.pin;
-        qspi_params.pin_cfg.io_0.mux       = p_flash_init->flash_io.spi_io0.qspi_io0.mux;
-        qspi_params.pin_cfg.io_0.pull      = APP_IO_NOPULL;
-        qspi_params.pin_cfg.io_0.enable    = APP_SPI_PIN_ENABLE;
-        qspi_params.pin_cfg.io_1.type      = p_flash_init->flash_io.spi_io1.qspi_io1.gpio;
-        qspi_params.pin_cfg.io_1.pin       = p_flash_init->flash_io.spi_io1.qspi_io1.pin;
-        qspi_params.pin_cfg.io_1.mux       = p_flash_init->flash_io.spi_io1.qspi_io1.mux;
-        qspi_params.pin_cfg.io_1.pull      = APP_IO_NOPULL;
-        qspi_params.pin_cfg.io_1.enable    = APP_SPI_PIN_ENABLE;
-        qspi_params.pin_cfg.io_2.type      = p_flash_init->flash_io.qspi_io2.gpio;
-        qspi_params.pin_cfg.io_2.pin       = p_flash_init->flash_io.qspi_io2.pin;
-        qspi_params.pin_cfg.io_2.mux       = p_flash_init->flash_io.qspi_io2.mux;
-        qspi_params.pin_cfg.io_2.pull      = APP_IO_NOPULL;
-        qspi_params.pin_cfg.io_2.enable    = APP_SPI_PIN_ENABLE;
-        qspi_params.pin_cfg.io_3.type      = p_flash_init->flash_io.qspi_io3.gpio;
-        qspi_params.pin_cfg.io_3.pin       = p_flash_init->flash_io.qspi_io3.pin;
-        qspi_params.pin_cfg.io_3.mux       = p_flash_init->flash_io.qspi_io3.mux;
-        qspi_params.pin_cfg.io_3.pull      = APP_IO_NOPULL;
-        qspi_params.pin_cfg.io_3.enable    = APP_SPI_PIN_ENABLE;
-
+        FLASH_SPIM_ID0_ID1_init(p_flash_init, &qspi_params);
         app_qspi_deinit(g_qspi_ctl.qspi_id);
-        if (app_qspi_init(&qspi_params, spi_app_qspi_callback)) {
-            return false;
-        }
-
-        // set qspi hold/wp pin to high
-        app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
-
-        io_init.mode = APP_IO_MODE_OUT_PUT;
-        io_init.pull = APP_IO_PULLUP;
-        io_init.pin  = qspi_params.pin_cfg.io_2.pin;
-        io_init.mux  = APP_IO_MUX_7;
-        if (app_io_init(qspi_params.pin_cfg.io_2.type, &io_init)) {
-            return false;
-        }
-
-        io_init.mode = APP_IO_MODE_OUT_PUT;
-        io_init.pull = APP_IO_PULLUP;
-        io_init.pin  = qspi_params.pin_cfg.io_3.pin;
-        io_init.mux  = APP_IO_MUX_7;
-        if (app_io_init(qspi_params.pin_cfg.io_3.type, &io_init)) {
-            return false;
-        }
-
-        if (app_io_write_pin(qspi_params.pin_cfg.io_2.type, qspi_params.pin_cfg.io_2.pin, APP_IO_PIN_SET)) {
-            return false;
-        }
-
-        if (app_io_write_pin(qspi_params.pin_cfg.io_3.type, qspi_params.pin_cfg.io_3.pin, APP_IO_PIN_SET)) {
-            return false;
-        }
+        IO_init(qspi_params);
     }
 
     return true;

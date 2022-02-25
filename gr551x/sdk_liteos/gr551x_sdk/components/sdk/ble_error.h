@@ -49,8 +49,6 @@
 #ifndef __BLE_ERROR_H__
 #define __BLE_ERROR_H__
 
-#include <stdint.h>
-
 /**@addtogroup BLE_ERROR_CODES Defines
  * @{
  */

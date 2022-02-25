@@ -19,12 +19,13 @@
 
 #define BUFSIZE  256
 
-int printf(char const  *fmt, ...)
+
+int printf(const char *__restrict __format, ...)
 {
     char buf[BUFSIZE] = { 0 };
     va_list ap;
-    va_start(ap, fmt);
-    int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, fmt, ap);
+    va_start(ap, __format);
+    int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, __format, ap);
     if ( len < 0 ) {
         return len;
     }
