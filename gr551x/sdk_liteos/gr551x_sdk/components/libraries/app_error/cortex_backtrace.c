@@ -109,10 +109,7 @@ void fault_trace_nvds_save_flush(void)
 #if SYS_FAULT_TRACE_MODE == 1    // only UART Print
 #define FAULT_TRACE_OUTPUT_PREPARE()
 #define FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format, ##__VA_ARGS__)
-static inline void FAULT_TRACE_OUTPUT_FLUSH()
-{
-    app_log_flush();
-}
+#define FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush()
 #elif SYS_FAULT_TRACE_MODE == 2  // only Save to NVDS
 #define FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();fault_trace_nvds_save_prepare()
 #define FAULT_TRACE_OUTPUT(format, ...)  do {
@@ -368,35 +365,36 @@ static void cb_stack_info_dump(uint32_t stack_start_addr, uint32_t stack_size, u
 void deal_mvalue(void)
 {
     // Memory Management Fault.
-        if (s_regs.mfsr.bits.IACCVIOL) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_IACCVIOL]);
-        }
+    if (s_regs.mfsr.bits.IACCVIOL) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_IACCVIOL]);
+    }
 
-        if (s_regs.mfsr.bits.DACCVIOL) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_DACCVIOL]);
-        }
+    if (s_regs.mfsr.bits.DACCVIOL) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_DACCVIOL]);
+    }
 
-        if (s_regs.mfsr.bits.MUNSTKERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MUNSTKERR]);
-        }
+    if (s_regs.mfsr.bits.MUNSTKERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MUNSTKERR]);
+    }
 
-        if (s_regs.mfsr.bits.MSTKERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MSTKERR]);
-        }
+    if (s_regs.mfsr.bits.MSTKERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MSTKERR]);
+    }
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
-        if (s_regs.mfsr.bits.MLSPERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MLSPERR]);
-        }
+    if (s_regs.mfsr.bits.MLSPERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_MLSPERR]);
+    }
 #endif
-        if (s_regs.mfsr.bits.MMARVALID) {
-            if ((s_regs.mfsr.bits.IACCVIOL) || (s_regs.mfsr.bits.DACCVIOL)) {
-                FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MMAR], s_regs.mmar);
-            }
+    if (s_regs.mfsr.bits.MMARVALID) {
+        if ((s_regs.mfsr.bits.IACCVIOL) || (s_regs.mfsr.bits.DACCVIOL)) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MMAR], s_regs.mmar);
         }
+    }
 }
 
-void deal_bvalue(void) {
+void deal_bvalue(void)
+{
     if (s_regs.bfsr.bits.IBUSERR) {
         FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IBUSERR]);
     }
@@ -430,7 +428,8 @@ void deal_bvalue(void) {
     }
 }
 
-void deal_uvalue(void) {
+void deal_uvalue(void)
+{
     if (s_regs.ufsr.bits.UNDEFINSTR) {
         FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNDEFINSTR]);
     }
@@ -483,7 +482,8 @@ void deal_dvalue(void) {
     * Fault diagnosis then print cause of fault
     *****************************************************************************************
     */
-static void cb_fault_diagnosis(void) {
+static void cb_fault_diagnosis(void)
+{
     FAULT_TRACE_OUTPUT("Fault reason:");
 
     if (s_regs.hfsr.bits.VECTBL) {
@@ -516,7 +516,8 @@ static void cb_fault_diagnosis(void) {
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
 #define FPSCR_OFFSET 18
-    static uint32_t cb_statck_fpu_reg_del(uint32_t fault_handler_lr, uint32_t sp) {
+    static uint32_t cb_statck_fpu_reg_del(uint32_t fault_handler_lr, uint32_t sp)
+    {
         bool statck_has_fpu_regs = (fault_handler_lr & (1UL << 4)) == 0 ? true : false;
 
         // The stack has S0~S15 and FPSCR registers when statck_has_fpu_regs is true, double word align.
@@ -524,7 +525,8 @@ static void cb_fault_diagnosis(void) {
     }
 #endif
 
-    static uint32_t cb_backtrace_call_stack_depth(uint32_t *p_buffer, uint32_t size, uint32_t sp) {
+    static uint32_t cb_backtrace_call_stack_depth(uint32_t *p_buffer, uint32_t size, uint32_t sp)
+    {
         uint32_t stack_start_addr = s_main_stack_start_addr;
         uint32_t depth            = 0;
         uint32_t stack_size       = s_main_stack_size;
@@ -550,10 +552,10 @@ static void cb_fault_diagnosis(void) {
 
             for (i = 0; i < s_code_section_count; i++) {
                 if ((pc >= (s_code_section_infos[i].code_start_addr)) && \
-                        (pc <= (s_code_section_infos[i].code_end_addr)) && \
-                        (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
-                        (depth < size) && \
-                        ((depth != TWO) || (!is_regs_saved_lr_valid) || (pc != p_buffer[1]))) {
+                    (pc <= (s_code_section_infos[i].code_end_addr)) && \
+                    (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
+                    (depth < size) && \
+                    ((depth != TWO) || (!is_regs_saved_lr_valid) || (pc != p_buffer[1]))) {
                     // The second depth function may be already saved, so need ignore repeat.
                     p_buffer[depth++] = pc;
                 } else if ((depth == TWO) && is_regs_saved_lr_valid && (pc == p_buffer[1])) {
@@ -576,7 +578,8 @@ static void cb_fault_diagnosis(void) {
      * @return Depth
      *****************************************************************************************
      */
-    static uint32_t cb_backtrace_call_stack(uint32_t *p_buffer, uint32_t size, uint32_t sp) {
+    static uint32_t cb_backtrace_call_stack(uint32_t *p_buffer, uint32_t size, uint32_t sp)
+    {
         uint32_t stack_start_addr = s_main_stack_start_addr;
         uint32_t depth            = 0;
         uint32_t stack_size       = s_main_stack_size;
@@ -593,9 +596,9 @@ static void cb_fault_diagnosis(void) {
                 pc = s_regs.saved.lr - sizeof(uint32_t);
                 for (i = 0; i < s_code_section_count; i++) {
                     if ((pc >= s_code_section_infos[i].code_start_addr) &&
-                            (pc <= s_code_section_infos[i].code_end_addr) &&
-                            (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) &&
-                            (depth < size)) {
+                        (pc <= s_code_section_infos[i].code_end_addr) &&
+                        (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) &&
+                        (depth < size)) {
                         p_buffer[depth++] = pc;
                         is_regs_saved_lr_valid = true;
                     }
@@ -625,7 +628,8 @@ static void cb_fault_diagnosis(void) {
      * @param[in] sp:Pointer to stack.
      *****************************************************************************************
      */
-    static void cb_call_stack_print(uint32_t sp) {
+    static void cb_call_stack_print(uint32_t sp)
+    {
         int ret;
         uint32_t i;
         uint32_t cur_depth = 0;
@@ -662,7 +666,8 @@ static void cb_fault_diagnosis(void) {
      * @brief Add Code sections for stack analysis.
      *****************************************************************************************
      */
-    bool cortex_backtrace_code_section_add(uint32_t code_start_addr, uint32_t code_end_addr) {
+    bool cortex_backtrace_code_section_add(uint32_t code_start_addr, uint32_t code_end_addr)
+    {
         if (s_code_section_count < FAULT_CODE_SECTON_CNT_MAX) {
             return false;
         }

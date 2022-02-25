@@ -325,7 +325,7 @@ typedef struct _hal_exflash_callback {
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the exFlash peripheral:
+          de-initialize the exFlash peripheral.
 
       (+) User must implement hal_exflash_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).

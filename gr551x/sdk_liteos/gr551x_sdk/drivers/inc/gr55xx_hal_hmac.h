@@ -332,7 +332,7 @@ typedef struct _hal_hmac_callback {
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the HMACx peripheral:
+          de-initialize the HMACx peripheral.
 
       (+) User must implement hal_hmac_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).

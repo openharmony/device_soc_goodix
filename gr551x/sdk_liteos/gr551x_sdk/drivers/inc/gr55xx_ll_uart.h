@@ -78,7 +78,9 @@ typedef struct _ll_uart_init_t {
                                            This feature can be modified afterwards using unitary function
                                            @ref ll_uart_set_baud_rate(). */
 
-    uint32_t data_bits;                 /**< Specifies the number of data bits transmitted or received in a frame.
+    uint32_t data_bits;                 /**< Specifies the number of
+                                           data bits transmitted or
+                                           received in a frame.
                                            This parameter can be a value of @ref UART_LL_EC_DATABITS.
                                            This feature can be modified afterwards using unitary function
                                            @ref ll_uart_set_data_bits_length(). */
@@ -93,7 +95,9 @@ typedef struct _ll_uart_init_t {
                                            This feature can be modified afterwards using unitary function
                                            @ref ll_uart_set_parity(). */
 
-    uint32_t hw_flow_ctrl;              /**< Specifies whether the hardware flow control mode is enabled or disabled.
+    uint32_t hw_flow_ctrl;              /**< Specifies whether the
+                                           hardware flow control mode
+                                           is enabled or disabled.
                                            This parameter can be a value of @ref UART_LL_EC_HWCONTROL.
                                            This feature can be modified afterwards using unitary function
                                            @ref ll_uart_set_hw_flow_ctrl(). */
@@ -121,7 +125,8 @@ typedef struct _ll_uart_init_t {
 #define LL_UART_LSR_PE                      UART_LSR_PE             /**< Parity error flag */
 #define LL_UART_LSR_FE                      UART_LSR_FE             /**< Framing error flag */
 #define LL_UART_LSR_BI                      UART_LSR_BI             /**< Break detection flag */
-#define LL_UART_LSR_THRE                    UART_LSR_THRE           /**< Transmit holding register empty flag */
+#define LL_UART_LSR_THRE                    UART_LSR_THRE           /**< Transmit holding register 
+                                                                       empty flag */
 #define LL_UART_LSR_TEMT                    UART_LSR_TEMT           /**< Transmitter empty flag */
 #define LL_UART_LSR_RFE                     UART_LSR_RFE            /**< Rx FIFO error flag */
 
@@ -142,13 +147,17 @@ typedef struct _ll_uart_init_t {
   * @brief    Interrupt definitions which can be used with LL_UART_ReadReg and  LL_UART_WriteReg functions
   * @{
   */
-#define LL_UART_IER_MS                      UART_IER_EDSSI                      /**< Enable Modem Status Interrupt */
-#define LL_UART_IER_RLS                     UART_IER_ERLS                       /**< Enable Receiver Line Status
-                                                                                     Interrupt */
-#define LL_UART_IER_THRE                    (UART_IER_ETBEI | UART_IER_PTIME)   /**< Enable Transmit Holding Register
-                                                                                     Empty Interrupt */
+#define LL_UART_IER_MS                      UART_IER_EDSSI                      /**< Enable Modem Status 
+                                                                                   Interrupt */
+#define LL_UART_IER_RLS                     UART_IER_ERLS                       /**< Enable Receiver Line 
+                                                                                   Status
+                                                                                   Interrupt */
+#define LL_UART_IER_THRE                    (UART_IER_ETBEI | UART_IER_PTIME)   /**< Enable Transmit Holding 
+                                                                                   Register
+                                                                                   Empty Interrupt */
 #define LL_UART_IER_RDA                     UART_IER_ERBFI                      /**< Enable Received Data Available
-                                                                                     Interrupt and Character Timeout
+                                                                                     Interrupt and Character 
+                                                                                     Timeout
                                                                                      Interrupt */
 /** @} */
 
@@ -450,8 +459,10 @@ __STATIC_INLINE uint32_t ll_uart_get_stop_bits_length(uart_regs_t *UARTx)
 
 /**
   * @brief  Configure Parity.
-  * @note   This function selects if hardware parity control (generation and detection) is enabled or disabled.
-  *         When the parity control is enabled (Odd,Even,0,1), computed parity bit is inserted at the MSB position
+  * @note   This function selects if hardware parity control
+  *         (generation and detection) is enabled or disabled. 
+  *         When the parity control is enabled (Odd,Even,0,1),
+  *         computed parity bit is inserted at the MSB position 
   *         and parity is checked on the received data.
   *
   *  Register|BitsName
@@ -532,10 +543,8 @@ __STATIC_INLINE uint32_t ll_uart_get_parity(uart_regs_t *UARTx)
   *         (*) STOPBITS_2 is invalid when DataBits = 5
   * @retval None
   */
-__STATIC_INLINE void ll_uart_config_character(uart_regs_t *UARTx,
-        uint32_t     data_bits,
-        uint32_t     parity,
-        uint32_t     stop_bits)
+__STATIC_INLINE void ll_uart_config_character(uart_regs_t *UARTx, uint32_t data_bits,
+                                              uint32_t parity, uint32_t stop_bits)
 {
     MODIFY_REG(UARTx->LCR, UART_LCR_PARITY | UART_LCR_STOP | UART_LCR_DLS, parity | stop_bits | data_bits);
 }
@@ -1067,7 +1076,8 @@ __STATIC_INLINE uint32_t ll_uart_is_enabled_it_rls(uart_regs_t *UARTx)
   */
 __STATIC_INLINE uint32_t ll_uart_is_enabled_it_thre(uart_regs_t *UARTx)
 {
-    return (READ_BITS(UARTx->DLH_IER.IER, UART_IER_PTIME | UART_IER_ETBEI) == (UART_IER_PTIME | UART_IER_ETBEI));
+    return (READ_BITS(UARTx->DLH_IER.IER, UART_IER_PTIME | UART_IER_ETBEI) == \
+            (UART_IER_PTIME | UART_IER_ETBEI));
 }
 
 /**
@@ -1280,7 +1290,8 @@ __STATIC_INLINE uint32_t ll_uart_is_active_flag_tfnf(uart_regs_t *UARTx)
   * @brief  Get UART interrupt flags
   * @note   The interrupt flags will be cleared after reading IIR.
   *         If interrupt was triggered when reading IIR register, the interrupt will be pended,
-  *         and No Interrupt Pending Flag will be RESET, read IIR again can get the pended interrupt
+  *         and No Interrupt Pending Flag will be RESET, read IIR
+  *         again can get the pended interrupt 
   *
   *  Register|BitsName
   *  --------|--------

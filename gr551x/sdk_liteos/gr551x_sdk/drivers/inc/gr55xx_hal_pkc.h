@@ -504,7 +504,7 @@ do {                                                            \
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the PKC peripheral:
+          de-initialize the PKC peripheral.
 
       (+) User must implement hal_pkc_msp_init() function in which it configures
           all related peripherals resources (IT and NVIC ).

@@ -156,11 +156,11 @@ static bool log_store_time_stamp_encode(uint8_t *p_buffer, uint8_t buffer_size)
     s_log_store_ops.time_get(&rtc_time);
 
     if (APP_LOG_STORE_TIME_SIZE == snprintf_s((char *)p_buffer, APP_LOG_STORE_TIME_SIZE, \
-            APP_LOG_STORE_TIME_SIZE, \
-            "[%04d/%02d/%02d %02d:%02d:%02d:%03d] ", \
-            rtc_time.year, rtc_time.month, rtc_time.day, \
-            rtc_time.hour, rtc_time.min, \
-            rtc_time.sec, rtc_time.msec)) {
+        APP_LOG_STORE_TIME_SIZE, \
+        "[%04d/%02d/%02d %02d:%02d:%02d:%03d] ", \
+        rtc_time.year, rtc_time.month, rtc_time.day, \
+        rtc_time.hour, rtc_time.min, \
+        rtc_time.sec, rtc_time.msec)) {
         return true;
     }
 
@@ -275,15 +275,15 @@ uint16_t app_log_store_init(app_log_store_info_t *p_info, app_log_store_op_t *p_
         return SDK_ERR_DISALLOWED;
     }
 
-    if (p_info == NULL
-            || p_op_func == NULL
-            || p_op_func->flash_init == NULL
-            || p_op_func->flash_read == NULL
-            || p_op_func->flash_write == NULL
-            || p_op_func->flash_erase == NULL
-            || p_info->db_size == 0
-            || p_info->blk_size == 0
-            || (p_info->db_addr % p_info->blk_size) != 0) {
+    if (p_info == NULL ||
+        p_op_func == NULL ||
+        p_op_func->flash_init == NULL ||
+        p_op_func->flash_read == NULL ||
+        p_op_func->flash_write == NULL ||
+        p_op_func->flash_erase == NULL ||
+        p_info->db_size == 0 ||
+        p_info->blk_size == 0 ||
+        (p_info->db_addr % p_info->blk_size) != 0) {
         return SDK_ERR_INVALID_PARAM;
     }
 

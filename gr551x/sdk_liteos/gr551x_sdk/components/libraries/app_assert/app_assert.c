@@ -131,7 +131,6 @@ static void app_assert_info_output(uint8_t assert_type)
             return;
         }
     } else if (assert_type == APP_ASSERT_PARAM) {
-        \
         ret = sprintf_s(assert_info, sizeof(assert_info), "[PARAM] Param0:%d,Param1:%d", \
                         s_assert_info.param0, s_assert_info.param1);
         if (ret < 0) {
@@ -197,9 +196,7 @@ __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int li
 
     // Also can store assert info to flash
     app_assert_info_output(APP_ASSERT_PARAM);
-
     while (1) {
-
     };
 }
 
@@ -225,7 +222,6 @@ __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
     // Also can store assert info to flash
     app_assert_info_output(APP_ASSERT_ERROR);
     while (1) {
-        
     };
 }
 

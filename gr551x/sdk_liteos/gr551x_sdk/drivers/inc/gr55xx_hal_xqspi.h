@@ -255,18 +255,18 @@ typedef struct _hal_xqspi_callback {
 /** @defgroup XQSPI_Clock_Mode XQSPI Clock Mode
   * @{
   */
-#define XQSPI_CLOCK_MODE_0       ((LL_XQSPI_SCPOL_LOW << 1) | LL_XQSPI_SCPHA_1EDGE)   /**< Inactive state of CLK is low,
-                                                                                           CLK toggles at the start of
-                                                                                           first data bit */
-#define XQSPI_CLOCK_MODE_1       ((LL_XQSPI_SCPOL_LOW << 1) | LL_XQSPI_SCPHA_2EDGE)   /**< Inactive state of CLK is low,
-                                                                                           CLK toggles in the middle of
-                                                                                           first data bit */
-#define XQSPI_CLOCK_MODE_2        ((LL_XQSPI_SCPOL_HIGH << 1) | LL_XQSPI_SCPHA_1EDGE) /**< Inactive state of CLK is high,
-                                                                                           CLK toggles at the start of
-                                                                                           first data bit */
-#define XQSPI_CLOCK_MODE_3        ((LL_XQSPI_SCPOL_HIGH << 1) | LL_XQSPI_SCPHA_2EDGE) /**< Inactive state of CLK is high,
-                                                                                           CLK toggles in the middle of
-                                                                                           first data bit */
+#define XQSPI_CLOCK_MODE_0  ((LL_XQSPI_SCPOL_LOW << 1) | LL_XQSPI_SCPHA_1EDGE)   /**< Inactive state of CLK is
+                                                                                      low, CLK toggles at the
+                                                                                      start of first data bit */
+#define XQSPI_CLOCK_MODE_1  ((LL_XQSPI_SCPOL_LOW << 1) | LL_XQSPI_SCPHA_2EDGE)   /**< Inactive state of CLK is
+                                                                                      low, CLK toggles in the
+                                                                                      middle of first data bit */
+#define XQSPI_CLOCK_MODE_2  ((LL_XQSPI_SCPOL_HIGH << 1) | LL_XQSPI_SCPHA_1EDGE) /**< Inactive state of CLK is
+                                                                                     high, CLK toggles at the
+                                                                                     start of first data bit */
+#define XQSPI_CLOCK_MODE_3  ((LL_XQSPI_SCPOL_HIGH << 1) | LL_XQSPI_SCPHA_2EDGE) /**< Inactive state of CLK is
+                                                                                     high, CLK toggles in the
+                                                                                     middle of first data bit */
 /** @} */
 
 /** @defgroup XQSPI_Baud_Rate XQSPI Clock Speed
@@ -365,13 +365,15 @@ typedef struct _hal_xqspi_callback {
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_ENABLE_QSPI(__HANDLE__)                 SET_BITS((__HANDLE__)->p_instance->QSPI.SPIEN, SSI_SSIEN_EN)
+#define __HAL_XQSPI_ENABLE_QSPI(__HANDLE__)                 \
+    SET_BITS((__HANDLE__)->p_instance->QSPI.SPIEN, SSI_SSIEN_EN)
 
 /** @brief  Disable the specified QSPI peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_DISABLE_QSPI(__HANDLE__)              CLEAR_BITS((__HANDLE__)->p_instance->QSPI.SPIEN, SSI_SSIEN_EN)
+#define __HAL_XQSPI_DISABLE_QSPI(__HANDLE__)              \
+    CLEAR_BITS((__HANDLE__)->p_instance->QSPI.SPIEN, SSI_SSIEN_EN)
 
 /** @brief  Enable the specified XIP peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
@@ -397,13 +399,15 @@ do {                                                               \
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_ENABLE_CACHE(__HANDLE__)    CLEAR_BITS((__HANDLE__)->p_instance->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS)
+#define __HAL_XQSPI_ENABLE_CACHE(__HANDLE__)    \
+    CLEAR_BITS((__HANDLE__)->p_instance->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS)
 
 /** @brief  Disable the specified CACHE peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_DISABLE_CACHE(__HANDLE__)     SET_BITS((__HANDLE__)->p_instance->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS)
+#define __HAL_XQSPI_DISABLE_CACHE(__HANDLE__)     \
+    SET_BITS((__HANDLE__)->p_instance->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS)
 
 /** @brief  Check whether the specified XQSPI flag is set or not.
   * @param  __HANDLE__ specifies the XQSPI Handle.
@@ -533,7 +537,7 @@ do {                                                               \
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the XQSPIx peripheral:
+          de-initialize the XQSPIx peripheral.
 
       (+) User must implement hal_xqspi_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).
@@ -557,7 +561,8 @@ do {                                                               \
  ****************************************************************************************
  * @brief  Initialize the XQSPI according to the specified parameters
  *         in the xqspi_init_t and initialize the associated handle.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *         configuration information for the specified XQSPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -569,7 +574,8 @@ hal_status_t hal_xqspi_init(xqspi_handle_t *p_xqspi);
 /**
  ****************************************************************************************
  * @brief  De-initialize the XQSPI peripheral.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *              configuration information for the specified XQSPI.
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
  * @retval ::HAL_BUSY: Driver is busy.
@@ -583,7 +589,8 @@ hal_status_t hal_xqspi_deinit(xqspi_handle_t *p_xqspi);
  * @brief  Initialize the XQSPI MSP.
  * @note   This function should not be modified. When the callback is needed,
             the hal_xqspi_msp_deinit can be implemented in the user file.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *          configuration information for the specified XQSPI.
  ****************************************************************************************
  */
 void hal_xqspi_msp_init(xqspi_handle_t *p_xqspi);
@@ -593,7 +600,8 @@ void hal_xqspi_msp_init(xqspi_handle_t *p_xqspi);
  * @brief  De-initialize the XQSPI MSP.
  * @note   This function should not be modified. When the callback is needed,
             the hal_xqspi_msp_deinit can be implemented in the user file.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *          configuration information for the specified XQSPI.
  ****************************************************************************************
  */
 void hal_xqspi_msp_deinit(xqspi_handle_t *p_xqspi);
@@ -629,8 +637,10 @@ void hal_xqspi_msp_deinit(xqspi_handle_t *p_xqspi);
  ****************************************************************************************
  * @brief  Transmit an amount of data with specified instruction and address in blocking mode.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
- * @param[in]  p_cmd: Pointer to a xqspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
+ * @param[in]  p_cmd: Pointer to a xqspi_command_t structure that
+ *                    contains the instruction and address for data transfer.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  retry: Repeat times
  * @retval ::HAL_OK: Operation is OK.
@@ -646,8 +656,10 @@ hal_status_t hal_xqspi_command_transmit(xqspi_handle_t *p_xqspi, xqspi_command_t
  ****************************************************************************************
  * @brief  Receive an amount of data with specified instruction and address in blocking mode.
  * @note   This function is used only in Indirect Write Mode.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
- * @param[in]  p_cmd: Pointer to a xqspi_command_t structure that contains the instruction and address for data transfer.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
+ * @param[in]  p_cmd: Pointer to a xqspi_command_t structure that
+ *                    contains the instruction and address for data transfer.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  retry: Repeat times
  * @retval ::HAL_OK: Operation is OK.
@@ -661,7 +673,7 @@ hal_status_t hal_xqspi_command_receive(xqspi_handle_t *p_xqspi, xqspi_command_t 
 
 #if defined RTL_SIM
 hal_status_t hal_xqspi_command_receive_rtl(xqspi_handle_t *p_xqspi, xqspi_command_t *p_cmd,
-        uint8_t *p_data, uint32_t retry);
+                                           uint8_t *p_data, uint32_t retry);
 #endif
 
 
@@ -669,7 +681,8 @@ hal_status_t hal_xqspi_command_receive_rtl(xqspi_handle_t *p_xqspi, xqspi_comman
  ****************************************************************************************
  * @brief  Transmit an amount of data in blocking mode.
  * @note   This function is used only in Indirect Write Mode, only in standard SPI mode.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @param[in]  p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be sent in bytes
  * @param[in]  retry: Repeat times
@@ -685,7 +698,8 @@ hal_status_t hal_xqspi_transmit(xqspi_handle_t *p_xqspi, uint8_t *p_data, uint32
  ****************************************************************************************
  * @brief  Receive an amount of data in blocking mode.
  * @note   This function is used only in Indirect Read Mode, only in standard SPI mode.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @param[out] p_data: Pointer to data buffer
  * @param[in]  length: Amount of data to be received in bytes
  * @param[in]  retry: Repeat times
@@ -722,7 +736,8 @@ hal_status_t hal_xqspi_receive(xqspi_handle_t *p_xqspi, uint8_t *p_data, uint32_
 /**
  ****************************************************************************************
  * @brief  Return the XQSPI handle state.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @retval ::HAL_XQSPI_STATE_RESET: Peripheral not initialized.
  * @retval ::HAL_XQSPI_STATE_READY: Peripheral initialized and ready for use.
  * @retval ::HAL_XQSPI_STATE_BUSY: Peripheral in indirect mode and busy.
@@ -737,7 +752,8 @@ hal_xqspi_state_t hal_xqspi_get_state(xqspi_handle_t *p_xqspi);
 /**
  ****************************************************************************************
  * @brief  Return the XQSPI error code.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @return XQSPI error code in bitmap format
  ****************************************************************************************
  */
@@ -746,7 +762,8 @@ uint32_t hal_xqspi_get_error(xqspi_handle_t *p_xqspi);
 /**
  ****************************************************************************************
  * @brief  Set the XQSPI internal process repeat times value.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @param[in]  retry: Internal process repeat times value.
  ****************************************************************************************
  */
@@ -755,7 +772,8 @@ void hal_xqspi_set_retry(xqspi_handle_t *p_xqspi, uint32_t retry);
 /**
  ****************************************************************************************
  * @brief  Set the TXFIFO threshold.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @param[in]  threshold: TX FIFO threshold can be one of the following values:
  *         @arg @ref XQSPI_FIFO_THRESHOLD_1_8      threshold is 8 bytes
  *         @arg @ref XQSPI_FIFO_THRESHOLD_1_4      threshold is 16 bytes
@@ -772,7 +790,8 @@ hal_status_t hal_xqspi_set_tx_fifo_threshold(xqspi_handle_t *p_xqspi, uint32_t t
 /**
  ****************************************************************************************
  * @brief  Set the RXFIFO threshold.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @param[in]  threshold: RX FIFO threshold can be one of the following values:
  *         @arg @ref XQSPI_FIFO_THRESHOLD_1_8      threshold is 8 bytes
  *         @arg @ref XQSPI_FIFO_THRESHOLD_1_4      threshold is 16 bytes
@@ -789,7 +808,8 @@ hal_status_t hal_xqspi_set_rx_fifo_threshold(xqspi_handle_t *p_xqspi, uint32_t t
 /**
  ****************************************************************************************
  * @brief  Get the TXFIFO threshold.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @return TX FIFO threshold
  ****************************************************************************************
  */
@@ -798,7 +818,8 @@ uint32_t hal_xqspi_get_tx_fifo_threshold(xqspi_handle_t *p_xqspi);
 /**
  ****************************************************************************************
  * @brief  Get the RXFIFO threshold.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @return RX FIFO threshold
  ****************************************************************************************
  */
@@ -807,7 +828,8 @@ uint32_t hal_xqspi_get_rx_fifo_threshold(xqspi_handle_t *p_xqspi);
 /**
  ****************************************************************************************
  * @brief  Turn on/off present module, only in XIP mode.
- * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the configuration information for the specified XQSPI.
+ * @param[in]  p_xqspi: Pointer to an XQSPI handle which contains the
+ *                      configuration information for the specified XQSPI.
  * @param[in]  status: Presen status can be one of the following values:
  *         @arg @ref XQSPI_DISABLE_PRESENT      Disable Present
  *         @arg @ref XQSPI_ENABLE_PRESENT       Enable Present

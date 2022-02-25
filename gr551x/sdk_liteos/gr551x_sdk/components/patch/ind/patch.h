@@ -58,8 +58,10 @@ enum {
  * MACRO DECLARATIONS
  ****************************************************************************************
  */
-#define PATCH_ENABLE_FLAG(BIT)      (1<<(BIT))
-
+static inline uint32_t PATCH_ENABLE_FLAG(uint32_t BIT)
+{
+    return (1 << BIT);
+}
 
 #define ENCRYPT_PATCH               ((PATCH_ENABLE_FLAG(BIT_HCI_SEND_2_CONTROLLER) | \
                                      PATCH_ENABLE_FLAG(BIT_HAL_EXFLASH_WRITE)     | \

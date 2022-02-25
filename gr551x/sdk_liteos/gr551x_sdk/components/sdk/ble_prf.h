@@ -370,7 +370,7 @@ uint16_t ble_gattc_prf_primary_services_discover(uint8_t prf_id, uint8_t conn_id
  ****************************************************************************************
  */
 uint16_t ble_gattc_prf_included_services_discover(uint8_t prf_id, uint8_t conn_idx, uint16_t start_hdl,
-        uint16_t end_hdl);
+                                                  uint16_t end_hdl);
 
 /**
  ****************************************************************************************

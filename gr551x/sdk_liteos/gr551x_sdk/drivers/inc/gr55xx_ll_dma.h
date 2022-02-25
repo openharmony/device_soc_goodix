@@ -606,7 +606,7 @@ __STATIC_INLINE uint32_t ll_dma_is_empty_fifo(dma_regs_t *DMAx, uint32_t channel
   */
 __STATIC_INLINE void ll_dma_config_transfer(dma_regs_t *DMAx, uint32_t channel, uint32_t configuration)
 {
-    MODIFY_REG(DMAx->CHANNEL[channel].CTL_LO, DMA_CTLL_DST_TR_WIDTH | DMA_CTLL_SRC_TR_WIDTH |\
+    MODIFY_REG(DMAx->CHANNEL[channel].CTL_LO, DMA_CTLL_DST_TR_WIDTH | DMA_CTLL_SRC_TR_WIDTH | \
                DMA_CTLL_DINC | DMA_CTLL_SINC | DMA_CTLL_DST_MSIZE | DMA_CTLL_SRC_MSIZE | DMA_CTLL_TT_FC,
                configuration);
 }
@@ -807,7 +807,7 @@ __STATIC_INLINE uint32_t ll_dma_get_source_increment_mode(dma_regs_t *DMAx, uint
   * @retval None
   */
 __STATIC_INLINE void ll_dma_set_destination_increment_mode(dma_regs_t *DMAx, uint32_t channel,
-        uint32_t dst_increment_mode)
+                                                           uint32_t dst_increment_mode)
 {
     MODIFY_REG(DMAx->CHANNEL[channel].CTL_LO, DMA_CTLL_DINC, dst_increment_mode);
 }
@@ -1205,11 +1205,8 @@ __STATIC_INLINE uint32_t ll_dma_get_block_size(dma_regs_t *DMAx, uint32_t channe
   *         @arg @ref LL_DMA_DIRECTION_PERIPH_TO_PERIPH
   * @retval None
   */
-__STATIC_INLINE void ll_dma_config_address(dma_regs_t *DMAx,
-        uint32_t    channel,
-        uint32_t    src_address,
-        uint32_t    dst_address,
-        uint32_t    direction)
+__STATIC_INLINE void ll_dma_config_address(dma_regs_t *DMAx, uint32_t channel, uint32_t src_address,
+                                           uint32_t dst_address, uint32_t direction)
 {
     WRITE_REG(DMAx->CHANNEL[channel].SAR, src_address);
     WRITE_REG(DMAx->CHANNEL[channel].DAR, dst_address);
@@ -1619,7 +1616,7 @@ __STATIC_INLINE uint32_t ll_dma_get_destination_peripheral(dma_regs_t *DMAx, uin
   * @retval None
   */
 __STATIC_INLINE void ll_dma_select_handshaking(dma_regs_t *DMAx, uint32_t channel,
-        uint32_t src_handshaking, uint32_t dst_handshaking)
+                                               uint32_t src_handshaking, uint32_t dst_handshaking)
 {
     MODIFY_REG(DMAx->CHANNEL[channel].CFG_LO, DMA_CFGL_HS_SEL_SRC | DMA_CFGL_HS_SEL_DST,
                src_handshaking | dst_handshaking);

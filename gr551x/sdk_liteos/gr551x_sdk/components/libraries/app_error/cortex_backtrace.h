@@ -183,13 +183,12 @@ typedef struct {
             unsigned int SYSTICKACT     : 1;   /**< Read as 1 if SYSTICK exception is active. */
 /**< Usage fault pended; usage fault started but was replaced by a higher-priority exception. */
             unsigned int USGFAULTPENDED : 1;
-/**< Memory management fault pended; 
- * memory management fault started but was replaced by a higher-priority exception. */
+/**< Memory management fault pended; memory management fault started but was replaced
+ * by a higher-priority exception. */
             unsigned int MEMFAULTPENDED : 1;
-/**< Bus fault pended; 
- * bus fault handler was started but was replaced by a higher-priority exception. */
+/**< Bus fault pended; bus fault handler was started but was replaced by a higher-priority exception. */
             unsigned int BUSFAULTPENDED : 1;
-            /**< SVC pended; SVC was started but was replaced by a higher-priority exception. */
+/**< SVC pended; SVC was started but was replaced by a higher-priority exception. */
             unsigned int SVCALLPENDED   : 1;
             unsigned int MEMFAULTENA    : 1;   /**< Memory management fault handler enable. */
             unsigned int BUSFAULTENA    : 1;   /**< Bus fault handler enable. */

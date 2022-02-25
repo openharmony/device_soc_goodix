@@ -79,17 +79,24 @@ typedef struct _ll_aon_gpio_init {
 
     uint32_t mode;          /**< Specifies the operating mode for the selected pins.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_MODE.
-                                 AON_GPIO HW AON_GPIO_InitStructuration can be modified afterwards using unitary function
+                                 AON_GPIO HW
+                                 AON_GPIO_InitStructuration can be
+                                 modified afterwards using unitary
+                                 function
                                  @ref ll_aon_gpio_set_pin_mode(). */
 
     uint32_t pull;          /**< Specifies the operating Pull-up/Pull down for the selected pins.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_PULL.
-                                 AON_GPIO HW configuration can be modified afterwards using unitary function
+                                 AON_GPIO HW configuration can be
+                                 modified afterwards using unitary
+                                 function
                                  @ref ll_aon_gpio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                  This parameter can be a value of @ref AON_GPIO_LL_EC_MUX.
-                                 GPIO HW AON_GPIO_InitStructuration can be modified afterwards using unitary function
+                                 GPIO HW AON_GPIO_InitStructuration
+                                 can be modified afterwards using
+                                 unitary function
                                  @ref ll_aon_gpio_set_mux_pin_0_7(). */
 
     uint32_t trigger;       /**< Specifies the trigger signal active edge.

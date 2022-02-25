@@ -57,7 +57,6 @@
 #define __BLE_GATTS_H__
 
 #include <stdint.h>
-#include "ble_error.h"
 #include "ble_gatt.h"
 
 /** @addtogroup BLE_GATTS_DEFINES Defines
@@ -161,21 +160,11 @@
 #define SRVC_ENCRP_KEY_SIZE_16        (0x02)             /**< 16 bytes service encryption key size . */
 #define SRVC_MULTI_ENABLE             (0x01)             /**< Service is multi-instantiated. */
 
-static inline uint32_t ble_set_srv_uuid_type(uint32_t uuid_len)
-{
-    return ((uuid_len) << 5);
-}
-
-static inline uint32_t ble_srv_perm(uint32_t sec_level)
-{
-    return (((sec_level) & SEC_LEVEL_MASK) << 2);
-}
-
 /**< Service UUID length set. See @ref BLE_GATTS_UUID_TYPE. */
-#define SRVC_UUID_TYPE_SET(uuid_len)  ble_set_srv_uuid_type(uuid_len)
+#define SRVC_UUID_TYPE_SET(uuid_len)  ((uuid_len) << 5)
 
 /**< Service permission authentication. See @ref BLE_GATTS_SEC_LEVEL. */
-#define SRVC_PERM(sec_level)          ble_srv_perm(sec_level)
+#define SRVC_PERM(sec_level)          (((sec_level) & SEC_LEVEL_MASK) << 2)
 /** @} */
 
 /**
@@ -202,60 +191,30 @@ static inline uint32_t ble_srv_perm(uint32_t sec_level)
 
 /** @defgroup BLE_GATTS_ATTR_PERM Attribute Permission
  * @{ */
-static inline uint32_t ble_read_perm(uint32_t sec_level)
-{
-    return (READ << 8 | (((sec_level) & SEC_LEVEL_MASK) << READ_POS));
-}
-
-static inline uint32_t ble_write_perm(uint32_t sec_level)
-{
-    return (WRITE_REQ << 8 | (((sec_level) & SEC_LEVEL_MASK) << WRITE_POS));
-}
-
-static inline uint32_t ble_write_cmd_perm(uint32_t sec_level)
-{
-    return (WRITE_CMD << 8 | (((sec_level) & SEC_LEVEL_MASK) << WRITE_POS));
-}
-
-static inline uint32_t ble_write_signed_perm(uint32_t sec_level)
-{
-    return (WRITE_SIGNED << 8 | (((sec_level) & SEC_LEVEL_MASK) << WRITE_POS));
-}
-
-static inline uint32_t ble_set_indicate_perm(uint32_t sec_level)
-{
-    return (INDICATE << 8 | (((sec_level) & SEC_LEVEL_MASK) << INDICATE_POS));
-}
-
-static inline uint32_t ble_set_noyify_perm(uint32_t sec_level)
-{
-    return (NOTIFY << 8 | (((sec_level) & SEC_LEVEL_MASK) << NOTIFY_POS));
-}
-
 /**< Default Read permission. */
 #define READ_PERM_UNSEC           (READ << 8)
 /**< Read permission set. See @ref BLE_GATTS_SEC_LEVEL. */
-#define READ_PERM(sec_level)      ble_read_perm(sec_level)
+#define READ_PERM(sec_level)      (READ << 8 | (((sec_level) & SEC_LEVEL_MASK) << READ_POS))
 /**< Default Write Permission. */
 #define WRITE_REQ_PERM_UNSEC      (WRITE_REQ << 8)
 /**<  Write permission set.   See @ref BLE_GATTS_SEC_LEVEL. */
-#define WRITE_REQ_PERM(sec_level) ble_write_perm(sec_level)
+#define WRITE_REQ_PERM(sec_level) (WRITE_REQ << 8 | (((sec_level) & SEC_LEVEL_MASK) << WRITE_POS))
 /**< Default Write without Response Permission. */
 #define WRITE_CMD_PERM_UNSEC      (WRITE_CMD << 8)
 /**< Write without Response permission set. See @ref BLE_GATTS_SEC_LEVEL. */
-#define WRITE_CMD_PERM(sec_level) ble_write_cmd_perm(sec_level)
+#define WRITE_CMD_PERM(sec_level) (WRITE_CMD << 8 | (((sec_level) & SEC_LEVEL_MASK) << WRITE_POS))
 /**< Default Authenticated Signed Write Permission. */
 #define WRITE_SIGNED_PERM_UNSEC   (WRITE_SIGNED << 8)
 /**< Authenticated Signed Write permission set. See @ref BLE_GATTS_SEC_LEVEL. */
-#define WRITE_SIGNED_PERM(sec_level) ble_write_signed_perm(sec_level)
+#define WRITE_SIGNED_PERM(sec_level) (WRITE_SIGNED << 8 | (((sec_level) & SEC_LEVEL_MASK) << WRITE_POS))
 /**< Default Indicate Permission. */
 #define INDICATE_PERM_UNSEC          (INDICATE << 8)
 /**< Indicate permission set. See @ref BLE_GATTS_SEC_LEVEL. */
-#define INDICATE_PERM(sec_level)     ble_set_indicate_perm(sec_level)
+#define INDICATE_PERM(sec_level)     (INDICATE << 8 | (((sec_level) & SEC_LEVEL_MASK) << INDICATE_POS))
 /**< Default Notify Permission. */
 #define NOTIFY_PERM_UNSEC            (NOTIFY << 8)
 /**< Notify permission set. See @ref BLE_GATTS_SEC_LEVEL. */
-#define NOTIFY_PERM(sec_level)       ble_set_noyify_perm(sec_level)
+#define NOTIFY_PERM(sec_level)       (NOTIFY << 8 | (((sec_level) & SEC_LEVEL_MASK) << NOTIFY_POS))
 /**< Broadcast enable. */
 #define BROADCAST_ENABLE             (BROADCAST << 8)
 /**< Extended Properties enable. */
@@ -282,13 +241,8 @@ static inline uint32_t ble_set_noyify_perm(uint32_t sec_level)
 #define ATT_VAL_LOC_STACK           (0 << 15)          /**< Value location which means value saved in BLE Stack. */
 #define ATT_ENC_KEY_SIZE_16         (0x1000)           /**< 16 bytes attribute encryption key size . */
 
-static inline uint32_t ble_att_uuid_type_set(uint32_t uuid_len)
-{
-    return ((uuid_len) << 13);
-}
-
 /**< Attribute UUID length set. See @ref BLE_GATTS_UUID_TYPE */
-#define ATT_UUID_TYPE_SET(uuid_len) ble_att_uuid_type_set(uuid_len)
+#define ATT_UUID_TYPE_SET(uuid_len) ((uuid_len) << 13)
 /** @} */
 
 /** @} */

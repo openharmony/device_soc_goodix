@@ -538,7 +538,7 @@ typedef struct _hal_spi_callback {
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the SPIx peripheral:
+          de-initialize the SPIx peripheral.
 
       (+) User must implement hal_spi_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).

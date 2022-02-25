@@ -77,7 +77,7 @@ static void gpiote_wake_up_ind(void);
 static   struct gpiote_env_t s_gpiote_env;
 
 static bool     s_sleep_cb_registered_flag = false;
-static pwr_id_t s_gpiote_pwr_id;
+static uint16_t s_gpiote_pwr_id;
 
 static const app_sleep_callbacks_t gpiote_sleep_cb = {
     .app_prepare_for_sleep = gpiote_prepare_for_sleep,
@@ -218,8 +218,9 @@ uint16_t app_gpiote_init(const app_gpiote_param_t *p_params, uint8_t table_cnt)
             continue;
         }
 
-        memcpy(&s_gpiote_env.params[s_gpiote_env.total_used],
-               &p_params[idx], sizeof(app_gpiote_param_t));
+        memcpy_s(&s_gpiote_env.params[s_gpiote_env.total_used],
+                 sizeof(s_gpiote_env.params[s_gpiote_env.total_used]),
+                 &p_params[idx], sizeof(app_gpiote_param_t));
 
         gpiote_wakeup_mode_config(idx, p_params);
 
@@ -292,7 +293,8 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
-    memcpy(&s_gpiote_env.params[index], p_config, sizeof(app_gpiote_param_t));
+    memcpy_s(&s_gpiote_env.params[index], sizeof(s_gpiote_env.params[index]),
+             p_config, sizeof(app_gpiote_param_t));
 
     io_init.pin  = p_config->pin;
     io_init.mode = p_config->mode;
@@ -322,10 +324,9 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
     return APP_DRV_SUCCESS;
 }
 
-
 void app_gpiote_deinit(void)
 {
-    for (int idx=0; idx<s_gpiote_env.total_used; idx++) {
+    for (int idx = 0; idx < s_gpiote_env.total_used; idx++) {
         app_io_deinit(s_gpiote_env.params[idx].type, s_gpiote_env.params[idx].pin);
     }
     hal_nvic_disable_irq(EXT0_IRQn);
@@ -359,7 +360,6 @@ void hal_gpio_exti_callback(gpio_regs_t *GPIOx, uint16_t gpio_pin)
 static void gpio_callback_config(uint8_t idx, uint16_t aon_gpio_pin, uint8_t *p_called_flag,
                                  uint8_t *p_called_table_used_pos, app_gpiote_evt_t gpiote_evt)
 {
-
     if ((s_gpiote_env.params[idx].type == APP_IO_TYPE_AON) && \
         (aon_gpio_pin & s_gpiote_env.params[idx].pin) && \
         (s_gpiote_env.params[idx].io_evt_cb)) {
@@ -395,13 +395,12 @@ void hal_aon_gpio_callback(uint16_t aon_gpio_pin)
         gpiote_evt.ctx_type = APP_IO_CTX_INT;
     }
 
-    memset(aon_cb_called_table, 0, sizeof(aon_cb_called_table));
+    memset_s(aon_cb_called_table, sizeof(aon_cb_called_table), 0, sizeof(aon_cb_called_table));
     for (uint8_t idx = 0; idx < s_gpiote_env.total_used; idx++) {
-        gpio_callback_config(idx, aon_gpio_pin, &called_flag, 
+         gpio_callback_config(idx, aon_gpio_pin, &called_flag,
                              &called_table_used_pos, gpiote_evt);
     }
 }
-
 
 SECTION_RAM_CODE void EXT0_IRQHandler(void)
 {
@@ -435,4 +434,3 @@ SECTION_RAM_CODE void EXT2_IRQHandler(void)
     platform_interrupt_protection_pop();
 #endif
 }
-

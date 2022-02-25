@@ -507,7 +507,7 @@ do {                                 \
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the I2Sx peripheral:
+          de-initialize the I2Sx peripheral.
 
       (+) User must implement hal_i2s_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).
@@ -698,7 +698,7 @@ hal_status_t hal_i2s_receive_it(i2s_handle_t *p_i2s, uint16_t *p_data, uint32_t 
  ****************************************************************************************
  */
 hal_status_t hal_i2s_transmit_receive_it(i2s_handle_t *p_i2s, uint16_t *p_tx_data,
-        uint16_t *p_rx_data, uint32_t length);
+                                         uint16_t *p_rx_data, uint32_t length);
 
 /**
  ****************************************************************************************
@@ -744,7 +744,7 @@ hal_status_t hal_i2s_receive_dma(i2s_handle_t *p_i2s, uint16_t *p_data, uint32_t
  ****************************************************************************************
  */
 hal_status_t hal_i2s_transmit_receive_dma(i2s_handle_t *p_i2s, uint16_t *p_tx_data,
-        uint16_t *p_rx_data, uint32_t length);
+                                          uint16_t *p_rx_data, uint32_t length);
 
 /**
  ****************************************************************************************

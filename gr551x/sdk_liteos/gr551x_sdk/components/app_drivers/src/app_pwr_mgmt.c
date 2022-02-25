@@ -65,16 +65,15 @@ int16_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priority
     int16_t id = -1;
     uint8_t  i  = 0;
 
-    GLOBAL_EXCEPTION_DISABLE();
+    if (p_cb == NULL || wakeup_priority > WAPEUP_PRIORITY_HIGH || wakeup_priority < WAPEUP_PRIORITY_LOW) {
+        return id;
+    }
 
+    GLOBAL_EXCEPTION_DISABLE();
     if (!s_pwr_env.is_pwr_callback_reg) {
         pwr_mgmt_dev_init(pwr_wake_up_ind);
         pwr_mgmt_set_callback(pwr_enter_sleep_check, NULL);
         s_pwr_env.is_pwr_callback_reg = true;
-    }
-
-    if (p_cb == NULL || wakeup_priority > WAPEUP_PRIORITY_HIGH || wakeup_priority < WAPEUP_PRIORITY_LOW) {
-        goto exit;
     }
 
     while ((i < APP_SLEEP_CB_MAX) && (s_pwr_env.pwr_sleep_cb[i] != NULL)) {
@@ -86,7 +85,7 @@ int16_t pwr_register_sleep_cb(const app_sleep_callbacks_t *p_cb, wakeup_priority
         s_pwr_env.wakeup_priority[i] = wakeup_priority;
         id = i;
     }
-exit:
+
     GLOBAL_EXCEPTION_ENABLE();
     return id;
 }

@@ -295,7 +295,7 @@ typedef struct _hal_efuse_callback {
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the EFUSEx peripheral:
+          de-initialize the EFUSEx peripheral.
 
       (+) User must implement hal_efuse_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).

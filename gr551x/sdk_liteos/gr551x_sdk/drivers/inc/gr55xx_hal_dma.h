@@ -53,6 +53,7 @@
 #define __GR55xx_HAL_DMA_H__
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
 #include "gr55xx_ll_dma.h"
 #include "gr55xx_hal_def.h"
 
@@ -147,7 +148,10 @@ typedef struct _dma_init {
 
     uint32_t dst_increment;             /**< Specifies whether the destination address register should be incremented
                                              or decrement or not.
-                                             This parameter can be a value of @ref DMA_Destination_incremented_mode */
+                                             This parameter can be a
+                                             value of @ref
+                                             DMA_Destination_incremented_mode
+                                             */ 
 
     uint32_t src_data_alignment;        /**< Specifies the source data width.
                                              This parameter can be a value of @ref DMA_Source_data_size */
@@ -157,8 +161,10 @@ typedef struct _dma_init {
 
     uint32_t mode;                      /**< Specifies the operation mode of the DMA Channel(Normal or Circular).
                                              This parameter can be a value of @ref DMA_mode
-                                             @note The circular buffer mode cannot be used if the memory-to-memory
-                                                   data transfer is configured on the selected Channel */
+                                             @note The circular buffer
+                                             mode cannot be used if
+                                             the memory-to-memory 
+                                             data transfer is configured on the selected Channel */
 
     uint32_t priority;                  /**< Specifies the software priority for the DMA Channel.
                                              This parameter can be a value of @ref DMA_Priority_level */
@@ -174,38 +180,28 @@ typedef struct _dma_init {
   * @brief  DMA handle Structure definition
   */
 typedef struct _dma_handle {
-    dma_channel_t
-    channel;                                              /**< DMA Channel Number                  */
+    dma_channel_t           channel;                                              /**< DMA Channel Number             */
 
-    dma_init_t
-    init;                                                 /**< DMA communication parameters        */
+    dma_init_t              init;                                                 /**< DMA communication parameters   */
 
-    hal_lock_t
-    lock;                                                 /**< DMA locking object                  */
+    hal_lock_t              lock;                                                 /**< DMA locking object             */
 
-    __IO hal_dma_state_t
-    state;                                                /**< DMA transfer state                  */
+    __IO hal_dma_state_t    state;                                                /**< DMA transfer state             */
 
-    void
-    *p_parent;                                            /**< Parent object state                 */
+    void                    *p_parent;                                            /**< Parent object state            */
 
-    void                    (* xfer_tfr_callback)(struct _dma_handle
-            *p_dma);     /**< DMA transfer complete callback      */
+    void                    (* xfer_tfr_callback)(struct _dma_handle *p_dma);     /**< DMA transfer complete callback */
 
-    void                    (* xfer_blk_callback)(struct _dma_handle
-            *p_dma);     /**< DMA block complete callback         */
+    void                    (* xfer_blk_callback)(struct _dma_handle *p_dma);     /**< DMA block complete callback    */
 
-    void                    (* xfer_error_callback)(struct _dma_handle
-            *p_dma);   /**< DMA transfer error callback         */
+    void                    (* xfer_error_callback)(struct _dma_handle *p_dma);   /**< DMA transfer error callback    */
 
-    void                    (* xfer_abort_callback)(struct _dma_handle
-            *p_dma);   /**< DMA transfer abort callback         */
+    void                    (* xfer_abort_callback)(struct _dma_handle *p_dma);   /**< DMA transfer abort callback    */
 
-    __IO uint32_t
-    error_code;                                           /**< DMA Error code                      */
+    __IO uint32_t           error_code;                                           /**< DMA Error code                 */
 
-    uint32_t
-    retention[5];                                         /**< DMA important register information. */
+    uint32_t                retention[5];                                         /**< DMA important register 
+                                                                                     information. */
 } dma_handle_t;
 
 /** @} */
@@ -263,7 +259,8 @@ typedef struct _dma_handle {
 #define DMA_MEMORY_TO_MEMORY         LL_DMA_DIRECTION_MEMORY_TO_MEMORY    /**< Memory to memory direction     */
 #define DMA_MEMORY_TO_PERIPH         LL_DMA_DIRECTION_MEMORY_TO_PERIPH    /**< Memory to peripheral direction */
 #define DMA_PERIPH_TO_MEMORY         LL_DMA_DIRECTION_PERIPH_TO_MEMORY    /**< Peripheral to memory direction */
-#define DMA_PERIPH_TO_PERIPH         LL_DMA_DIRECTION_PERIPH_TO_PERIPH    /**< Peripheral to Peripheral direction */
+#define DMA_PERIPH_TO_PERIPH         LL_DMA_DIRECTION_PERIPH_TO_PERIPH    /**< Peripheral to 
+                                                                             Peripheral direction */
 /** @} */
 
 /** @defgroup DMA_Source_incremented_mode DMA Source Incremented Mode
@@ -326,102 +323,125 @@ typedef struct _dma_handle {
   * @param  __instance__ DMA channel instance.
   * @retval SET (__instance__ is valid) or RESET (__instance__ is invalid)
   */
-#define IS_DMA_ALL_INSTANCE(__instance__) (((__instance__) == DMA_Channel0) || \
-                                           ((__instance__) == DMA_Channel1) || \
-                                           ((__instance__) == DMA_Channel2) || \
-                                           ((__instance__) == DMA_Channel3) || \
-                                           ((__instance__) == DMA_Channel4) || \
-                                           ((__instance__) == DMA_Channel5) || \
-                                           ((__instance__) == DMA_Channel6) || \
-                                           ((__instance__) == DMA_Channel7))
+__STATIC_INLINE bool IS_DMA_ALL_INSTANCE(dma_channel_t __instance__)
+{
+    return (((__instance__) == DMA_Channel0) || ((__instance__) == DMA_Channel1) || \
+            ((__instance__) == DMA_Channel2) || ((__instance__) == DMA_Channel3) || \
+            ((__instance__) == DMA_Channel4) || ((__instance__) == DMA_Channel5) || \
+            ((__instance__) == DMA_Channel6) || ((__instance__) == DMA_Channel7));
+}
 
 /** @brief  Check if DMA request is valid.
   * @param  __REQUEST__ DMA request.
   * @retval SET (__REQUEST__ is valid) or RESET (__REQUEST__ is invalid)
   */
-#define IS_DMA_ALL_REQUEST(__REQUEST__)   (((__REQUEST__) == DMA_REQUEST_SPIM_TX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_SPIM_RX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_SPIS_TX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_SPIS_RX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_QSPI0_TX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_QSPI0_RX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2C0_TX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2C0_RX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2C1_TX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2C1_RX)  || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2S_S_TX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2S_S_RX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_UART0_TX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_UART0_RX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_QSPI1_TX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_QSPI1_RX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2S_M_TX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_I2S_M_RX) || \
-                                           ((__REQUEST__) == DMA_REQUEST_SNSADC)   || \
-                                           ((__REQUEST__) == DMA_REQUEST_MEM))
+__STATIC_INLINE bool IS_DMA_ALL_REQUEST(uint32_t __REQUEST__)
+{
+    return (((__REQUEST__) == DMA_REQUEST_SPIM_TX)  || \
+            ((__REQUEST__) == DMA_REQUEST_SPIM_RX)  || \
+            ((__REQUEST__) == DMA_REQUEST_SPIS_TX)  || \
+            ((__REQUEST__) == DMA_REQUEST_SPIS_RX)  || \
+            ((__REQUEST__) == DMA_REQUEST_QSPI0_TX) || \
+            ((__REQUEST__) == DMA_REQUEST_QSPI0_RX) || \
+            ((__REQUEST__) == DMA_REQUEST_I2C0_TX)  || \
+            ((__REQUEST__) == DMA_REQUEST_I2C0_RX)  || \
+            ((__REQUEST__) == DMA_REQUEST_I2C1_TX)  || \
+            ((__REQUEST__) == DMA_REQUEST_I2C1_RX)  || \
+            ((__REQUEST__) == DMA_REQUEST_I2S_S_TX) || \
+            ((__REQUEST__) == DMA_REQUEST_I2S_S_RX) || \
+            ((__REQUEST__) == DMA_REQUEST_UART0_TX) || \
+            ((__REQUEST__) == DMA_REQUEST_UART0_RX) || \
+            ((__REQUEST__) == DMA_REQUEST_QSPI1_TX) || \
+            ((__REQUEST__) == DMA_REQUEST_QSPI1_RX) || \
+            ((__REQUEST__) == DMA_REQUEST_I2S_M_TX) || \
+            ((__REQUEST__) == DMA_REQUEST_I2S_M_RX) || \
+            ((__REQUEST__) == DMA_REQUEST_SNSADC)   || \
+            ((__REQUEST__) == DMA_REQUEST_MEM));
+}
 
 /** @brief  Check if DMA direction is valid.
   * @param  __DIRECTION__ DMA direction.
   * @retval SET (__DIRECTION__ is valid) or RESET (__DIRECTION__ is invalid)
   */
-#define IS_DMA_DIRECTION(__DIRECTION__)   (((__DIRECTION__) == DMA_MEMORY_TO_MEMORY) || \
-                                           ((__DIRECTION__) == DMA_MEMORY_TO_PERIPH) || \
-                                           ((__DIRECTION__) == DMA_PERIPH_TO_MEMORY) || \
-                                           ((__DIRECTION__) == DMA_PERIPH_TO_PERIPH))
+__STATIC_INLINE bool IS_DMA_DIRECTION(uint32_t __DIRECTION__)
+{
+    return (((__DIRECTION__) == DMA_MEMORY_TO_MEMORY) || \
+            ((__DIRECTION__) == DMA_MEMORY_TO_PERIPH) || \
+            ((__DIRECTION__) == DMA_PERIPH_TO_MEMORY) || \
+            ((__DIRECTION__) == DMA_PERIPH_TO_PERIPH));
+}
 
 /** @brief  Check if DMA buffer size is valid.
   * @param  __SIZE__ DMA buffer size.
   * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
   */
-#define IS_DMA_BUFFER_SIZE(__SIZE__)      (((__SIZE__) >= 0x1) && ((__SIZE__) < 0xFFF))
+__STATIC_INLINE bool IS_DMA_BUFFER_SIZE(uint32_t __SIZE__)
+{
+    return (((__SIZE__) >= 0x1) && ((__SIZE__) < 0xFFF));
+}
 
 /** @brief  Check if DMA source address increment state is valid.
   * @param  __STATE__ DMA source address increment state.
   * @retval SET (__STATE__ is valid) or RESET (__STATE__ is invalid)
   */
-#define IS_DMA_SOURCE_INC_STATE(__STATE__)      (((__STATE__) == DMA_SRC_INCREMENT) || \
-                                                 ((__STATE__) == DMA_SRC_DECREMENT) || \
-                                                 ((__STATE__) == DMA_SRC_NO_CHANGE))
+__STATIC_INLINE bool IS_DMA_SOURCE_INC_STATE(uint32_t __STATE__)
+{
+    return (((__STATE__) == DMA_SRC_INCREMENT) || \
+            ((__STATE__) == DMA_SRC_DECREMENT) || \
+            ((__STATE__) == DMA_SRC_NO_CHANGE));
+}
 
 /** @brief  Check if DMA destination address increment state is valid.
   * @param  __STATE__ DMA destination address increment state.
   * @retval SET (__STATE__ is valid) or RESET (__STATE__ is invalid)
   */
-#define IS_DMA_DESTINATION_INC_STATE(__STATE__) (((__STATE__) == DMA_DST_INCREMENT)  || \
-                                                 ((__STATE__) == DMA_DST_DECREMENT)  || \
-                                                 ((__STATE__) == DMA_DST_NO_CHANGE))
+__STATIC_INLINE bool IS_DMA_DESTINATION_INC_STATE(uint32_t __STATE__)
+{
+    return (((__STATE__) == DMA_DST_INCREMENT) || \
+            ((__STATE__) == DMA_DST_DECREMENT) || \
+            ((__STATE__) == DMA_DST_NO_CHANGE));
+}
 
 /** @brief  Check if DMA source data size is valid.
   * @param  __SIZE__ DMA source data size.
   * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
   */
-#define IS_DMA_SOURCE_DATA_SIZE(__SIZE__)       (((__SIZE__) == DMA_SDATAALIGN_BYTE)     || \
-                                                 ((__SIZE__) == DMA_SDATAALIGN_HALFWORD) || \
-                                                 ((__SIZE__) == DMA_SDATAALIGN_WORD))
+__STATIC_INLINE bool IS_DMA_SOURCE_DATA_SIZE(uint32_t __SIZE__)
+{
+    return (((__SIZE__) == DMA_SDATAALIGN_BYTE)     || \
+            ((__SIZE__) == DMA_SDATAALIGN_HALFWORD) || \
+            ((__SIZE__) == DMA_SDATAALIGN_WORD));
+}
 
 /** @brief  Check if DMA destination data size is valid.
   * @param  __SIZE__ DMA destination data size.
   * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
   */
-#define IS_DMA_DESTINATION_DATA_SIZE(__SIZE__)  (((__SIZE__) == DMA_DDATAALIGN_BYTE)     || \
-                                                 ((__SIZE__) == DMA_DDATAALIGN_HALFWORD) || \
-                                                 ((__SIZE__) == DMA_DDATAALIGN_WORD))
+__STATIC_INLINE bool IS_DMA_DESTINATION_DATA_SIZE(uint32_t __SIZE__)
+{
+    return (((__SIZE__) == DMA_DDATAALIGN_BYTE)     || \
+            ((__SIZE__) == DMA_DDATAALIGN_HALFWORD) || \
+            ((__SIZE__) == DMA_DDATAALIGN_WORD));
+}
 
 /** @brief  Check if DMA mode is valid.
   * @param  __MODE__ DMA mode.
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
-#define IS_DMA_MODE(__MODE__)   (((__MODE__) == DMA_NORMAL )  || \
-                                 ((__MODE__) == DMA_CIRCULAR))
+__STATIC_INLINE bool IS_DMA_MODE(uint32_t __MODE__)
+{
+    return (((__MODE__) == DMA_NORMAL) || ((__MODE__) == DMA_CIRCULAR));
+}
 
 /** @brief  Check if DMA priority is valid.
   * @param  __PRIORITY__ DMA priority.
   * @retval SET (__PRIORITY__ is valid) or RESET (__PRIORITY__ is invalid)
   */
-#define IS_DMA_PRIORITY(__PRIORITY__)   (((__PRIORITY__) == DMA_PRIORITY_LOW )   || \
-                                         ((__PRIORITY__) == DMA_PRIORITY_MEDIUM) || \
-                                         ((__PRIORITY__) == DMA_PRIORITY_HIGH)   || \
-                                         ((__PRIORITY__) == DMA_PRIORITY_VERY_HIGH))
+__STATIC_INLINE bool IS_DMA_PRIORITY(uint32_t __PRIORITY__)
+{
+    return (((__PRIORITY__) == DMA_PRIORITY_LOW ) || ((__PRIORITY__) == DMA_PRIORITY_MEDIUM) || \
+            ((__PRIORITY__) == DMA_PRIORITY_HIGH) || ((__PRIORITY__) == DMA_PRIORITY_VERY_HIGH));
+}
 /** @} */
 
 /** @} */
@@ -512,7 +532,9 @@ hal_status_t hal_dma_deinit (dma_handle_t *p_dma);
  *                    information for the specified DMA Channel.
  * @param[in]  src_address: The source memory Buffer address
  * @param[in]  dst_address: The destination memory Buffer address
- * @param[in]  data_length: The length of data to be transferred from source to destination, ranging between 0 and 4095.
+ * @param[in]  data_length: The length of data to be transferred from
+ *                    source to destination, ranging between 0 and
+ *                    4095. 
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -530,7 +552,9 @@ hal_status_t hal_dma_start (dma_handle_t *p_dma, uint32_t src_address, uint32_t 
  *                    information for the specified DMA Channel.
  * @param[in]  src_address: The source memory Buffer address
  * @param[in]  dst_address: The destination memory Buffer address
- * @param[in]  data_length: The length of data to be transferred from source to destination, ranging between 0 and 4095.
+ * @param[in]  data_length: The length of data to be transferred from
+ *                    source to destination, ranging between 0 and
+ *                    4095. 
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -614,7 +638,9 @@ void hal_dma_irq_handler(dma_handle_t *p_dma);
  *         @arg @ref HAL_DMA_XFER_BLK_CB_ID
  *         @arg @ref HAL_DMA_XFER_ERROR_CB_ID
  *         @arg @ref HAL_DMA_XFER_ABORT_CB_ID
- * @param[in]  callback: Pointer to private callback function which has pointer to dma_handle_t structure as parameter.
+ * @param[in]  callback: Pointer to private callback function which
+ *                    has pointer to dma_handle_t structure as
+ *                    parameter. 
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -623,7 +649,7 @@ void hal_dma_irq_handler(dma_handle_t *p_dma);
  ****************************************************************************************
  */
 hal_status_t hal_dma_register_callback(dma_handle_t *p_dma, hal_dma_callback_id_t id,
-                                       void (* callback)(dma_handle_t * p_dma));
+                                       void (* callback)(dma_handle_t *p_dma));
 
 /**
  ****************************************************************************************

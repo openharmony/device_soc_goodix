@@ -79,32 +79,46 @@ typedef struct _ll_xqspi_init_t {
 
     uint32_t cache_mode;                /**< Specifies the cache mode in XIP mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_CACHE_MODE.
-                                             This feature can be modified afterwards using unitary function
+                                             This feature can be
+                                             modified afterwards using
+                                             unitary function
                                              @ref ll_xqspi_enable_cache(). */
 
     uint32_t read_cmd;                  /**< Specifies the XQSPI read command in XIP mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_XIP_READ_CMD.
-                                             This feature can be modified afterwards using unitary function
+                                             This feature can be
+                                             modified afterwards using
+                                             unitary function
                                              @ref ll_xqspi_set_xip_cmd(). */
 
     uint32_t data_size;                 /**< Specifies the XQSPI data width, only in QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_DATASIZE.
-                                             This feature can be modified afterwards using unitary function
+                                             This feature can be
+                                             modified afterwards using
+                                             unitary function
                                              @ref ll_xqspi_set_qspi_datasize(). */
 
     uint32_t data_order;                /**< Specifies the XQSPI data order, MSB oe LSB, only in QSPI mode.
                                              This parameter can be a value of @ref XQSPI_LL_EC_QSPI_DATAORDER.
-                                             This feature can be modified afterwards using unitary function
+                                             This feature can be
+                                             modified afterwards using
+                                             unitary function
                                              @ref ll_xqspi_set_qspi_data_order(). */
 
     uint32_t clock_polarity;            /**< Specifies the serial clock steady state.
-                                             This parameter can be a value of @ref XQSPI_LL_EC_QSPI_POLARITY in XIP mode
+                                             This parameter can be a
+                                             value of @ref
+                                             XQSPI_LL_EC_QSPI_POLARITY
+                                             in XIP mode
                                              or @ref XQSPI_LL_EC_QSPI_POLARITY in QSPI mode.
                                              This feature can be modified afterwards using unitary function
                                              @ref ll_xqspi_set_xip_cpol() or @ref ll_xqspi_set_qspi_cpol(). */
 
     uint32_t clock_phase;               /**< Specifies the clock active edge for the bit capture.
-                                             This parameter can be a value of @ref XQSPI_LL_EC_QSPI_PHASE in XIP mode
+                                             This parameter can be a
+                                             value of @ref
+                                             XQSPI_LL_EC_QSPI_PHASE in
+                                             XIP mode
                                              or @ref XQSPI_LL_EC_QSPI_PHASE in QSPI mode.
                                              This feature can be modified afterwards using unitary function
                                              @ref ll_xqspi_set_xip_cpha() or @ref ll_xqspi_set_qspi_cpha(). */
@@ -196,30 +210,33 @@ typedef struct _ll_xqspi_init_t {
   * @brief    Flags defines which can be used with LL_XQSPI_ReadReg function
   * @{
   */
-#define LL_XQSPI_QSPI_STAT_RFTF             XQSPI_QSPI_STAT_RXWMARK     /**< Rx FIFO watermark flag         */
-#define LL_XQSPI_QSPI_STAT_RFF              XQSPI_QSPI_STAT_RXFULL      /**< Rx FIFO full flag              */
-#define LL_XQSPI_QSPI_STAT_RFE              XQSPI_QSPI_STAT_RXEMPTY     /**< Rx FIFO empty flag             */
-#define LL_XQSPI_QSPI_STAT_TFTF             XQSPI_QSPI_STAT_TXWMARK     /**< Tx FIFO watermark flag         */
-#define LL_XQSPI_QSPI_STAT_TFF              XQSPI_QSPI_STAT_TXFULL      /**< Tx FIFO full flag              */
-#define LL_XQSPI_QSPI_STAT_TFE              XQSPI_QSPI_STAT_TXEMPTY     /**< Tx FIFO empty flag             */
-#define LL_XQSPI_QSPI_STAT_BUSY             XQSPI_QSPI_STAT_XFERIP      /**< Busy flag                      */
+#define LL_XQSPI_QSPI_STAT_RFTF             XQSPI_QSPI_STAT_RXWMARK     /**< Rx FIFO watermark flag  */
+#define LL_XQSPI_QSPI_STAT_RFF              XQSPI_QSPI_STAT_RXFULL      /**< Rx FIFO full flag       */
+#define LL_XQSPI_QSPI_STAT_RFE              XQSPI_QSPI_STAT_RXEMPTY     /**< Rx FIFO empty flag      */
+#define LL_XQSPI_QSPI_STAT_TFTF             XQSPI_QSPI_STAT_TXWMARK     /**< Tx FIFO watermark flag  */
+#define LL_XQSPI_QSPI_STAT_TFF              XQSPI_QSPI_STAT_TXFULL      /**< Tx FIFO full flag       */
+#define LL_XQSPI_QSPI_STAT_TFE              XQSPI_QSPI_STAT_TXEMPTY     /**< Tx FIFO empty flag      */
+#define LL_XQSPI_QSPI_STAT_BUSY             XQSPI_QSPI_STAT_XFERIP      /**< Busy flag               */
 /** @} */
 
 /** @defgroup XQSPI_LL_EC_QSPI_IT QSPI interrupt Defines
   * @brief    Interrupt defines which can be used with LL_XQSPI_ReadReg and  LL_XQSPI_WriteReg functions
   * @{
   */
-#define LL_XQSPI_QSPI_IM_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt enable          */
-#define LL_XQSPI_QSPI_IM_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt enable       */
-#define LL_XQSPI_QSPI_IM_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt enable  */
-#define LL_XQSPI_QSPI_IM_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt enable */
-#define LL_XQSPI_QSPI_IM_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt enable     */
+#define LL_XQSPI_QSPI_IM_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt enable       */
+#define LL_XQSPI_QSPI_IM_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt enable    */
+#define LL_XQSPI_QSPI_IM_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt
+                                                                           enable  */
+#define LL_XQSPI_QSPI_IM_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt
+                                                                           enable */
+#define LL_XQSPI_QSPI_IM_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt enable  */
 
-#define LL_XQSPI_QSPI_IS_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt flag            */
-#define LL_XQSPI_QSPI_IS_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt flag         */
-#define LL_XQSPI_QSPI_IS_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt flag    */
-#define LL_XQSPI_QSPI_IS_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt flag   */
-#define LL_XQSPI_QSPI_IS_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt flag       */
+#define LL_XQSPI_QSPI_IS_DONE               XQSPI_QSPI_XFER_DPULSE_Msk  /**< Transmite Done Interrupt flag         */
+#define LL_XQSPI_QSPI_IS_RFF                XQSPI_QSPI_RX_FPULSE_Msk    /**< Receive FIFO Full Interrupt flag      */
+#define LL_XQSPI_QSPI_IS_RFTF               XQSPI_QSPI_RX_WPULSE_Msk    /**< Receive FIFO Watermark Interrupt flag */
+#define LL_XQSPI_QSPI_IS_TFTF               XQSPI_QSPI_TX_WPULSE_Msk    /**< Transmit FIFO Watermark Interrupt
+                                                                           flag   */
+#define LL_XQSPI_QSPI_IS_TFE                XQSPI_QSPI_TX_EPULSE_Msk    /**< Transmit FIFO Empty Interrupt flag    */
 /** @} */
 
 /** @defgroup XQSPI_LL_EC_QSPI_FIFO_WATERMARK QSPI FIFO Watermark
@@ -235,7 +252,8 @@ typedef struct _ll_xqspi_init_t {
 /** @defgroup XQSPI_LL_EC_QSPI_FRAMEFORMAT QSPI Frame Format
   * @{
   */
-#define LL_XQSPI_QSPI_FRF_SPI               0x00000000UL                           /**< SPI frame format for transfer */
+#define LL_XQSPI_QSPI_FRF_SPI               0x00000000UL                           /**< SPI frame format for
+                                                                                      transfer */
 #define LL_XQSPI_QSPI_FRF_DUALSPI           (2UL << XQSPI_QSPI_AUXCTRL_QMODE_Pos)  /**< Dual-SPI frame format
                                                                                         for transfer */
 #define LL_XQSPI_QSPI_FRF_QUADSPI           (3UL << XQSPI_QSPI_AUXCTRL_QMODE_Pos)  /**< Quad-SPI frame format
@@ -622,7 +640,8 @@ SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_set_cache_dbgbus(xqspi_regs_t *XQ
   */
 SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_xqspi_get_cache_dbgbus(xqspi_regs_t *XQSPIx)
 {
-    return (uint32_t)(READ_BITS(XQSPIx->CACHE.CTRL1, XQSPI_CACHE_CTRL1_DBGBUS_SEL) >> XQSPI_CACHE_CTRL1_DBGBUS_SEL_Pos);
+    return (uint32_t)(READ_BITS(XQSPIx->CACHE.CTRL1, XQSPI_CACHE_CTRL1_DBGBUS_SEL) >> \
+                      XQSPI_CACHE_CTRL1_DBGBUS_SEL_Pos);
 }
 
 /**
@@ -1010,8 +1029,10 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_xqspi_get_xip_endian(xqspi_regs_t *
   *  CTRL2   |CFG_HPMODE
   *
   * @param  XQSPIx XQSPI instance
-  * @param  cmd    This value is specified by different QSPI FLASH memory vendor to enter into its status register
-  *                to activate HP mode in dual I/O and Quad I/O access. This parameter can between: 0 ~ 0xFF.
+  * @param  cmd    This value is specified by different QSPI FLASH
+  *                 memory vendor to enter into its status register 
+  *                to activate HP mode in dual I/O and Quad I/O
+  *                 access. This parameter can between: 0 ~ 0xFF. 
   * @retval None
   */
 SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_set_xip_hp_cmd(xqspi_regs_t *XQSPIx, uint32_t cmd)

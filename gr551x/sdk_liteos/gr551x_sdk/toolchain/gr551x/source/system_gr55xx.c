@@ -59,7 +59,10 @@ static inline uint32_t REG_PL_RD(uint32_t addr)
 }
 
 #define SCB_CPACR_BASE_NUM           3UL
-#define READ_VERSION_ADDR()          REG_PL_RD(0x45004)
+static inline uint32_t READ_VERSION_ADDR(void)
+{
+    return REG_PL_RD(0x45004);
+}
 #define CALIB_LP_CYCLE_COUNT           20
 
 #define REGION_TABLE_LIMIT           0x0007e9c0

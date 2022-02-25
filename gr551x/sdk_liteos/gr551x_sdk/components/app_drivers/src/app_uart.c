@@ -51,16 +51,6 @@
  */
 #define TX_ONCE_MAX_SIZE     128
 
-#ifdef ENV_RTOS_USE_MUTEX
-
-#define APP_UART_DRV_SYNC_MUTEX_LOCK(id)    app_driver_mutex_pend(s_uart_env[id].mutex_sync, MUTEX_WAIT_FOREVER)
-#define APP_UART_DRV_SYNC_MUTEX_UNLOCK(id)  app_driver_mutex_post(s_uart_env[id].mutex_sync)
-
-#define APP_UART_DRV_ASYNC_MUTEX_LOCK(id)   app_driver_mutex_pend(s_uart_env[id].mutex_async, MUTEX_WAIT_FOREVER)
-#define APP_UART_DRV_ASYNC_MUTEX_UNLOCK(id) app_driver_mutex_post(s_uart_env[id].mutex_async)
-
-#endif
-
 #define MS_5000              5000
 
 /*
@@ -148,6 +138,33 @@ static const app_sleep_callbacks_t uart_sleep_cb = {
     .app_wake_up_ind       = uart_wake_up_ind,
 };
 
+
+#ifdef ENV_RTOS_USE_MUTEX
+static inline void APP_UART_DRV_SYNC_MUTEX_LOCK(uint8_t id);
+static inline void APP_UART_DRV_SYNC_MUTEX_UNLOCK(uint8_t id);
+static inline void APP_UART_DRV_ASYNC_MUTEX_LOCK(uint8_t id);
+static inline void APP_UART_DRV_ASYNC_MUTEX_UNLOCK(uint8_t id);
+
+static inline void APP_UART_DRV_SYNC_MUTEX_LOCK(uint8_t id)
+{
+    app_driver_mutex_pend(s_uart_env[id].mutex_sync, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_UART_DRV_SYNC_MUTEX_UNLOCK(uint8_t id)
+{
+    app_driver_mutex_post(s_uart_env[id].mutex_sync);
+}
+
+static inline void APP_UART_DRV_ASYNC_MUTEX_LOCK(uint8_t id)
+{
+    app_driver_mutex_pend(s_uart_env[id].mutex_async, MUTEX_WAIT_FOREVER);
+}
+
+static inline void APP_UART_DRV_ASYNC_MUTEX_UNLOCK(uint8_t id)
+{
+    app_driver_mutex_post(s_uart_env[id].mutex_async);
+}
+#endif
 /*
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
@@ -788,7 +805,8 @@ uint16_t app_uart_transmit_async(app_uart_id_t id, uint8_t *p_data, uint16_t siz
     ring_buffer_write(&s_uart_env[id].tx_ring_buffer, p_data, size);
 
     if ((s_uart_env[id].start_tx_flag == false) && (s_uart_env[id].start_flush_flag == false) &&
-            (s_uart_env[id].uart_state == APP_UART_ACTIVITY) && ll_uart_is_enabled_fifo(s_uart_env[id].handle.p_instance)) {
+        (s_uart_env[id].uart_state == APP_UART_ACTIVITY) &&
+        ll_uart_is_enabled_fifo(s_uart_env[id].handle.p_instance)) {
         s_uart_env[id].start_tx_flag = true;
 
         err_code = app_uart_start_transmit_async(id);
@@ -827,7 +845,8 @@ uint16_t app_uart_transmit_sem_sync(app_uart_id_t id, uint8_t *p_data, uint16_t 
     ring_buffer_write(&s_uart_env[id].tx_ring_buffer, p_data, size);
 
     if ((s_uart_env[id].start_tx_flag == false) && (s_uart_env[id].start_flush_flag == false) &&
-            (s_uart_env[id].uart_state == APP_UART_ACTIVITY) && ll_uart_is_enabled_fifo(s_uart_env[id].handle.p_instance)) {
+        (s_uart_env[id].uart_state == APP_UART_ACTIVITY) &&
+        ll_uart_is_enabled_fifo(s_uart_env[id].handle.p_instance)) {
         s_uart_env[id].start_tx_flag = true;
 
         err_code = app_uart_start_transmit_async(id);
@@ -895,8 +914,8 @@ static void flush_process(app_uart_id_t id)
         uint16_t tx_xfer_count = 0;
         uint32_t tx_wait_count = 0;
         uint32_t data_width = 1 + s_uart_env[id].handle.init.data_bits + \
-                                5 + s_uart_env[id].handle.init.stop_bits + 1 + \
-                                (s_uart_env[id].handle.init.parity & 1);
+                              5 + s_uart_env[id].handle.init.stop_bits + 1 + \
+                              (s_uart_env[id].handle.init.parity & 1);
 
         while (!ll_uart_is_active_flag_tfe(s_uart_env[id].handle.p_instance));
 
@@ -905,9 +924,9 @@ static void flush_process(app_uart_id_t id)
             tx_xfer_count = s_uart_env[id].handle.tx_xfer_count;
             hal_uart_abort_transmit_it(&s_uart_env[id].handle);
             hal_uart_transmit(&s_uart_env[id].handle,
-                                s_uart_env[id].tx_send_buf + tx_xfer_size - tx_xfer_count,
-                                tx_xfer_count,
-                                MS_5000);
+                              s_uart_env[id].tx_send_buf + tx_xfer_size - tx_xfer_count,
+                              tx_xfer_count,
+                              MS_5000);
         } else {
             do {
                 tx_wait_count++;

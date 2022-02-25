@@ -79,20 +79,22 @@ typedef struct _ll_gpio_init {
 
     uint32_t mode;          /*!< Specifies the operating mode for the selected pins.
                                 This parameter can be a value of @ref GPIO_LL_EC_MODE.
-
-                                GPIO HW GPIO_InitStructuration can be modified afterwards using unitary function
+                                GPIO HW GPIO_InitStructuration can be
+                                modified afterwards using unitary
+                                function
                                 @ref ll_gpio_set_pin_mode(). */
 
     uint32_t pull;          /*!< Specifies the operating Pull-up/Pull down for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_PULL.
-
-                              GPIO HW configuration can be modified afterwards using unitary function
+                              GPIO HW configuration can be modified
+                              afterwards using unitary function
                               @ref ll_gpio_set_pin_pull(). */
 
     uint32_t mux;           /*!< Specifies the Peripheral to be connected to the selected pins.
                                 This parameter can be a value of @ref GPIO_LL_EC_MUX.
-
-                                GPIO HW GPIO_InitStructuration can be modified afterwards using unitary function
+                                GPIO HW GPIO_InitStructuration can be
+                                modified afterwards using unitary
+                                function
                                 @ref ll_gpio_set_mux_pin_0_7() and ll_gpio_set_mux_pin_8_15(). */
 
     uint32_t trigger;        /*!< Specifies the trigger signal active edge.
@@ -232,7 +234,8 @@ typedef struct _ll_gpio_init {
   * @{
   */
 
-/** @brief  Get the starting position of the specified GPIO instance in related pull-up/pull-down register.
+/** @brief  Get the starting position of the specified GPIO instance
+  * in related pull-up/pull-down register. 
   * @param  __GPIOx__ This parameter can be one of the following values:
   *         @arg GPIO0
   *         @arg GPIO1

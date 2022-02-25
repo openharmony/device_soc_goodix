@@ -108,10 +108,13 @@ static void dbg_uart_init(uart_regs_t *UARTx, dbg_printf_mode_t mode)
     /* Set baudrate */
     baud = DBG_UART_BAUDRATE;
     ll_uart_set_baud_rate(UARTx, uart_pclk, baud);
-    /* Set data bit to 8; */
-    /* Set stop bit to 1; */
-    /* Set parity to none; */
-    /* Set fifo to enable; */
+
+    /**
+    Set data bit to 8.
+    Set stop bit to 1.
+    Set parity to none.
+    Set fifo to enable.
+    */
     ll_uart_config_character(UARTx, LL_UART_DATABITS_8B, LL_UART_PARITY_NONE, LL_UART_STOPBITS_1);
     /* Set fifo enable */
     ll_uart_enable_fifo(UARTx);

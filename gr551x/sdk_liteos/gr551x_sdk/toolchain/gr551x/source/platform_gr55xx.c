@@ -102,7 +102,7 @@ static void nvds_setup(void)
                 }
             }
             /* Flash fault, cannot startup.
-             * TODO: Output log via UART or Dump an error code to flash. */
+             * Output log via UART or Dump an error code to flash. */
             while (1) {}
         }
         case NVDS_SUCCESS:
@@ -141,7 +141,7 @@ static void BLE_power_check(void)
         ll_pwr_enable_comm_timer_reset();
         ll_pwr_disable_comm_core_power();
         ll_pwr_disable_comm_timer_power();
-        /* TODO: Reserve System Cold Fully Reset Method. */
+        /* Reserve System Cold Fully Reset Method. */
     }
 }
 
@@ -205,7 +205,7 @@ void platform_init(void)
 
     if (!hal_flash_init()) {
         /* Flash fault, cannot startup.
-         * TODO: Output log via UART or Dump an error code to flash. */
+         * Output log via UART or Dump an error code to flash. */
         while (1) {}
     }
 

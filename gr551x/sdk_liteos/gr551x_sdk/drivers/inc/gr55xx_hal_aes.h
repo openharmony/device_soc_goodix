@@ -362,7 +362,7 @@ typedef struct _aes_callback {
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This subsection provides a set of functions allowing to initialize and
-          de-initialize the AESx peripheral:
+          de-initialize the AESx peripheral.
 
       (+) User must implement hal_aes_msp_init() function in which he configures
           all related peripherals resources (GPIO, DMA, IT and NVIC ).
