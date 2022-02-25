@@ -198,7 +198,9 @@ __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int li
     // Also can store assert info to flash
     app_assert_info_output(APP_ASSERT_PARAM);
 
-    while (1);
+    while (1) {
+
+    };
 }
 
 __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
@@ -222,7 +224,9 @@ __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
 
     // Also can store assert info to flash
     app_assert_info_output(APP_ASSERT_ERROR);
-    while (1);
+    while (1) {
+        
+    };
 }
 
 void app_assert_init(void)

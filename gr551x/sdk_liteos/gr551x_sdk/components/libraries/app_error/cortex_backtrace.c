@@ -109,30 +109,28 @@ void fault_trace_nvds_save_flush(void)
 #if SYS_FAULT_TRACE_MODE == 1    // only UART Print
 #define FAULT_TRACE_OUTPUT_PREPARE()
 #define FAULT_TRACE_OUTPUT(format, ...)  APP_ERROR_INFO_PRINT(format, ##__VA_ARGS__)
-#define FAULT_TRACE_OUTPUT_FLUSH()       app_log_flush()
+static inline void FAULT_TRACE_OUTPUT_FLUSH()
+{
+    app_log_flush();
+}
 #elif SYS_FAULT_TRACE_MODE == 2  // only Save to NVDS
 #define FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();fault_trace_nvds_save_prepare()
 #define FAULT_TRACE_OUTPUT(format, ...)  do {
-fault_trace_nvds_add(format, ##__VA_ARGS__);
-\
-fault_trace_nvds_add("\r\n")；
-} while (0)
+                                                fault_trace_nvds_add(format, ##__VA_ARGS__); \
+                                                fault_trace_nvds_add("\r\n")；
+                                            } while (0)
 #define  FAULT_TRACE_OUTPUT_FLUSH()       fault_trace_nvds_save_flush()
 #elif SYS_FAULT_TRACE_MODE == 3  // UART Print and Save to NVDS
 #define FAULT_TRACE_OUTPUT_PREPARE()     fault_trace_db_init();fault_trace_nvds_save_prepare()
 #define FAULT_TRACE_OUTPUT(format, ...)  do {
-APP_ERROR_INFO_PRINT(format,##__VA_ARGS__);
-\
-fault_trace_nvds_add(format,##__VA_ARGS__);
-\
-fault_trace_nvds_add("\r\n")；
-} while (0)
+                                                APP_ERROR_INFO_PRINT(format, ##__VA_ARGS__); \
+                                                fault_trace_nvds_add(format, ##__VA_ARGS__); \
+                                                fault_trace_nvds_add("\r\n"); \
+                                            } while (0)
 #define  FAULT_TRACE_OUTPUT_FLUSH()  do {
-    app_log_flush();
-\
-fault_trace_nvds_save_flush();
-\
-} while (0)
+                                            app_log_flush(); \
+                                            fault_trace_nvds_save_flush(); \
+                                        } while (0)
 #else
 #define FAULT_TRACE_OUTPUT_PREPARE()
 #define FAULT_TRACE_OUTPUT(...)
@@ -370,7 +368,6 @@ static void cb_stack_info_dump(uint32_t stack_start_addr, uint32_t stack_size, u
 void deal_mvalue(void)
 {
     // Memory Management Fault.
-    if (s_regs.mfsr.value) {
         if (s_regs.mfsr.bits.IACCVIOL) {
             FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MFSR_IACCVIOL]);
         }
@@ -397,124 +394,124 @@ void deal_mvalue(void)
                 FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_MMAR], s_regs.mmar);
             }
         }
+}
+
+void deal_bvalue(void) {
+    if (s_regs.bfsr.bits.IBUSERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IBUSERR]);
     }
 
-    void deal_bvalue(void) {
-        if (s_regs.bfsr.bits.IBUSERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IBUSERR]);
-        }
+    if (s_regs.bfsr.bits.PRECISERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_PRECISERR]);
+    }
 
-        if (s_regs.bfsr.bits.PRECISERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_PRECISERR]);
-        }
+    if (s_regs.bfsr.bits.IMPREISERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IMPREISERR]);
+    }
 
-        if (s_regs.bfsr.bits.IMPREISERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_IMPREISERR]);
-        }
+    if (s_regs.bfsr.bits.UNSTKERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_UNSTKERR]);
+    }
 
-        if (s_regs.bfsr.bits.UNSTKERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_UNSTKERR]);
-        }
-
-        if (s_regs.bfsr.bits.STKERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_STKERR]);
-        }
+    if (s_regs.bfsr.bits.STKERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_STKERR]);
+    }
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
-        if (s_regs.bfsr.bits.LSPERR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_LSPERR]);
-        }
+    if (s_regs.bfsr.bits.LSPERR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFSR_LSPERR]);
+    }
 #endif
 
-        if (s_regs.bfsr.bits.BFARVALID) {
-            if (s_regs.bfsr.bits.PRECISERR) {
-                FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFAR], s_regs.bfar);
-            }
+    if (s_regs.bfsr.bits.BFARVALID) {
+        if (s_regs.bfsr.bits.PRECISERR) {
+            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_BFAR], s_regs.bfar);
+        }
+    }
+}
+
+void deal_uvalue(void) {
+    if (s_regs.ufsr.bits.UNDEFINSTR) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNDEFINSTR]);
+    }
+
+    if (s_regs.ufsr.bits.INVSTATE) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVSTATE]);
+    }
+
+    if (s_regs.ufsr.bits.INVPC) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVPC]);
+    }
+
+    if (s_regs.ufsr.bits.NOCP) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_NOCP]);
+    }
+
+    if (s_regs.ufsr.bits.UNALIGNED) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNALIGNED]);
+    }
+
+    if (s_regs.ufsr.bits.DIVBYZERO0) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_DIVBYZERO0]);
+    }
+}
+
+void deal_dvalue(void) {
+    if (s_regs.dfsr.bits.HALTED) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_HALTED]);
+    }
+
+    if (s_regs.dfsr.bits.BKPT) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_BKPT]);
+    }
+
+    if (s_regs.dfsr.bits.DWTTRAP) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_DWTTRAP]);
+    }
+
+    if (s_regs.dfsr.bits.VCATCH) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_VCATCH]);
+    }
+
+    if (s_regs.dfsr.bits.EXTERNAL) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_EXTERNAL]);
+    }
+}
+
+/**
+ *****************************************************************************************
+    * Fault diagnosis then print cause of fault
+    *****************************************************************************************
+    */
+static void cb_fault_diagnosis(void) {
+    FAULT_TRACE_OUTPUT("Fault reason:");
+
+    if (s_regs.hfsr.bits.VECTBL) {
+        FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_HFSR_VECTBL]);
+    }
+
+    if (s_regs.hfsr.bits.FORCED) {
+        // Memory Management Fault.
+        if (s_regs.mfsr.value) {
+            deal_mvalue();
+        }
+        // Bus Fault
+        if (s_regs.bfsr.value) {
+            deal_bvalue();
+        }
+        // Usage Fault
+        if (s_regs.ufsr.value) {
+            deal_uvalue();
         }
     }
 
-    void deal_uvalue(void) {
-        if (s_regs.ufsr.bits.UNDEFINSTR) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNDEFINSTR]);
-        }
-
-        if (s_regs.ufsr.bits.INVSTATE) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVSTATE]);
-        }
-
-        if (s_regs.ufsr.bits.INVPC) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_INVPC]);
-        }
-
-        if (s_regs.ufsr.bits.NOCP) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_NOCP]);
-        }
-
-        if (s_regs.ufsr.bits.UNALIGNED) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_UNALIGNED]);
-        }
-
-        if (s_regs.ufsr.bits.DIVBYZERO0) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_UFSR_DIVBYZERO0]);
+    // Debug Fault
+    if (s_regs.hfsr.bits.DEBUGEVT) {
+        if (s_regs.dfsr.value) {
+            deal_dvalue();
         }
     }
-
-    void deal_dvalue(void) {
-        if (s_regs.dfsr.bits.HALTED) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_HALTED]);
-        }
-
-        if (s_regs.dfsr.bits.BKPT) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_BKPT]);
-        }
-
-        if (s_regs.dfsr.bits.DWTTRAP) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_DWTTRAP]);
-        }
-
-        if (s_regs.dfsr.bits.VCATCH) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_VCATCH]);
-        }
-
-        if (s_regs.dfsr.bits.EXTERNAL) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_EXTERNAL]);
-        }
-    }
-
-    /**
-     *****************************************************************************************
-     * Fault diagnosis then print cause of fault
-     *****************************************************************************************
-     */
-    static void cb_fault_diagnosis(void) {
-        FAULT_TRACE_OUTPUT("Fault reason:");
-
-        if (s_regs.hfsr.bits.VECTBL) {
-            FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_HFSR_VECTBL]);
-        }
-
-        if (s_regs.hfsr.bits.FORCED) {
-            // Memory Management Fault.
-            if (s_regs.mfsr.value) {
-                deal_uvalue();
-            }
-            // Bus Fault
-            if (s_regs.bfsr.value) {
-                deal_bvalue();
-            }
-            // Usage Fault
-            if (s_regs.ufsr.value) {
-                deal_uvalue();
-            }
-        }
-
-        // Debug Fault
-        if (s_regs.hfsr.bits.DEBUGEVT) {
-            if (s_regs.dfsr.value) {
-                deal_dvalue();
-            }
-        }
-    }
+}
 #endif
 
 #if (__CORTEX_M == CB_CPU_ARM_CORTEX_M4) || (__CORTEX_M == CB_CPU_ARM_CORTEX_M7)
@@ -555,7 +552,7 @@ void deal_mvalue(void)
                 if ((pc >= (s_code_section_infos[i].code_start_addr)) && \
                         (pc <= (s_code_section_infos[i].code_end_addr)) && \
                         (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) && \
-                        (depth < size) &&
+                        (depth < size) && \
                         ((depth != TWO) || (!is_regs_saved_lr_valid) || (pc != p_buffer[1]))) {
                     // The second depth function may be already saved, so need ignore repeat.
                     p_buffer[depth++] = pc;
