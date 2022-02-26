@@ -1030,9 +1030,9 @@ SECTION_RAM_CODE __STATIC_INLINE uint32_t ll_xqspi_get_xip_endian(xqspi_regs_t *
   *
   * @param  XQSPIx XQSPI instance
   * @param  cmd    This value is specified by different QSPI FLASH
-  *                 memory vendor to enter into its status register 
+  *                 memory vendor to enter into its status register
   *                to activate HP mode in dual I/O and Quad I/O
-  *                 access. This parameter can between: 0 ~ 0xFF. 
+  *                 access. This parameter can between: 0 ~ 0xFF.
   * @retval None
   */
 SECTION_RAM_CODE __STATIC_INLINE void ll_xqspi_set_xip_hp_cmd(xqspi_regs_t *XQSPIx, uint32_t cmd)

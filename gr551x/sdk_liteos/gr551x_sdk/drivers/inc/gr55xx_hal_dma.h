@@ -151,7 +151,7 @@ typedef struct _dma_init {
                                              This parameter can be a
                                              value of @ref
                                              DMA_Destination_incremented_mode
-                                             */ 
+                                             */
 
     uint32_t src_data_alignment;        /**< Specifies the source data width.
                                              This parameter can be a value of @ref DMA_Source_data_size */
@@ -163,7 +163,7 @@ typedef struct _dma_init {
                                              This parameter can be a value of @ref DMA_mode
                                              @note The circular buffer
                                              mode cannot be used if
-                                             the memory-to-memory 
+                                             the memory-to-memory
                                              data transfer is configured on the selected Channel */
 
     uint32_t priority;                  /**< Specifies the software priority for the DMA Channel.
@@ -200,7 +200,7 @@ typedef struct _dma_handle {
 
     __IO uint32_t           error_code;                                           /**< DMA Error code                 */
 
-    uint32_t                retention[5];                                         /**< DMA important register 
+    uint32_t                retention[5];                                         /**< DMA important register
                                                                                      information. */
 } dma_handle_t;
 
@@ -259,7 +259,7 @@ typedef struct _dma_handle {
 #define DMA_MEMORY_TO_MEMORY         LL_DMA_DIRECTION_MEMORY_TO_MEMORY    /**< Memory to memory direction     */
 #define DMA_MEMORY_TO_PERIPH         LL_DMA_DIRECTION_MEMORY_TO_PERIPH    /**< Memory to peripheral direction */
 #define DMA_PERIPH_TO_MEMORY         LL_DMA_DIRECTION_PERIPH_TO_MEMORY    /**< Peripheral to memory direction */
-#define DMA_PERIPH_TO_PERIPH         LL_DMA_DIRECTION_PERIPH_TO_PERIPH    /**< Peripheral to 
+#define DMA_PERIPH_TO_PERIPH         LL_DMA_DIRECTION_PERIPH_TO_PERIPH    /**< Peripheral to
                                                                              Peripheral direction */
 /** @} */
 
@@ -534,7 +534,7 @@ hal_status_t hal_dma_deinit (dma_handle_t *p_dma);
  * @param[in]  dst_address: The destination memory Buffer address
  * @param[in]  data_length: The length of data to be transferred from
  *                    source to destination, ranging between 0 and
- *                    4095. 
+ *                    4095.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -554,7 +554,7 @@ hal_status_t hal_dma_start (dma_handle_t *p_dma, uint32_t src_address, uint32_t 
  * @param[in]  dst_address: The destination memory Buffer address
  * @param[in]  data_length: The length of data to be transferred from
  *                    source to destination, ranging between 0 and
- *                    4095. 
+ *                    4095.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.
@@ -640,7 +640,7 @@ void hal_dma_irq_handler(dma_handle_t *p_dma);
  *         @arg @ref HAL_DMA_XFER_ABORT_CB_ID
  * @param[in]  callback: Pointer to private callback function which
  *                    has pointer to dma_handle_t structure as
- *                    parameter. 
+ *                    parameter.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.

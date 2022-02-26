@@ -235,7 +235,7 @@ typedef struct _ll_gpio_init {
   */
 
 /** @brief  Get the starting position of the specified GPIO instance
-  * in related pull-up/pull-down register. 
+  * in related pull-up/pull-down register.
   * @param  __GPIOx__ This parameter can be one of the following values:
   *         @arg GPIO0
   *         @arg GPIO1

@@ -50,7 +50,6 @@
 #define __BLE_SEC_H__
 
 #include <stdbool.h>
-#include "ble_error.h"
 
 /** @addtogroup BLE_SM_DEFINES Defines
  * @{
