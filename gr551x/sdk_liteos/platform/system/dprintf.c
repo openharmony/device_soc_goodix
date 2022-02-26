@@ -23,10 +23,11 @@
 int printf(const char *__restrict __format, ...)
 {
     char buf[BUFSIZE] = { 0 };
+    int len;
     va_list ap;
     va_start(ap, __format);
-    int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, __format, ap);
-    if ( len < 0 ) {
+    len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, __format, ap);
+    if (len < 0) {
         return len;
     }
 

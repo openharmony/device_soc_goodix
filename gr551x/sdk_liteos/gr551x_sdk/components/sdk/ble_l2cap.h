@@ -51,7 +51,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_error.h"
 #include "gr55xx_sys_cfg.h"
 
 /** @addtogroup BLE_L2CAP_ENUMERATIONS Enumerations

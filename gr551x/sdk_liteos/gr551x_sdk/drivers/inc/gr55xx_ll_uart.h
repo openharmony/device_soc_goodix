@@ -125,7 +125,7 @@ typedef struct _ll_uart_init_t {
 #define LL_UART_LSR_PE                      UART_LSR_PE             /**< Parity error flag */
 #define LL_UART_LSR_FE                      UART_LSR_FE             /**< Framing error flag */
 #define LL_UART_LSR_BI                      UART_LSR_BI             /**< Break detection flag */
-#define LL_UART_LSR_THRE                    UART_LSR_THRE           /**< Transmit holding register 
+#define LL_UART_LSR_THRE                    UART_LSR_THRE           /**< Transmit holding register
                                                                        empty flag */
 #define LL_UART_LSR_TEMT                    UART_LSR_TEMT           /**< Transmitter empty flag */
 #define LL_UART_LSR_RFE                     UART_LSR_RFE            /**< Rx FIFO error flag */
@@ -147,16 +147,16 @@ typedef struct _ll_uart_init_t {
   * @brief    Interrupt definitions which can be used with LL_UART_ReadReg and  LL_UART_WriteReg functions
   * @{
   */
-#define LL_UART_IER_MS                      UART_IER_EDSSI                      /**< Enable Modem Status 
+#define LL_UART_IER_MS                      UART_IER_EDSSI                      /**< Enable Modem Status
                                                                                    Interrupt */
-#define LL_UART_IER_RLS                     UART_IER_ERLS                       /**< Enable Receiver Line 
+#define LL_UART_IER_RLS                     UART_IER_ERLS                       /**< Enable Receiver Line
                                                                                    Status
                                                                                    Interrupt */
-#define LL_UART_IER_THRE                    (UART_IER_ETBEI | UART_IER_PTIME)   /**< Enable Transmit Holding 
+#define LL_UART_IER_THRE                    (UART_IER_ETBEI | UART_IER_PTIME)   /**< Enable Transmit Holding
                                                                                    Register
                                                                                    Empty Interrupt */
 #define LL_UART_IER_RDA                     UART_IER_ERBFI                      /**< Enable Received Data Available
-                                                                                     Interrupt and Character 
+                                                                                     Interrupt and Character
                                                                                      Timeout
                                                                                      Interrupt */
 /** @} */
@@ -460,9 +460,9 @@ __STATIC_INLINE uint32_t ll_uart_get_stop_bits_length(uart_regs_t *UARTx)
 /**
   * @brief  Configure Parity.
   * @note   This function selects if hardware parity control
-  *         (generation and detection) is enabled or disabled. 
+  *         (generation and detection) is enabled or disabled.
   *         When the parity control is enabled (Odd,Even,0,1),
-  *         computed parity bit is inserted at the MSB position 
+  *         computed parity bit is inserted at the MSB position
   *         and parity is checked on the received data.
   *
   *  Register|BitsName
@@ -1291,7 +1291,7 @@ __STATIC_INLINE uint32_t ll_uart_is_active_flag_tfnf(uart_regs_t *UARTx)
   * @note   The interrupt flags will be cleared after reading IIR.
   *         If interrupt was triggered when reading IIR register, the interrupt will be pended,
   *         and No Interrupt Pending Flag will be RESET, read IIR
-  *         again can get the pended interrupt 
+  *         again can get the pended interrupt
   *
   *  Register|BitsName
   *  --------|--------

@@ -400,7 +400,7 @@ uint32_t FLASH_SPIM_ID0_ID1_init(flash_init_t *p_flash_init, app_qspi_params_t *
 uint32_t IO_init(app_qspi_params_t qspi_params)
 {
     if (app_qspi_init(&qspi_params, spi_app_qspi_callback)) {
-       return false;
+        return false;
     }
     // set qspi hold/wp pin to high
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;

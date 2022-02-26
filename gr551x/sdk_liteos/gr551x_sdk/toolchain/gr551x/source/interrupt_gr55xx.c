@@ -172,13 +172,13 @@ __asm void DebugMon_Handler(void)
     PRESERVE8
     IMPORT  print_callstack_handler
     IMPORT  __R4_R11_REG
-    LDR R0, =__R4_R11_REG
-             STMIA R0!, {R4-R11}
-             MOV R0, SP
-             MOV r12, lr
-             BL  print_callstack_handler
-             BX  r12
-             ALIGN
+    LDR R0, =   __R4_R11_REG
+                STMIA R0!, {R4-R11}
+                MOV R0, SP
+                MOV r12, lr
+                BL  print_callstack_handler
+                BX  r12
+                ALIGN
 }
 #endif
 

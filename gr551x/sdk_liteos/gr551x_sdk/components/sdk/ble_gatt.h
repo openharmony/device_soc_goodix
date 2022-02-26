@@ -55,7 +55,6 @@
 #define __BLE_GATT_H__
 
 #include <stdint.h>
-#include "ble_error.h"
 
 /** @addtogroup BLE_GATT_COMMON Enumerations
  * @{ */

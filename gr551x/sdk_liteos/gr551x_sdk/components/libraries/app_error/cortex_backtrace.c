@@ -455,7 +455,8 @@ void deal_uvalue(void)
     }
 }
 
-void deal_dvalue(void) {
+void deal_dvalue(void)
+{
     if (s_regs.dfsr.bits.HALTED) {
         FAULT_TRACE_OUTPUT(s_print_info[CB_PRINT_DFSR_HALTED]);
     }

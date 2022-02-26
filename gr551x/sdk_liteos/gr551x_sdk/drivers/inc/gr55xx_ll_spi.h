@@ -412,9 +412,9 @@ typedef struct _ll_qspi_init_t {
 /** @defgroup SPI_LL_EC_MICROWIRECONTROL MicroWire Control
   * @{
   */
-#define LL_SSI_MICROWIRE_HANDSHAKE_DIS      0x00000000UL                /**< Enable Handshake for Microwire 
+#define LL_SSI_MICROWIRE_HANDSHAKE_DIS      0x00000000UL                /**< Enable Handshake for Microwire
                                                                            transfer  */
-#define LL_SSI_MICROWIRE_HANDSHAKE_EN       (1UL << SSI_MWC_MHS_Pos)    /**< Disable Handshake for Microwire 
+#define LL_SSI_MICROWIRE_HANDSHAKE_EN       (1UL << SSI_MWC_MHS_Pos)    /**< Disable Handshake for Microwire
                                                                            transfer */
 
 #define LL_SSI_MICROWIRE_RX                 0x00000000UL                /**< Rx mode. Rx transfer at Microwire mode */
@@ -1345,7 +1345,7 @@ __STATIC_INLINE uint32_t ll_spi_is_enabled_ss(ssi_regs_t *SPIx, uint32_t ss)
   *
   * @param  SPIx SPI instance
   * @param  baud_rate This parameter can be one even value between 2
-  * and 65534, if the value is 0, the SCLK is disable. 
+  * and 65534, if the value is 0, the SCLK is disable.
   * @retval None
   */
 __STATIC_INLINE void ll_spi_set_baud_rate_prescaler(ssi_regs_t *SPIx, uint32_t baud_rate)

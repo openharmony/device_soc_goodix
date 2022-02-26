@@ -397,7 +397,7 @@ void hal_aon_gpio_callback(uint16_t aon_gpio_pin)
 
     memset_s(aon_cb_called_table, sizeof(aon_cb_called_table), 0, sizeof(aon_cb_called_table));
     for (uint8_t idx = 0; idx < s_gpiote_env.total_used; idx++) {
-         gpio_callback_config(idx, aon_gpio_pin, &called_flag,
+        gpio_callback_config(idx, aon_gpio_pin, &called_flag,
                              &called_table_used_pos, gpiote_evt);
     }
 }

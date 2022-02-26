@@ -49,7 +49,6 @@
 #ifndef __BLE_PRF_H__
 #define __BLE_PRF_H__
 
-#include "ble_error.h"
 #include "ble_gatts.h"
 #include "ble_gattc.h"
 #include "ble_gatt.h"
