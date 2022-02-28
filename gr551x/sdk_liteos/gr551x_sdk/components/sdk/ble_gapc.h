@@ -57,7 +57,6 @@
 
 #include <stdint.h>         // Standard Integer
 #include <stdbool.h>
-#include "ble_error.h"
 #include "gr55xx_sys_cfg.h"
 
 /**
