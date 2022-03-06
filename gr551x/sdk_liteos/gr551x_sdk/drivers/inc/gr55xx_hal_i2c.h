@@ -332,7 +332,7 @@ typedef struct _hal_i2c_callback {
   * @param  __HANDLE__ Specifies the I2C Handle.
   * @retval None
   */
-#define __HAL_I2C_RESET_HANDLE_STATE(__HANDLE__)                ((__HANDLE__)->state = HAL_I2C_STATE_RESET)
+#define HAL_I2C_RESET_HANDLE_STATE(__HANDLE__)                ((__HANDLE__)->state = HAL_I2C_STATE_RESET)
 /** @} */
 
 /* Private macros ------------------------------------------------------------*/

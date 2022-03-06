@@ -588,35 +588,40 @@ static void cb_fault_diagnosis(void)
         uint32_t i;
 
         bool is_regs_saved_lr_valid = false;
-        if (s_is_on_fault) {
-            if (!s_is_stack_overflow) {
-                // First depth is PC
-                p_buffer[depth++] = s_regs.saved.pc;
-
-                // Second depth is from LR, so need decrease a word to PC
-                pc = s_regs.saved.lr - sizeof(uint32_t);
-                for (i = 0; i < s_code_section_count; i++) {
-                    if ((pc >= s_code_section_infos[i].code_start_addr) &&
-                        (pc <= s_code_section_infos[i].code_end_addr) &&
-                        (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) &&
-                        (depth < size)) {
-                        p_buffer[depth++] = pc;
-                        is_regs_saved_lr_valid = true;
-                    }
-                }
-            }
+        if (!s_is_on_fault) {
 #if APP_IS_USING_FREEROTS
-            // Program is running on thread before fault.
-            if (s_is_on_thread_before_fault) {
-                cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
-            }
-        } else {
             // OS environment.
             if (cb_sp_get() == cb_psp_get()) {
                 cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
             }
 #endif
+            depth = cb_backtrace_call_stack_depth(p_buffer, size, sp);
+
+            return depth;
         }
+
+        if (!s_is_stack_overflow) {
+            // First depth is PC
+            p_buffer[depth++] = s_regs.saved.pc;
+
+            // Second depth is from LR, so need decrease a word to PC
+            pc = s_regs.saved.lr - sizeof(uint32_t);
+            for (i = 0; i < s_code_section_count; i++) {
+                if ((pc >= s_code_section_infos[i].code_start_addr) &&
+                    (pc <= s_code_section_infos[i].code_end_addr) &&
+                    (depth < APP_ERROR_CALL_STACK_DEPTH_MAX) &&
+                    (depth < size)) {
+                    p_buffer[depth++] = pc;
+                    is_regs_saved_lr_valid = true;
+                }
+            }
+        }
+#if APP_IS_USING_FREEROTS
+        // Program is running on thread before fault.
+        if (s_is_on_thread_before_fault) {
+            cb_cur_thread_stack_info_get(sp, &stack_start_addr, &stack_size);
+        }
+#endif
         depth = cb_backtrace_call_stack_depth(p_buffer, size, sp);
 
         return depth;

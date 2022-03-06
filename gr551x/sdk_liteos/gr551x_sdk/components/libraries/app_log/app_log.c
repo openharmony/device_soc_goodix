@@ -241,47 +241,10 @@ sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_fu
     return SDK_SUCCESS;
 }
 
-void app_log_output(uint8_t level, const char *tag, const char *file, const char *func, const long line,
-                    const char *format, ...)
+uint16_t encode_name(uint8_t level, const char *file, const char *func, const long line)
 {
-    uint16_t log_length     = 0;
-    uint8_t  newline_length = strlen(APP_LOG_NEWLINE_SIGN);
-    int      fmt_result     = 0;
+    uint16_t log_length = 0;
     char     line_num[APP_LOG_LINE_NB_LEN_MAX + 1]  = { 0 };
-    va_list  ap;
-
-    if (level > s_app_log_env.app_log_init.filter.level && s_app_log_env.is_filter_set) {
-        return;
-    }
-
-#if APP_LOG_TAG_ENABLE
-    if (!strstr(tag, s_app_log_env.app_log_init.filter.tag)) {
-        return;
-    }
-#endif
-
-    va_start(ap, format);
-
-    APP_LOG_LOCK();
-
-#if APP_LOG_COLOR_ENABLE
-    // Encode CSI start sign and color info.
-    log_length += app_log_strcpy(log_length, s_log_encode_buf, CSI_START);
-    log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_color_output_info[level]);
-#endif
-
-    // Encode level info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_LVL)) {
-        log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_svt_lvl_output_info[level]);
-    }
-
-#if APP_LOG_TAG_ENABLE
-    // Encode tag info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_TAG)) {
-        log_length += app_log_strcpy(log_length, s_log_encode_buf, tag);
-        log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
-    }
-#endif
 
     // Encode file directory name , function name and lune number info.
     if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR | APP_LOG_FMT_FUNC | APP_LOG_FMT_LINE)) {
@@ -312,42 +275,86 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
 
         log_length += app_log_strcpy(log_length, s_log_encode_buf, ") ");
     }
+    return log_length;
+}
 
+uint16_t calculate_log_length(uint16_t log_length, int fmt_result)
+{
+    uint8_t  newline_length = strlen(APP_LOG_NEWLINE_SIGN);
+    uint16_t log_len     = log_length;
+    //  Calculate log length
+    if ((fmt_result > -1) && (log_len + fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
+        log_len += fmt_result;
+    } else {
+        log_len = APP_LOG_LINE_BUF_SIZE;
+    }
+
+#if APP_LOG_COLOR_ENABLE
+    if (log_len + (sizeof(CSI_END) - 1) + newline_length > APP_LOG_LINE_BUF_SIZE) {
+        log_len  = APP_LOG_LINE_BUF_SIZE;
+        // Reserve some space for CSI end sign.
+        log_len -= sizeof(CSI_END) - 1;
+#else
+    if (log_len + newline_length > APP_LOG_LINE_BUF_SIZE) {
+        log_len = APP_LOG_LINE_BUF_SIZE;
+#endif
+        log_len -= newline_length;
+    }
+
+#if APP_LOG_COLOR_ENABLE
+    // Encode CSI end sign.
+    log_len += app_log_strcpy(log_len, s_log_encode_buf, CSI_END);
+#endif
+
+    // Encode newline sign.
+    log_len += app_log_strcpy(log_len, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
+    return log_len;
+}
+
+void app_log_output(uint8_t level, const char *tag, const char *file, const char *func, const long line,
+                    const char *format, ...)
+{
+    uint16_t log_length     = 0;
+    int      fmt_result     = 0;
+    va_list  ap;
+
+    if (level > s_app_log_env.app_log_init.filter.level && s_app_log_env.is_filter_set) {
+        return;
+    }
+#if APP_LOG_TAG_ENABLE
+    if (!strstr(tag, s_app_log_env.app_log_init.filter.tag)) {
+        return;
+    }
+#endif
+    va_start(ap, format);
+    APP_LOG_LOCK();
+
+#if APP_LOG_COLOR_ENABLE
+    // Encode CSI start sign and color info.
+    log_length += app_log_strcpy(log_length, s_log_encode_buf, CSI_START);
+    log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_color_output_info[level]);
+#endif
+
+    // Encode level info.
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_LVL)) {
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_svt_lvl_output_info[level]);
+    }
+
+#if APP_LOG_TAG_ENABLE
+    // Encode tag info.
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_TAG)) {
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, tag);
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
+    }
+#endif
+    log_length = encode_name(level, file, func, line);
     // Encode other log data to buffer. '\0' must be added in the end by vsnprintf. */
     fmt_result = vsnprintf_s((char *)s_log_encode_buf + log_length, sizeof (s_log_encode_buf),
                              APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
 
     va_end(ap);
-
-    //  Calculate log length
-    if ((fmt_result > -1) && (log_length + fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
-        log_length += fmt_result;
-    } else {
-        log_length = APP_LOG_LINE_BUF_SIZE;
-    }
-
-#if APP_LOG_COLOR_ENABLE
-    if (log_length + (sizeof(CSI_END) - 1) + newline_length > APP_LOG_LINE_BUF_SIZE) {
-        log_length  = APP_LOG_LINE_BUF_SIZE;
-        // Reserve some space for CSI end sign.
-        log_length -= sizeof(CSI_END) - 1;
-#else
-    if (log_length + newline_length > APP_LOG_LINE_BUF_SIZE) {
-        log_length = APP_LOG_LINE_BUF_SIZE;
-#endif
-        log_length -= newline_length;
-    }
-
-#if APP_LOG_COLOR_ENABLE
-    // Encode CSI end sign.
-    log_length += app_log_strcpy(log_length, s_log_encode_buf, CSI_END);
-#endif
-
-    // Encode newline sign.
-    log_length += app_log_strcpy(log_length, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
-
+    log_length = calculate_log_length(log_length, fmt_result);
     app_log_data_trans(s_log_encode_buf, log_length);
-
     APP_LOG_UNLOCK();
 }
 

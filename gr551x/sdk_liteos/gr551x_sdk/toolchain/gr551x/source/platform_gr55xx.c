@@ -63,9 +63,9 @@
 #define FLASH_IO_1      (LL_GPIO_PIN_6)      /* XQSPI flash IO1       */
 #define FLASH_IO_2      (LL_GPIO_PIN_5)      /* XQSPI flash IO2 (WP)  */
 #define FLASH_IO_3      (LL_GPIO_PIN_3)      /* XQSPI flash IO3 (HOLD) */
-static inline void HAL_EXFLASH_IO_PULL_SET(uint32_t _PIN_, uint32_t _PULL_)
+static inline void HAL_EXFLASH_IO_PULL_SET(uint32_t PIN, uint32_t PULL)
 {
-    ll_gpio_set_pin_pull(GPIO1, _PIN_, _PULL_);
+    ll_gpio_set_pin_pull(GPIO1, PIN, PULL);
 }
 
 static uint32_t SVC_TABLE_USER_SPACE[SVC_TABLE_NUM_MAX] __attribute__((section("SVC_TABLE")));
@@ -296,13 +296,13 @@ void $Sub$$main(void)
 
 void __main(void)
 {
-    __iar_program_start();
+    iar_program_start();
 }
 
-int __low_level_init(void)
+int low_level_init(void)
 {
     // call IAR table copy function.
-    __iar_data_init3();
+    iar_data_init3();
     system_platform_init();
     return 0;
 }

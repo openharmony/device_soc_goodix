@@ -108,35 +108,35 @@ uint32_t hal_flash_write_r(const uint32_t addr, const uint8_t *buf, const uint32
     hal_status_t status;
 
     status = hal_exflash_write(&g_exflash_handle, addr, (uint8_t*)buf, size);
-    if (HAL_OK == status) {
-        /* It's possible that the data is not written to flash memory.
-         * So we must read the data from flash memory, and check it. */
-        uint8_t  rd_buf[EXFLASH_SIZE_PAGE_BYTES];
-        uint32_t offset     = 0;
-        uint32_t unrd_bytes = size;
-        uint32_t rd_bytes   = size > EXFLASH_SIZE_PAGE_BYTES ?
-                              EXFLASH_SIZE_PAGE_BYTES : size;
+    if (HAL_OK != status) {
+        return 0;
+    }
+    /* It's possible that the data is not written to flash memory.
+        * So we must read the data from flash memory, and check it. */
+    uint8_t  rd_buf[EXFLASH_SIZE_PAGE_BYTES];
+    uint32_t offset     = 0;
+    uint32_t unrd_bytes = size;
+    uint32_t rd_bytes   = size > EXFLASH_SIZE_PAGE_BYTES ?
+                            EXFLASH_SIZE_PAGE_BYTES : size;
 
-        do {
-            status = hal_exflash_read(&g_exflash_handle, addr + offset,
-                                      rd_buf, rd_bytes);
-            if ((HAL_OK == status) && (memcmp(buf + offset, rd_buf, rd_bytes) == 0)) {
-                unrd_bytes -= rd_bytes;
-                if (unrd_bytes == 0) {
-                    return size;
-                } else {
-                    offset += rd_bytes;
-                    rd_bytes = unrd_bytes > EXFLASH_SIZE_PAGE_BYTES ?
-                               EXFLASH_SIZE_PAGE_BYTES : unrd_bytes;
-                    if ((offset >= size) || ((offset + rd_bytes) > size)) {
-                        break;
-                    }
-                }
-            } else {
+    do {
+        status = hal_exflash_read(&g_exflash_handle, addr + offset,
+                                  rd_buf, rd_bytes);
+        if ((HAL_OK == status) && (memcmp(buf + offset, rd_buf, rd_bytes) == 0)) {
+            unrd_bytes -= rd_bytes;
+            if (unrd_bytes == 0) {
+                return size;
+            }
+            offset += rd_bytes;
+            rd_bytes = unrd_bytes > EXFLASH_SIZE_PAGE_BYTES ?
+                        EXFLASH_SIZE_PAGE_BYTES : unrd_bytes;
+            if ((offset >= size) || ((offset + rd_bytes) > size)) {
                 break;
             }
-        } while (1);
-    }
+        } else {
+            break;
+        }
+    } while (1);
 
     return 0;
 }

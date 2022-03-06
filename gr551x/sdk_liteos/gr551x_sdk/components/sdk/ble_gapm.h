@@ -479,17 +479,17 @@ typedef enum {
 } privacy_mode_t;
 
 /**
- * @brief Possible roles for the activity.
+ * @brief Possible roles for the event.
  */
 typedef enum {
-    GAP_ACTIVITY_ROLE_ADV = 0,          /**< Adertise role. */
-    GAP_ACTIVITY_ROLE_CON = 1,          /**< Connect role. */
-    GAP_ACTIVITY_ROLE_SCAN_INIT = 2,    /**< Scann role. */
-    GAP_ACTIVITY_ROLE_UNKNOWN = 0xf,    /**< Unknown role. */
-} gap_activity_role_t;
+    GAP_EVENT_ROLE_ADV = 0,          /**< Adertise role. */
+    GAP_EVENT_ROLE_CON = 1,          /**< Connect role. */
+    GAP_EVENT_ROLE_SCAN_INIT = 2,    /**< Scann role. */
+    GAP_EVENT_ROLE_UNKNOWN = 0xf,    /**< Unknown role. */
+} gap_event_role_t;
 
 /**
- * @brief Activity type.
+ * @brief Event type.
  */
 typedef enum {
     TYPE_ADV = 0,
@@ -825,10 +825,10 @@ uint16_t ble_gap_addr_get(gap_bdaddr_t *p_addr);
  ****************************************************************************************
  * @brief Set the tx power
  *
- * @param[in] role: Select the role to set tx power. @ref gap_activity_role_t for possible roles.
+ * @param[in] role: Select the role to set tx power. @ref gap_event_role_t for possible roles.
  * @param[in] index: The idx parameter is interpreted on role.
- *              -If the role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
- *              -If the role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of connection.
+ *              -If the role is @ref GAP_EVENT_ROLE_ADV, it's the index of Advertising.
+ *              -If the role is @ref GAP_EVENT_ROLE_CON, it's the index of connection.
  *              -For all other roles, it should be ignored.
  * @param[in] txpwr_dbm: The value of the tx power, Range: -20dbm to 7dbm.
  *
@@ -838,16 +838,16 @@ uint16_t ble_gap_addr_get(gap_bdaddr_t *p_addr);
  * @retval ::SDK_ERR_INVALID_HANDLE: Invalid handle supplied.
  ****************************************************************************************
  */
-uint16_t ble_gap_tx_power_set(gap_activity_role_t role, uint8_t index, int8_t txpwr_dbm);
+uint16_t ble_gap_tx_power_set(gap_event_role_t role, uint8_t index, int8_t txpwr_dbm);
 
 /**
  ****************************************************************************************
  * @brief Get the tx power
  *
- * @param[in] role: Select the role to Get tx power. @ref gap_activity_role_t for possible roles.
+ * @param[in] role: Select the role to Get tx power. @ref gap_event_role_t for possible roles.
  * @param[in] index: The idx parameter is interpreted on role.
- *                   -If the role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
- *                   -If the role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of connection.
+ *                   -If the role is @ref GAP_EVENT_ROLE_ADV, it's the index of Advertising.
+ *                   -If the role is @ref GAP_EVENT_ROLE_CON, it's the index of connection.
  *                   -For all other roles, it should be ignored.
  * @param[in] txpwr_dbm: The value of the tx power, Range: -20dbm to 7dbm.
  *
@@ -857,7 +857,7 @@ uint16_t ble_gap_tx_power_set(gap_activity_role_t role, uint8_t index, int8_t tx
  * @retval ::SDK_ERR_INVALID_HANDLE: Invalid handle supplied.
  ****************************************************************************************
  */
-uint16_t ble_gap_tx_power_get(gap_activity_role_t role, uint8_t index, int8_t *txpwr_dbm);
+uint16_t ble_gap_tx_power_get(gap_event_role_t role, uint8_t index, int8_t *txpwr_dbm);
 
 /**
  ****************************************************************************************

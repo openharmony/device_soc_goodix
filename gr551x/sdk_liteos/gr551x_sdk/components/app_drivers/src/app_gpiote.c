@@ -189,7 +189,7 @@ uint16_t app_gpiote_init(const app_gpiote_param_t *p_params, uint8_t table_cnt)
 {
     static uint8_t exit_flag = 0x0;
     app_io_init_t io_init;
-    app_drv_err_t err_code;
+    uint16_t err_code;
 
     err_code = params_check(p_params, table_cnt);
     APP_DRV_ERR_CODE_CHECK(err_code);
@@ -275,7 +275,7 @@ uint16_t app_gpiote_config(const app_gpiote_param_t *p_config)
     uint8_t exit_flag = 0x0;
     uint8_t index;
     app_io_init_t io_init;
-    app_drv_err_t err_code;
+    uint16_t err_code;
 
     if (p_config == NULL) {
         return APP_DRV_ERR_POINTER_NULL;

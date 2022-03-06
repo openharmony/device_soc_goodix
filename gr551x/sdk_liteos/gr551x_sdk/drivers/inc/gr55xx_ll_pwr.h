@@ -49,8 +49,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __GR55xx_LL_PWR_H__
-#define __GR55xx_LL_PWR_H__
+#ifndef GR55xx_LL_PWR_H
+#define GR55xx_LL_PWR_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx.h"

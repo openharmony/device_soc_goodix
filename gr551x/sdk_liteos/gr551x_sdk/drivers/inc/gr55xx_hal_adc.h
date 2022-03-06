@@ -238,43 +238,43 @@ typedef struct _adc_callback {
   * @param  __HANDLE__ ADC handle.
   * @retval None
   */
-#define __HAL_ADC_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_ADC_STATE_RESET)
+#define HAL_ADC_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_ADC_STATE_RESET)
 
 /** @brief  Enable the specified ADC peripheral.
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval None
   */
-#define __HAL_ADC_ENABLE(__HANDLE__)                           ll_adc_enable()
+#define HAL_ADC_ENABLE(__HANDLE__)                           ll_adc_enable()
 
 /** @brief  Disable the specified ADC peripheral.
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval None
   */
-#define __HAL_ADC_DISABLE(__HANDLE__)                          ll_adc_disable()
+#define HAL_ADC_DISABLE(__HANDLE__)                          ll_adc_disable()
 
 /** @brief  Enable the specified ADC clock.
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval None
   */
-#define __HAL_ADC_ENABLE_CLOCK(__HANDLE__)                     ll_adc_enable_clock()
+#define HAL_ADC_ENABLE_CLOCK(__HANDLE__)                     ll_adc_enable_clock()
 
 /** @brief  Disable the specified ADC clock.
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval None
   */
-#define __HAL_ADC_DISABLE_CLOCK(__HANDLE__)                    ll_adc_disable_clock()
+#define HAL_ADC_DISABLE_CLOCK(__HANDLE__)                    ll_adc_disable_clock()
 
 /** @brief  Check the FIFO is not empty.
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval The new state of notempty flag (TRUE or FALSE).
   */
-#define __HAL_ADC_GET_FLAG_NOTEMPTY(__HANDLE__)                ll_adc_is_fifo_notempty()
+#define HAL_ADC_GET_FLAG_NOTEMPTY(__HANDLE__)                ll_adc_is_fifo_notempty()
 
 /** @brief  Flush the FIFO.
   * @param  __HANDLE__ Specify the ADC Handle.
   * @retval None
   */
-#define __HAL_ADC_FLUSH_FIFO(__HANDLE__)                       \
+#define HAL_ADC_FLUSH_FIFO(__HANDLE__)                       \
 do {                                                           \
     while (ll_adc_is_fifo_notempty())                          \
     {                                                          \

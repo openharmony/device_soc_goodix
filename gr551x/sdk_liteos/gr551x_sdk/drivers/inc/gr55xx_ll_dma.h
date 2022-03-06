@@ -346,7 +346,7 @@ typedef struct _ll_dma_init {
 /**
   * @brief  Enable DMA Module.
   * @note This function is used to enable the DMA Module, which must be done before any
-  *       channel activity can begin.
+  *       channel is enabled.
   *
   *  Register|BitsName
   *  --------|--------

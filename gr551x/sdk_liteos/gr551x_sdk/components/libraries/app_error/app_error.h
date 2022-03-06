@@ -68,9 +68,8 @@
             app_error_info_t error_info = {             \
                 .error_type = APP_ERROR_BOOL_COMPARE,   \
                 .value.expr = #BOOL_VAL,                \
-                .file       = __FILE__,                 \
-                .func       = __FUNCTION__,             \
-                .line       = __LINE__,                 \
+                .file = __FILE__,                        \
+                .func       = __FUNCTION__, .line = __LINE__, \
             };                                          \
             app_error_fault_handler(&error_info);       \
         }                                               \

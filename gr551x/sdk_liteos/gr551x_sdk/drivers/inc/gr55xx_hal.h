@@ -103,18 +103,16 @@ typedef struct _hal_callback {
 /** @brief Disable BLE_IRQn and BLESLP_IRQn.
  *  @sa BLE_INT_DISABLE
  */
-#define BLE_INT_DISABLE()                                                                            \
-do {                                                                                                 \
-    volatile uint32_t __ble_l_irq_rest = __get_PRIMASK();                                            \
-    volatile bool __ble_int_status = NVIC_GetEnableIRQ(BLE_IRQn) || NVIC_GetEnableIRQ(BLESLP_IRQn);  \
-    __set_PRIMASK(1);                                                                                \
-    if (__ble_int_status)                                                                            \
-    {                                                                                                \
-        NVIC_DisableIRQ(BLE_IRQn);                                                                   \
-        NVIC_DisableIRQ(BLESLP_IRQn);                                                                \
-    }                                                                                                \
+#define BLE_INT_DISABLE()                          \
+do {                                               \
+    volatile uint32_t __ble_l_irq_rest = __get_PRIMASK();  \
+    volatile bool __ble_int_status = NVIC_GetEnableIRQ(BLE_IRQn) || NVIC_GetEnableIRQ(BLESLP_IRQn); \
+    __set_PRIMASK(1);                      \
+    if (__ble_int_status) {        \
+        NVIC_DisableIRQ(BLE_IRQn); \
+        NVIC_DisableIRQ(BLESLP_IRQn); \
+    }                                 \
     __set_PRIMASK(__ble_l_irq_rest)
-
 /** @brief Restore BLE_IRQn and BLESLP_IRQn.
  *  @sa BLE_INT_RESTORE
  */
@@ -155,10 +153,9 @@ do {                                                       \
 do {                                                                         \
     volatile uint32_t __nvic_iser0 = 0xFFFFFFFF;                             \
     volatile uint32_t __nvic_iser1 = 0xFFFFFFFF;                             \
-    volatile uint32_t __ret_pri = __get_PRIMASK();                           \
-    __set_PRIMASK(1);                                                        \
-    if ( (NVIC->ICER[0] != 0xFFFFFFFF) ||  (NVIC->ICER[1] != 0xFFFFFFFF) )   \
-    {                                                                        \
+    volatile uint32_t __ret_pri = __get_PRIMASK();                             \
+    __set_PRIMASK(1);                             \
+    if ((NVIC->ICER[0] != 0xFFFFFFFF) ||  (NVIC->ICER[1] != 0xFFFFFFFF)) { \
         __nvic_iser0 = NVIC->ISER[0];                                        \
         __nvic_iser1 = NVIC->ISER[1];                                        \
         NVIC->ICER[0] = 0xFFFFFFFF;                                          \
@@ -167,7 +164,6 @@ do {                                                                         \
     __set_PRIMASK(__ret_pri);                                                \
     __DSB();                                                                 \
     __ISB()
-
 /** @brief Restore external interrupts(Exception Type: 16~255) from the previous disable.
  *  @sa GLOBAL_INT_RESTORE
  */

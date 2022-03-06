@@ -140,16 +140,10 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
                                 "Error code 0x%04X: %s",
                                 p_error_info->value.error_code,
                                 s_error_code_info[i].error_info);
-                if (ret < 0) {
-                    return;
-                }
                 break;
             } else if (i == APP_ERROR_CODE_NB) {
                 ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
                                 "Error code 0x%04X: No found information.", p_error_info->value.error_code);
-                if (ret < 0) {
-                    return;
-                }
                 break;
             }
         }
@@ -157,11 +151,11 @@ __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
         ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info),
                         "(%s) is not established.",
                         p_error_info->value.expr);
-        if (ret < 0) {
-            return;
-        }
     }
 
+    if (ret < 0) {
+        return;
+    }
     app_log_output(APP_LOG_LVL_ERROR,
                    APP_LOG_TAG,
                    p_error_info->file,

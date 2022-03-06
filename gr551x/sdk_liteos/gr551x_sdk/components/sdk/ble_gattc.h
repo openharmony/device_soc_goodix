@@ -176,7 +176,7 @@ typedef struct {
     uint8_t  uuid[BLE_ATT_UUID_128_LEN];                /**< Service UUID. */
     uint16_t start_hdl;                                 /**< Service start handle. */
     uint16_t end_hdl;                                   /**< Service end handle. */
-    union gattc_browse_attr_info info[__ARRAY_EMPTY];   /**< Attribute information presented in the service
+    union gattc_browse_attr_info info[ARRAY_EMPTY];   /**< Attribute information presented in the service
                                                              (array length = end_hdl - start_hdl);
                                                              If attr_type is equal to BLE_GATTC_BROWSE_NONE,the last
                                                              attribute information has been found in previous one,
@@ -219,25 +219,25 @@ typedef struct {
 /** @brief GATT service discovery. */
 typedef struct {
     uint16_t            count;                        /**< Service count. */
-    ble_gattc_service_t services[__ARRAY_EMPTY];      /**< Service data. */
+    ble_gattc_service_t services[ARRAY_EMPTY];      /**< Service data. */
 } ble_gattc_srvc_disc_t;
 
 /** @brief GATT include discovery. */
 typedef struct {
     uint16_t            count;                       /**< Include count. */
-    ble_gattc_include_t includes[__ARRAY_EMPTY];     /**< Include data. */
+    ble_gattc_include_t includes[ARRAY_EMPTY];     /**< Include data. */
 } ble_gattc_incl_disc_t;
 
 /** @brief GATT characteristic discovery. */
 typedef struct {
     uint16_t            count;                  /**< Characteristic count. */
-    ble_gattc_char_t    chars[__ARRAY_EMPTY];   /**< Characteristic data. */
+    ble_gattc_char_t    chars[ARRAY_EMPTY];   /**< Characteristic data. */
 } ble_gattc_char_disc_t;
 
 /** @brief GATT characteristic descriptor discovery. */
 typedef struct {
     uint16_t            count;                      /**< Descriptor count. */
-    ble_gattc_desc_t    char_descs[__ARRAY_EMPTY];  /**< Descriptor data. */
+    ble_gattc_desc_t    char_descs[ARRAY_EMPTY];  /**< Descriptor data. */
 } ble_gattc_char_desc_disc_t;
 
 /** @brief GATT Client Read value. */
@@ -251,7 +251,7 @@ typedef struct {
 /** @brief GATT value Read response. */
 typedef struct {
     uint16_t                    count;                 /**< Value Count. */
-    ble_gattc_read_value_t      vals[__ARRAY_EMPTY];   /**< Value(s) list. */
+    ble_gattc_read_value_t      vals[ARRAY_EMPTY];   /**< Value(s) list. */
 } ble_gattc_read_rsp_t;
 
 

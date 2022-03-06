@@ -173,41 +173,41 @@ void ble_idle_time_notify_cb_register(void (*callback)(uint32_t hs));
 
 /**
  *****************************************************************************************
- * @brief Register BLE activity - start notification callback function.
+ * @brief Register BLE event - start notification callback function.
  *
- * @param[in] callback:  function pointer of BLE activity - start notification.
- * @note            param[in] of callback: e_role - the role of activity,
- *                  @ref gap_activity_role_t for possible roles.
+ * @param[in] callback:  function pointer of BLE event - start notification.
+ * @note            param[in] of callback: e_role - the role of event,
+ *                  @ref gap_role_t for possible roles.
  *                  param[in] of callback: index - The index parameter is interpreted by role.
- *                  If the role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
- *                  If the role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of Connection.
+ *                  If the role is @ref GAP_EVENT_ROLE_ADV, it's the index of Advertising.
+ *                  If the role is @ref GAP_EVENT_ROLE_CON, it's the index of Connection.
  *                  For all other roles, it should be ignored.
- *                  A callback will be called by BLE ISR when the BLE activity starts every time.
+ *                  A callback will be called by BLE ISR when the BLE event starts every time.
  *                  It should be realized as simlpe as you can.
  *                  Notice: You must define the start callback in the RAM space to avoid hardfault.
  *                  It's not suitable for ISO activities.
  *****************************************************************************************
  */
-void ble_activity_start_notify_cb_register(void (*callback)(gap_activity_role_t e_role,
+void ble_start_notify_cb_register(void (*callback)(gap_event_role_t e_role,
         uint8_t index));
 
 /**
  *****************************************************************************************
- * @brief Register BLE activity end notification callback function.
+ * @brief Register BLE event end notification callback function.
  *
- * @param[in] callback:  function pointer of BLE activity - end notification function.
- * @note            param[in] of callback: e_role - the role of activity,
- *                  @ref gap_activity_role_t for possible roles.
+ * @param[in] callback:  function pointer of BLE event - end notification function.
+ * @note            param[in] of callback: e_role - the role of event,
+ *                  @ref gap_role_t for possible roles.
  *                  param[in] of callback: index - The index parameter is interpreted by role.
- *                  If the role is @ref GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
- *                  If the role is @ref GAP_ACTIVITY_ROLE_CON, it's the index of Connection.
+ *                  If the role is @ref GAP_EVENT_ROLE_ADV, it's the index of Advertising.
+ *                  If the role is @ref GAP_EVENT_ROLE_CON, it's the index of Connection.
  *                  For all other roles, it should be ignored.
- *                  A callback will be called by BLE ISR when the BLE activity ends every time.
+ *                  A callback will be called by BLE ISR when the BLE event ends every time.
  *                  It should be realized as simlpe as you can. You'd better to define it in the RAM space
  *                  It's not suitable for ISO activities.
  *****************************************************************************************
  */
-void ble_activity_end_notify_cb_register(void (*callback)(gap_activity_role_t e_role,
+void ble_end_notify_cb_register(void (*callback)(gap_event_role_t e_role,
         uint8_t index));
 
 /**

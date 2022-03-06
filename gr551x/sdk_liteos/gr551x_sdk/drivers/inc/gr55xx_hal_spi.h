@@ -49,8 +49,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __GR55xx_HAL_SPI_H__
-#define __GR55xx_HAL_SPI_H__
+#ifndef GR55xx_HAL_SPI_H
+#define GR55xx_HAL_SPI_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_ll_spi.h"
@@ -338,43 +338,43 @@ typedef struct _hal_spi_callback {
   * @param  __HANDLE__ SPI handle.
   * @retval None
   */
-#define __HAL_SPI_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_SPI_STATE_RESET)
+#define HAL_SPI_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_SPI_STATE_RESET)
 
 /** @brief  Enable the specified SPI peripheral.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
+#define HAL_SPI_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
 
 /** @brief  Disable the specified SPI peripheral.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_DISABLE(__HANDLE__)                         CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
+#define HAL_SPI_DISABLE(__HANDLE__)                         CLEAR_BITS((__HANDLE__)->p_instance->SSI_EN, SSI_SSIEN_EN)
 
 /** @brief  Enable the SPI DMA TX Request.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_ENABLE_DMATX(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
+#define HAL_SPI_ENABLE_DMATX(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
 
 /** @brief  Enable the SPI DMA RX Request.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_ENABLE_DMARX(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
+#define HAL_SPI_ENABLE_DMARX(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
 
 /** @brief  Disable the SPI DMA TX Request.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_DISABLE_DMATX(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
+#define HAL_SPI_DISABLE_DMATX(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_TDMAE)
 
 /** @brief  Disable the SPI DMA RX Request.
   * @param  __HANDLE__ Specifies the SPI Handle.
   * @retval None
   */
-#define __HAL_SPI_DISABLE_DMARX(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
+#define HAL_SPI_DISABLE_DMARX(__HANDLE__)                   CLEAR_BITS((__HANDLE__)->p_instance->DMAC, SSI_DMAC_RDMAE)
 
 /** @brief  Enable the specified SPI interrupts.
   * @param  __HANDLE__      Specifies the SPI Handle.
@@ -388,7 +388,7 @@ typedef struct _hal_spi_callback {
   *            @arg @ref SPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_SPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)      SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+#define HAL_SPI_ENABLE_IT(__HANDLE__, __INTERRUPT__)      SET_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
 
 /** @brief  Disable the specified SPI interrupts.
   * @param  __HANDLE__      Specifies the SPI handle.
@@ -402,7 +402,7 @@ typedef struct _hal_spi_callback {
   *            @arg @ref SPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval None
   */
-#define __HAL_SPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)   CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
+#define HAL_SPI_DISABLE_IT(__HANDLE__, __INTERRUPT__)   CLEAR_BITS((__HANDLE__)->p_instance->INTMASK, (__INTERRUPT__))
 
 /** @brief  Check whether the specified SPI interrupt source is enabled or not.
   * @param  __HANDLE__      Specifies the SPI Handle.
@@ -416,7 +416,7 @@ typedef struct _hal_spi_callback {
   *            @arg @ref SPI_IT_TXE Transmit FIFO Empty Interrupt enable
   * @retval The new state of __IT__ (TRUE or FALSE).
   */
-#define __HAL_SPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) \
+#define HAL_SPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) \
     (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__INTERRUPT__)) == (__INTERRUPT__))
 
 /** @brief  Check whether the specified SPI flag is set or not.
@@ -432,7 +432,7 @@ typedef struct _hal_spi_callback {
   *            @arg @ref SPI_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_SPI_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_SPI_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @brief  Clear the specified SPI flag.
@@ -448,7 +448,7 @@ typedef struct _hal_spi_callback {
   *            @arg @ref SPI_FLAG_BUSY Busy flag
   * @retval None
   */
-#define __HAL_SPI_CLEAR_FLAG(__HANDLE__, __FLAG__)             READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__))
+#define HAL_SPI_CLEAR_FLAG(__HANDLE__, __FLAG__)             READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__))
 
 /** @} */
 

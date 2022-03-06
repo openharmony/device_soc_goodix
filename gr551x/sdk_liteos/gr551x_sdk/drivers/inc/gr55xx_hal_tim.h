@@ -49,8 +49,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __GR55xx_HAL_TIMER_H__
-#define __GR55xx_HAL_TIMER_H__
+#ifndef GR55xx_HAL_TIMER_H
+#define GR55xx_HAL_TIMER_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx_hal_def.h"
@@ -155,7 +155,7 @@ typedef struct _hal_timer_callback {
   * @param  __HANDLE__ TIMER handle.
   * @retval None
   */
-#define __HAL_TIMER_RESET_HANDLE_STATE(__HANDLE__)          ((__HANDLE__)->state = HAL_TIMER_STATE_RESET)
+#define HAL_TIMER_RESET_HANDLE_STATE(__HANDLE__)          ((__HANDLE__)->state = HAL_TIMER_STATE_RESET)
 
 /** @brief  Enable the specified TIMER peripheral.
   * @param  __HANDLE__ Specifies the TIMER Handle.

@@ -330,7 +330,7 @@ typedef struct _hal_uart_callback {
   * @param  __HANDLE__ UART handle.
   * @retval None
   */
-#define __HAL_UART_RESET_HANDLE_STATE(__HANDLE__)       \
+#define HAL_UART_RESET_HANDLE_STATE(__HANDLE__)       \
 do {                                                    \
     (__HANDLE__)->g_state = HAL_UART_STATE_RESET;       \
     (__HANDLE__)->rx_state = HAL_UART_STATE_RESET;      \
@@ -346,7 +346,7 @@ do {                                                    \
   *            @arg @ref UART_IT_MS
   * @retval None
   */
-#define __HAL_UART_ENABLE_IT(__HANDLE__, __INTERRUPT__)                 \
+#define HAL_UART_ENABLE_IT(__HANDLE__, __INTERRUPT__)                 \
 do {                                                                    \
     GLOBAL_EXCEPTION_DISABLE();                                         \
     ll_uart_enable_it((__HANDLE__)->p_instance, (__INTERRUPT__));       \
@@ -363,7 +363,7 @@ do {                                                                    \
   *            @arg @ref UART_IT_MS
   * @retval None
   */
-#define __HAL_UART_DISABLE_IT(__HANDLE__, __INTERRUPT__)                \
+#define HAL_UART_DISABLE_IT(__HANDLE__, __INTERRUPT__)                \
 do {                                                                    \
     GLOBAL_EXCEPTION_DISABLE();                                         \
     ll_uart_disable_it((__HANDLE__)->p_instance, (__INTERRUPT__));      \
@@ -379,7 +379,7 @@ do {                                                                    \
   *            @arg @ref UART_TXRXDATA_FLUSH_REQUEST TX FIFO and RX FIFO flush
   * @retval None
   */
-#define __HAL_UART_SEND_REQ(__HANDLE__, __REQ__) ((__HANDLE__)->p_instance->SRR = (__REQ__))
+#define HAL_UART_SEND_REQ(__HANDLE__, __REQ__) ((__HANDLE__)->p_instance->SRR = (__REQ__))
 
 /** @} */
 

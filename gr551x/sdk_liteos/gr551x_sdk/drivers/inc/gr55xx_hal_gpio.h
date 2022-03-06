@@ -209,7 +209,7 @@ typedef struct _gpio_init {
   *          This parameter can be GPIO_PIN_x where x can be (0..15)
   * @retval The new state of __GPIO_PIN__ (SET or RESET).
   */
-#define __HAL_GPIO_IT_GET_IT(__GPIOX__, __GPIO_PIN__)         ll_gpio_read_flag_it(__GPIOX__, __GPIO_PIN__)
+#define HAL_GPIO_IT_GET_IT(__GPIOX__, __GPIO_PIN__)         ll_gpio_read_flag_it(__GPIOX__, __GPIO_PIN__)
 
 /**
   * @brief  Clear the GPIO pin pending bits.
@@ -218,7 +218,7 @@ typedef struct _gpio_init {
   *          This parameter can be any combination of GPIO_PIN_x where x can be (0..15)
   * @retval None
   */
-#define __HAL_GPIO_IT_CLEAR_IT(__GPIOX__, __GPIO_PIN__)       ll_gpio_clear_flag_it(__GPIOX__, __GPIO_PIN__)
+#define HAL_GPIO_IT_CLEAR_IT(__GPIOX__, __GPIO_PIN__)       ll_gpio_clear_flag_it(__GPIOX__, __GPIO_PIN__)
 
 /** @} */
 

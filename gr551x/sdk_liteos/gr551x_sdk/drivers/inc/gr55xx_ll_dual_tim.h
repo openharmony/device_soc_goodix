@@ -49,8 +49,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __GR55XX_LL_DUAL_TIMER_H__
-#define __GR55XX_LL_DUAL_TIMER_H__
+#ifndef GR55XX_LL_DUAL_TIMER_H
+#define GR55XX_LL_DUAL_TIMER_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "gr55xx.h"

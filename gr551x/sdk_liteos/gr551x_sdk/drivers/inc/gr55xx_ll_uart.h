@@ -295,7 +295,7 @@ typedef struct _ll_uart_init_t {
   * @param  __BAUDRATE__ Baud rate value to achieve
   * @retval UARTDIV value to be used for DLL,DLH registers
   */
-#define __LL_UART_DIV(__PERIPHCLK__, __BAUDRATE__) ((__PERIPHCLK__) / (__BAUDRATE__) / 16)
+#define LL_UART_DIV(__PERIPHCLK__, __BAUDRATE__) ((__PERIPHCLK__) / (__BAUDRATE__) / 16)
 
 /**
   * @brief  Compute UARTDLF value according to Peripheral Clock and
@@ -304,7 +304,7 @@ typedef struct _ll_uart_init_t {
   * @param  __BAUDRATE__ Baud rate value to achieve
   * @retval UARTDLF value to be used for DLL,DLH registers
   */
-#define __LL_UART_DLF(__PERIPHCLK__, __BAUDRATE__) ((__PERIPHCLK__) / (__BAUDRATE__) % 16)
+#define LL_UART_DLF(__PERIPHCLK__, __BAUDRATE__) ((__PERIPHCLK__) / (__BAUDRATE__) % 16)
 
 /** @} */
 
@@ -338,13 +338,13 @@ typedef struct _ll_uart_init_t {
   */
 __STATIC_INLINE void ll_uart_set_baud_rate(uart_regs_t *UARTx, uint32_t peripheral_clock, uint32_t baud_rate)
 {
-    register uint32_t uartdiv = __LL_UART_DIV(peripheral_clock, baud_rate);
+    register uint32_t uartdiv = LL_UART_DIV(peripheral_clock, baud_rate);
 
     SET_BITS(UARTx->LCR, UART_LCR_DLAB);
     WRITE_REG(UARTx->RBR_DLL_THR.DLL, uartdiv & UART_DLL_DLL);
     WRITE_REG(UARTx->DLH_IER.DLH, (uartdiv >> ITEM_8) & UART_DLH_DLH);
     CLEAR_BITS(UARTx->LCR, UART_LCR_DLAB);
-    WRITE_REG(UARTx->DLF, __LL_UART_DLF(peripheral_clock, baud_rate));
+    WRITE_REG(UARTx->DLF, LL_UART_DLF(peripheral_clock, baud_rate));
 }
 
 /**

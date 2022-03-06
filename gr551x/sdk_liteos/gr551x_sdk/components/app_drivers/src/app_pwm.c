@@ -53,7 +53,7 @@
 /**@brief App pwm state types. */
 typedef enum {
     APP_PWM_INVALID = 0,
-    APP_PWM_ACTIVITY,
+    APP_PWM_ENABLE,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_PWM_SLEEP,
 #endif
@@ -107,7 +107,7 @@ static bool pwm_prepare_for_sleep(void)
     uint8_t i;
 
     for (i = 0; i < APP_PWM_ID_MAX; i++) {
-        if (s_pwm_env[i].pwm_state == APP_PWM_ACTIVITY) {
+        if (s_pwm_env[i].pwm_state == APP_PWM_ENABLE) {
             state = hal_pwm_get_state(&s_pwm_env[i].handle);
             if ((state != HAL_PWM_STATE_RESET) && (state != HAL_PWM_STATE_READY)) {
                 return false;
@@ -134,7 +134,7 @@ SECTION_RAM_CODE static void pwm_wake_up_ind(void)
     uint8_t i;
 
     for (i = 0; i < APP_PWM_ID_MAX; i++) {
-        if (s_pwm_env[i].pwm_state == APP_PWM_ACTIVITY) {
+        if (s_pwm_env[i].pwm_state == APP_PWM_ENABLE) {
             GLOBAL_EXCEPTION_DISABLE();
             hal_pwm_resume_reg(&s_pwm_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
@@ -167,7 +167,7 @@ static void pwm_wake_up(app_pwm_id_t id)
 static uint16_t pwm_gpio_config(app_pwm_pin_cfg_t pin_cfg)
 {
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     io_init.pull = APP_IO_PULLUP;
     io_init.mode = APP_IO_MODE_MUX;
@@ -203,7 +203,7 @@ static uint16_t pwm_gpio_config(app_pwm_pin_cfg_t pin_cfg)
 uint16_t app_pwm_init(app_pwm_params_t *p_params)
 {
     uint8_t id = p_params->id;
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t  hal_err_code;
 
     if (p_params == NULL) {
@@ -243,7 +243,7 @@ uint16_t app_pwm_init(app_pwm_params_t *p_params)
         }
     }
 
-    s_pwm_env[id].pwm_state = APP_PWM_ACTIVITY;
+    s_pwm_env[id].pwm_state = APP_PWM_ENABLE;
     s_pwm_env[id].pwm_module_state = APP_PWM_STOP;
 
     return APP_DRV_SUCCESS;

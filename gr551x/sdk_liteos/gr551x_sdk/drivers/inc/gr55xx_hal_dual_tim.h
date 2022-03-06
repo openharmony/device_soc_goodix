@@ -188,43 +188,43 @@ typedef struct _hal_dual_timer_callback {
   * @param  __HANDLE__ DUAL TIMER handle.
   * @retval None
   */
-#define __HAL_DUAL_TIMER_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_DUAL_TIMER_STATE_RESET)
+#define HAL_DUAL_TIMER_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_DUAL_TIMER_STATE_RESET)
 
 /** @brief  Enable the specified DUAL TIMER peripheral.
   * @param  __HANDLE__ Specifies the DUAL TIMER Handle.
   * @retval None
   */
-#define __HAL_DUAL_TIMER_ENABLE(__HANDLE__)                 SET_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_EN)
+#define HAL_DUAL_TIMER_ENABLE(__HANDLE__)                 SET_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_EN)
 
 /** @brief  Disable the specified DUAL TIMER peripheral.
   * @param  __HANDLE__ Specifies the DUAL TIMER Handle.
   * @retval None
   */
-#define __HAL_DUAL_TIMER_DISABLE(__HANDLE__)              CLEAR_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_EN)
+#define HAL_DUAL_TIMER_DISABLE(__HANDLE__)              CLEAR_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_EN)
 
 /** @brief  Enable the DUAL TIMER interrupt.
   * @param  __HANDLE__ Specifies the DUAL TIM Handle.
   * @retval None
   */
-#define __HAL_DUAL_TIMER_ENABLE_IT(__HANDLE__)           SET_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_INTEN)
+#define HAL_DUAL_TIMER_ENABLE_IT(__HANDLE__)           SET_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_INTEN)
 
 /** @brief  Disable the DUAL TIMER interrupt.
   * @param  __HANDLE__ Specifies the DUAL TIM Handle.
   * @retval None
   */
-#define __HAL_DUAL_TIMER_DISABLE_IT(__HANDLE__)        CLEAR_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_INTEN)
+#define HAL_DUAL_TIMER_DISABLE_IT(__HANDLE__)        CLEAR_BITS((__HANDLE__)->p_instance->CTRL, DUAL_TIMER_CTRL_INTEN)
 
 /** @brief  Check whether the DUAL TIMER interrupt has occurred or not.
   * @param  __HANDLE__ Specifies the DUAL TIMER Handle.
   * @retval The new state of DUAL TIMER interrupt (SET or RESET).
   */
-#define __HAL_DUAL_TIMER_GET_FLAG_IT(__HANDLE__)               ll_dual_timer_is_active_flag_it((__HANDLE__)->p_instance)
+#define HAL_DUAL_TIMER_GET_FLAG_IT(__HANDLE__)               ll_dual_timer_is_active_flag_it((__HANDLE__)->p_instance)
 
 /** @brief  Clear the DUAL TIMER interrupt flag.
   * @param  __HANDLE__ Specifies the DUAL TIMER Handle.
   * @retval None.
   */
-#define __HAL_DUAL_TIMER_CLEAR_FLAG_IT(__HANDLE__)                 ll_dual_timer_clear_flag_it((__HANDLE__)->p_instance)
+#define HAL_DUAL_TIMER_CLEAR_FLAG_IT(__HANDLE__)                 ll_dual_timer_clear_flag_it((__HANDLE__)->p_instance)
 
 /** @} */
 

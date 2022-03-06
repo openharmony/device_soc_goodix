@@ -285,7 +285,7 @@ typedef struct _iso7816_callback {
   *            @arg @ref HAL_ISO7816_INTR_DONE Done error interrupt
   * @retval None
   */
-#define __HAL_ISO7816_ENABLE_IT(__HANDLE__, __INTERRUPT__) \
+#define HAL_ISO7816_ENABLE_IT(__HANDLE__, __INTERRUPT__) \
     SET_BITS((__HANDLE__)->p_instance->INT_MASK, (__INTERRUPT__))
 
 /** @brief  Disable the specified ISO7816 interrupts.
@@ -301,14 +301,14 @@ typedef struct _iso7816_callback {
   *            @arg @ref HAL_ISO7816_INTR_DONE Done error interrupt
   * @retval None
   */
-#define __HAL_ISO7816_DISABLE_IT(__HANDLE__, __INTERRUPT__) \
+#define HAL_ISO7816_DISABLE_IT(__HANDLE__, __INTERRUPT__) \
     CLEAR_BITS((__HANDLE__)->p_instance->INT_MASK, (__INTERRUPT__))
 
 /** @brief  Get the ISO7816 interrupt flags.
   * @param  __ISO7816_REGS      ISO7816 Register.
   * @retval ISO78116 Interrupt definitions.
   */
-#define __HAL_ISO7816_IT_GET_IT_FLAG(__ISO7816_REGS)       ll_iso7816_get_it_flag(__ISO7816_REGS)
+#define HAL_ISO7816_IT_GET_IT_FLAG(__ISO7816_REGS)       ll_iso7816_get_it_flag(__ISO7816_REGS)
 /** @} */
 /** @} */
 
@@ -484,7 +484,7 @@ void hal_iso7816_presence_callback(iso7816_handle_t *p_iso7816);
 
 /**
  ****************************************************************************************
- * @brief  Receive ART completed callback.
+ * @brief  Receive completed callback.
  * @param[in]  p_iso7816: Pointer to an ISO7816 handle which contains the configuration
  *                        information for the specified ISO7816.
  ****************************************************************************************

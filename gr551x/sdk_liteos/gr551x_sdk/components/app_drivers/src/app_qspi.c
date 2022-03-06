@@ -75,7 +75,7 @@
 /**@brief App qspi state types. */
 typedef enum {
     APP_QSPI_INVALID = 0,
-    APP_QSPI_ACTIVITY,
+    APP_QSPI_ENABLE,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_QSPI_SLEEP,
 #endif
@@ -212,7 +212,7 @@ static bool qspi_prepare_for_sleep(void)
     uint8_t i;
 
     for (i = 0; i < APP_QSPI_ID_MAX; i++) {
-        if (s_qspi_env[i].qspi_state == APP_QSPI_ACTIVITY) {
+        if (s_qspi_env[i].qspi_state == APP_QSPI_ENABLE) {
             state = hal_qspi_get_state(&s_qspi_env[i].handle);
             if ((state != HAL_QSPI_STATE_RESET) && (state != HAL_QSPI_STATE_READY)) {
                 return false;
@@ -240,7 +240,7 @@ SECTION_RAM_CODE static void qspi_wake_up_ind(void)
     uint8_t i;
 
     for (i = 0; i < APP_QSPI_ID_MAX; i++) {
-        if (s_qspi_env[i].qspi_state == APP_QSPI_ACTIVITY) {
+        if (s_qspi_env[i].qspi_state == APP_QSPI_ENABLE) {
             GLOBAL_EXCEPTION_DISABLE();
             hal_qspi_resume_reg(&s_qspi_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
@@ -268,7 +268,7 @@ static void qspi_wake_up(app_qspi_id_t id)
             hal_nvic_clear_pending_irq(s_qspi_irq[id]);
             hal_nvic_enable_irq(s_qspi_irq[id]);
         }
-        s_qspi_env[id].qspi_state = APP_QSPI_ACTIVITY;
+        s_qspi_env[id].qspi_state = APP_QSPI_ENABLE;
     }
 
     if (s_qspi_env[id].use_mode.type == APP_QSPI_TYPE_DMA) {
@@ -280,7 +280,7 @@ static void qspi_wake_up(app_qspi_id_t id)
 static uint16_t qspi_gpio_config(app_qspi_pin_cfg_t pin_cfg)
 {
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     io_init.mode = APP_IO_MODE_MUX;
 
@@ -426,7 +426,7 @@ static uint16_t params_check(app_qspi_params_t *p_params)
 #ifdef  ENV_RTOS_USE_SEMP
 static uint16_t semp_init_config(uint8_t id)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
 
     if (s_qspi_env[id].sem_rx == NULL) {
         app_err_code = app_driver_sem_init(&s_qspi_env[id].sem_rx);
@@ -444,7 +444,7 @@ static uint16_t semp_init_config(uint8_t id)
 #ifdef ENV_RTOS_USE_MUTEX
 static uint16_t mutex_init_config(uint8_t id)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
 
     if (s_qspi_env[id].mutex_async == NULL) {
         app_err_code = app_driver_mutex_init(&s_qspi_env[id].mutex_async);
@@ -490,7 +490,7 @@ static uint16_t register_cb(void)
 uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_handler)
 {
     uint8_t id = p_params->id;
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t  hal_err_code;
 
     app_err_code = params_check(p_params);
@@ -533,7 +533,7 @@ uint16_t app_qspi_init(app_qspi_params_t *p_params, app_qspi_evt_handler_t evt_h
     app_err_code = register_cb();
     APP_DRV_ERR_CODE_CHECK(app_err_code);
 
-    s_qspi_env[id].qspi_state = APP_QSPI_ACTIVITY;
+    s_qspi_env[id].qspi_state = APP_QSPI_ENABLE;
     s_qspi_env[id].start_flag = false;
 
     return APP_DRV_SUCCESS;
@@ -580,7 +580,7 @@ static void unregister_cb(void)
 
 uint16_t app_qspi_deinit(app_qspi_id_t id)
 {
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t  hal_err_code;
 
     if ((id >= APP_QSPI_ID_MAX) || (s_qspi_env[id].qspi_state == APP_QSPI_INVALID)) {
@@ -726,7 +726,7 @@ uint16_t app_qspi_command_receive_sem_sync(app_qspi_id_t id, app_qspi_command_t 
 
 uint16_t app_qspi_command_receive_high_speed_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint8_t *p_data)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
@@ -884,7 +884,7 @@ static hal_status_t command_transmit_process(app_qspi_id_t id, app_qspi_command_
 #ifdef  ENV_RTOS_USE_SEMP
 uint16_t app_qspi_command_transmit_sem_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint8_t *p_data)
 {
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t err_code = HAL_OK;
 
 #ifdef ENV_RTOS_USE_MUTEX
@@ -930,7 +930,7 @@ uint16_t app_qspi_command_transmit_sem_sync(app_qspi_id_t id, app_qspi_command_t
 
 uint16_t app_qspi_command_transmit_high_speed_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd, uint8_t *p_data)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
@@ -1118,7 +1118,7 @@ uint16_t app_qspi_command_sem_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd)
 
 uint16_t app_qspi_command_high_speed_sync(app_qspi_id_t id, app_qspi_command_t *p_cmd)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
@@ -1301,7 +1301,7 @@ uint16_t app_qspi_transmit_sem_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t 
 
 uint16_t app_qspi_transmit_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t length)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||
@@ -1487,7 +1487,7 @@ uint16_t app_qspi_receive_sem_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t l
 
 uint16_t app_qspi_receive_high_speed_sync(app_qspi_id_t id, uint8_t *p_data, uint32_t length)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_QSPI_ID_MAX ||

@@ -404,41 +404,6 @@ typedef struct _mpu_region_init_t {
                                              ((__NUMBER__) == MPU_REGION_NUMBER7))
 
 /**
-  * @brief Check if MPU region size is valid.
-  * @param __SIZE__  MPU region size.
-  * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
-  */
-#define IS_MPU_REGION_SIZE(__SIZE__)    (((__SIZE__) == MPU_REGION_SIZE_32B)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_64B)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_128B)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_256B)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_512B)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_1KB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_2KB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_4KB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_8KB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_16KB)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_32KB)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_64KB)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_128KB) || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_256KB) || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_512KB) || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_1MB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_2MB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_4MB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_8MB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_16MB)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_32MB)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_64MB)  || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_128MB) || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_256MB) || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_512MB) || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_1GB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_2GB)   || \
-                                         ((__SIZE__) == MPU_REGION_SIZE_4GB))
-
-
-/**
   * @brief Check if MPU sub region is valid.
   * @param __SUBREGION__  MPU sub region.
   * @retval SET (__SUBREGION__ is valid) or RESET (__SUBREGION__ is invalid)

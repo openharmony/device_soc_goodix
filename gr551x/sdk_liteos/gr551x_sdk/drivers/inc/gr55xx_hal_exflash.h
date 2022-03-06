@@ -247,70 +247,17 @@ typedef struct _hal_exflash_callback {
   * @param  __HANDLE__ exFlash handle.
   * @retval None
   */
-#define __HAL_EXFLASH_RESET_HANDLE_STATE(__HANDLE__)                ((__HANDLE__)->state = HAL_EXFLASH_STATE_RESET)
+#define HAL_EXFLASH_RESET_HANDLE_STATE(__HANDLE__)                ((__HANDLE__)->state = HAL_EXFLASH_STATE_RESET)
 
 /** @brief  Enable the specified exFlash power.
   * @retval None
   */
-#define __HAL_EXFLASH_POWER_ON()                                    ll_xqspi_enable_exflash_power()
+#define HAL_EXFLASH_POWER_ON()                                    ll_xqspi_enable_exflash_power()
 
 /** @brief  Disable the specified exFlash power.
   * @retval None
   */
-#define __HAL_EXFLASH_POWER_OFF()                                   ll_xqspi_disable_exflash_power()
-
-/** @} */
-
-/* Private macros ------------------------------------------------------------*/
-/** @defgroup EXFLASH_PRIVATE_MACRO EXFLASH Private Macros
-  * @{
-  */
-
-/**
-  * @brief Check if exFlash erase type is valid.
-  * @param __TYPE__ exFlash erase type.
-  * @retval SET (__TYPE__ is valid) or RESET (__TYPE__ is invalid)
-  */
-#define IS_EXFLASH_ERASE_TYPE(__TYPE__)            (((__TYPE__) == EXFLASH_ERASE_SECTOR) || \
-                                                    ((__TYPE__) == EXFLASH_ERASE_CHIP))
-
-/**
-  * @brief Check if exFlash lock area type is valid.
-  * @param __AREA__ exFlash lock area type.
-  * @retval SET (__AREA__ is valid) or RESET (__AREA__ is invalid)
-  */
-#define IS_EXFLASH_LOCK_AREA(__AREA__)             (((__AREA__) == EXFLASH_LOCK_AREA_NONE)          || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_1_8)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_1_4)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_1_2)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_1_8)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_1_4)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_1_2)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_ALL)           || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_TOP_4K)        || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_TOP_8K)        || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_TOP_16K)       || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_TOP_32K)       || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_BOTTOM_4K)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_BOTTOM_8K)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_BOTTOM_16K)    || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_BOTTOM_32K)    || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_7_8)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_3_4)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_7_8)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_3_4)     || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_127_128) || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_63_64)   || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_31_32)   || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_LOWER_15_16)   || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_127_128) || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_63_64)   || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_31_32)   || \
-                                                    ((__AREA__) == EXFLASH_LOCK_AREA_UPPER_15_16))
-/** @} */
-
-/** @} */
-
+#define HAL_EXFLASH_POWER_OFF()                                   ll_xqspi_disable_exflash_power()
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup HAL_EXFLASH_DRIVER_FUNCTIONS Functions

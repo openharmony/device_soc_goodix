@@ -266,13 +266,13 @@ typedef enum {
     BLE_ATT_UNIT_LUX                                             = BLE_ATT_UUID_16(0x2731),
     /**< Illuminance unit: lux. */
     BLE_ATT_UNIT_BECQUEREL                                       = BLE_ATT_UUID_16(0x2732),
-    /**< Activity referred to a radionuclide unit: becquerel. */
+    /**< Enable referred to a radionuclide unit: becquerel. */
     BLE_ATT_UNIT_GRAY                                            = BLE_ATT_UUID_16(0x2733),
     /**< Absorbed dose unit: gray. */
     BLE_ATT_UNIT_SIEVERT                                         = BLE_ATT_UUID_16(0x2734),
     /**< Dose equivalent unit: sievert. */
     BLE_ATT_UNIT_KATAL                                           = BLE_ATT_UUID_16(0x2735),
-    /**< Catalytic activity unit: katal. */
+    /**< Catalytic enable unit: katal. */
     BLE_ATT_UNIT_PASCAL_SECOND                                   = BLE_ATT_UUID_16(0x2740),
     /**< Synamic viscosity unit: pascal second. */
     BLE_ATT_UNIT_NEWTON_METRE                                    = BLE_ATT_UUID_16(0x2741),
