@@ -469,16 +469,16 @@ TINY_RAM_SECTION sdk_err_t app_timer_start(app_timer_id_t p_timer_id, uint32_t d
             if (is_pending_trigger == false) {
                 s_app_timer_info.apptimer_total_ticks += already_ran_time;
                 p_cur_node->next_trigger_time = delay_time + s_app_timer_info.apptimer_total_ticks;
+                s_app_timer_info.apptimer_runout_time = s_app_timer_info.p_curr_timer_node->next_trigger_time -
+                                                        s_app_timer_info.apptimer_total_ticks;
             } else {
                 p_cur_node->next_trigger_time = delay_time + s_app_timer_info.apptimer_total_ticks + already_ran_time;
             }
 
-            if (is_pending_trigger == false) {
-                s_app_timer_info.apptimer_runout_time = s_app_timer_info.p_curr_timer_node->next_trigger_time -
-                                                        s_app_timer_info.apptimer_total_ticks;
-                if (s_app_timer_info.apptimer_runout_time < 0) {
+            if ((is_pending_trigger == false)&&(s_app_timer_info.apptimer_runout_time < 0)) {
                     s_app_timer_info.apptimer_runout_time = 0;
-                }
+            }
+            if (is_pending_trigger == false) {
                 hal_pwr_config_timer_wakeup(PWR_SLP_TIMER_MODE_SINGLE,
                                             sys_us_2_lpcycles(s_app_timer_info.apptimer_runout_time));
             }

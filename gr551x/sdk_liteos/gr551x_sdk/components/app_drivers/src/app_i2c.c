@@ -60,7 +60,7 @@
 /**@brief App i2c state types. */
 typedef enum {
     APP_I2C_INVALID = 0,
-    APP_I2C_ACTIVITY,
+    APP_I2C_ENABLE,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_I2C_SLEEP,
 #endif
@@ -171,7 +171,7 @@ static bool i2c_prepare_for_sleep(void)
     hal_i2c_state_t state;
 
     for (uint8_t i = 0; i < APP_I2C_ID_MAX; i++) {
-        if (s_i2c_env[i].i2c_state == APP_I2C_ACTIVITY) {
+        if (s_i2c_env[i].i2c_state == APP_I2C_ENABLE) {
             state = hal_i2c_get_state(&s_i2c_env[i].handle);
             if ((state != HAL_I2C_STATE_READY) && (state != HAL_I2C_STATE_RESET)) {
                 return false;
@@ -198,7 +198,7 @@ SECTION_RAM_CODE static void i2c_wake_up_ind(void)
 {
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
     for (uint8_t i = 0; i < APP_I2C_ID_MAX; i++) {
-        if (s_i2c_env[i].i2c_state == APP_I2C_ACTIVITY) {
+        if (s_i2c_env[i].i2c_state == APP_I2C_ENABLE) {
             GLOBAL_EXCEPTION_DISABLE();
             hal_i2c_resume_reg(&s_i2c_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
@@ -224,7 +224,7 @@ static void i2c_wake_up(app_i2c_id_t id)
             hal_nvic_clear_pending_irq(s_i2c_irq[id]);
             hal_nvic_enable_irq(s_i2c_irq[id]);
         }
-        s_i2c_env[id].i2c_state = APP_I2C_ACTIVITY;
+        s_i2c_env[id].i2c_state = APP_I2C_ENABLE;
     }
 
     if (s_i2c_env[id].use_mode.type == APP_I2C_TYPE_DMA) {
@@ -237,7 +237,7 @@ static void i2c_wake_up(app_i2c_id_t id)
 static uint16_t i2c_gpio_config(app_i2c_pin_cfg_t pin_cfg)
 {
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     io_init.pull = pin_cfg.scl.pull;
     io_init.mode = APP_IO_MODE_MUX;
@@ -353,7 +353,7 @@ static uint16_t params_check(app_i2c_params_t *p_params)
 #ifdef  ENV_RTOS_USE_SEMP
 static uint16_t semp_init_config(uint8_t id)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
 
     if (s_i2c_env[id].sem_tx == NULL) {
         app_err_code = app_driver_sem_init(&s_i2c_env[id].sem_tx);
@@ -371,7 +371,7 @@ static uint16_t semp_init_config(uint8_t id)
 #ifdef ENV_RTOS_USE_MUTEX
 static uint16_t mutex_init_config(uint8_t id)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
 
     if (s_i2c_env[id].mutex_async == NULL) {
         app_err_code = app_driver_mutex_init(&s_i2c_env[id].mutex_async);
@@ -419,7 +419,7 @@ static uint16_t register_cb(void)
 uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_handler)
 {
     uint8_t       id       = p_params->id;
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t  hal_err_code;
 
     app_err_code = params_check(p_params);
@@ -463,7 +463,7 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
     app_err_code = register_cb();
     APP_DRV_ERR_CODE_CHECK(app_err_code);
 
-    s_i2c_env[id].i2c_state = APP_I2C_ACTIVITY;
+    s_i2c_env[id].i2c_state = APP_I2C_ENABLE;
     s_i2c_env[id].start_flag = false;
 
     return APP_DRV_SUCCESS;
@@ -471,7 +471,7 @@ uint16_t app_i2c_init(app_i2c_params_t *p_params, app_i2c_evt_handler_t evt_hand
 
 uint16_t app_i2c_deinit(app_i2c_id_t id)
 {
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t  hal_err_code;
 
     if ((id >= APP_I2C_ID_MAX) || (s_i2c_env[id].i2c_state == APP_I2C_INVALID)) {
@@ -627,7 +627,7 @@ static hal_status_t master_or_slave_receive_process(app_i2c_id_t id, uint16_t ta
 #ifdef  ENV_RTOS_USE_SEMP
 uint16_t app_i2c_receive_sem_sync(app_i2c_id_t id, uint16_t target_address, uint8_t *p_data, uint16_t size)
 {
-    app_drv_err_t app_err_code;
+    uint16_t app_err_code;
     hal_status_t err_code = HAL_OK;
 
 #ifdef ENV_RTOS_USE_MUTEX

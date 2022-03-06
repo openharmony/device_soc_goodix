@@ -68,7 +68,7 @@
 /**@brief App rng state types. */
 typedef enum {
     APP_RNG_INVALID = 0,
-    APP_RNG_ACTIVITY,
+    APP_RNG_ENABLE,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_RNG_SLEEP,
 #endif
@@ -128,7 +128,7 @@ static bool rng_prepare_for_sleep(void)
 {
     hal_rng_state_t state;
 
-    if (s_rng_env.rng_state == APP_RNG_ACTIVITY) {
+    if (s_rng_env.rng_state == APP_RNG_ENABLE) {
         state = hal_rng_get_state(&s_rng_env.handle);
         if ((state != HAL_RNG_STATE_READY) && (state != HAL_RNG_STATE_RESET)) {
             return false;
@@ -152,7 +152,7 @@ static void rng_sleep_canceled(void)
 SECTION_RAM_CODE static void rng_wake_up_ind(void)
 {
 #ifndef APP_DRIVER_WAKEUP_CALL_FUN
-    if (s_rng_env.rng_state == APP_RNG_ACTIVITY) {
+    if (s_rng_env.rng_state == APP_RNG_ENABLE) {
         GLOBAL_EXCEPTION_DISABLE();
         hal_rng_resume_reg(&s_rng_env.handle);
         GLOBAL_EXCEPTION_ENABLE();
@@ -175,7 +175,7 @@ static void rng_wake_up(void)
             hal_nvic_clear_pending_irq(RNG_IRQn);
             hal_nvic_enable_irq(RNG_IRQn);
         }
-        s_rng_env.rng_state = APP_RNG_ACTIVITY;
+        s_rng_env.rng_state = APP_RNG_ENABLE;
     }
 }
 #endif
@@ -205,7 +205,7 @@ static void app_rng_event_call(rng_handle_t *p_rng, app_rng_evt_type_t evt_type,
 uint16_t app_rng_init(app_rng_params_t *p_params, app_rng_evt_handler_t evt_handler)
 {
     hal_status_t  hal_err_code = HAL_OK;
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
 
     if (p_params == NULL) {
         return APP_DRV_ERR_POINTER_NULL;
@@ -255,7 +255,7 @@ uint16_t app_rng_init(app_rng_params_t *p_params, app_rng_evt_handler_t evt_hand
         }
     }
 
-    s_rng_env.rng_state = APP_RNG_ACTIVITY;
+    s_rng_env.rng_state = APP_RNG_ENABLE;
 
     return app_err_code;
 }

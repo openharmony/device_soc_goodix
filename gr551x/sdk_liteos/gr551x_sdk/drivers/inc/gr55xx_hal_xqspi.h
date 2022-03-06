@@ -359,27 +359,27 @@ typedef struct _hal_xqspi_callback {
   * @param  __HANDLE__ XQSPI handle.
   * @retval None
   */
-#define __HAL_XQSPI_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_XQSPI_STATE_RESET)
+#define HAL_XQSPI_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_XQSPI_STATE_RESET)
 
 /** @brief  Enable the specified QSPI peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_ENABLE_QSPI(__HANDLE__)                 \
+#define HAL_XQSPI_ENABLE_QSPI(__HANDLE__)                 \
     SET_BITS((__HANDLE__)->p_instance->QSPI.SPIEN, SSI_SSIEN_EN)
 
 /** @brief  Disable the specified QSPI peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_DISABLE_QSPI(__HANDLE__)              \
+#define HAL_XQSPI_DISABLE_QSPI(__HANDLE__)              \
     CLEAR_BITS((__HANDLE__)->p_instance->QSPI.SPIEN, SSI_SSIEN_EN)
 
 /** @brief  Enable the specified XIP peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_ENABLE_XIP(__HANDLE__)                       \
+#define HAL_XQSPI_ENABLE_XIP(__HANDLE__)                       \
 do {                                                             \
     SET_BITS((__HANDLE__)->p_instance->XIP.CTRL3, SSI_SSIEN_EN); \
     while (!ll_xqspi_get_xip_flag((__HANDLE__)->p_instance))     \
@@ -389,7 +389,7 @@ do {                                                             \
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_DISABLE_XIP(__HANDLE__)                        \
+#define HAL_XQSPI_DISABLE_XIP(__HANDLE__)                        \
 do {                                                               \
     CLEAR_BITS((__HANDLE__)->p_instance->XIP.CTRL3, SSI_SSIEN_EN); \
     while (ll_xqspi_get_xip_flag((__HANDLE__)->p_instance))        \
@@ -399,14 +399,14 @@ do {                                                               \
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_ENABLE_CACHE(__HANDLE__)    \
+#define HAL_XQSPI_ENABLE_CACHE(__HANDLE__)    \
     CLEAR_BITS((__HANDLE__)->p_instance->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS)
 
 /** @brief  Disable the specified CACHE peripheral in XQSPI.
   * @param  __HANDLE__ specifies the XQSPI Handle.
   * @retval None
   */
-#define __HAL_XQSPI_DISABLE_CACHE(__HANDLE__)     \
+#define HAL_XQSPI_DISABLE_CACHE(__HANDLE__)     \
     SET_BITS((__HANDLE__)->p_instance->CACHE.CTRL0, XQSPI_CACHE_CTRL0_DIS)
 
 /** @brief  Check whether the specified XQSPI flag is set or not.
@@ -422,7 +422,7 @@ do {                                                               \
   *            @arg @ref XQSPI_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_XQSPI_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_XQSPI_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->QSPI.STAT, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */

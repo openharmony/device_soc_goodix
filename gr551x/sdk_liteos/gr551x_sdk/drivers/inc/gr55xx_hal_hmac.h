@@ -256,31 +256,31 @@ typedef struct _hal_hmac_callback {
   * @param  __HANDLE__ HMAC handle.
   * @retval None
   */
-#define __HAL_HMAC_RESET_HANDLE_STATE(__HANDLE__)         ((__HANDLE__)->state = HAL_HMAC_STATE_RESET)
+#define HAL_HMAC_RESET_HANDLE_STATE(__HANDLE__)         ((__HANDLE__)->state = HAL_HMAC_STATE_RESET)
 
 /** @brief  Enable the specified HMAC peripheral.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_ENABLE(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
+#define HAL_HMAC_ENABLE(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
 
 /** @brief  Disable the specified HMAC peripheral.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_DISABLE(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
+#define HAL_HMAC_DISABLE(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->CTRL, HMAC_CTRL_ENABLE)
 
 /** @brief  Enable the HMAC interrupt.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_ENABLE_IT(__HANDLE__)                  ll_hmac_enable_it_done((__HANDLE__)->p_instance)
+#define HAL_HMAC_ENABLE_IT(__HANDLE__)                  ll_hmac_enable_it_done((__HANDLE__)->p_instance)
 
 /** @brief  Disable the HMAC interrupt.
   * @param  __HANDLE__ Specifies the HMAC Handle.
   * @retval None
   */
-#define __HAL_HMAC_DISABLE_IT(__HANDLE__)                 ll_hmac_disable_it_done((__HANDLE__)->p_instance)
+#define HAL_HMAC_DISABLE_IT(__HANDLE__)                 ll_hmac_disable_it_done((__HANDLE__)->p_instance)
 
 /** @brief  Check whether the specified HMAC interrupt flag is set or not.
   * @param  __HANDLE__  Specifies the HMAC Handle.
@@ -289,7 +289,7 @@ typedef struct _hal_hmac_callback {
   *            @arg @ref HMAC_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_HMAC_GET_FLAG_IT(__HANDLE__, __FLAG__) \
+#define HAL_HMAC_GET_FLAG_IT(__HANDLE__, __FLAG__) \
     (READ_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified HMAC interrupt flag.
@@ -299,7 +299,7 @@ typedef struct _hal_hmac_callback {
   *            @arg @ref HMAC_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval None
   */
-#define __HAL_HMAC_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)    SET_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__))
+#define HAL_HMAC_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)    SET_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__))
 
 /** @brief  Check whether the specified HMAC flag is set or not.
   * @param  __HANDLE__  Specifies the HMAC Handle.
@@ -312,7 +312,7 @@ typedef struct _hal_hmac_callback {
   *            @arg @ref HMAC_FLAG_KEY_VALID Key valid flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_HMAC_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_HMAC_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->STATUS, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */

@@ -242,25 +242,25 @@ typedef struct _hal_efuse_callback {
   * @param  __HANDLE__ Specifies the eFuse Handle.
   * @retval None.
   */
-#define __HAL_EFUSE_ENABLE_MAIN_BACKUP(__HANDLE__)              ll_efuse_enable_main_backup((__HANDLE__)->p_instance)
+#define HAL_EFUSE_ENABLE_MAIN_BACKUP(__HANDLE__)              ll_efuse_enable_main_backup((__HANDLE__)->p_instance)
 
 /** @brief  Disable the eFuse main or backup.
   * @param  __HANDLE__ Specifies the eFuse Handle.
   * @retval None.
   */
-#define __HAL_EFUSE_DISABLE_MAIN_BACKUP(__HANDLE__)             ll_efuse_disable_main_backup((__HANDLE__)->p_instance)
+#define HAL_EFUSE_DISABLE_MAIN_BACKUP(__HANDLE__)             ll_efuse_disable_main_backup((__HANDLE__)->p_instance)
 
 /** @brief  Enable the eFuse PGENB.
   * @param  __HANDLE__ Specifies the eFuse Handle.
   * @retval None.
   */
-#define __HAL_EFUSE_ENABLE_PGENB(__HANDLE__)                    ll_efuse_enable_pgenb((__HANDLE__)->p_instance)
+#define HAL_EFUSE_ENABLE_PGENB(__HANDLE__)                    ll_efuse_enable_pgenb((__HANDLE__)->p_instance)
 
 /** @brief  Disable the eFuse PGENB.
   * @param  __HANDLE__ Specifies the eFuse Handle.
   * @retval None.
   */
-#define __HAL_EFUSE_DISABLE_PGENB(__HANDLE__)                   ll_efuse_disable_pgenb((__HANDLE__)->p_instance)
+#define HAL_EFUSE_DISABLE_PGENB(__HANDLE__)                   ll_efuse_disable_pgenb((__HANDLE__)->p_instance)
 
 /** @brief  Check whether the specified eFuse flag is set or not.
   * @param  __HANDLE__ specifies the eFuse Handle.
@@ -276,7 +276,7 @@ typedef struct _hal_efuse_callback {
   *            @arg @ref EFUSE_FLAG_TEST_DONE          Read from eFuse has done in test mode
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_EFUSE_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_EFUSE_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->STAT, (__FLAG__)) != 0) ? SET : RESET)
 /** @} */
 

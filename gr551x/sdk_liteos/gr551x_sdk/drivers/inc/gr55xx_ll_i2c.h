@@ -112,7 +112,7 @@ typedef struct _ll_i2c_init {
 #define LL_I2C_INTR_STAT_GEN_CALL           I2C_INTR_GEN_CALL       /**< GEN_CALL interrupt flag */
 #define LL_I2C_INTR_STAT_START_DET          I2C_INTR_START_DET      /**< START_DET interrupt flag */
 #define LL_I2C_INTR_STAT_STOP_DET           I2C_INTR_STOP_DET       /**< STOP_DET interrupt flag */
-#define LL_I2C_INTR_STAT_ACTIVITY           I2C_INTR_ACTIVITY       /**< ACTIVITY interrupt flag */
+#define LL_I2C_INTR_STAT_ENABLE             I2C_INTR_ENABLE         /**< ENABLE interrupt flag */
 #define LL_I2C_INTR_STAT_RX_DONE            I2C_INTR_RX_DONE        /**< RX_DONE interrupt flag */
 #define LL_I2C_INTR_STAT_TX_ABRT            I2C_INTR_TX_ABRT        /**< TX_ABRT interrupt flag */
 #define LL_I2C_INTR_STAT_RD_REQ             I2C_INTR_RD_REQ         /**< RD_REQ interrupt flag */
@@ -163,7 +163,7 @@ typedef struct _ll_i2c_init {
 #define LL_I2C_INTR_MASK_GEN_CALL           I2C_INTR_GEN_CALL       /**< GEN_CALL interrupt */
 #define LL_I2C_INTR_MASK_START_DET          I2C_INTR_START_DET      /**< START_DET interrupt */
 #define LL_I2C_INTR_MASK_STOP_DET           I2C_INTR_STOP_DET       /**< STOP_DET interrupt */
-#define LL_I2C_INTR_MASK_ACTIVITY           I2C_INTR_ACTIVITY       /**< ACTIVITY interrupt */
+#define LL_I2C_INTR_MASK_ENABLE             I2C_INTR_ENABLE         /**< ENABLE interrupt */
 #define LL_I2C_INTR_MASK_RX_DONE            I2C_INTR_RX_DONE        /**< RX_DONE interrupt */
 #define LL_I2C_INTR_MASK_TX_ABRT            I2C_INTR_TX_ABRT        /**< TX_ABRT interrupt */
 #define LL_I2C_INTR_MASK_RD_REQ             I2C_INTR_RD_REQ         /**< RD_REQ interrupt */
@@ -312,7 +312,7 @@ typedef struct _ll_i2c_init {
   * @param  __SPEED__ Speed value to achieve
   * @retval CLK_SSL_CNT value to be used for XS_SCL_HCNT, XS_SCL_LCNT registers where X can be (S, F, H)
   */
-#define __LL_I2C_CONVERT_CLK_SSL_CNT(__PERIPHCLK__, __SPEED__) ((__PERIPHCLK__) / 2 / (__SPEED__))
+#define LL_I2C_CONVERT_CLK_SSL_CNT(__PERIPHCLK__, __SPEED__) ((__PERIPHCLK__) / 2 / (__SPEED__))
 
 /**
   * @brief  Get Speed Mode according to expected Speed.
@@ -322,7 +322,7 @@ typedef struct _ll_i2c_init {
   *         @arg @ref LL_I2C_SPEED_MODE_FAST
   *         @arg @ref LL_I2C_SPEED_MODE_HIGH
   */
-#define __LL_I2C_CONVERT_SPEED_MODE(__SPEED__)      ((__SPEED__ <= LL_I2C_SPEED_100K) ? LL_I2C_SPEED_MODE_STANDARD : \
+#define LL_I2C_CONVERT_SPEED_MODE(__SPEED__)      ((__SPEED__ <= LL_I2C_SPEED_100K) ? LL_I2C_SPEED_MODE_STANDARD : \
                                                      ((__SPEED__ <= LL_I2C_SPEED_1000K) ? LL_I2C_SPEED_MODE_FAST : \
                                                      LL_I2C_SPEED_MODE_HIGH))
 /** @} */
@@ -1317,7 +1317,7 @@ __STATIC_INLINE uint32_t ll_i2c_get_tx_flush_count(i2c_regs_t *I2Cx)
   *  INTR_MASK | INTR_MASK_GEN_CALL
   *  INTR_MASK | INTR_MASK_START_DET
   *  INTR_MASK | INTR_MASK_STOP_DET
-  *  INTR_MASK | INTR_MASK_ACTIVITY
+  *  INTR_MASK | INTR_MASK_ENABLE
   *  INTR_MASK | INTR_MASK_RX_DONE
   *  INTR_MASK | INTR_MASK_TX_ABRT
   *  INTR_MASK | INTR_MASK_RD_REQ
@@ -1332,7 +1332,7 @@ __STATIC_INLINE uint32_t ll_i2c_get_tx_flush_count(i2c_regs_t *I2Cx)
   *         @arg @ref LL_I2C_INTR_MASK_GEN_CALL
   *         @arg @ref LL_I2C_INTR_MASK_START_DET
   *         @arg @ref LL_I2C_INTR_MASK_STOP_DET
-  *         @arg @ref LL_I2C_INTR_MASK_ACTIVITY
+  *         @arg @ref LL_I2C_INTR_MASK_ENABLE
   *         @arg @ref LL_I2C_INTR_MASK_RX_DONE
   *         @arg @ref LL_I2C_INTR_MASK_TX_ABRT
   *         @arg @ref LL_I2C_INTR_MASK_RD_REQ
@@ -1356,7 +1356,7 @@ __STATIC_INLINE void ll_i2c_enable_it(i2c_regs_t *I2Cx, uint32_t mask)
   *  INTR_MASK | INTR_MASK_GEN_CALL
   *  INTR_MASK | INTR_MASK_START_DET
   *  INTR_MASK | INTR_MASK_STOP_DET
-  *  INTR_MASK | INTR_MASK_ACTIVITY
+  *  INTR_MASK | INTR_MASK_ENABLE
   *  INTR_MASK | INTR_MASK_RX_DONE
   *  INTR_MASK | INTR_MASK_TX_ABRT
   *  INTR_MASK | INTR_MASK_RD_REQ
@@ -1371,7 +1371,7 @@ __STATIC_INLINE void ll_i2c_enable_it(i2c_regs_t *I2Cx, uint32_t mask)
   *         @arg @ref LL_I2C_INTR_MASK_GEN_CALL
   *         @arg @ref LL_I2C_INTR_MASK_START_DET
   *         @arg @ref LL_I2C_INTR_MASK_STOP_DET
-  *         @arg @ref LL_I2C_INTR_MASK_ACTIVITY
+  *         @arg @ref LL_I2C_INTR_MASK_ENABLE
   *         @arg @ref LL_I2C_INTR_MASK_RX_DONE
   *         @arg @ref LL_I2C_INTR_MASK_TX_ABRT
   *         @arg @ref LL_I2C_INTR_MASK_RD_REQ
@@ -1395,7 +1395,7 @@ __STATIC_INLINE void ll_i2c_disable_it(i2c_regs_t *I2Cx, uint32_t mask)
   *  INTR_MASK | INTR_MASK_GEN_CALL
   *  INTR_MASK | INTR_MASK_START_DET
   *  INTR_MASK | INTR_MASK_STOP_DET
-  *  INTR_MASK | INTR_MASK_ACTIVITY
+  *  INTR_MASK | INTR_MASK_ENABLE
   *  INTR_MASK | INTR_MASK_RX_DONE
   *  INTR_MASK | INTR_MASK_TX_ABRT
   *  INTR_MASK | INTR_MASK_RD_REQ
@@ -1410,7 +1410,7 @@ __STATIC_INLINE void ll_i2c_disable_it(i2c_regs_t *I2Cx, uint32_t mask)
   *         @arg @ref LL_I2C_INTR_MASK_GEN_CALL
   *         @arg @ref LL_I2C_INTR_MASK_START_DET
   *         @arg @ref LL_I2C_INTR_MASK_STOP_DET
-  *         @arg @ref LL_I2C_INTR_MASK_ACTIVITY
+  *         @arg @ref LL_I2C_INTR_MASK_ENABLE
   *         @arg @ref LL_I2C_INTR_MASK_RX_DONE
   *         @arg @ref LL_I2C_INTR_MASK_TX_ABRT
   *         @arg @ref LL_I2C_INTR_MASK_RD_REQ
@@ -1652,48 +1652,48 @@ __STATIC_INLINE uint32_t ll_i2c_is_enabled_it_stop_det(i2c_regs_t *I2Cx)
 }
 
 /**
-  * @brief  Enable ACTIVITY interrupt.
+  * @brief  Enable interrupt.
   *
   *  Register|BitsName
   *  --------|--------
-  *  INTR_MASK | ACTIVITY
+  *  INTR_MASK | ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval None.
   */
-__STATIC_INLINE void ll_i2c_enable_it_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE void ll_i2c_enable_it_event(i2c_regs_t *I2Cx)
 {
-    SET_BITS(I2Cx->INTR_MASK, I2C_INTR_ACTIVITY);
+    SET_BITS(I2Cx->INTR_MASK, I2C_INTR_ENABLE);
 }
 
 /**
-  * @brief  Disable ACTIVITY interrupt.
+  * @brief  Disable interrupt.
   *
   *  Register|BitsName
   *  --------|--------
-  *  INTR_MASK | ACTIVITY
+  *  INTR_MASK | ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval None.
   */
-__STATIC_INLINE void ll_i2c_disable_it_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE void ll_i2c_disable_it_event(i2c_regs_t *I2Cx)
 {
-    CLEAR_BITS(I2Cx->INTR_MASK, I2C_INTR_ACTIVITY);
+    CLEAR_BITS(I2Cx->INTR_MASK, I2C_INTR_ENABLE);
 }
 
 /**
-  * @brief  Check if ACTIVITY interrupt is enabled or disabled.
+  * @brief  Check if interrupt is enabled or disabled.
   *
   *  Register|BitsName
   *  --------|--------
-  *  INTR_MASK | ACTIVITY
+  *  INTR_MASK | ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t ll_i2c_is_enabled_it_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE uint32_t ll_i2c_is_enabled_it_event(i2c_regs_t *I2Cx)
 {
-    return (READ_BITS(I2Cx->INTR_MASK, I2C_INTR_ACTIVITY) == (I2C_INTR_ACTIVITY));
+    return (READ_BITS(I2Cx->INTR_MASK, I2C_INTR_ENABLE) == (I2C_INTR_ENABLE));
 }
 
 /**
@@ -2072,7 +2072,7 @@ __STATIC_INLINE uint32_t ll_i2c_is_enabled_it_rx_under(i2c_regs_t *I2Cx)
   *  IC_INTR_STAT | GEN_CALL
   *  IC_INTR_STAT | START_DET
   *  IC_INTR_STAT | STOP_DET
-  *  IC_INTR_STAT | ACTIVITY
+  *  IC_INTR_STAT | ENABLE
   *  IC_INTR_STAT | RX_DONE
   *  IC_INTR_STAT | TX_ABRT
   *  IC_INTR_STAT | RD_REQ
@@ -2089,7 +2089,7 @@ __STATIC_INLINE uint32_t ll_i2c_is_enabled_it_rx_under(i2c_regs_t *I2Cx)
   *         @arg @ref LL_I2C_INTR_STAT_GEN_CALL
   *         @arg @ref LL_I2C_INTR_STAT_START_DET
   *         @arg @ref LL_I2C_INTR_STAT_STOP_DET
-  *         @arg @ref LL_I2C_INTR_STAT_ACTIVITY
+  *         @arg @ref LL_I2C_INTR_STAT_ENABLE
   *         @arg @ref LL_I2C_INTR_STAT_RX_DONE
   *         @arg @ref LL_I2C_INTR_STAT_TX_ABRT
   *         @arg @ref LL_I2C_INTR_STAT_RD_REQ
@@ -2114,7 +2114,7 @@ __STATIC_INLINE uint32_t ll_i2c_get_it_flag(i2c_regs_t *I2Cx)
   *  IC_RAW_INTR_STAT | RAW_GEN_CALL
   *  IC_RAW_INTR_STAT | RAW_START_DET
   *  IC_RAW_INTR_STAT | RAW_STOP_DET
-  *  IC_RAW_INTR_STAT | RAW_ACTIVITY
+  *  IC_RAW_INTR_STAT | RAW_ENABLE
   *  IC_RAW_INTR_STAT | RAW_RX_DONE
   *  IC_RAW_INTR_STAT | RAW_TX_ABRT
   *  IC_RAW_INTR_STAT | RAW_RD_REQ
@@ -2131,7 +2131,7 @@ __STATIC_INLINE uint32_t ll_i2c_get_it_flag(i2c_regs_t *I2Cx)
   *         @arg @ref LL_I2C_INTR_STAT_GEN_CALL
   *         @arg @ref LL_I2C_INTR_STAT_START_DET
   *         @arg @ref LL_I2C_INTR_STAT_STOP_DET
-  *         @arg @ref LL_I2C_INTR_STAT_ACTIVITY
+  *         @arg @ref LL_I2C_INTR_STAT_ENABLE
   *         @arg @ref LL_I2C_INTR_STAT_RX_DONE
   *         @arg @ref LL_I2C_INTR_STAT_TX_ABRT
   *         @arg @ref LL_I2C_INTR_STAT_RD_REQ
@@ -2317,37 +2317,37 @@ __STATIC_INLINE uint32_t ll_i2c_is_active_flag_raw_stop_det(i2c_regs_t *I2Cx)
 }
 
 /**
-  * @brief  Indicate the status of ACTIVITY flag.
+  * @brief  Indicate the status of ENABLE flag.
   * @note   RESET: Clear default value.
-  *         SET  : When masked ACTIVITY interrupt is actived.
+  *         SET  : When masked ENABLE interrupt is actived.
   *
   *  Register|BitsName
   *  --------|--------
-  *  IC_INTR_STAT | ACTIVITY
+  *  IC_INTR_STAT | ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t ll_i2c_is_active_flag_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE uint32_t ll_i2c_is_active_flag(i2c_regs_t *I2Cx)
 {
-    return (READ_BITS(I2Cx->INTR_STAT, I2C_INTR_ACTIVITY) == (I2C_INTR_ACTIVITY));
+    return (READ_BITS(I2Cx->INTR_STAT, I2C_INTR_ENABLE) == (I2C_INTR_ENABLE));
 }
 
 /**
-  * @brief  Indicate the status of RAW_ACTIVITY flag.
+  * @brief  Indicate the status of RAW_ENABLE flag.
   * @note   RESET: Clear default value.
-  *         SET  : When unmasked ACTIVITY interrupt is actived.
+  *         SET  : When unmasked ENABLE interrupt is actived.
   *
   *  Register|BitsName
   *  --------|--------
-  *  IC_RAW_INTR_STAT | RAW_ACTIVITY
+  *  IC_RAW_INTR_STAT | RAW_ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t ll_i2c_is_active_flag_raw_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE uint32_t ll_i2c_is_active_flag_raw(i2c_regs_t *I2Cx)
 {
-    return (READ_BITS(I2Cx->RAW_INTR_STAT, I2C_INTR_ACTIVITY) == (I2C_INTR_ACTIVITY));
+    return (READ_BITS(I2Cx->RAW_INTR_STAT, I2C_INTR_ENABLE) == (I2C_INTR_ENABLE));
 }
 
 /**
@@ -2691,19 +2691,19 @@ __STATIC_INLINE void ll_i2c_clear_flag_stop_det(i2c_regs_t *I2Cx)
 }
 
 /**
-  * @brief  Clear ACTIVITY flag.
+  * @brief  Clear ENABLE flag.
   *
   *  Register|BitsName
   *  --------|--------
-  *  IC_CLR_ACTIVITY | CLR_ACTIVITY
+  *  IC_CLR_ENABLE | CLR_ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval None.
   */
-__STATIC_INLINE void ll_i2c_clear_flag_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE void ll_i2c_clear_flag(i2c_regs_t *I2Cx)
 {
     __IO uint32_t tmpreg;
-    tmpreg = READ_REG(I2Cx->CLR_ACTIVITY);
+    tmpreg = READ_REG(I2Cx->CLR_ENABLE);
     (void) tmpreg;
 }
 
@@ -2810,37 +2810,37 @@ __STATIC_INLINE void ll_i2c_clear_flag_rx_under(i2c_regs_t *I2Cx)
 }
 
 /**
-  * @brief  Indicate the status of IC_STATUS Slave FSM Activity Status flag.
+  * @brief  Indicate the status of IC_STATUS Slave FSM ENABLE Status flag.
   * @note   RESET: Slave FSM is in IDLE state.
   *         SET  : When Slave FSM is not in IDLE state.
   *
   *  Register|BitsName
   *  --------|--------
-  *  IC_STATUS | SLV_ACTIVITY
+  *  IC_STATUS | SLV_ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t ll_i2c_is_active_flag_status_slave_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE uint32_t ll_i2c_is_active_flag_status_slave(i2c_regs_t *I2Cx)
 {
-    return (READ_BITS(I2Cx->STATUS, I2C_STATUS_SLV_ACTIVITY) == (I2C_STATUS_SLV_ACTIVITY));
+    return (READ_BITS(I2Cx->STATUS, I2C_STATUS_SLV_ENABLE) == (I2C_STATUS_SLV_ENABLE));
 }
 
 /**
-  * @brief  Indicate the status of IC_STATUS Master FSM Activity Status flag.
+  * @brief  Indicate the status of IC_STATUS Master FSM ENABLE Status flag.
   * @note   RESET: Master FSM is in IDLE state.
   *         SET  : When Master FSM is not in IDLE state.
   *
   *  Register|BitsName
   *  --------|--------
-  *  IC_STATUS | MST_ACTIVITY
+  *  IC_STATUS | MST_ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t ll_i2c_is_active_flag_status_master_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE uint32_t ll_i2c_is_active_flag_status_master(i2c_regs_t *I2Cx)
 {
-    return (READ_BITS(I2Cx->STATUS, I2C_STATUS_MST_ACTIVITY) == (I2C_STATUS_MST_ACTIVITY));
+    return (READ_BITS(I2Cx->STATUS, I2C_STATUS_MST_ENABLE) == (I2C_STATUS_MST_ENABLE));
 }
 
 /**
@@ -2912,20 +2912,20 @@ __STATIC_INLINE uint32_t ll_i2c_is_active_flag_status_tfnf(i2c_regs_t *I2Cx)
 }
 
 /**
-  * @brief  Indicate the status of IC_STATUS ACTIVITY flag.
+  * @brief  Indicate the status of IC_STATUS ENABLE flag.
   * @note   RESET:  I2C is idle.
   *         SET  :  When I2C is active.
   *
   *  Register|BitsName
   *  --------|--------
-  *  IC_STATUS | ACTIVITY
+  *  IC_STATUS | ENABLE
   *
   * @param  I2Cx I2C instance.
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t ll_i2c_is_active_flag_status_activity(i2c_regs_t *I2Cx)
+__STATIC_INLINE uint32_t ll_i2c_is_active_flag_status(i2c_regs_t *I2Cx)
 {
-    return (READ_BITS(I2Cx->STATUS, I2C_STATUS_ACTIVITY) == (I2C_STATUS_ACTIVITY));
+    return (READ_BITS(I2Cx->STATUS, I2C_STATUS_ENABLE) == (I2C_STATUS_ENABLE));
 }
 
 /**

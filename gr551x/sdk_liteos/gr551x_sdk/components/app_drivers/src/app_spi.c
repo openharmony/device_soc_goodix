@@ -64,7 +64,7 @@
 /**@brief App spi state types. */
 typedef enum {
     APP_SPI_INVALID = 0,
-    APP_SPI_ACTIVITY,
+    APP_SPI_ENABLE,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_SPI_SLEEP,
 #endif
@@ -204,7 +204,7 @@ static bool spi_prepare_for_sleep(void)
     uint8_t i;
 
     for (i = 0; i < APP_SPI_ID_MAX; i++) {
-        if (s_spi_env[i].spi_state == APP_SPI_ACTIVITY) {
+        if (s_spi_env[i].spi_state == APP_SPI_ENABLE) {
             state = hal_spi_get_state(&s_spi_env[i].handle);
             if ((state != HAL_SPI_STATE_READY) && (state != HAL_SPI_STATE_RESET)) {
                 return false;
@@ -232,7 +232,7 @@ SECTION_RAM_CODE static void spi_wake_up_ind(void)
     uint8_t i;
 
     for (i = 0; i < APP_SPI_ID_MAX; i++) {
-        if (s_spi_env[i].spi_state == APP_SPI_ACTIVITY) {
+        if (s_spi_env[i].spi_state == APP_SPI_ENABLE) {
             GLOBAL_EXCEPTION_DISABLE();
             hal_spi_resume_reg(&s_spi_env[i].handle);
             GLOBAL_EXCEPTION_ENABLE();
@@ -259,7 +259,7 @@ static void spi_wake_up(app_spi_id_t id)
             hal_nvic_clear_pending_irq(s_spi_irq[id]);
             hal_nvic_enable_irq(s_spi_irq[id]);
         }
-        s_spi_env[id].spi_state = APP_SPI_ACTIVITY;
+        s_spi_env[id].spi_state = APP_SPI_ENABLE;
     }
 
     if (s_spi_env[id].use_mode.type == APP_SPI_TYPE_DMA) {
@@ -272,7 +272,7 @@ static void spi_wake_up(app_spi_id_t id)
 static uint16_t spi_gpio_config(app_spi_id_t id, app_spi_pin_cfg_t pin_cfg)
 {
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     if (pin_cfg.cs.enable == APP_SPI_PIN_ENABLE) {
         if (id == APP_SPI_ID_SLAVE) {
@@ -390,7 +390,7 @@ static uint16_t spi_rx_dma_config(app_spi_params_t *p_params)
 
 static uint16_t app_spi_config_dma(app_spi_params_t *p_params)
 {
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     err_code = spi_tx_dma_config(p_params);
     APP_DRV_ERR_CODE_CHECK(err_code);
@@ -469,7 +469,7 @@ static uint16_t params_check(app_spi_params_t *p_params)
 #ifdef  ENV_RTOS_USE_SEMP
 static uint16_t semp_init_config(uint8_t id)
 {
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     if (s_spi_env[id].sem_rx == NULL) {
         err_code = app_driver_sem_init(&s_spi_env[id].sem_rx);
@@ -491,7 +491,7 @@ static uint16_t semp_init_config(uint8_t id)
 #ifdef ENV_RTOS_USE_MUTEX
 static uint16_t mutex_init_config(uint8_t id)
 {
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     if (s_spi_env[id].mutex_async == NULL) {
         err_code = app_driver_mutex_init(&s_spi_env[id].mutex_async);
@@ -538,7 +538,7 @@ static uint16_t register_cb(void)
 uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_handler)
 {
     uint8_t       id       = p_params->id;
-    app_drv_err_t err_code = APP_DRV_SUCCESS;
+    uint16_t err_code = APP_DRV_SUCCESS;
 
     err_code = params_check(p_params);
     APP_DRV_ERR_CODE_CHECK(err_code);
@@ -578,7 +578,7 @@ uint16_t app_spi_init(app_spi_params_t *p_params, app_spi_evt_handler_t evt_hand
     err_code = register_cb();
     APP_DRV_ERR_CODE_CHECK(err_code);
 
-    s_spi_env[id].spi_state = APP_SPI_ACTIVITY;
+    s_spi_env[id].spi_state = APP_SPI_ENABLE;
     s_spi_env[id].start_flag = false;
 
     return APP_DRV_SUCCESS;
@@ -806,7 +806,7 @@ uint16_t app_spi_receive_sem_sync(app_spi_id_t id, uint8_t *p_data, uint16_t siz
 
 uint16_t app_spi_receive_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint16_t size)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_SPI_ID_MAX ||
@@ -864,7 +864,7 @@ exit:
 
 uint16_t app_spi_transmit_high_speed_sync(app_spi_id_t id, uint8_t *p_data, uint16_t size)
 {
-    app_drv_err_t app_err_code = APP_DRV_SUCCESS;
+    uint16_t app_err_code = APP_DRV_SUCCESS;
     hal_status_t  hal_err_code = HAL_OK;
 
     if (id >= APP_SPI_ID_MAX ||

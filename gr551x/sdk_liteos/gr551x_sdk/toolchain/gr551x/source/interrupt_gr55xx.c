@@ -152,16 +152,16 @@ SECTION_RAM_CODE __asm void HardFault_Handler (void)
 }
 
 #if DEBUG_MONITOR
-uint32_t __R4_R11_REG[8];
+uint32_t R4_R11_REG[8];
 void print_callstack_handler(uint32_t sp)
 {
     printf("================================\r\n");
     printf("  r0: %08x     r1: %08x\r\n", ((uint32_t *)sp)[ITEM_0], ((uint32_t *)sp)[ITEM_1]);
     printf("  r2: %08x     r3: %08x\r\n", ((uint32_t *)sp)[ITEM_2], ((uint32_t *)sp)[ITEM_3]);
-    printf("  r4: %08x     r5: %08x\r\n", __R4_R11_REG[ITEM_0], __R4_R11_REG[ITEM_1]);
-    printf("  r6: %08x     r7: %08x\r\n", __R4_R11_REG[ITEM_2], __R4_R11_REG[ITEM_3]);
-    printf("  r8: %08x     r9: %08x\r\n", __R4_R11_REG[ITEM_4], __R4_R11_REG[ITEM_5]);
-    printf("  r10:%08x     r11:%08x\r\n", __R4_R11_REG[ITEM_6], __R4_R11_REG[ITEM_7]);
+    printf("  r4: %08x     r5: %08x\r\n", R4_R11_REG[ITEM_0], R4_R11_REG[ITEM_1]);
+    printf("  r6: %08x     r7: %08x\r\n", R4_R11_REG[ITEM_2], R4_R11_REG[ITEM_3]);
+    printf("  r8: %08x     r9: %08x\r\n", R4_R11_REG[ITEM_4], R4_R11_REG[ITEM_5]);
+    printf("  r10:%08x     r11:%08x\r\n", R4_R11_REG[ITEM_6], R4_R11_REG[ITEM_7]);
     printf("  r12:%08x     lr: %08x\r\n", ((uint32_t *)sp)[ITEM_4], ((uint32_t *)sp)[ITEM_5]);
     printf("  pc: %08x     xpsr: %08x\r\n", ((uint32_t *)sp)[ITEM_6], ((uint32_t *)sp)[ITEM_7]);
     printf("================================\r\n");
@@ -171,8 +171,8 @@ __asm void DebugMon_Handler(void)
 {
     PRESERVE8
     IMPORT  print_callstack_handler
-    IMPORT  __R4_R11_REG
-    LDR R0, =   __R4_R11_REG
+    IMPORT  R4_R11_REG
+    LDR R0, =   R4_R11_REG
                 STMIA R0!, {R4-R11}
                 MOV R0, SP
                 MOV r12, lr

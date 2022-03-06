@@ -231,31 +231,31 @@ typedef struct _hal_pwm_callback {
   * @param  __HANDLE__ PWM handle.
   * @retval None
   */
-#define __HAL_PWM_RESET_HANDLE_STATE(__HANDLE__)           ((__HANDLE__)->state = HAL_PWM_STATE_RESET)
+#define HAL_PWM_RESET_HANDLE_STATE(__HANDLE__)           ((__HANDLE__)->state = HAL_PWM_STATE_RESET)
 
 /** @brief  Enable the specified PWM peripheral.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_ENABLE(__HANDLE__)                       SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
+#define HAL_PWM_ENABLE(__HANDLE__)                       SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
 
 /** @brief  Disable the specified PWM peripheral.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_DISABLE(__HANDLE__)                      CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
+#define HAL_PWM_DISABLE(__HANDLE__)                      CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_EN)
 
 /** @brief  Enable PWM breath mode.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_ENABLE_BREATH(__HANDLE__)                SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
+#define HAL_PWM_ENABLE_BREATH(__HANDLE__)                SET_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
 
 /** @brief  Disable PWM breath mode.
   * @param  __HANDLE__ specifies the PWM Handle.
   * @retval None
   */
-#define __HAL_PWM_DISABLE_BREATH(__HANDLE__)               CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
+#define HAL_PWM_DISABLE_BREATH(__HANDLE__)               CLEAR_BITS((__HANDLE__)->p_instance->MODE, PWM_MODE_BREATHEN)
 
 /** @} */
 

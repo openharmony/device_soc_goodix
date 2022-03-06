@@ -273,119 +273,119 @@ typedef struct _hal_i2s_callback {
   * @param  __HANDLE__ I2S handle.
   * @retval None
   */
-#define __HAL_I2S_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_I2S_STATE_RESET)
+#define HAL_I2S_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_I2S_STATE_RESET)
 
 /** @brief  Enable the specified I2S peripheral.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->ENABLE, I2S_ENABLE_EN)
+#define HAL_I2S_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->ENABLE, I2S_ENABLE_EN)
 
 /** @brief  Disable the specified I2S peripheral.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->ENABLE, I2S_ENABLE_EN)
+#define HAL_I2S_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->ENABLE, I2S_ENABLE_EN)
 
 /** @brief  Enable the specified I2S clock.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_ENABLE_CLOCK(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->CLKEN, I2S_CLKEN_EN)
+#define HAL_I2S_ENABLE_CLOCK(__HANDLE__)                     SET_BITS((__HANDLE__)->p_instance->CLKEN, I2S_CLKEN_EN)
 
 /** @brief  Disable the specified I2S clock.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_DISABLE_CLOCK(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->CLKEN, I2S_CLKEN_EN)
+#define HAL_I2S_DISABLE_CLOCK(__HANDLE__)                    CLEAR_BITS((__HANDLE__)->p_instance->CLKEN, I2S_CLKEN_EN)
 
 /** @brief  Enable the specified I2S transmitter block.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_ENABLE_TX_BLOCK(__HANDLE__)                  ll_i2s_enable_txblock((__HANDLE__)->p_instance)
+#define HAL_I2S_ENABLE_TX_BLOCK(__HANDLE__)                  ll_i2s_enable_txblock((__HANDLE__)->p_instance)
 
 /** @brief  Disable the specified I2S transmitter block.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_DISABLE_TX_BLOCK(__HANDLE__)                 ll_i2s_disable_txblock((__HANDLE__)->p_instance)
+#define HAL_I2S_DISABLE_TX_BLOCK(__HANDLE__)                 ll_i2s_disable_txblock((__HANDLE__)->p_instance)
 
 /** @brief  Enable the specified I2S receiver block.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_ENABLE_RX_BLOCK(__HANDLE__)                  ll_i2s_enable_rxblock((__HANDLE__)->p_instance)
+#define HAL_I2S_ENABLE_RX_BLOCK(__HANDLE__)                  ll_i2s_enable_rxblock((__HANDLE__)->p_instance)
 
 /** @brief  Disable the specified I2S receiver block.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_DISABLE_RX_BLOCK(__HANDLE__)                 ll_i2s_disable_rxblock((__HANDLE__)->p_instance)
+#define HAL_I2S_DISABLE_RX_BLOCK(__HANDLE__)                 ll_i2s_disable_rxblock((__HANDLE__)->p_instance)
 
 /** @brief  Enable the specified I2S transmitter channel.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @param  __CH__ Specifies the I2S channel.
   * @retval None
   */
-#define __HAL_I2S_ENABLE_TX_CHANNEL(__HANDLE__, __CH__)        ll_i2s_enable_tx((__HANDLE__)->p_instance, (__CH__))
+#define HAL_I2S_ENABLE_TX_CHANNEL(__HANDLE__, __CH__)        ll_i2s_enable_tx((__HANDLE__)->p_instance, (__CH__))
 
 /** @brief  Disable the specified I2S transmitter channel.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @param  __CH__ Specifies the I2S channel.
   * @retval None
   */
-#define __HAL_I2S_DISABLE_TX_CHANNEL(__HANDLE__, __CH__)       ll_i2s_disable_tx((__HANDLE__)->p_instance, (__CH__))
+#define HAL_I2S_DISABLE_TX_CHANNEL(__HANDLE__, __CH__)       ll_i2s_disable_tx((__HANDLE__)->p_instance, (__CH__))
 
 /** @brief  Enable the specified I2S receiver channel.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @param  __CH__ Specifies the I2S channel.
   * @retval None
   */
-#define __HAL_I2S_ENABLE_RX_CHANNEL(__HANDLE__, __CH__)        ll_i2s_enable_rx((__HANDLE__)->p_instance, (__CH__))
+#define HAL_I2S_ENABLE_RX_CHANNEL(__HANDLE__, __CH__)        ll_i2s_enable_rx((__HANDLE__)->p_instance, (__CH__))
 
 /** @brief  Disable the specified I2S receiver channel.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @param  __CH__ Specifies the I2S channel.
   * @retval None
   */
-#define __HAL_I2S_DISABLE_RX_CHANNEL(__HANDLE__, __CH__)       ll_i2s_disable_rx((__HANDLE__)->p_instance, (__CH__))
+#define HAL_I2S_DISABLE_RX_CHANNEL(__HANDLE__, __CH__)       ll_i2s_disable_rx((__HANDLE__)->p_instance, (__CH__))
 
 /** @brief  Flush the I2S transmitter FIFO.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_FLUSH_TX_FIFO(__HANDLE__)                    ll_i2s_clr_txfifo_all((__HANDLE__)->p_instance)
+#define HAL_I2S_FLUSH_TX_FIFO(__HANDLE__)                    ll_i2s_clr_txfifo_all((__HANDLE__)->p_instance)
 
 /** @brief  Flush the I2S receiver FIFO.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_FLUSH_RX_FIFO(__HANDLE__)                    ll_i2s_clr_rxfifo_all((__HANDLE__)->p_instance)
+#define HAL_I2S_FLUSH_RX_FIFO(__HANDLE__)                    ll_i2s_clr_rxfifo_all((__HANDLE__)->p_instance)
 
 /** @brief  Enable the I2S DMA Request.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_ENABLE_DMA(__HANDLE__)                       ll_i2s_enable_dma((__HANDLE__)->p_instance)
+#define HAL_I2S_ENABLE_DMA(__HANDLE__)                       ll_i2s_enable_dma((__HANDLE__)->p_instance)
 
 /** @brief  Disable the I2S DMA Request.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_DISABLE_DMA(__HANDLE__)                      ll_i2s_disable_dma((__HANDLE__)->p_instance)
+#define HAL_I2S_DISABLE_DMA(__HANDLE__)                      ll_i2s_disable_dma((__HANDLE__)->p_instance)
 
 /** @brief  Reset the I2S TX DMA request to the lowest enabled channel.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_RESET_TXDMA(__HANDLE__)                  WRITE_REG((__HANDLE__)->p_instance->TXDMA_RST, I2S_TXDMA_RST)
+#define HAL_I2S_RESET_TXDMA(__HANDLE__)                  WRITE_REG((__HANDLE__)->p_instance->TXDMA_RST, I2S_TXDMA_RST)
 
 /** @brief  Reset the I2S RX DMA request to the lowest enabled channel.
   * @param  __HANDLE__ Specifies the I2S Handle.
   * @retval None
   */
-#define __HAL_I2S_RESET_RXDMA(__HANDLE__)                  WRITE_REG((__HANDLE__)->p_instance->RXDMA_RST, I2S_RXDMA_RST)
+#define HAL_I2S_RESET_RXDMA(__HANDLE__)                  WRITE_REG((__HANDLE__)->p_instance->RXDMA_RST, I2S_RXDMA_RST)
 
 /** @brief  Enable the specified I2S interrupts.
   * @param  __HANDLE__      Specifies the I2S Handle.
@@ -397,7 +397,7 @@ typedef struct _hal_i2s_callback {
   *            @arg @ref I2S_IT_RXDA RX FIFO data available interrupt
   * @retval None
   */
-#define __HAL_I2S_ENABLE_IT(__HANDLE__, __INTERRUPT__) \
+#define HAL_I2S_ENABLE_IT(__HANDLE__, __INTERRUPT__) \
     CLEAR_BITS((__HANDLE__)->p_instance->I2S_CHANNEL[0].INTMASK, (__INTERRUPT__))
 
 /** @brief  Disable the specified I2S interrupts.
@@ -410,7 +410,7 @@ typedef struct _hal_i2s_callback {
   *            @arg @ref I2S_IT_RXDA RX FIFO data available interrupt
   * @retval None
   */
-#define __HAL_I2S_DISABLE_IT(__HANDLE__, __INTERRUPT__) \
+#define HAL_I2S_DISABLE_IT(__HANDLE__, __INTERRUPT__) \
     SET_BITS((__HANDLE__)->p_instance->I2S_CHANNEL[0].INTMASK, (__INTERRUPT__))
 
 /** @brief  Check whether the specified I2S flag is set or not.
@@ -423,30 +423,8 @@ typedef struct _hal_i2s_callback {
   *            @arg @ref I2S_FLAG_RXDA RX FIFO data available flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_I2S_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_I2S_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->I2S_CHANNEL[0].INTSTAT, (__FLAG__)) != 0) ? SET : RESET)
-
-/** @brief  Clear the specified I2S flag.
-  * @param  __HANDLE__  Specifies the I2S Handle.
-  * @param  __FLAG__    Specifies the flag to check.
-  *         This parameter can be one of the following values:
-  *            @arg @ref I2S_FLAG_TXFO TX FIFO write overflow flag
-  *            @arg @ref I2S_FLAG_RXFO RX FIFO receive overflow flag
-  * @retval None
-  */
-#define __HAL_I2S_CLEAR_FLAG(__HANDLE__, __FLAG__) \
-do {                                 \
-    if ((__FLAG__) & I2S_FLAG_RXFO)  \
-    {                                \
-        READ_BITS((__HANDLE__)->p_instance->I2S_CHANNEL[0].RXOVR, I2S_RXOVR_RXCHO); \
-    }                                \
-    if ((__FLAG__) & I2S_FLAG_TXFO)  \
-    {                                \
-        READ_BITS((__HANDLE__)->p_instance->I2S_CHANNEL[0].TXOVR, I2S_TXOVR_TXCHO); \
-    }                                \
-} while (0)
-
-/** @} */
 
 /* Private macros ------------------------------------------------------------*/
 /** @defgroup I2S_Private_Macro I2S Private Macros

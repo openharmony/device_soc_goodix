@@ -57,7 +57,7 @@
 /**@brief App dma state types. */
 typedef enum {
     APP_DMA_INVALID = 0,
-    APP_DMA_ACTIVITY,
+    APP_DMA_ENABLE,
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     APP_DMA_SLEEP,
 #endif
@@ -100,7 +100,7 @@ static bool dma_prepare_for_sleep(void)
     hal_dma_state_t state;
 
     for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++) {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
+        if (s_dma_env[i].dma_state == APP_DMA_ENABLE) {
             state = hal_dma_get_state(&s_dma_env[i].handle);
             if ((state != HAL_DMA_STATE_RESET) && (state != HAL_DMA_STATE_READY)) {
                 return false;
@@ -125,7 +125,7 @@ SECTION_RAM_CODE static void dma_wake_up_ind(void)
     bool find = false;
 
     for (uint8_t i = 0; i < DMA_HANDLE_MAX; i++) {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
+        if (s_dma_env[i].dma_state == APP_DMA_ENABLE) {
             hal_dma_resume_reg(&s_dma_env[i].handle);
             find = true;
         }
@@ -147,7 +147,7 @@ void dma_wake_up(int16_t id)
 
     if (s_dma_env[id].dma_state == APP_DMA_SLEEP) {
         hal_dma_resume_reg(&s_dma_env[id].handle);
-        s_dma_env[id].dma_state = APP_DMA_ACTIVITY;
+        s_dma_env[id].dma_state = APP_DMA_ENABLE;
 
         if (!NVIC_GetEnableIRQ(DMA_IRQn)) {
             hal_nvic_clear_pending_irq(DMA_IRQn);
@@ -166,7 +166,7 @@ void dma_tfr_callback(struct _dma_handle *hdma)
     uint8_t i;
 
     for (i = 0; i < DMA_HANDLE_MAX; i++) {
-        if ((s_dma_env[i].dma_state == APP_DMA_ACTIVITY) &&
+        if ((s_dma_env[i].dma_state == APP_DMA_ENABLE) &&
                 (s_dma_env[i].handle.channel == hdma->channel)) {
             if (s_dma_env[i].evt_handler != NULL) {
                 s_dma_env[i].evt_handler(APP_DMA_EVT_TFR);
@@ -181,7 +181,7 @@ void dma_err_callback(struct _dma_handle * hdma)
     uint8_t i;
 
     for (i = 0; i < DMA_HANDLE_MAX; i++) {
-        if ((s_dma_env[i].dma_state == APP_DMA_ACTIVITY) &&
+        if ((s_dma_env[i].dma_state == APP_DMA_ENABLE) &&
                 (s_dma_env[i].handle.channel == hdma->channel)) {
             if (s_dma_env[i].evt_handler != NULL) {
                 s_dma_env[i].evt_handler(APP_DMA_EVT_ERROR);
@@ -203,7 +203,7 @@ static void dma_handle_config(uint8_t *p_i, int16_t *p_id, app_dma_params_t *p_p
                 break;
             } else {
                 *p_id = *p_i;
-                s_dma_env[*p_i].dma_state = APP_DMA_ACTIVITY;
+                s_dma_env[*p_i].dma_state = APP_DMA_ENABLE;
                 break;
             }
         }
@@ -264,7 +264,7 @@ uint16_t app_dma_deinit(int16_t id)
     s_dma_env[id].handle.channel = (dma_channel_t)(-1);
 
     for (i = 0; i < DMA_HANDLE_MAX; i++) {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
+        if (s_dma_env[i].dma_state == APP_DMA_ENABLE) {
             break;
         }
     }
@@ -319,7 +319,7 @@ SECTION_RAM_CODE void DMA_IRQHandler(void)
 #endif
     uint8_t i;
     for (i = 0; i < DMA_HANDLE_MAX; i++) {
-        if (s_dma_env[i].dma_state == APP_DMA_ACTIVITY) {
+        if (s_dma_env[i].dma_state == APP_DMA_ENABLE) {
             hal_dma_irq_handler(&s_dma_env[i].handle);
         }
     }

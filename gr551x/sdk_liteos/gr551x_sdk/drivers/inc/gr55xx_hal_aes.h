@@ -258,31 +258,31 @@ typedef struct _aes_callback {
   * @param  __HANDLE__ AES handle.
   * @retval None
   */
-#define __HAL_AES_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_AES_STATE_RESET)
+#define HAL_AES_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_AES_STATE_RESET)
 
 /** @brief  Enable the specified AES peripheral.
   * @param  __HANDLE__ Specifies the AES Handle.
   * @retval None
   */
-#define __HAL_AES_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->CTRL, AES_CTRL_ENABLE)
+#define HAL_AES_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->CTRL, AES_CTRL_ENABLE)
 
 /** @brief  Disable the specified AES peripheral.
   * @param  __HANDLE__ Specifies the AES Handle.
   * @retval None
   */
-#define __HAL_AES_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->CTRL, AES_CTRL_ENABLE)
+#define HAL_AES_DISABLE(__HANDLE__)                        CLEAR_BITS((__HANDLE__)->p_instance->CTRL, AES_CTRL_ENABLE)
 
 /** @brief  Enable the AES interrupt.
   * @param  __HANDLE__ Specifies the AES Handle.
   * @retval None
   */
-#define __HAL_AES_ENABLE_IT(__HANDLE__)                        ll_aes_enable_it_done((__HANDLE__)->p_instance)
+#define HAL_AES_ENABLE_IT(__HANDLE__)                        ll_aes_enable_it_done((__HANDLE__)->p_instance)
 
 /** @brief  Disable the AES interrupt.
   * @param  __HANDLE__ Specifies the AES Handle.
   * @retval None
   */
-#define __HAL_AES_DISABLE_IT(__HANDLE__)                       ll_aes_disable_it_done((__HANDLE__)->p_instance)
+#define HAL_AES_DISABLE_IT(__HANDLE__)                       ll_aes_disable_it_done((__HANDLE__)->p_instance)
 
 /** @brief  Check whether the specified AES interrupt flag is set or not.
   * @param  __HANDLE__ Specifies the AES Handle.
@@ -291,7 +291,7 @@ typedef struct _aes_callback {
   *            @arg @ref AES_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_AES_GET_FLAG_IT(__HANDLE__, __FLAG__) \
+#define HAL_AES_GET_FLAG_IT(__HANDLE__, __FLAG__) \
     (READ_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified AES interrupt flag.
@@ -301,7 +301,7 @@ typedef struct _aes_callback {
   *            @arg @ref AES_IT_DONE Encrypted or Decrypted Data Done Interrupt
   * @retval None
   */
-#define __HAL_AES_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)          SET_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__))
+#define HAL_AES_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)          SET_BITS((__HANDLE__)->p_instance->INTERRUPT, (__FLAG__))
 
 /** @brief  Check whether the specified AES flag is set or not.
   * @param  __HANDLE__ Specifies the AES Handle.
@@ -313,7 +313,7 @@ typedef struct _aes_callback {
   *            @arg @ref AES_FLAG_KEY_VALID Key valid flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_AES_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_AES_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->STATUS, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */

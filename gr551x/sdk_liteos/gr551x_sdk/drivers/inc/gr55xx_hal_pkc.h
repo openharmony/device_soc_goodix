@@ -367,13 +367,13 @@ typedef struct _hal_pkc_callback {
   * @param  __HANDLE__ PKC handle.
   * @retval None
   */
-#define __HAL_PKC_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_PKC_STATE_RESET)
+#define HAL_PKC_RESET_HANDLE_STATE(__HANDLE__)               ((__HANDLE__)->state = HAL_PKC_STATE_RESET)
 
 /** @brief  Reset the specified PKC peripheral.
   * @param  __HANDLE__ PKC handle.
   * @retval None
   */
-#define __HAL_PKC_RESET(__HANDLE__)                             \
+#define HAL_PKC_RESET(__HANDLE__)                             \
 do {                                                            \
     CLEAR_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_SWRST); \
     SET_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_SWRST);   \
@@ -384,13 +384,13 @@ do {                                                            \
   * @param  __HANDLE__ Specifies the PKC Handle.
   * @retval None
   */
-#define __HAL_PKC_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_EN)
+#define HAL_PKC_ENABLE(__HANDLE__)                           SET_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_EN)
 
 /** @brief  Disable the specified PKC peripheral.
   * @param  __HANDLE__ Specifies the PKC Handle.
   * @retval None
   */
-#define __HAL_PKC_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_EN)
+#define HAL_PKC_DISABLE(__HANDLE__)                          CLEAR_BITS((__HANDLE__)->p_instance->CTRL, PKC_CTRL_EN)
 
 /** @brief  Enable the specified PKC interrupts.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -401,7 +401,7 @@ do {                                                            \
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval None
   */
-#define __HAL_PKC_ENABLE_IT(__HANDLE__, __INTERRUPT__)        SET_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
+#define HAL_PKC_ENABLE_IT(__HANDLE__, __INTERRUPT__)        SET_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
 
 /** @brief  Disable the specified PKC interrupts.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -412,7 +412,7 @@ do {                                                            \
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval None
   */
-#define __HAL_PKC_DISABLE_IT(__HANDLE__, __INTERRUPT__)     CLEAR_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
+#define HAL_PKC_DISABLE_IT(__HANDLE__, __INTERRUPT__)     CLEAR_BITS((__HANDLE__)->p_instance->INTEN, (__INTERRUPT__))
 
 /** @brief  Check whether the specified PKC interrupt flag is set or not.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -423,7 +423,7 @@ do {                                                            \
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_PKC_GET_FLAG_IT(__HANDLE__, __FLAG__) \
+#define HAL_PKC_GET_FLAG_IT(__HANDLE__, __FLAG__) \
     (READ_BITS((__HANDLE__)->p_instance->INTSTAT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified PKC interrupt flag.
@@ -435,7 +435,7 @@ do {                                                            \
   *            @arg @ref PKC_IT_OVF  Big Integer Result Overflow Interrupt source
   * @retval None
   */
-#define __HAL_PKC_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)          SET_BITS((__HANDLE__)->p_instance->INTSTAT, (__FLAG__))
+#define HAL_PKC_CLEAR_FLAG_IT(__HANDLE__, __FLAG__)          SET_BITS((__HANDLE__)->p_instance->INTSTAT, (__FLAG__))
 
 /** @brief  Check whether the specified PKC flag is set or not.
   * @param  __HANDLE__ Specifies the PKC Handle.
@@ -444,7 +444,7 @@ do {                                                            \
   *            @arg @ref PKC_FLAG_BUSY Busy flag
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_PKC_GET_FLAG(__HANDLE__, __FLAG__) \
+#define HAL_PKC_GET_FLAG(__HANDLE__, __FLAG__) \
     ((READ_BITS((__HANDLE__)->p_instance->WORKSTAT, (__FLAG__)) != 0) ? SET : RESET)
 
 /** @} */

@@ -320,64 +320,64 @@ typedef struct _dma_handle {
   */
 
 /** @brief  Check if DMA channel instance is valid.
-  * @param  __instance__ DMA channel instance.
-  * @retval SET (__instance__ is valid) or RESET (__instance__ is invalid)
+  * @param  instance DMA channel instance.
+  * @retval SET (instance is valid) or RESET (instance is invalid)
   */
-__STATIC_INLINE bool IS_DMA_ALL_INSTANCE(dma_channel_t __instance__)
+__STATIC_INLINE bool IS_DMA_ALL_INSTANCE(dma_channel_t instance)
 {
-    return (((__instance__) == DMA_Channel0) || ((__instance__) == DMA_Channel1) || \
-            ((__instance__) == DMA_Channel2) || ((__instance__) == DMA_Channel3) || \
-            ((__instance__) == DMA_Channel4) || ((__instance__) == DMA_Channel5) || \
-            ((__instance__) == DMA_Channel6) || ((__instance__) == DMA_Channel7));
+    return (((instance) == DMA_Channel0) || ((instance) == DMA_Channel1) || \
+            ((instance) == DMA_Channel2) || ((instance) == DMA_Channel3) || \
+            ((instance) == DMA_Channel4) || ((instance) == DMA_Channel5) || \
+            ((instance) == DMA_Channel6) || ((instance) == DMA_Channel7));
 }
 
 /** @brief  Check if DMA request is valid.
-  * @param  __REQUEST__ DMA request.
-  * @retval SET (__REQUEST__ is valid) or RESET (__REQUEST__ is invalid)
+  * @param  REQUEST DMA request.
+  * @retval SET (REQUEST is valid) or RESET (REQUEST is invalid)
   */
-__STATIC_INLINE bool IS_DMA_ALL_REQUEST(uint32_t __REQUEST__)
+__STATIC_INLINE bool IS_DMA_ALL_REQUEST(uint32_t REQUEST)
 {
-    return (((__REQUEST__) == DMA_REQUEST_SPIM_TX)  || \
-            ((__REQUEST__) == DMA_REQUEST_SPIM_RX)  || \
-            ((__REQUEST__) == DMA_REQUEST_SPIS_TX)  || \
-            ((__REQUEST__) == DMA_REQUEST_SPIS_RX)  || \
-            ((__REQUEST__) == DMA_REQUEST_QSPI0_TX) || \
-            ((__REQUEST__) == DMA_REQUEST_QSPI0_RX) || \
-            ((__REQUEST__) == DMA_REQUEST_I2C0_TX)  || \
-            ((__REQUEST__) == DMA_REQUEST_I2C0_RX)  || \
-            ((__REQUEST__) == DMA_REQUEST_I2C1_TX)  || \
-            ((__REQUEST__) == DMA_REQUEST_I2C1_RX)  || \
-            ((__REQUEST__) == DMA_REQUEST_I2S_S_TX) || \
-            ((__REQUEST__) == DMA_REQUEST_I2S_S_RX) || \
-            ((__REQUEST__) == DMA_REQUEST_UART0_TX) || \
-            ((__REQUEST__) == DMA_REQUEST_UART0_RX) || \
-            ((__REQUEST__) == DMA_REQUEST_QSPI1_TX) || \
-            ((__REQUEST__) == DMA_REQUEST_QSPI1_RX) || \
-            ((__REQUEST__) == DMA_REQUEST_I2S_M_TX) || \
-            ((__REQUEST__) == DMA_REQUEST_I2S_M_RX) || \
-            ((__REQUEST__) == DMA_REQUEST_SNSADC)   || \
-            ((__REQUEST__) == DMA_REQUEST_MEM));
+    return (((REQUEST) == DMA_REQUEST_SPIM_TX)  || \
+            ((REQUEST) == DMA_REQUEST_SPIM_RX)  || \
+            ((REQUEST) == DMA_REQUEST_SPIS_TX)  || \
+            ((REQUEST) == DMA_REQUEST_SPIS_RX)  || \
+            ((REQUEST) == DMA_REQUEST_QSPI0_TX) || \
+            ((REQUEST) == DMA_REQUEST_QSPI0_RX) || \
+            ((REQUEST) == DMA_REQUEST_I2C0_TX)  || \
+            ((REQUEST) == DMA_REQUEST_I2C0_RX)  || \
+            ((REQUEST) == DMA_REQUEST_I2C1_TX)  || \
+            ((REQUEST) == DMA_REQUEST_I2C1_RX)  || \
+            ((REQUEST) == DMA_REQUEST_I2S_S_TX) || \
+            ((REQUEST) == DMA_REQUEST_I2S_S_RX) || \
+            ((REQUEST) == DMA_REQUEST_UART0_TX) || \
+            ((REQUEST) == DMA_REQUEST_UART0_RX) || \
+            ((REQUEST) == DMA_REQUEST_QSPI1_TX) || \
+            ((REQUEST) == DMA_REQUEST_QSPI1_RX) || \
+            ((REQUEST) == DMA_REQUEST_I2S_M_TX) || \
+            ((REQUEST) == DMA_REQUEST_I2S_M_RX) || \
+            ((REQUEST) == DMA_REQUEST_SNSADC)   || \
+            ((REQUEST) == DMA_REQUEST_MEM));
 }
 
 /** @brief  Check if DMA direction is valid.
-  * @param  __DIRECTION__ DMA direction.
-  * @retval SET (__DIRECTION__ is valid) or RESET (__DIRECTION__ is invalid)
+  * @param  DIRECTION DMA direction.
+  * @retval SET (DIRECTION is valid) or RESET (DIRECTION is invalid)
   */
-__STATIC_INLINE bool IS_DMA_DIRECTION(uint32_t __DIRECTION__)
+__STATIC_INLINE bool IS_DMA_DIRECTION(uint32_t DIRECTION)
 {
-    return (((__DIRECTION__) == DMA_MEMORY_TO_MEMORY) || \
-            ((__DIRECTION__) == DMA_MEMORY_TO_PERIPH) || \
-            ((__DIRECTION__) == DMA_PERIPH_TO_MEMORY) || \
-            ((__DIRECTION__) == DMA_PERIPH_TO_PERIPH));
+    return (((DIRECTION) == DMA_MEMORY_TO_MEMORY) || \
+            ((DIRECTION) == DMA_MEMORY_TO_PERIPH) || \
+            ((DIRECTION) == DMA_PERIPH_TO_MEMORY) || \
+            ((DIRECTION) == DMA_PERIPH_TO_PERIPH));
 }
 
 /** @brief  Check if DMA buffer size is valid.
-  * @param  __SIZE__ DMA buffer size.
-  * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
+  * @param  SIZE DMA buffer size.
+  * @retval SET (SIZE is valid) or RESET (SIZE is invalid)
   */
-__STATIC_INLINE bool IS_DMA_BUFFER_SIZE(uint32_t __SIZE__)
+__STATIC_INLINE bool IS_DMA_BUFFER_SIZE(uint32_t SIZE)
 {
-    return (((__SIZE__) >= 0x1) && ((__SIZE__) < 0xFFF));
+    return (((SIZE) >= 0x1) && ((SIZE) < 0xFFF));
 }
 
 /** @brief  Check if DMA source address increment state is valid.
@@ -403,44 +403,44 @@ __STATIC_INLINE bool IS_DMA_DESTINATION_INC_STATE(uint32_t __STATE__)
 }
 
 /** @brief  Check if DMA source data size is valid.
-  * @param  __SIZE__ DMA source data size.
-  * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
+  * @param  SIZE DMA source data size.
+  * @retval SET (SIZE is valid) or RESET (SIZE is invalid)
   */
-__STATIC_INLINE bool IS_DMA_SOURCE_DATA_SIZE(uint32_t __SIZE__)
+__STATIC_INLINE bool IS_DMA_SOURCE_DATA_SIZE(uint32_t SIZE)
 {
-    return (((__SIZE__) == DMA_SDATAALIGN_BYTE)     || \
-            ((__SIZE__) == DMA_SDATAALIGN_HALFWORD) || \
-            ((__SIZE__) == DMA_SDATAALIGN_WORD));
+    return (((SIZE) == DMA_SDATAALIGN_BYTE)     || \
+            ((SIZE) == DMA_SDATAALIGN_HALFWORD) || \
+            ((SIZE) == DMA_SDATAALIGN_WORD));
 }
 
 /** @brief  Check if DMA destination data size is valid.
-  * @param  __SIZE__ DMA destination data size.
-  * @retval SET (__SIZE__ is valid) or RESET (__SIZE__ is invalid)
+  * @param  SIZE DMA destination data size.
+  * @retval SET (SIZE is valid) or RESET (SIZE is invalid)
   */
-__STATIC_INLINE bool IS_DMA_DESTINATION_DATA_SIZE(uint32_t __SIZE__)
+__STATIC_INLINE bool IS_DMA_DESTINATION_DATA_SIZE(uint32_t SIZE)
 {
-    return (((__SIZE__) == DMA_DDATAALIGN_BYTE)     || \
-            ((__SIZE__) == DMA_DDATAALIGN_HALFWORD) || \
-            ((__SIZE__) == DMA_DDATAALIGN_WORD));
+    return (((SIZE) == DMA_DDATAALIGN_BYTE)     || \
+            ((SIZE) == DMA_DDATAALIGN_HALFWORD) || \
+            ((SIZE) == DMA_DDATAALIGN_WORD));
 }
 
 /** @brief  Check if DMA mode is valid.
-  * @param  __MODE__ DMA mode.
-  * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
+  * @param  MODE DMA mode.
+  * @retval SET (MODE is valid) or RESET (MODE is invalid)
   */
-__STATIC_INLINE bool IS_DMA_MODE(uint32_t __MODE__)
+__STATIC_INLINE bool IS_DMA_MODE(uint32_t MODE)
 {
-    return (((__MODE__) == DMA_NORMAL) || ((__MODE__) == DMA_CIRCULAR));
+    return (((MODE) == DMA_NORMAL) || ((MODE) == DMA_CIRCULAR));
 }
 
 /** @brief  Check if DMA priority is valid.
-  * @param  __PRIORITY__ DMA priority.
-  * @retval SET (__PRIORITY__ is valid) or RESET (__PRIORITY__ is invalid)
+  * @param  PRIORITY DMA priority.
+  * @retval SET (PRIORITY is valid) or RESET (PRIORITY is invalid)
   */
-__STATIC_INLINE bool IS_DMA_PRIORITY(uint32_t __PRIORITY__)
+__STATIC_INLINE bool IS_DMA_PRIORITY(uint32_t PRIORITY)
 {
-    return (((__PRIORITY__) == DMA_PRIORITY_LOW ) || ((__PRIORITY__) == DMA_PRIORITY_MEDIUM) || \
-            ((__PRIORITY__) == DMA_PRIORITY_HIGH) || ((__PRIORITY__) == DMA_PRIORITY_VERY_HIGH));
+    return (((PRIORITY) == DMA_PRIORITY_LOW ) || ((PRIORITY) == DMA_PRIORITY_MEDIUM) || \
+            ((PRIORITY) == DMA_PRIORITY_HIGH) || ((PRIORITY) == DMA_PRIORITY_VERY_HIGH));
 }
 /** @} */
 

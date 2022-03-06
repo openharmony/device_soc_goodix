@@ -254,12 +254,12 @@ typedef struct _hal_calendar_callback {
 /** @brief  Enable the specified CALENDAR peripheral.
   * @retval None
   */
-#define __HAL_CALENDAR_ENABLE()                             SET_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_EN)
+#define HAL_CALENDAR_ENABLE()                             SET_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_EN)
 
 /** @brief  Disable the specified CALENDAR peripheral.
   * @retval None
   */
-#define __HAL_CALENDAR_DISABLE()                          CLEAR_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_EN)
+#define HAL_CALENDAR_DISABLE()                          CLEAR_BITS(AON->CALENDAR_TIMER_CTL, AON_CALENDAR_TIMER_CTL_EN)
 
 /** @brief  Enable the specified CALENDAR interrupts.
   * @param  __INTERRUPT__ Specifies the interrupt source to enable.
@@ -268,7 +268,7 @@ typedef struct _hal_calendar_callback {
   *            @arg @ref CALENDAR_IT_WARP  Warp Interrupt
   * @retval None
   */
-#define __HAL_CALENDAR_ENABLE_IT(__INTERRUPT__)             SET_BITS(AON->CALENDAR_TIMER_CTL, (__INTERRUPT__))
+#define HAL_CALENDAR_ENABLE_IT(__INTERRUPT__)             SET_BITS(AON->CALENDAR_TIMER_CTL, (__INTERRUPT__))
 
 /** @brief  Disable the specified CALENDAR interrupts.
   * @param  __INTERRUPT__ Specifies the interrupt source to disable.
@@ -277,7 +277,7 @@ typedef struct _hal_calendar_callback {
   *            @arg @ref CALENDAR_IT_WARP  Warp Interrupt
   * @retval None
   */
-#define __HAL_CALENDAR_DISABLE_IT(__INTERRUPT__)            CLEAR_BITS(AON->CALENDAR_TIMER_CTL, (__INTERRUPT__))
+#define HAL_CALENDAR_DISABLE_IT(__INTERRUPT__)            CLEAR_BITS(AON->CALENDAR_TIMER_CTL, (__INTERRUPT__))
 
 /** @brief  Check whether the specified CALENDAR interrupt flag is set or not.
   * @param  __FLAG__ Specifies the interrupt source to check.
@@ -286,7 +286,7 @@ typedef struct _hal_calendar_callback {
   *            @arg @ref CALENDAR_FLAG_WARP  Warp Interrupt event
   * @retval The new state of __IT__ (TRUE or FALSE).
   */
-#define __HAL_CALENDAR_GET_IT_SOURCE(__FLAG__)              (READ_BITS(AON->SLP_EVENT, (__FLAG__)) == (__FLAG__))
+#define HAL_CALENDAR_GET_IT_SOURCE(__FLAG__)              (READ_BITS(AON->SLP_EVENT, (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified CALENDAR flag.
   * @param  __FLAG__ Specifies the flag to clear.
@@ -295,7 +295,7 @@ typedef struct _hal_calendar_callback {
   *            @arg @ref CALENDAR_FLAG_WARP  Warp Interrupt event
   * @retval None
   */
-#define __HAL_CALENDAR_CLEAR_FLAG(__FLAG__)                 WRITE_REG(AON->SLP_EVENT, ~(__FLAG__))
+#define HAL_CALENDAR_CLEAR_FLAG(__FLAG__)                 WRITE_REG(AON->SLP_EVENT, ~(__FLAG__))
 
 /** @} */
 

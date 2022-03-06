@@ -133,7 +133,7 @@ typedef struct {
     uint16_t credits;             /**< The credits is 0 if this packet is being sent,
                                        otherwise it represents the number of credits consumed by the sdu. */
     uint16_t length;              /**< The lenght of data. */
-    uint8_t  data[__ARRAY_EMPTY]; /**< The data of this sdu packet. */
+    uint8_t  data[ARRAY_EMPTY]; /**< The data of this sdu packet. */
 } lecb_sdu_t;
 
 /** @brief Receive LE credit based connection request packet indication. */

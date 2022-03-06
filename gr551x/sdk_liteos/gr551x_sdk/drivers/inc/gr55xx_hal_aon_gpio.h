@@ -198,7 +198,7 @@ typedef struct _aon_gpio_callback {
   *          This parameter can be AON_GPIO_PIN_x where x can be (0..15).
   * @retval The new state of __AON_GPIO_PIN__ (SET or RESET).
   */
-#define __HAL_AON_GPIO_IT_GET_IT(__AON_GPIO_PIN__)         ll_aon_gpio_read_flag_it(__AON_GPIO_PIN__)
+#define HAL_AON_GPIO_IT_GET_IT(__AON_GPIO_PIN__)         ll_aon_gpio_read_flag_it(__AON_GPIO_PIN__)
 
 /**
   * @brief  Clear the AON_GPIO pin pending bits.
@@ -206,7 +206,7 @@ typedef struct _aon_gpio_callback {
   *          This parameter can be any combination of AON_GPIO_PIN_x where x can be (0..15).
   * @retval None
   */
-#define __HAL_AON_GPIO_IT_CLEAR_IT(__AON_GPIO_PIN__)       ll_aon_gpio_clear_flag_it(__AON_GPIO_PIN__)
+#define HAL_AON_GPIO_IT_CLEAR_IT(__AON_GPIO_PIN__)       ll_aon_gpio_clear_flag_it(__AON_GPIO_PIN__)
 
 /** @} */
 

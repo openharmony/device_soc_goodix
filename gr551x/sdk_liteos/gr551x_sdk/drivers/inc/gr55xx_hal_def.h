@@ -49,8 +49,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __GR55xx_HAL_DEF__
-#define __GR55xx_HAL_DEF__
+#ifndef GR55xx_HAL_DEF
+#define GR55xx_HAL_DEF
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
@@ -115,7 +115,7 @@ typedef enum {
   * @param  __DMA_HANDLE_ specifies the DMA handle.
   * @retval None
   */
-#define __HAL_LINKDMA(__HANDLE__, __PPP_DMA_FIELD_, __DMA_HANDLE_)                 \
+#define HAL_LINKDMA(__HANDLE__, __PPP_DMA_FIELD_, __DMA_HANDLE_)                 \
 do {                                                                               \
     (__HANDLE__)->__PPP_DMA_FIELD_ = &(__DMA_HANDLE_);                             \
     (__DMA_HANDLE_).p_parent = (__HANDLE__);                                       \
@@ -136,34 +136,17 @@ do {                                                                            
   *            hal_ppp_msp_init which will reconfigure the low level hardware.
   * @retval None
   */
-#define __HAL_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->state = 0U)
+#define HAL_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->state = 0U)
 
 #if (USE_RTOS == 1U)
 #error " USE_RTOS should be 0 in the current HAL release "
 #else
 /**
-  * @brief  Lock peripheral handle.
-  * @param  __HANDLE__ specifies the peripheral handle.
-  * @retval HAL_BUSY If handle is locked.
-  */
-#define __HAL_LOCK(__HANDLE__)                                              \
-do {                                                                        \
-    if ((__HANDLE__)->lock == HAL_LOCKED)                                   \
-    {                                                                       \
-        return HAL_BUSY;                                                    \
-    }                                                                       \
-    else                                                                    \
-    {                                                                       \
-        (__HANDLE__)->lock = HAL_LOCKED;                                    \
-    }                                                                       \
-} while (0U)
-
-/**
   * @brief  Unlock peripheral handle.
   * @param  __HANDLE__ specifies the peripheral handle.
   * @retval None
   */
-#define __HAL_UNLOCK(__HANDLE__)                                            \
+#define HAL_UNLOCK(__HANDLE__)                                            \
 do {                                                                        \
     (__HANDLE__)->lock = HAL_UNLOCKED;                                      \
 } while (0U)

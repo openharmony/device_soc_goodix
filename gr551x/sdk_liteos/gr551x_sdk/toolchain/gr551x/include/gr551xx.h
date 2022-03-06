@@ -290,7 +290,7 @@ typedef struct _i2c_regs {
     __IM  uint32_t CLR_RD_REQ;                 /**< Clear RQ_REQ Interrupt,                      Address offset: 0x50 */
     __IM  uint32_t CLR_TX_ABRT;                /**< Clear TX_ABRT Interrupt,                     Address offset: 0x54 */
     __IM  uint32_t CLR_RX_DONE;                /**< Clear RX_DONE Interrupt,                     Address offset: 0x58 */
-    __IM  uint32_t CLR_ACTIVITY;               /**< Clear ACTIVITY Interrupt,                    Address offset: 0x5C */
+    __IM  uint32_t CLR_ENABLE;               /**< Clear ENABLE Interrupt,                    Address offset: 0x5C */
     __IM  uint32_t CLR_STOP_DET;               /**< Clear STOP_DET Interrupt,                    Address offset: 0x60 */
     __IM  uint32_t CLR_START_DET;              /**< Clear START_DET Interrupt,                   Address offset: 0x64 */
     __IM  uint32_t CLR_GEN_CALL;               /**< Clear GEN_CALL Interrupt,                    Address offset: 0x68 */
@@ -3012,10 +3012,10 @@ typedef struct _rng_regs {
 #define I2C_INTR_STOP_DET_Msk                               (0x1U << I2C_INTR_STOP_DET_Pos)
 #define I2C_INTR_STOP_DET                                   I2C_INTR_STOP_DET_Msk
 
-#define I2C_INTR_ACTIVITY_Pos                               (8U)
-#define I2C_INTR_ACTIVITY_Len                               (1U)
-#define I2C_INTR_ACTIVITY_Msk                               (0x1U << I2C_INTR_ACTIVITY_Pos)
-#define I2C_INTR_ACTIVITY                                   I2C_INTR_ACTIVITY_Msk
+#define I2C_INTR_ENABLE_Pos                               (8U)
+#define I2C_INTR_ENABLE_Len                               (1U)
+#define I2C_INTR_ENABLE_Msk                               (0x1U << I2C_INTR_ENABLE_Pos)
+#define I2C_INTR_ENABLE                                   I2C_INTR_ENABLE_Msk
 
 #define I2C_INTR_RX_DONE_Pos                                (7U)
 #define I2C_INTR_RX_DONE_Len                                (1U)
@@ -3081,15 +3081,15 @@ typedef struct _rng_regs {
 #define I2C_ENABLE_ENABLE                                   I2C_ENABLE_ENABLE_Msk
 
 /*******************  Bit definition for IC_STATUS register  ******************/
-#define I2C_STATUS_SLV_ACTIVITY_Pos                         (6U)
-#define I2C_STATUS_SLV_ACTIVITY_Len                         (1U)
-#define I2C_STATUS_SLV_ACTIVITY_Msk                         (0x1U << I2C_STATUS_SLV_ACTIVITY_Pos)
-#define I2C_STATUS_SLV_ACTIVITY                             I2C_STATUS_SLV_ACTIVITY_Msk
+#define I2C_STATUS_SLV_ENABLE_Pos                         (6U)
+#define I2C_STATUS_SLV_ENABLE_Len                         (1U)
+#define I2C_STATUS_SLV_ENABLE_Msk                         (0x1U << I2C_STATUS_SLV_ENABLE_Pos)
+#define I2C_STATUS_SLV_ENABLE                             I2C_STATUS_SLV_ENABLE_Msk
 
-#define I2C_STATUS_MST_ACTIVITY_Pos                         (5U)
-#define I2C_STATUS_MST_ACTIVITY_Len                         (1U)
-#define I2C_STATUS_MST_ACTIVITY_Msk                         (0x1U << I2C_STATUS_MST_ACTIVITY_Pos)
-#define I2C_STATUS_MST_ACTIVITY                             I2C_STATUS_MST_ACTIVITY_Msk
+#define I2C_STATUS_MST_ENABLE_Pos                         (5U)
+#define I2C_STATUS_MST_ENABLE_Len                         (1U)
+#define I2C_STATUS_MST_ENABLE_Msk                         (0x1U << I2C_STATUS_MST_ENABLE_Pos)
+#define I2C_STATUS_MST_ENABLE                             I2C_STATUS_MST_ENABLE_Msk
 
 #define I2C_STATUS_RFF_Pos                                  (4U)
 #define I2C_STATUS_RFF_Len                                  (1U)
@@ -3111,10 +3111,10 @@ typedef struct _rng_regs {
 #define I2C_STATUS_TFNF_Msk                                 (0x1U << I2C_STATUS_TFNF_Pos)
 #define I2C_STATUS_TFNF                                     I2C_STATUS_TFNF_Msk
 
-#define I2C_STATUS_ACTIVITY_Pos                             (0U)
-#define I2C_STATUS_ACTIVITY_Len                             (1U)
-#define I2C_STATUS_ACTIVITY_Msk                             (0x1U << I2C_STATUS_ACTIVITY_Pos)
-#define I2C_STATUS_ACTIVITY                                 I2C_STATUS_ACTIVITY_Msk
+#define I2C_STATUS_ENABLE_Pos                             (0U)
+#define I2C_STATUS_ENABLE_Len                             (1U)
+#define I2C_STATUS_ENABLE_Msk                             (0x1U << I2C_STATUS_ENABLE_Pos)
+#define I2C_STATUS_ENABLE                                 I2C_STATUS_ENABLE_Msk
 
 /*******************  Bit definition for IC_RXFLR register  *******************/
 #define I2C_RXFLR_RXFLR_Pos                                 (0U)

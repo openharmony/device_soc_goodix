@@ -314,7 +314,7 @@ typedef struct {
     uint8_t      per_sync_idx;          /**< Periodic syncronization index,
                                              valid only for periodic advertising report. */
     uint16_t     length;                /**< Report length. */
-    uint8_t      data[__ARRAY_EMPTY];   /**< Report. */
+    uint8_t      data[ARRAY_EMPTY];   /**< Report. */
 } gap_ext_adv_report_ind_t;
 
 /** @brief  Name of peer device indication. */
@@ -322,7 +322,7 @@ typedef struct {
     gap_addr_t  peer_addr;              /**< Peer device bd address. */
     uint8_t     addr_type;              /**< Peer device address type. */
     uint8_t     name_len;               /**< Peer device name length. */
-    uint8_t     name[__ARRAY_EMPTY];    /**< Peer device name. */
+    uint8_t     name[ARRAY_EMPTY];    /**< Peer device name. */
 } gap_peer_name_ind_t;
 
 /** @brief Connection parameter used to update connection parameters. */
@@ -841,7 +841,7 @@ uint16_t ble_gap_latency_set(uint8_t conn_idx, uint16_t latency);
 
 /**
  *****************************************************************************************
- * @brief Consult BLE connection activity - plan situation function.
+ * @brief Consult BLE connection event - plan situation function.
  * @note  This function should be called when connection established and no periodic advertising exists.
  *
  * @param[out] p_act_num:       Pointer to the number of existing connection activities.

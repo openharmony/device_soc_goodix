@@ -131,7 +131,7 @@ typedef struct {
     uint16_t handle;                       /**< Handle of the attribute to be written. */
     uint16_t offset;                       /**< Offset at which the data has to be written. */
     uint16_t length;                       /**< Data length to be written. */
-    uint8_t  value[__ARRAY_EMPTY];         /**< Data to be written to characteristic value. */
+    uint8_t  value[ARRAY_EMPTY];         /**< Data to be written to characteristic value. */
 } gatts_write_req_cb_t;
 
 /**

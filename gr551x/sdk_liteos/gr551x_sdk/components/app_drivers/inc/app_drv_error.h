@@ -104,14 +104,6 @@ extern "C" {
 /** @} */
 /** @} */
 
-/**
- * @defgroup APP_DRV_ERROR_TYPEDEF Typedefs
- * @{
- */
-/**@brief APP driver error type. */
-typedef uint16_t   app_drv_err_t;
-/**@} */
-
 #ifdef __cplusplus
 }
 #endif

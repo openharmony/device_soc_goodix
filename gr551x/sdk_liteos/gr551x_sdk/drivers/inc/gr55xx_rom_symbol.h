@@ -58,8 +58,8 @@ void __main(void);
 void system_platform_init(void);
 int main(void);
 void $Super$$main(void);
-void __iar_program_start(void);
-void __iar_data_init3(void);
+void iar_program_start(void);
+void iar_data_init3(void);
 
 void hal_pwr_config_timer_wakeup_ext(uint8_t timer_mode, uint32_t load_count);
 void hal_pwr_register_timer_elaspsed_handler(pwr_slp_elapsed_handler_t pwr_slp_elapsed_hander);
