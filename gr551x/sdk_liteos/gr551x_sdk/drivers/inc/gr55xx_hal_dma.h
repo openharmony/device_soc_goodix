@@ -381,25 +381,25 @@ __STATIC_INLINE bool IS_DMA_BUFFER_SIZE(uint32_t SIZE)
 }
 
 /** @brief  Check if DMA source address increment state is valid.
-  * @param  __STATE__ DMA source address increment state.
-  * @retval SET (__STATE__ is valid) or RESET (__STATE__ is invalid)
+  * @param  STATE DMA source address increment state.
+  * @retval SET (STATE is valid) or RESET (STATE is invalid)
   */
-__STATIC_INLINE bool IS_DMA_SOURCE_INC_STATE(uint32_t __STATE__)
+__STATIC_INLINE bool IS_DMA_SOURCE_INC_STATE(uint32_t STATE)
 {
-    return (((__STATE__) == DMA_SRC_INCREMENT) || \
-            ((__STATE__) == DMA_SRC_DECREMENT) || \
-            ((__STATE__) == DMA_SRC_NO_CHANGE));
+    return (((STATE) == DMA_SRC_INCREMENT) || \
+            ((STATE) == DMA_SRC_DECREMENT) || \
+            ((STATE) == DMA_SRC_NO_CHANGE));
 }
 
 /** @brief  Check if DMA destination address increment state is valid.
-  * @param  __STATE__ DMA destination address increment state.
-  * @retval SET (__STATE__ is valid) or RESET (__STATE__ is invalid)
+  * @param  STATE DMA destination address increment state.
+  * @retval SET (STATE is valid) or RESET (STATE is invalid)
   */
-__STATIC_INLINE bool IS_DMA_DESTINATION_INC_STATE(uint32_t __STATE__)
+__STATIC_INLINE bool IS_DMA_DESTINATION_INC_STATE(uint32_t STATE)
 {
-    return (((__STATE__) == DMA_DST_INCREMENT) || \
-            ((__STATE__) == DMA_DST_DECREMENT) || \
-            ((__STATE__) == DMA_DST_NO_CHANGE));
+    return (((STATE) == DMA_DST_INCREMENT) || \
+            ((STATE) == DMA_DST_DECREMENT) || \
+            ((STATE) == DMA_DST_NO_CHANGE));
 }
 
 /** @brief  Check if DMA source data size is valid.

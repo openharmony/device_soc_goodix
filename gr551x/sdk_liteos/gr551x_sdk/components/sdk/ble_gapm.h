@@ -119,15 +119,15 @@
 #define BLE_APPEARANCE_PULSE_OXIMETER_FINGERTIP            3137     /**< Fingertip (Pulse Oximeter subtype). */
 #define BLE_APPEARANCE_PULSE_OXIMETER_WRIST_WORN           3138     /**< Wrist Worn(Pulse Oximeter subtype). */
 #define BLE_APPEARANCE_GENERIC_WEIGHT_SCALE                3200     /**< Generic Weight Scale. */
-#define BLE_APPEARANCE_GENERIC_OUTDOOR_SPORTS_ACT          5184     /**< Generic Outdoor Sports Activity. */
+#define BLE_APPEARANCE_GENERIC_OUTDOOR_SPORTS_ACT          5184     /**< Generic Outdoor Sports Event. */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_DISP         5185     /**< Location Display Device
-                                                                         (Outdoor Sports Activity subtype). */
+                                                                         (Outdoor Sports Event subtype). */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_DISP 5186     /**< Location and Navigation Display Device
-                                                                         (Outdoor Sports Activity subtype). */
+                                                                         (Outdoor Sports Event subtype). */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_POD          5187     /**< Location Pod (Outdoor Sports
-                                                                         Activity subtype). */
+                                                                         Event subtype). */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_POD  5188     /**< Location and Navigation Pod (Outdoor Sports
-                                                                         Activity subtype). */
+                                                                         Event subtype). */
 
 /** @defgroup BLE_GAP_PHYS GAP PHYs (bitmask)
  * @{ */

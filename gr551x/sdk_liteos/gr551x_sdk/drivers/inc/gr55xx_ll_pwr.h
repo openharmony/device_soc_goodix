@@ -95,8 +95,8 @@ extern "C" {
 /**
   * @brief PWR_LL_PM_GET_MEM_PWR_MSK PWR Get Memory Power Value Mask
   */
-#define __LL_PWR_GET_MEM_PWR_MASK(__POWER__)   (((__POWER__) == LL_PWR_MEM_POWER_OFF) ? 0x0U : \
-                                                (((__POWER__) == LL_PWR_MEM_POWER_FULL) ? 0xAAAAAAAAU : 0xFFFFFFFFU))
+#define LL_PWR_GET_MEM_PWR_MASK(POWER)   (((POWER) == LL_PWR_MEM_POWER_OFF) ? 0x0U : \
+                                         (((POWER) == LL_PWR_MEM_POWER_FULL) ? 0xAAAAAAAAU : 0xFFFFFFFFU))
 
 /** @} */
 
