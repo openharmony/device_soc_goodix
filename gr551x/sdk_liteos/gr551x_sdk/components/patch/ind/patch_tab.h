@@ -98,7 +98,7 @@ extern int ble_sdk_gattc_event_ind_handler_patch(uint16_t const msgid, struct ga
 
 #if CFG_MAX_SCAN
 // gapm task for scan
-extern int gapm_activity_create_cmd_handler_patch(uint16_t const msgid, struct gapm_create_cmd const *param,
+extern int gapm_activity_create_cmd_handler_patch(uint16_t const msgid, struct gapm_activity_create_cmd const *param,
                                                   uint16_t const dest_id, uint16_t const src_id);
 extern int gapm_hci_handler_patch(uint16_t const msgid, uint16_t const *event,
                                   uint16_t dest_id, uint16_t opcode);
