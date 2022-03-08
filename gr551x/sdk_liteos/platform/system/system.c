@@ -229,7 +229,7 @@ long simple_strtol(const char *cp, char **endp, unsigned int base)
 * @fmt:     format of buffer
 * @args:     arguments
 */
-int vsscanf_s(const char *__restrict __s, const char *__restrict __format, va_list arg)
+int pre_vsscanf(const char *__restrict __s, const char *__restrict __format, va_list arg)
 {
     const char *str = __s;
     char *next;
@@ -467,7 +467,7 @@ int sscanf(const char *__restrict __s, const char *__restrict __format, ...)
     int i;
 
     va_start(args, __format);
-    i = vsscanf_s(__s, __format, args);
+    i = pre_vsscanf(__s, __format, args);
     va_end(args);
 
     return i;
