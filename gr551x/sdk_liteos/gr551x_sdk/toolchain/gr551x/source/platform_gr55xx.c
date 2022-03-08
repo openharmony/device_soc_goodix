@@ -296,13 +296,13 @@ void $Sub$$main(void)
 
 void __main(void)
 {
-    iar_program_start();
+    __iar_program_start();
 }
 
-int low_level_init(void)
+int __low_level_init(void)
 {
     // call IAR table copy function.
-    iar_data_init3();
+    __iar_data_init3();
     system_platform_init();
     return 0;
 }

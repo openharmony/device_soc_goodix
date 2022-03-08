@@ -34,7 +34,7 @@
 /*----------------------------------------------------------------------------
   WEAK Functions
  *----------------------------------------------------------------------------*/
-__WEAK void GR5515_E_sdk_init(void)
+__WEAK void sdk_init(void)
 {
     /* Prevent unused argument(s) compilation warning */
     return;
@@ -157,7 +157,7 @@ void set_msp(void)
 #endif
 }
 
-static void sdk_init(void)
+static void sdk_init_patch(void)
 {
     sactter_copy_info_t sactter_copy_info = {0};
 
@@ -192,7 +192,7 @@ void SystemInit(void)
 
     if (COLD_BOOT == get_wakeup_flag()) {
 #if defined(GR5515_D)
-        sdk_init();
+        sdk_init_patch();
 #endif
     }
 
@@ -202,7 +202,7 @@ void SystemInit(void)
 void system_platform_init(void)
 {
 #if (!defined(ROM_RUN_IN_FLASH)) && defined(GR5515_E)
-    GR5515_E_sdk_init();
+    sdk_init();
 #else
 #if defined(GR5515_E)
     rom_init();
