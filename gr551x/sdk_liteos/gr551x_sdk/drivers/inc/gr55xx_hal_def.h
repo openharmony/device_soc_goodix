@@ -123,24 +123,10 @@ do {                                                                            
 
 /** @brief Reset the Handle's State field.
   * @param __HANDLE__ specifies the Peripheral Handle.
-  * @note  This macro can be used for the following purposes:
-  *          - When the Handle is declared as local variable; before passing it as parameter
-  *            to hal_ppp_init() for the first time, it is mandatory to use this macro
-  *            to set the Handle's "State" field to 0.
-  *            Otherwise, "State" field may have any random value and the first time the function
-  *            hal_ppp_init() is called, the low level hardware initialization will be missed
-  *            (i.e. hal_ppp_msp_init() will not be executed).
-  *          - When there is a need to reconfigure the low level hardware: instead of calling
-  *            hal_ppp_deinit() then hal_ppp_init(), user can make a call to this macro then hal_ppp_init().
-  *            In this later function, when the Handle's "State" field is set to 0, it will execute the function
-  *            hal_ppp_msp_init which will reconfigure the low level hardware.
   * @retval None
   */
 #define HAL_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->state = 0U)
 
-#if (USE_RTOS == 1U)
-#error " USE_RTOS should be 0 in the current HAL release "
-#else
 /**
   * @brief  Unlock peripheral handle.
   * @param  __HANDLE__ specifies the peripheral handle.
@@ -150,8 +136,6 @@ do {                                                                            
 do {                                                                        \
     (__HANDLE__)->lock = HAL_UNLOCKED;                                      \
 } while (0U)
-
-#endif /* USE_RTOS */
 
 
 #if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
@@ -163,45 +147,6 @@ do {                                                                        \
 #endif /* __packed */
 #endif /* __GNUC__ */
 
-
-/* Macro to get variable aligned on 4-bytes, for __ICCARM__ the directive "#pragma data_alignment=4"
-   must be used instead                                                                              */
-#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
-#ifndef __ALIGN_END
-#define __ALIGN_END    __attribute__((aligned(4)))
-#endif /* __ALIGN_END */
-#ifndef __ALIGN_BEGIN
-#define __ALIGN_BEGIN
-#endif /* __ALIGN_BEGIN */
-#else
-#ifndef __ALIGN_END
-#define __ALIGN_END             /**< ALIGN END */
-#endif /* __ALIGN_END */
-#ifndef __ALIGN_BEGIN
-#if defined(__CC_ARM)      /* ARM Compiler */
-#define __ALIGN_BEGIN    __align(4)
-#elif defined(__ICCARM__)    /* IAR Compiler */
-#define __ALIGN_BEGIN
-#endif /* __CC_ARM */
-#endif /* __ALIGN_BEGIN */
-#endif /* __GNUC__ */
-
-/**
-  * @brief  __NOINLINE definition
-  */
-#if defined(__CC_ARM) || defined(__GNUC__)
-/* ARM & GNUCompiler
-   ----------------
-*/
-#define __NOINLINE __attribute__((noinline))
-
-#elif defined(__ICCARM__)
-/* ICCARM Compiler
-   ---------------
-*/
-#define __NOINLINE _Pragma("optimize = no_inline")
-
-#endif
 
 /** @} */
 
