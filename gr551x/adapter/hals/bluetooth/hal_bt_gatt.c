@@ -334,29 +334,6 @@ int BleGattSecurityRsp(BdAddr bdAddr, bool accept)
     return OHOS_BT_STATUS_SUCCESS;
 }
 
-int HILINK_BT_GetMacAddr(unsigned char* result, unsigned int length)
-{
-    APP_LOG_DEBUG(">>>>>>>>>>>>>>>>>>>>>>>>>>%s--- Entry!!! ", __FUNCTION__);
-    uint8_t   addr[6];
-    uint16_t  lenght = 6;
-    if (result == NULL) {
-        return OHOS_BT_STATUS_PARM_INVALID;
-    }
-
-    if (nvds_get(0xC001, &lenght, (uint8_t*)addr))
-    {
-        return OHOS_BT_STATUS_PARM_INVALID;
-    }
-
-    result[0] = addr[5];
-    result[1] = addr[4];
-    result[2] = addr[3];
-    result[3] = addr[2];
-    result[4] = addr[1];
-    result[5] = addr[0];
-    return OHOS_BT_STATUS_SUCCESS;
-}
-
 int GetDeviceMacAddress(unsigned char* result)
 {
     APP_LOG_DEBUG(">>>>>>>>>>>>>>>>>>>>>>>>>>%s--- Entry!!! ", __FUNCTION__);

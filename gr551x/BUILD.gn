@@ -19,16 +19,6 @@ copy("link-script") {
     outputs = [ "$root_build_dir/bin/link.ld" ]
 }
 
-# copy("hilink_btsdk_lib") {
-#      sources = [ "components/hilink/debug/libhilinkbtsdk.a"]
-#      outputs = [ "$root_build_dir/libs/libhilinkbtsdk.a" ]
-#  }
-
-# copy("hichain_lib") {
-#      sources = [ "components/hichain/libhichain_account.a"]
-#      outputs = [ "$root_build_dir/libs/libhichain_account.a" ]
-#  }
-
 copy("sdk_lib") {
      sources = [ "sdk_liteos/gr551x_sdk/components/sdk/linker/lib_gcc/libble_sdk.a"]
      outputs = [ "$root_build_dir/libs/libble_sdk.a" ]
@@ -93,15 +83,13 @@ source_set("device_soc"){
 
         "adapter/hals/bluetooth/hal_bt_gatt.c",
         "adapter/hals/bluetooth/hal_bt_gatt_server.c",
-        "adapter/hals/bluetooth/hal_bt_ota.c",
         "adapter/hals/bluetooth/hal_bt_evt_handler.c",
+        "adapter/hals/iot_hardware/wifiiot_lite/hal_iot_flash.c"
     ]
 
     deps = [
         ":link-script",
         ":sdk_lib",
-        # ":hilink_btsdk_lib",
-        # ":hichain_lib",
         ":rom_symbol",
         "//kernel/liteos_m:kernel",
         "//build/lite/config/component/cJSON:cjson_static",
