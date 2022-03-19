@@ -100,8 +100,7 @@ board_ld_flags = [
     "-lhal_token_static",
     "-lutils_kv_store",
     "-lble_sdk",
-    # "-lhilinkbtsdk",
-    # "-lhichain_account",
+    #"-liot_solution",
 
     "-Wl,--no-whole-archive",
     "-Wl,--end-group",
@@ -122,6 +121,7 @@ board_include_dirs = [
     "//kernel/liteos_m/components/exchook",
     "//utils/native/lite/kal/timer",
     "//utils/native/lite/include",
+    "//base/iot_hardware/peripheral/interfaces/kits",
 
     "//kernel/liteos_m/components/fs/fatfs",
     "//third_party/FatFs/source",
@@ -137,7 +137,6 @@ board_include_dirs = [
 
     "//device/goodix/gr551x/sdk_liteos/platform/include",
     "//device/goodix/gr551x/adapter/hals/bluetooth",
-    "//device/goodix/gr551x/components/hilink/include",
     "//device/goodix/gr551x/sdk_liteos/config",
     "//device/goodix/gr551x/sdk_liteos/liteos_m",
     "//device/goodix/gr551x/components/watchdog",
