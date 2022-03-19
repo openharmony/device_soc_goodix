@@ -159,11 +159,11 @@ static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char 
     uint16_t cpy_length = 0;
     char *temp_p_log_data = p_log_data;
 
-    if (!p_log_buff || !p_log_data) {
+    if (!p_log_buff || !temp_p_log_data) {
         return cpy_length;
     }
 
-    while (*p_log_data != 0) {
+    while (*temp_p_log_data != 0) {
         if ((wr_idx + cpy_length) < APP_LOG_LINE_BUF_SIZE) {
             p_log_buff[wr_idx + cpy_length] = *temp_p_log_data++;
             cpy_length++;
