@@ -142,6 +142,12 @@
 #define FLASH_PROTECT_PRIORITY  0
 #endif
 
+// <o> NVDS Start Address
+// <i> Default:  0x010FF000
+#ifndef NVDS_START_ADDR
+#define NVDS_START_ADDR         0x010FF000
+#endif
+
 // <o> The Number of sectors for NVDS
 // <i> Default:  1
 #ifndef NVDS_NUM_SECTOR

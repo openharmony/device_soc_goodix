@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <stdio.h>
+#include <string.h>
 
 #define INDEX_0 0
 #define INDEX_1 1
@@ -472,3 +473,10 @@ int sscanf(const char *__restrict __s, const char *__restrict __format, ...)
 
     return i;
 }
+
+char *strcpy(char *__restrict __dest, const char *__restrict __src)
+{
+    __stpcpy(__dest, __src);
+    return __dest;
+}
+
