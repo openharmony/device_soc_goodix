@@ -18,7 +18,6 @@
 import("//kernel/liteos_m/liteos.gni")
 
 config("public") {
-
   include_dirs = [
     "components/app_drivers/inc",
     "components/boards",
@@ -72,5 +71,4 @@ kernel_module("gr551x_sdk") {
     "toolchain/gr551x/source/platform_gr55xx.c",
     "toolchain/gr551x/source/system_gr55xx.c",
   ]
-
 }

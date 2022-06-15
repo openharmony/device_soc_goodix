@@ -14,7 +14,5 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("platform_startup") {
-  sources = [
-    "startup_gr55xx.s",
-  ]
+  sources = [ "startup_gr55xx.s" ]
 }
