@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sys/stat.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -32,25 +31,6 @@
 #define likely(x)       __builtin_expect((x), 1)
 #define unlikely(x)     __builtin_expect((x), 0)
 #define KSTRTOX_OVERFLOW 0
-
-int access(const char *pathname, int mode)
-{
-    struct stat f_info;
-
-    if (stat(pathname, &f_info) == 0) {
-        if (f_info.st_mode & S_IFDIR) {
-            return 0;
-        } else if (f_info.st_mode & S_IFREG) {
-            return 0;
-        } else {
-            return -1;
-        }
-    } else {
-        return -1;
-    }
-
-    return 0;
-}
 
 int fcntl(int fd, int cmd, long arg)
 {
