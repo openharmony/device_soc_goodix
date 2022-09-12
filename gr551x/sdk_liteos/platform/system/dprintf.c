@@ -41,16 +41,15 @@ int printf(const char *__restrict __format, ...)
     return len;
 }
 
-/*
-int sprintf(char *buf, const char *fmt, ...)
+int sprintf(char *__restrict   __s, const char *__restrict  __format, ...)
 {
     va_list args;
     int val;
 
-    va_start(args, fmt);
-    val = vsprintf_s(buf, fmt, args);
+    va_start(args, __format);
+    val = vsprintf_s(__s,  BUFSIZE - 1,  __format,  args);
     va_end(args);
 
     return val;
 }
-*/
+

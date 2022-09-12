@@ -59,7 +59,6 @@ void PRESENT_IRQHandler(void);
 void CALENDAR_IRQHandler(void);
 void DUAL_TIMER_IRQHandler(void);
 void SVC_Handler(void);
-void OHOS_SystemInit(void);
 
 #ifdef __cplusplus
 }
