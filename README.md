@@ -1,26 +1,20 @@
-# device_gr551x
+# device_soc_goodix
 
-## 介绍
+[TOC]
+
+## 简介
+
+基于Goodix开发的BLE应用soc部分，主要存放GR551x系列芯片的sdk和适配，以及后续其他系列芯片的适配。
 
 以下内容步骤参考[quickstart-lite-env-setup-linux](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/quick-start/quickstart-lite-env-setup-linux.md)
 
 系统要求：Ubuntu16.04 或 Ubuntu18.04 64位系统版本。
 
-编译环境搭建包含如下几步：
+## 编译构建
 
+### 工具安装
 
-1. 安装必要的库和工具
-2. 安装python3
-3. 安装hb
-4. 安装编译工具链
-5. 获取源码
-6. 确认目录结构
-7. 编译流程
-8. 烧录
-
-## 工具安装
-
-### 安装repo
+#### 安装repo
 
 1. 创建repo安装目录：命令行输入`mkdir ~/bin`
 2. 下载repo：命令行输入`wget https://storage.googleapis.com/git-repo-downloads/repo -P ~/bin/`
@@ -28,8 +22,7 @@
 4. 设置环境变量：在~/.bashrc文件的最后输入`export PATH=~/bin:$PATH`和`export REPO_URL=https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/`
 5. 重启shell
 
-
-### 安装必要的库和工具
+#### 安装必要的库和工具
 
 > - 通常系统默认安装samba、vim等常用软件，需要做适当适配以支持Linux服务器与Windows工作台之间的文件共享。
 
@@ -39,7 +32,7 @@
 sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg-config flex bison perl bc openssl libssl-dev libelf-dev libc6-dev-amd64 binutils binutils-dev libdwarf-dev u-boot-tools mtd-utils gcc-arm-linux-gnueabi
 ```
 
-### 安装Python3
+#### 安装Python3
 
 1. 打开Linux编译服务器终端。
 2. 输入如下命令，查看python版本号：
@@ -102,13 +95,13 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
      python get-pip.py
      ```
 
-### 安装hb
+#### 安装hb
 
-#### 前提条件
+##### 前提条件
 
 请先安装Python 3.7.4及以上版本，请见[安装Python3](#section1238412211211)。
 
-#### 安装方法
+##### 安装方法
 
 1. 运行如下命令安装hb
 
@@ -150,14 +143,14 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
      -h, --help            show this help message and exit
    ```
 
-### 安装编译工具链
+#### 安装编译工具链
 
 1. 编译链工具推荐使用gcc-arm-none-eabi-10-2020-q4-major。(下载网站：https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads )。
 2. 执行`vim ~/.bashrc`。
 3. 将工具链的路径加入环境变量, 如:`export PATH=/home/tools/ARM/gcc-arm-none-eabi-10-2020-q4-major/bin:$PATH`。
 3. 保存后执行`source ~/.bashrc`使环境变量生效。
 
-## 获取代码流程
+### 获取代码流程
 
 1. 新建代码存放目录(用户可以自行指定为其他目录)，并进入：
 ```
@@ -171,7 +164,7 @@ repo init -u https://gitee.com/openharmony/manifest --no-repo-verify
 3. 下载好仓库后，输入：`repo sync -c`，也就是下载当前分支的代码。
 4. 下载好代码后，输入：`repo forall -c 'git lfs pull'`，下载部分大容量二进制文件。
 
-## 确认目录结构
+### 确认目录结构
 
 在device文件夹下，确保device/soc目录结构如下
 
@@ -240,7 +233,7 @@ user:~/openharmony/vendor$ tree -L 3
         └── kernel_configs                        # Kconfig配置输出
 ```
 
-## 编译工程
+### 编译工程
 
 进入源码根目录编译工程
 
@@ -256,7 +249,7 @@ user:~/openharmony/vendor$ tree -L 3
 
 如果hb set命令提示报错，请先执行一次`python3 -m pip install build/lite`
 
-## 固件烧录
+## 使用方法
 
 生成的固件位于**out/{board_name}/{product_name}/bin/application_fw.bin**。
 
