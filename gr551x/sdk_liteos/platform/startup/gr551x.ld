@@ -37,7 +37,7 @@ MEMORY
 {
   FPB_RAM (xrw)   : ORIGIN = 0x30004000,   LENGTH = 0x20
   RAM     (xrw)   : ORIGIN = 0x00804400,   LENGTH = 239K
-  FLASH   (rx)    : ORIGIN = 0x0100B000,   LENGTH = 676K
+  FLASH   (rx)    : ORIGIN = 0x01002000,   LENGTH = 1012K
 }
 
 /* Sections */
