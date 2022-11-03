@@ -32,11 +32,6 @@
 #define unlikely(x)     __builtin_expect((x), 0)
 #define KSTRTOX_OVERFLOW 0
 
-int fcntl(int fd, int cmd, long arg)
-{
-    return 0;
-}
-
 /* Convert a character to lower case */
 inline static char tolower_re(char char_c)
 {
