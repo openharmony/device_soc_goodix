@@ -216,7 +216,7 @@ void platform_init(void)
     platform_flash_protection(FLASH_PROTECT_PRIORITY);
 
     /* nvds module init process. */
-    nvds_setup();
+    //nvds_setup();
 
     /* To choose the System clock source and set the accuracy of OSC. */
 #if CFG_LPCLK_INTERNAL_EN
