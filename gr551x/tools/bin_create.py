@@ -363,7 +363,7 @@ class MainFunc():
             out_dir = os.path.dirname(input)
             bin_file_name = os.path.basename(input)
             tmp = bin_file_name.split('.')    
-            targe_name = tmp[0] + "_fw"
+            targe_name = "OHOS_Image"
             self.opt_gen_param = GenFirmware()
             self.opt_gen_param.config_file = CUSTOM_CONFIG
             self.opt_gen_param.input_bin = input
