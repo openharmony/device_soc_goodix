@@ -13,23 +13,48 @@
  * limitations under the License.
  */
 #include <sys/mount.h>
-#include "littlefs.h"
+#include <los_fs.h>
 #include "los_config.h"
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
 #include "device_resource_if.h"
 #include "lfs_adapter.h"
+#include "gr55xx_hal.h"
+#include "hal_flash.h"
 
 #define LFS_CFG_READ_SIZE       16
 #define LFS_CFG_PROG_SIZE       16
 #define LFS_CFG_CACHE_SIZE      16
 #define LFS_CFG_LOOKAHEAD_SIZE  32
 #define LFS_CFG_BLOCK_CYCLES    500
+#define LFS_CFG_BLOCK_SIZE      4096
+#define LFS_CFG_BLOCK_COUNT     75
+
+#define LITTLEFS_PHYS_ADDR (0x10b4000)
+#define LITTLEFS_PHYS_SIZE (300 * 1024)
 
 struct fs_cfg {
     char *mount_point;
     struct lfs_config lfs_cfg;
 };
+
+static int littlefs_block_read(int partition, uint32_t *offset, uint8_t *buf, uint32_t size)
+{
+    hal_flash_read(LITTLEFS_PHYS_ADDR + *offset, buf, size);
+    return LFS_ERR_OK;
+}
+
+static int littlefs_block_write(int partition, uint32_t *offset, const uint8_t *buf, uint32_t size)
+{
+    hal_flash_write(LITTLEFS_PHYS_ADDR + *offset, (unsigned char *)buf, size);
+    return LFS_ERR_OK;
+}
+
+static int littlefs_block_erase(int partition, uint32_t offset, uint32_t size)
+{
+    hal_flash_erase(LITTLEFS_PHYS_ADDR + offset, LFS_CFG_BLOCK_SIZE);
+    return LFS_ERR_OK;
+}
 
 static struct fs_cfg fs[LOSCFG_LFS_MAX_MOUNT_SIZE] = {0};
 
@@ -71,6 +96,21 @@ static uint32_t FsGetResource(struct fs_cfg *fs, const struct DeviceResourceNode
     return HDF_SUCCESS;
 }
 
+void PartitionsInit(void)
+{
+    int lengthArray[LOSCFG_LFS_MAX_MOUNT_SIZE];
+    int addrArray[LOSCFG_LFS_MAX_MOUNT_SIZE];
+    int nextAddr = 0;
+
+    for (int i = 0; i < sizeof(fs) / sizeof(fs[0]); i++) {
+        lengthArray[i] = fs[i].lfs_cfg.block_count * fs[i].lfs_cfg.block_size;
+        addrArray[i] = nextAddr;
+        nextAddr += lengthArray[i];
+    }
+
+    (VOID) LOS_DiskPartition("flash0", "littlefs", lengthArray, addrArray, LOSCFG_LFS_MAX_MOUNT_SIZE);
+}
+
 static int32_t FsDriverInit(struct HdfDeviceObject *object)
 {
     struct FileOpInfo *fileOpInfo = NULL;
@@ -85,24 +125,27 @@ static int32_t FsDriverInit(struct HdfDeviceObject *object)
         }
     }
 
+    PartitionsInit();
+
+    struct PartitionCfg partCfg = {.readSize = LFS_CFG_READ_SIZE,
+        .writeSize = LFS_CFG_PROG_SIZE,
+        .cacheSize = LFS_CFG_CACHE_SIZE,
+        .partNo = 0,
+        .blockCycles = LFS_CFG_BLOCK_CYCLES,
+        .lookaheadSize = LFS_CFG_LOOKAHEAD_SIZE,
+        .readFunc = littlefs_block_read,
+        .writeFunc = littlefs_block_write,
+        .eraseFunc = littlefs_block_erase};
+
     for (int i = 0; i < sizeof(fs) / sizeof(fs[0]); i++) {
         if (fs[i].mount_point == NULL) {
             continue;
         }
-        fs[i].lfs_cfg.read  = littlefs_block_read;
-        fs[i].lfs_cfg.prog  = littlefs_block_write;
-        fs[i].lfs_cfg.erase = littlefs_block_erase;
-        fs[i].lfs_cfg.sync  = littlefs_block_sync;
 
-        fs[i].lfs_cfg.read_size = LFS_CFG_READ_SIZE;
-        fs[i].lfs_cfg.prog_size = LFS_CFG_PROG_SIZE;
-        fs[i].lfs_cfg.cache_size = LFS_CFG_CACHE_SIZE;
-        fs[i].lfs_cfg.lookahead_size = LFS_CFG_LOOKAHEAD_SIZE;
-        fs[i].lfs_cfg.block_cycles = LFS_CFG_BLOCK_CYCLES;
+        partCfg.blockSize = fs[i].lfs_cfg.block_size;
+        partCfg.blockCount = fs[i].lfs_cfg.block_count;
 
-        littlefs_flash_init(&fs[i].lfs_cfg);
-
-        int ret = mount(NULL, fs[i].mount_point, "littlefs", 0, &fs[i].lfs_cfg);
+        int ret = mount(NULL, fs[i].mount_point, "littlefs", 0, &partCfg);
         HDF_LOGI("%s: mount fs on '%s' %s\n", __func__, fs[i].mount_point, (ret == 0) ? "succeed" : "failed");
         if (ret == 0) {
             ret = mkdir(fs[i].mount_point, S_IRWXU | S_IRWXG | S_IRWXO);
