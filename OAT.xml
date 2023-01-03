@@ -36,6 +36,7 @@
                 <filteritem type="filepath" name="gr551x/sdk_liteos/gr551x_sdk/toolchain/gr551x/include/.*" desc="Goodix open source SDK code"/>
                 <filteritem type="filepath" name="gr551x/sdk_liteos/gr551x_sdk/components/patch/ind/.*" desc="Goodix open source SDK code"/>
                 <filteritem type="filepath" name="gr551x/sdk_liteos/gr551x_sdk/components/sdk/linker/lib_gcc/LICENSE" desc="LICENSE file"/>
+				<filteritem type="filepath" name="gr551x/NOTICE" desc="NOTICE file"/>
 	        </filefilter>
         </filefilterlist>
     </oatconfig>
