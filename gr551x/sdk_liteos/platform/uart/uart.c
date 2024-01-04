@@ -134,7 +134,6 @@ int HiLogWriteInternal(const char *buffer, size_t bufLen)
 #if APP_LOG_PORT == 0
     int ret = app_uart_transmit_sync(LOG_UART_ID, buffer, bufLen, UART_TX_TIMEOUT);
 #elif APP_LOG_PORT == 1
-    // TODO: implement error code and timeout here
     int ret = 0;
     bsp_segger_rtt_send(buffer, bufLen);
 #endif // APP_LOG_PORT == 0
