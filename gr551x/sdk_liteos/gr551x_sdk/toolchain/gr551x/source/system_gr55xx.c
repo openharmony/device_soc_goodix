@@ -223,6 +223,9 @@ void main_init(void)
     if (COLD_BOOT == boot_flag) {
         __main();
     } else {
+        __DMB();
+        SCB->VTOR = (uint32_t)(uintptr_t)ArchGetHwiFrom();
+        __DSB();
         pwr_mgmt_warm_boot();
         while (1) {}
     }

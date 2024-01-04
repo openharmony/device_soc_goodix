@@ -147,6 +147,8 @@ static void BLE_power_check(void)
 
 static void system_calibration(void)
 {
+    system_pmu_calibration_init(30000);
+
     system_pmu_deinit();
     SystemCoreSetClock((mcu_clock_type_t)SYSTEM_CLOCK);
     system_pmu_init((mcu_clock_type_t)SYSTEM_CLOCK);

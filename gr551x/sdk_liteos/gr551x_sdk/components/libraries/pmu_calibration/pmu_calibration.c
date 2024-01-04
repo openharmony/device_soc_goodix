@@ -55,7 +55,7 @@ static void system_pmu_calibration_task(void *p_arg);
 static app_timer_id_t s_pmu_calibration_timer_id = 0;
 #endif
 
-uint32_t g_debug_temperature;
+extern uint32_t g_debug_temperature;
 
 #if CFG_LPCLK_INTERNAL_EN
 
