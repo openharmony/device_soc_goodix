@@ -36,14 +36,14 @@ static uint64_t g_tickTimerBaseBeforeSleep = 0;
 static uint32_t g_lpCntWhenTickStop = 0;
 static uint32_t g_lpCntWhenTickReload = 0;
 
-TINY_RAM_SECTION uint32_t OsSleepMsGet(void)
+TINY_RAM_SECTION uint32_t os_sleep_ms_get(void)
 {
     g_tickTimerBaseBeforeSleep = OsGetCurrSchedTimeCycle();
     return ((uint32_t)(OsSchedGetNextExpireTime(g_tickTimerBaseBeforeSleep) - g_tickTimerBaseBeforeSleep)) /
            OS_CYCLE_PER_TICK;
 }
 
-TINY_RAM_SECTION void SysTickReload(void)
+TINY_RAM_SECTION void sys_tick_reload(void)
 {
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
     SysTick->LOAD = (UINT32)((OS_SYS_CLOCK / LOSCFG_BASE_CORE_TICK_PER_SECOND) - 1UL);
@@ -51,7 +51,7 @@ TINY_RAM_SECTION void SysTickReload(void)
     SysTick->CTRL |= (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk);
 }
 
-TINY_RAM_SECTION static void pwrMgmtSleepDurLimit(uint32_t sleepMs)
+TINY_RAM_SECTION static void pwr_mgmt_sleep_dur_limit(uint32_t sleepMs)
 {
     uint32_t sleepHus = sleepMs * TICK_MS_IN_HUS - SYS_BLE_SLEEP_ALGO_HUS;
     if (get_remain_sleep_dur() > sleepHus) {
@@ -60,9 +60,9 @@ TINY_RAM_SECTION static void pwrMgmtSleepDurLimit(uint32_t sleepMs)
     sys_ble_heartbeat_period_set(sleepHus);
 }
 
-TINY_RAM_SECTION static void pwrMgmtEnterSleepWithCond(uint32_t sleepMs)
+TINY_RAM_SECTION static void pwr_mgmt_enter_sleep_with_cond(uint32_t sleepMs)
 {
-    pwrMgmtSleepDurLimit(sleepMs);
+    pwr_mgmt_sleep_dur_limit(sleepMs);
 
     uint32_t intSave = LOS_IntLock();
 
@@ -103,7 +103,7 @@ TINY_RAM_SECTION static void pwrMgmtEnterSleepWithCond(uint32_t sleepMs)
         uint32_t intSaveLocal = LOS_IntLock();
 
         g_lpCntWhenTickReload = ll_pwr_get_comm_sleep_duration();
-        SysTickReload();
+        sys_tick_reload();
 
         uint32_t sleepLpCycles = g_lpCntWhenTickReload - g_lpCntWhenTickStop + SLP_WAKUP_ALGO_LP_CNT;
         uint32_t lpCycles2HusErr = 0;
@@ -118,7 +118,7 @@ TINY_RAM_SECTION static void pwrMgmtEnterSleepWithCond(uint32_t sleepMs)
     }
 }
 
-TINY_RAM_SECTION static void osPmEnterHandler(void)
+TINY_RAM_SECTION static void os_pm_enter_handler(void)
 {
     uint32_t intSave = LOS_IntLock();
 
@@ -127,7 +127,7 @@ TINY_RAM_SECTION static void osPmEnterHandler(void)
         return;
     }
 
-    uint32_t sleepMs = OsSleepMsGet();
+    uint32_t sleepMs = os_sleep_ms_get();
     LOS_IntRestore(intSave);
 
     if (sleepMs < DEEPSLEEP_TIME_MIN_MS) {
@@ -141,11 +141,11 @@ TINY_RAM_SECTION static void osPmEnterHandler(void)
     }
 
     LOS_TaskLock();
-    pwrMgmtEnterSleepWithCond(sleepMs);
+    pwr_mgmt_enter_sleep_with_cond(sleepMs);
     LOS_TaskUnlock();
 }
 
 void GR551xPwrMgmtInit(void)
 {
-    OsPmEnterHandlerSet(osPmEnterHandler);
+    OsPmEnterHandlerSet(os_pm_enter_handler);
 }
