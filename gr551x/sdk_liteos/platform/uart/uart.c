@@ -69,6 +69,7 @@ void bsp_uart_init(void)
     uart_initialized = true;
 }
 
+#if APP_LOG_PORT == 0
 void bsp_uart_send(uint8_t *p_data, uint16_t length)
 {
     if (uart_initialized != true) {
@@ -82,6 +83,19 @@ void bsp_uart_flush(void)
 {
     app_uart_flush(LOG_UART_ID);
 }
+#elif APP_LOG_PORT == 1
+__WEAK unsigned SEGGER_RTT_Write(unsigned BufferIndex, const uint8_t* pBuffer, unsigned NumBytes)
+{
+    return 0;
+}
+
+void bsp_segger_rtt_send(uint8_t *p_data, uint16_t length)
+{
+    SEGGER_RTT_Write(0, (void*)p_data, length);
+}
+#elif APP_LOG_PORT == 2
+#error "ITM log is not supported"
+#endif // APP_LOG_UART == 0
 
 void bsp_log_init(void)
 {
@@ -93,8 +107,12 @@ void bsp_log_init(void)
     log_init.fmt_set[APP_LOG_LVL_INFO]    = APP_LOG_FMT_LVL;
     log_init.fmt_set[APP_LOG_LVL_DEBUG]   = APP_LOG_FMT_LVL;
 
+#if APP_LOG_PORT == 0
     bsp_uart_init();
     app_log_init(&log_init, bsp_uart_send, bsp_uart_flush);
+#elif APP_LOG_PORT == 1
+    app_log_init(&log_init, bsp_segger_rtt_send, NULL);
+#endif // (APP_LOG_PORT == 0)
     app_assert_init();
 }
 
@@ -113,14 +131,23 @@ int HiLogWriteInternal(const char *buffer, size_t bufLen)
     } else {
         len--;
     }
+#if APP_LOG_PORT == 0
     int ret = app_uart_transmit_sync(LOG_UART_ID, buffer, bufLen, UART_TX_TIMEOUT);
+#elif APP_LOG_PORT == 1
+    int ret = 0;
+    bsp_segger_rtt_send(buffer, bufLen);
+#endif // APP_LOG_PORT == 0
 
     return ret;
 }
 
 void _putchar(char character)
 {
+#if APP_LOG_PORT == 0
     bsp_uart_send(&character, 1);
+#elif APP_LOG_PORT == 1
+    bsp_segger_rtt_send(&character, 1);
+#endif // APP_LOG_PORT
 }
 
 uint8_t UartGetc(void)

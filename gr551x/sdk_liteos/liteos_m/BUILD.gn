@@ -19,4 +19,5 @@ config("public") {
 
 module_name = get_path_info(rebase_path("."), "name")
 kernel_module(module_name) {
+  sources = [ "los_port_pm.c" ]
 }

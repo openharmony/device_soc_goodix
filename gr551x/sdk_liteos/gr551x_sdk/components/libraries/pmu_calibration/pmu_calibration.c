@@ -55,59 +55,8 @@ static void system_pmu_calibration_task(void *p_arg);
 static app_timer_id_t s_pmu_calibration_timer_id = 0;
 #endif
 
-uint32_t g_debug_temperature;
-
 #if CFG_LPCLK_INTERNAL_EN
-
-#define PMU_SMALL_INTERVAL_MS       (10*1000)
-#define TEMPERATURN_HIGH    44
-#define TEMPERATURN_LOW     40
-static uint32_t pmu_interval_init = 30 * 1000;
-static uint32_t pmu_interval_prev = 0;
-
-uint32_t pmu_interval_get(uint32_t is_init)
-{
-    uint32_t interval = 0;
-
-    if (g_debug_temperature > TEMPERATURN_HIGH) {
-        interval = PMU_SMALL_INTERVAL_MS;
-    } else if (g_debug_temperature >= TEMPERATURN_LOW && g_debug_temperature <= TEMPERATURN_HIGH && is_init) {
-        interval = PMU_SMALL_INTERVAL_MS;
-    } else if (g_debug_temperature < TEMPERATURN_LOW) {
-        interval = pmu_interval_init;
-    }
-
-    return interval;
-}
-
-void pmu_timer_handler(void* p_arg)
-{
-    pmu_calibration_handler(p_arg);
-
-    uint32_t interval_new;
-    uint32_t interval_diff;
-
-    interval_new = pmu_interval_get(0);
-    if (interval_new == 0) {
-        return;
-    }
-
-    interval_diff = interval_new > pmu_interval_prev ?
-                    interval_new - pmu_interval_prev: pmu_interval_prev - interval_new;
-
-    if (interval_diff > INTERVAL_MIN) {
-#ifdef ENV_USE_FREERTOS
-        portBASE_TYPE xHigherPriorityTaskWoken;
-        xTimerChangePeriodFromISR(timer_handle, interval_new, &xHigherPriorityTaskWoken);
-        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-#else
-        app_timer_delete(&s_pmu_calibration_timer_id);
-        app_timer_create(&s_pmu_calibration_timer_id, ATIMER_REPEAT, pmu_timer_handler);
-        app_timer_start(s_pmu_calibration_timer_id, interval_new, NULL);
-#endif
-        pmu_interval_prev = interval_new;
-    }
-}
+#error "INTERNAL LPCLK is not supported by OHOS"
 #endif
 
 /*

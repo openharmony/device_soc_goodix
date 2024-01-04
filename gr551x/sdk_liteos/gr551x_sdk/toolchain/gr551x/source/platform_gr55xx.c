@@ -57,6 +57,8 @@
 // NOTE: SVC #0 is reserved for freertos, DO NOT USE IT!
 #define SVC_TABLE_NUM_MAX   4
 
+#define PMU_CALIBRATION_DURATION_MS (30000)
+
 #define FLASH_CS        (LL_GPIO_PIN_2)      /* XQSPI flash CS        */
 #define FLASH_CLK       (LL_GPIO_PIN_4)      /* XQSPI flash CLK       */
 #define FLASH_IO_0      (LL_GPIO_PIN_7)      /* XQSPI flash IO0       */
@@ -147,6 +149,8 @@ static void BLE_power_check(void)
 
 static void system_calibration(void)
 {
+    system_pmu_calibration_init(PMU_CALIBRATION_DURATION_MS);
+
     system_pmu_deinit();
     SystemCoreSetClock((mcu_clock_type_t)SYSTEM_CLOCK);
     system_pmu_init((mcu_clock_type_t)SYSTEM_CLOCK);

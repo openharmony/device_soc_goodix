@@ -110,13 +110,21 @@ void OSVectorInit(void)
     NVIC_SetPriorityGrouping(0x3);
 }
 
+static void OHOS_SystemInitWrapper(void *parg)
+{
+    UNUSED(parg);
+    OHOS_SystemInit();
+    LOS_TaskDelete(LOS_CurTaskIDGet());
+    LOS_ASSERT_COND(0);
+}
+
 static void MainBoot(void)
 {
     UINT32 uwRet;
     UINT32 taskID;
     TSK_INIT_PARAM_S stTask = {0};
 
-    stTask.pfnTaskEntry = (TSK_ENTRY_FUNC)OHOS_SystemInit;
+    stTask.pfnTaskEntry = OHOS_SystemInitWrapper;
     stTask.uwStackSize = CN_MAINBOOT_TASK_STACKSIZE;
     stTask.pcName = CN_MAINBOOT_TASK_NAME;
     stTask.usTaskPrio = CN_MAINBOOT_TASK_PRIOR;
@@ -145,6 +153,7 @@ int main(void)
         HardwareRandomInit();
         DeviceManagerStart();
         MainBoot();
+        GR551xPwrMgmtInit();
         LOS_Start();
     }
     return 0;

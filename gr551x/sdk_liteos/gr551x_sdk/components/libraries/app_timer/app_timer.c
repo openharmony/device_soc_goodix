@@ -64,18 +64,13 @@
   not disable SVC_IRQ, BLE_IRQ, BLE_SLEEP_IRQ to ensure the highest priority of
   Bluetooth services
 */
-#define LOCAL_APP_TIMER_LOCK()                                  \
-    do {                                                         \
-        uint32_t __l_irq_rest = __get_BASEPRI();                 \
-        __set_BASEPRI(NVIC_GetPriority(BLE_IRQn) +               \
-                     (1 << (NVIC_GetPriorityGrouping() + 1)));   \
-    } while (0)
+#define LOCAL_APP_TIMER_LOCK()                 \
+    uint32_t __l_irq_rest = __get_BASEPRI();   \
+    __set_BASEPRI(NVIC_GetPriority(BLE_IRQn) + \
+                  (1 << (NVIC_GetPriorityGrouping() + 1)))
 
-#define LOCAL_APP_TIMER_UNLOCK()                                \
-    do {                                                         \
-        uint32_t __l_irq_rest = __get_BASEPRI(); \
-        __set_BASEPRI(__l_irq_rest); \
-    } while (0)
+#define LOCAL_APP_TIMER_UNLOCK() \
+    __set_BASEPRI(__l_irq_rest)
 
 /**@brief The length of timer node list. */
 #define TIMER_NODE_CNT                 20

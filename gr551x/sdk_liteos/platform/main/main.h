@@ -24,6 +24,7 @@ void HardwareRandomInit(void);
 void OSVectorInit(void);
 void FileSystemInit(void);
 void OHOS_SystemInit(void); // this is the service loader function for OHOS
+void GR551xPwrMgmtInit(void);
 void WDT_IRQHandler(void);
 void BLE_SDK_Handler(void);
 void BLE_IRQHandler(void);
