@@ -51,7 +51,7 @@ TINY_RAM_SECTION void SysTickReload(void)
 {
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
     SysTick->LOAD = (UINT32)((OS_SYS_CLOCK / LOSCFG_BASE_CORE_TICK_PER_SECOND) - 1UL); /* set reload register */
-    SysTick->VAL = 0UL;                                   /* Load the SysTick Counter Value */
+    SysTick->VAL = 0UL;                                                                /* Load the SysTick Counter Value */
     SysTick->CTRL |= (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk);
 }
 
@@ -94,7 +94,6 @@ TINY_RAM_SECTION static void pwrMgmtEnterSleepWithCond(uint32_t sleepMs)
             return;
     }
 
-    // g_tickTimerBaseBeforeSleep = OsGetCurrSchedTimeCycle();
     g_lpCntWhenTickStop = ll_pwr_get_comm_sleep_duration();
 
     pwr_mgmt_save_context();
@@ -123,9 +122,6 @@ TINY_RAM_SECTION static void pwrMgmtEnterSleepWithCond(uint32_t sleepMs)
         uint32_t sleepHus = sys_lpcycles_2_hus(sleepLpCycles, &lpCycles2HusErr);
         uint32_t sleepSystick = sleepHus * (OS_CYCLE_PER_TICK / TICK_MS_IN_HUS);
 
-        // extern VOID OsTickTimerBaseStep(UINT64 step);
-        // OsTickTimerBaseStep(sleepSystick);
-        // printf("Base Reset Estimate: %llu\n", g_tickTimerBaseBeforeSleep + sleepSystick);
         OsTickTimerBaseReset(g_tickTimerBaseBeforeSleep + sleepSystick);
         LOS_SchedTickHandler();
 
@@ -143,7 +139,6 @@ TINY_RAM_SECTION static void osPmEnterHandler(void)
         LOS_IntRestore(intSave);
         return;
     }
-
 
     uint32_t sleepMs = OsSleepMsGet();
     LOS_IntRestore(intSave);
