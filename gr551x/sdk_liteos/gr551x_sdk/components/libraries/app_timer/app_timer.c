@@ -70,7 +70,7 @@
                   (1 << (NVIC_GetPriorityGrouping() + 1)));
 
 #define LOCAL_APP_TIMER_UNLOCK() \
-    __set_BASEPRI(__l_irq_rest);
+    __set_BASEPRI(__l_irq_rest)
 
 /**@brief The length of timer node list. */
 #define TIMER_NODE_CNT                 20
