@@ -39,18 +39,17 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
+#include "app_log.h"
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include "app_log.h"
 
 /*
  * DEFINE
  *****************************************************************************************
  */
 #if APP_LOG_COLOR_ENABLE
-/**@brief CSI(Control Sequence Introducer/Initiator) sign more information on
-  * https://en.wikipedia.org/wiki/ANSI_escape_code. */
+/**@brief CSI(Control Sequence Introducer/Initiator) sign more information on https://en.wikipedia.org/wiki/ANSI_escape_code. */
 #define CSI_START                      "\033["
 #define CSI_END                        "\033[0m"
 
@@ -100,18 +99,18 @@
 
 #endif
 
-#define BIT_8                           8
-
 /*
  * STRUCTURES
  *****************************************************************************************
  */
 /**@brief App log environment variable. */
-struct app_log_env_t {
+struct app_log_env_t
+{
     app_log_init_t       app_log_init;  /**< App log initialization variables. */
     bool                 is_filter_set; /**< App log filter is set or not. */
     app_log_trans_func_t trans_func;    /**< App log transmit function. */
     app_log_flush_func_t flush_func;    /**< App log flush function. */
+
 };
 
 /*
@@ -120,7 +119,8 @@ struct app_log_env_t {
  */
 static uint8_t     s_log_encode_buf[APP_LOG_LINE_BUF_SIZE];  /**< App log data encode buffer. */
 
-static const char *s_log_svt_lvl_output_info[] = {           /**< App log severity level outpout information. */
+static const char *s_log_svt_lvl_output_info[] =            /**< App log severity level outpout information. */
+{
     [APP_LOG_LVL_ERROR]   = "APP_E: ",
     [APP_LOG_LVL_WARNING] = "APP_W: ",
     [APP_LOG_LVL_INFO]    = "APP_I: ",
@@ -128,7 +128,8 @@ static const char *s_log_svt_lvl_output_info[] = {           /**< App log severi
 };
 
 #if APP_LOG_COLOR_ENABLE
-static const char *s_log_color_output_info[] = {            /**< App log level outpout color information. */
+static const char *s_log_color_output_info[] =             /**< App log level outpout color information. */
+{
     [APP_LOG_LVL_ERROR]   = APP_LOG_COLOR_ERROR,
     [APP_LOG_LVL_WARNING] = APP_LOG_COLOR_WARNING,
     [APP_LOG_LVL_INFO]    = APP_LOG_COLOR_INFO,
@@ -157,17 +158,21 @@ static struct app_log_env_t  s_app_log_env;                  /**< App log enviro
 static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char *p_log_data)
 {
     uint16_t cpy_length = 0;
-    char *temp_p_log_data = p_log_data;
 
-    if (!p_log_buff || !temp_p_log_data) {
+    if (!p_log_buff || !p_log_data)
+    {
         return cpy_length;
     }
 
-    while (*temp_p_log_data != 0) {
-        if ((wr_idx + cpy_length) < APP_LOG_LINE_BUF_SIZE) {
-            p_log_buff[wr_idx + cpy_length] = *temp_p_log_data++;
+    while (*p_log_data != 0)
+    {
+        if ((wr_idx + cpy_length) < APP_LOG_LINE_BUF_SIZE)
+        {
+            p_log_buff[wr_idx + cpy_length] = *p_log_data++;
             cpy_length++;
-        } else {
+        }
+        else
+        {
             break;
         }
     }
@@ -187,11 +192,15 @@ static uint16_t app_log_strcpy(uint16_t wr_idx, uint8_t *p_log_buff, const char 
  */
 static bool app_log_is_fmt_set(uint8_t level, uint8_t fmt)
 {
-    if (s_app_log_env.app_log_init.fmt_set[level] & fmt) {
+    if (s_app_log_env.app_log_init.fmt_set[level] & fmt)
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
+
 }
 
 /**
@@ -206,11 +215,13 @@ static bool app_log_is_fmt_set(uint8_t level, uint8_t fmt)
  */
 static void app_log_data_trans(uint8_t *p_data, uint16_t length)
 {
-    if (p_data == NULL || length == 0) {
+    if (NULL == p_data || 0 == length)
+    {
         return;
     }
 
-    if (s_app_log_env.trans_func) {
+    if (s_app_log_env.trans_func)
+    {
         s_app_log_env.trans_func(p_data, length);
     }
 
@@ -225,13 +236,18 @@ static void app_log_data_trans(uint8_t *p_data, uint16_t length)
  */
 sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_func, app_log_flush_func_t flush_func)
 {
-    if (NULL == p_log_init) {
+    if (NULL == p_log_init)
+    {
         s_app_log_env.is_filter_set = false;
-        memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), 0, sizeof(app_log_init_t));
-    } else if (p_log_init->filter.level <= APP_LOG_LVL_DEBUG) {
+        memset(&s_app_log_env.app_log_init, 0, sizeof(app_log_init_t));
+    }
+    else if ( p_log_init->filter.level <= APP_LOG_LVL_DEBUG)
+    {
         s_app_log_env.is_filter_set = true;
-        memset_s(&s_app_log_env.app_log_init, sizeof (s_app_log_env.app_log_init), p_log_init, sizeof(app_log_init_t));
-    } else {
+        memcpy(&s_app_log_env.app_log_init, p_log_init, sizeof(app_log_init_t));
+    }
+    else
+    {
         return SDK_ERR_INVALID_PARAM;
     }
 
@@ -241,92 +257,28 @@ sdk_err_t app_log_init(app_log_init_t *p_log_init, app_log_trans_func_t trans_fu
     return SDK_SUCCESS;
 }
 
-uint16_t encode_name(uint8_t level, const char *file, const char *func, const long line)
-{
-    uint16_t log_length = 0;
-    char     line_num[APP_LOG_LINE_NB_LEN_MAX + 1]  = { 0 };
-
-    // Encode file directory name , function name and lune number info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR | APP_LOG_FMT_FUNC | APP_LOG_FMT_LINE)) {
-        log_length += app_log_strcpy(log_length, s_log_encode_buf, "(");
-
-        if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR)) {
-            log_length += app_log_strcpy(log_length, s_log_encode_buf, file);
-
-            if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC)) {
-                log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
-            } else if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE)) {
-                log_length += app_log_strcpy(log_length, s_log_encode_buf, ":");
-            }
-        }
-
-        if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC)) {
-            log_length += app_log_strcpy(log_length, s_log_encode_buf, func);
-
-            if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE)) {
-                log_length += app_log_strcpy(log_length, s_log_encode_buf, " Line:");
-            }
-        }
-
-        if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE)) {
-            snprintf_s(line_num, sizeof (line_num), APP_LOG_LINE_NB_LEN_MAX, "%ld", line);
-            log_length += app_log_strcpy(log_length, s_log_encode_buf, line_num);
-        }
-
-        log_length += app_log_strcpy(log_length, s_log_encode_buf, ") ");
-    }
-    return log_length;
-}
-
-uint16_t calculate_log_length(uint16_t log_length, int fmt_result)
-{
-    uint8_t  newline_length = strlen(APP_LOG_NEWLINE_SIGN);
-    uint16_t log_len     = log_length;
-    //  Calculate log length
-    if ((fmt_result > -1) && (log_len + fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
-        log_len += fmt_result;
-    } else {
-        log_len = APP_LOG_LINE_BUF_SIZE;
-    }
-
-#if APP_LOG_COLOR_ENABLE
-    if (log_len + (sizeof(CSI_END) - 1) + newline_length > APP_LOG_LINE_BUF_SIZE) {
-        log_len  = APP_LOG_LINE_BUF_SIZE;
-        // Reserve some space for CSI end sign.
-        log_len -= sizeof(CSI_END) - 1;
-#else
-    if (log_len + newline_length > APP_LOG_LINE_BUF_SIZE) {
-        log_len = APP_LOG_LINE_BUF_SIZE;
-#endif
-        log_len -= newline_length;
-    }
-
-#if APP_LOG_COLOR_ENABLE
-    // Encode CSI end sign.
-    log_len += app_log_strcpy(log_len, s_log_encode_buf, CSI_END);
-#endif
-
-    // Encode newline sign.
-    log_len += app_log_strcpy(log_len, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
-    return log_len;
-}
-
-void app_log_output(uint8_t level, const char *tag, const char *file, const char *func, const long line,
-                    const char *format, ...)
+void app_log_output(uint8_t level, const char *tag, const char *file, const char *func, const long line, const char *format, ...)
 {
     uint16_t log_length     = 0;
+    uint8_t  newline_length = strlen(APP_LOG_NEWLINE_SIGN);
     int      fmt_result     = 0;
+    char     line_num[APP_LOG_LINE_NB_LEN_MAX + 1]  = { 0 };
     va_list  ap;
 
-    if (level > s_app_log_env.app_log_init.filter.level && s_app_log_env.is_filter_set) {
+    if (level > s_app_log_env.app_log_init.filter.level && s_app_log_env.is_filter_set)
+    {
         return;
     }
+
 #if APP_LOG_TAG_ENABLE
-    if (!strstr(tag, s_app_log_env.app_log_init.filter.tag)) {
+    if (!strstr(tag, s_app_log_env.app_log_init.filter.tag))
+    {
         return;
     }
 #endif
+
     va_start(ap, format);
+
     APP_LOG_LOCK();
 
 #if APP_LOG_COLOR_ENABLE
@@ -336,25 +288,98 @@ void app_log_output(uint8_t level, const char *tag, const char *file, const char
 #endif
 
     // Encode level info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_LVL)) {
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_LVL))
+    {
         log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_svt_lvl_output_info[level]);
     }
 
 #if APP_LOG_TAG_ENABLE
     // Encode tag info.
-    if (app_log_is_fmt_set(level, APP_LOG_FMT_TAG)) {
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_TAG))
+    {
         log_length += app_log_strcpy(log_length, s_log_encode_buf, tag);
         log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
     }
 #endif
-    log_length = encode_name(level, file, func, line);
+
+    // Encode file directory name , function name and lune number info.
+    if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR | APP_LOG_FMT_FUNC | APP_LOG_FMT_LINE))
+    {
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, "(");
+
+        if (app_log_is_fmt_set(level, APP_LOG_FMT_DIR))
+        {
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, file);
+
+            if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC))
+            {
+                log_length += app_log_strcpy(log_length, s_log_encode_buf, " ");
+            }
+            else if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
+            {
+                log_length += app_log_strcpy(log_length, s_log_encode_buf, ":");
+            }
+        }
+
+        if (app_log_is_fmt_set(level, APP_LOG_FMT_FUNC))
+        {
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, func);
+
+            if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
+            {
+                log_length += app_log_strcpy(log_length, s_log_encode_buf, " Line:");
+            }
+        }
+
+        if (app_log_is_fmt_set(level, APP_LOG_FMT_LINE))
+        {
+            snprintf(line_num, APP_LOG_LINE_NB_LEN_MAX, "%ld", line);
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, line_num);
+        }
+
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, ") ");
+    }
+
     // Encode other log data to buffer. '\0' must be added in the end by vsnprintf. */
-    fmt_result = vsnprintf_s((char *)s_log_encode_buf + log_length, sizeof (s_log_encode_buf),
-                             APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
+    fmt_result = vsnprintf((char *)s_log_encode_buf + log_length, APP_LOG_LINE_BUF_SIZE - log_length, format, ap);
 
     va_end(ap);
-    log_length = calculate_log_length(log_length, fmt_result);
+
+    //  Calculate log length
+    if ((fmt_result > -1) && (log_length + fmt_result) <= APP_LOG_LINE_BUF_SIZE)
+    {
+        log_length += fmt_result;
+    }
+    else
+    {
+        log_length = APP_LOG_LINE_BUF_SIZE;
+    }
+
+#if APP_LOG_COLOR_ENABLE
+    if (log_length + (sizeof(CSI_END) - 1) + newline_length > APP_LOG_LINE_BUF_SIZE)
+    {
+        log_length  = APP_LOG_LINE_BUF_SIZE;
+        // Reserve some space for CSI end sign.
+        log_length -= sizeof(CSI_END) - 1;
+#else
+    if (log_length + newline_length > APP_LOG_LINE_BUF_SIZE)
+    {
+        log_length = APP_LOG_LINE_BUF_SIZE;
+#endif
+        log_length -= newline_length;
+    }
+
+#if APP_LOG_COLOR_ENABLE
+    // Encode CSI end sign.
+    log_length += app_log_strcpy(log_length, s_log_encode_buf, CSI_END);
+#endif
+
+    // Encode newline sign.
+    log_length += app_log_strcpy(log_length, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
+
+
     app_log_data_trans(s_log_encode_buf, log_length);
+
     APP_LOG_UNLOCK();
 }
 
@@ -368,10 +393,14 @@ void app_log_raw_info(const char *format, ...)
 
     APP_LOG_LOCK();
 
-    fmt_result = vsnprintf_s((char *)s_log_encode_buf, sizeof(s_log_encode_buf), APP_LOG_LINE_BUF_SIZE, format, ap);
-    if ((fmt_result > -1) && (fmt_result) <= APP_LOG_LINE_BUF_SIZE) {
+    fmt_result = vsnprintf((char *)s_log_encode_buf, APP_LOG_LINE_BUF_SIZE, format, ap);
+
+    if ((fmt_result > -1) && (fmt_result) <= APP_LOG_LINE_BUF_SIZE)
+    {
         log_length = fmt_result;
-    } else {
+    }
+    else
+    {
         log_length = APP_LOG_LINE_BUF_SIZE;
     }
 
@@ -380,50 +409,132 @@ void app_log_raw_info(const char *format, ...)
     APP_LOG_UNLOCK();
 }
 
-void app_log_hex_dump(uint8_t *p_data, uint16_t length)
+void app_log_hex_dump(void *p_data, uint16_t length)
 {
     uint16_t log_length  = 0;
     uint16_t convert_idx = 0;
+    uint16_t line_num    = 0;
     char     dump_str[8] = {0};
 
     APP_LOG_LOCK();
 
-    for (convert_idx = 0; convert_idx < length; convert_idx++) {
-        if (log_length >= APP_LOG_LINE_BUF_SIZE) {
-            log_length = APP_LOG_LINE_BUF_SIZE;
-            break;
+    line_num = length / APP_LOG_PER_LINE_HEX_DUMP_SIZE;
+
+    for (uint8_t i = 0; i < line_num; i ++)
+    {
+        if (app_log_is_fmt_set(APP_LOG_LVL_DEBUG, APP_LOG_FMT_LVL))
+        {
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_svt_lvl_output_info[APP_LOG_LVL_DEBUG]);
         }
 
-        if (p_data[convert_idx] < ' ') {
-            s_log_encode_buf[log_length] = '.';
-            log_length++;
-        } else {
-            snprintf_s(dump_str, sizeof (dump_str), BIT_8, "%02X ", p_data[convert_idx]);
+        for (uint8_t j = 0; j < APP_LOG_PER_LINE_HEX_DUMP_SIZE; j++)
+        {
+            snprintf(dump_str, 8, "%02X ", ((uint8_t *)p_data)[convert_idx++]);
             log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
         }
+
+        if (convert_idx % APP_LOG_PER_LINE_HEX_DUMP_SIZE == 0)
+        {
+            snprintf(dump_str, 8, " | ");
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
+            convert_idx -= APP_LOG_PER_LINE_HEX_DUMP_SIZE;
+            for (uint8_t j = 0; j < APP_LOG_PER_LINE_HEX_DUMP_SIZE; j++)
+            {
+                if (((uint8_t *)p_data)[convert_idx] < ' ' || ((uint8_t *)p_data)[convert_idx] > 0x7f)
+                {
+                    s_log_encode_buf[log_length] = '.';
+                    log_length++;
+                }
+                else
+                {
+                    s_log_encode_buf[log_length] = ((uint8_t *)p_data)[convert_idx];
+                    log_length++;
+                }
+                convert_idx++;
+            }
+        }
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
+        app_log_data_trans(s_log_encode_buf, log_length);
+        log_length = 0;
     }
 
-    app_log_data_trans(s_log_encode_buf, log_length);
+    if (length % APP_LOG_PER_LINE_HEX_DUMP_SIZE)
+    {
+        if (app_log_is_fmt_set(APP_LOG_LVL_DEBUG, APP_LOG_FMT_LVL))
+        {
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, s_log_svt_lvl_output_info[APP_LOG_LVL_DEBUG]);
+        }
+
+        for (uint8_t j = 0; j < length % APP_LOG_PER_LINE_HEX_DUMP_SIZE; j++)
+        {
+            snprintf(dump_str, 8, "%02X ", ((uint8_t *)p_data)[convert_idx++]);
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
+        }
+
+        for (uint8_t j = 0; j < APP_LOG_PER_LINE_HEX_DUMP_SIZE -length % APP_LOG_PER_LINE_HEX_DUMP_SIZE; j++)
+        {
+            snprintf(dump_str, 8, "   ");
+            log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
+        }
+
+        snprintf(dump_str, 8, " | ");
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, dump_str);
+        convert_idx -= length % APP_LOG_PER_LINE_HEX_DUMP_SIZE;
+        for (uint8_t j = 0; j < length % APP_LOG_PER_LINE_HEX_DUMP_SIZE; j++)
+        {
+            if (((uint8_t *)p_data)[convert_idx] < ' ' || ((uint8_t *)p_data)[convert_idx] > 0x7f)
+            {
+                s_log_encode_buf[log_length] = '.';
+                log_length++;
+            }
+            else
+            {
+                s_log_encode_buf[log_length] = ((uint8_t *)p_data)[convert_idx];
+                log_length++;
+            }
+            convert_idx++;
+        }
+
+        log_length += app_log_strcpy(log_length, s_log_encode_buf, APP_LOG_NEWLINE_SIGN);
+        app_log_data_trans(s_log_encode_buf, log_length);
+    }
 
     APP_LOG_UNLOCK();
 }
 
 void app_log_flush(void)
 {
-    if (s_app_log_env.flush_func) {
+    if (s_app_log_env.flush_func)
+    {
         s_app_log_env.flush_func();
     }
 }
 
+
 #if IO_REDIRECT == 0
 #if defined(__CC_ARM)
 
-struct __FILE {
+struct __FILE
+{
     int handle;
 };
 
-FILE s_stdout;
-FILE s_stdin;
+FILE __stdout;
+FILE __stdin;
+
+#if !defined(__MICROLIB)
+void _sys_exit(int x) {
+    x = x;
+}
+
+void _ttywrch(int ch) {
+    ch = ch;
+}
+
+void _sys_command_string(int y) {
+    y = y;
+}
+#endif
 
 int fputc(int ch, FILE *file)
 {
@@ -437,11 +548,11 @@ int fputc(int ch, FILE *file)
 int _write(int file, const char *buf, int len)
 {
     int tx_len = 0;
-    char *temp_buf = buf;
 
-    while (tx_len < len) {
+    while (tx_len < len)
+    {
         app_log_data_trans((uint8_t *)buf, 1);
-        temp_buf++;
+        buf++;
         tx_len++;
     }
     return tx_len;
@@ -449,14 +560,14 @@ int _write(int file, const char *buf, int len)
 
 #elif defined(__ICCARM__)
 
-size_t s_write(int handle, const unsigned char *buf, size_t size)
+size_t __write(int handle, const unsigned char *buf, size_t size)
 {
     size_t len = 0;
-    unsigned char* temp_buf = buf;
 
-    while (len < size) {
+    while (len < size)
+    {
         app_log_data_trans((uint8_t *)buf, 1);
-        temp_buf++;
+        buf++;
         len++;
     }
     return len;

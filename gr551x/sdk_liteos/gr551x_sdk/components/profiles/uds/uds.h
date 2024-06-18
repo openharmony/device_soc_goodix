@@ -52,68 +52,66 @@
  *
  *          After \ref uds_init_t variable is intialized, the application must call \ref uds_service_init()
  *          to add User Data Service and UDS Characteristic, Database Change Increment, User Index, User
- *          Control Point and Registered User characteristics to the BLE Stack database according to
+ *          Control Point and Registered User characteristics to the BLE Stack database according to 
   *         \ref uds_init_t.char_mask.
  */
 
 #ifndef __UDS_H__
 #define __UDS_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 #include "ble_prf_utils.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup UDS_MACRO Defines
  * @{
  */
-#define UDS_CONNECTION_MAX               (10 < CFG_MAX_CONNECTIONS ? \
-                                          10 : CFG_MAX_CONNECTIONS)    /**< Maximum number of UDS connections. */
+#define UDS_CONNECTION_MAX                10                           /**< Maximum number of UDS connections. */
+#define UDS_AGE_VAL_LEN_MAX               2                            /**< Maximum length of Age Characteristic value. */
+#define UDS_DATE_OF_BIRTH_VAL_LEN_MAX     4                            /**< Maximum length of Date of Birth Characteristic value. */
+#define UDS_FIRST_NAME_VAL_LEN_MAX        50                           /**< Maximum length of First Name Characteristic value. */
+#define UDS_HEIGHT_VAL_LEN_MAX            2                            /**< Maximum length of Height Characteristic value. */
+#define UDS_GENDER_VAL_LEN_MAX            2                            /**< Maximum length of Gender Characteristic value. */
+#define UDS_DB_CHANGE_INCR_VAL_LEN_MAX    4                            /**< Maximum length of Database Change Increment value. */
+#define UDS_USER_INDEX_VAL_LEN_MAX        1                            /**< Maximum length of User Index value. */
+#define UDS_CTRL_PT_RSP_LEN_MIN           3                            /**< Mimimum length of User Control Point response value. */
+#define UDS_CTRL_PT_RSP_LEN_MAX           20                           /**< Maximum length of User Control Point response value. */
+#define UDS_CTRL_PT_VAL_LEN_MAX           19                           /**< Maximum length of User Control Point value. */
+#define UDS_REGI_USER_DATA_LEN_MAX        19                           /**< Maximum length of Registered User Data value. */
+#define UDS_REGI_USER_VAL_LEN_MAX         20                           /**< Maximum length of Registered User Characteristic value. */
 
-#define UDS_AGE_VAL_LEN_MAX               2    /**< Maximum length of Age Characteristic value. */
-#define UDS_DATE_OF_BIRTH_VAL_LEN_MAX     4    /**< Maximum length of Date of Birth Characteristic value. */
-#define UDS_FIRST_NAME_VAL_LEN_MAX        50   /**< Maximum length of First Name Characteristic value. */
-#define UDS_HEIGHT_VAL_LEN_MAX            2    /**< Maximum length of Height Characteristic value. */
-#define UDS_GENDER_VAL_LEN_MAX            2    /**< Maximum length of Gender Characteristic value. */
-#define UDS_DB_CHANGE_INCR_VAL_LEN_MAX    4    /**< Maximum length of Database Change Increment value. */
-#define UDS_USER_INDEX_VAL_LEN_MAX        1    /**< Maximum length of User Index value. */
-#define UDS_CTRL_PT_RSP_LEN_MIN           3    /**< Mimimum length of User Control Point response value. */
-#define UDS_CTRL_PT_RSP_LEN_MAX           20   /**< Maximum length of User Control Point response value. */
-#define UDS_CTRL_PT_VAL_LEN_MAX           19   /**< Maximum length of User Control Point value. */
-#define UDS_REGI_USER_DATA_LEN_MAX        19   /**< Maximum length of Registered User Data value. */
-#define UDS_REGI_USER_VAL_LEN_MAX         20   /**< Maximum length of Registered User Characteristic value. */
+#define UDS_ERROR_UD_ACCESS_NOT_PERMIT    0x80                         /**< Error code: The user data access is not permitted. */
+#define UDS_ERROR_PROC_IN_PROGRESS        0xFE                         /**< Error code: A previously triggered User Control Point operation is still in progress. */
+#define UDS_ERROR_CCCD_INVALID            0xFD                         /**< Error code: The Client Characteristic Configuration descriptor is not configured. */
 
-#define UDS_ERROR_UD_ACCESS_NOT_PERMIT    0x80 /**< Error code: The user data access is not permitted. */
-#define UDS_ERROR_PROC_IN_PROGRESS        0xFE /**< Error code: A previously triggered User Control Point operation \
-                                               is still in progress. */
-#define UDS_ERROR_CCCD_INVALID            0xFD /**< Error code: The Client Characteristic Configuration descriptor \
-                                               is not configured. */
+#define UDS_DB_CHANGE_INCR_DEFAULT_VAL    0x00                         /**< Database Change Increment default value. */
+#define UDS_UNKNOWN_USER                  0xFF                         /**< Unknown User. */
+#define UDS_CONSENT_CODE_VAL_MAX          0x270F                       /**< Maximum value of Consent Code. */
+#define UDS_CONSENT_TRY_NUM_MAX           0x04                         /**< Maximum number of consent tries. */
 
-#define UDS_DB_CHANGE_INCR_DEFAULT_VAL    0x00 /**< Database Change Increment default value. */
-#define UDS_UNKNOWN_USER                  0xFF /**< Unknown User. */
-#define UDS_CONSENT_CODE_VAL_MAX          0x270F   /**< Maximum value of Consent Code. */
-#define UDS_CONSENT_TRY_NUM_MAX           0x04     /**< Maximum number of consent tries. */
+#define UDS_MIDDLE_REGI_USER_SEGM         0x00                         /**< The middle segment of Registered User Characterristic value. */
+#define UDS_FIRST_REGI_USER_SEGM          0x01                         /**< The first segment of Registered User Characterristic value. */
+#define UDS_LAST_REGI_USER_SEGM           0x02                         /**< The last segment of Registered User Characterristic value. */
+#define UDS_ONLY_REGI_USER_SEGM           0x03                         /**< The only segment of Registered User Characterristic value. */
 
-#define UDS_MIDDLE_REGI_USER_SEGM         0x00     /**< The middle segment of Registered User Characterristic value. */
-#define UDS_FIRST_REGI_USER_SEGM          0x01     /**< The first segment of Registered User Characterristic value. */
-#define UDS_LAST_REGI_USER_SEGM           0x02     /**< The last segment of Registered User Characterristic value. */
-#define UDS_ONLY_REGI_USER_SEGM           0x03     /**< The only segment of Registered User Characterristic value. */
+#define UDS_MEAS_FLAG_DEFAULT             0x3E                          /**< The default flag of UDS MEAS */
 
 /**
  * @defgroup UDS_CHAR_MASK Characteristics Mask
  * @{
  * @brief Bit masks for the initialization of \ref uds_init_t.char_mask.
  */
-#define UDS_CHAR_MANDATORY            0x000001FF   /**< Bit mask for mandatory characteristic in UDS.*/
-#define UDS_CHAR_AGE_SUP              0x00000600   /**< Bit mask for Age characteristic that is optional.*/
-#define UDS_CHAR_DATE_OF_BIRTH_SUP    0x00001800   /**< Bit mask for date of birth characteristic that is optional.*/
-#define UDS_CHAR_FIRST_NAME_SUP       0x00006000   /**< Bit mask for first name characteristic that is optional. */
-#define UDS_CHAR_HEIGHT_SUP           0x00018000   /**< Bit mask for height characteristic that is optional.*/
-#define UDS_CHAR_GENDER_SUP           0x00060000   /**< Bit mask for gender characteristic that is optional.*/
-#define UDS_CHAR_REGIST_USER_SUP      0x00380000   /**< Bit mask for Registered User characteristic that is optional.*/
-#define UDS_CHAR_FULL                 0x003FFFFF   /**< Bit mask of the full characteristic.*/
+#define UDS_CHAR_MANDATORY              0x000001FF     /**< Bit mask for mandatory characteristic in UDS. */
+#define UDS_CHAR_AGE_SUP                0x00000600     /**< Bit mask for Age characteristic that is optional. */
+#define UDS_CHAR_DATE_OF_BIRTH_SUP      0x00001800     /**< Bit mask for date of birth characteristic that is optional. */
+#define UDS_CHAR_FIRST_NAME_SUP         0x00006000     /**< Bit mask for first name characteristic that is optional. */
+#define UDS_CHAR_HEIGHT_SUP             0x00018000     /**< Bit mask for height characteristic that is optional. */
+#define UDS_CHAR_GENDER_SUP             0x00060000     /**< Bit mask for gender characteristic that is optional. */
+#define UDS_CHAR_REGIST_USER_SUP        0x00380000     /**< Bit mask for Registered User characteristic that is optional. */
+#define UDS_CHAR_FULL                   0x003FFFFF     /**< Bit mask of the full characteristic. */
 /** @} */
 /** @} */
 
@@ -122,7 +120,8 @@
  * @{
  */
 /**@brief User Data Service Control Point Operation Code.*/
-typedef enum {
+typedef enum
+{
     UDS_CTRL_PT_OP_RESERVED,         /**< Reserved for future use. */
     UDS_CTRL_PT_OP_REGIST_NEW_USER,  /**< Register New User Operation Code.*/
     UDS_CTRL_PT_OP_CONSENT,          /**< Consent Operation Code.*/
@@ -133,7 +132,8 @@ typedef enum {
 } uds_ctrl_pt_op_code_t;
 
 /**@brief User Data Service Control Point Response value.*/
-typedef enum {
+typedef enum
+{
     UDS_CTRL_PT_RSP_RESERVED,        /**< Reserved value. */
     UDS_CTRL_PT_RSP_SUCCESS,         /**< Operation Success. */
     UDS_CTRL_PT_RSP_NOT_SUP,         /**< Operation Code Not Supported. */
@@ -143,12 +143,13 @@ typedef enum {
 } uds_ctrl_pt_rsp_t;
 
 /**@brief User Data Service event type. */
-typedef enum {
+typedef enum
+{
     UDS_EVT_INVALID = 0x00,                       /**< Invalid event. */
     UDS_EVT_DB_CHANGE_INCR_NOTIFICATION_ENABLE,   /**< Database Change Increment Notification is enabled. */
     UDS_EVT_DB_CHANGE_INCR_NOTIFICATION_DISABLE,  /**< Database Change Increment Notification is disabled. */
-    UDS_EVT_CTRL_POINT_INDICATION_ENABLE,         /**< Indicate that User Control Point indication has been enabled.*/
-    UDS_EVT_CTRL_POINT_INDICATION_DISABLE,        /**< Indicate that User Control Point indication has been disabled.*/
+    UDS_EVT_CTRL_POINT_INDICATION_ENABLE,         /**< Indicate that User Control Point indication has been enabled. */
+    UDS_EVT_CTRL_POINT_INDICATION_DISABLE,        /**< Indicate that User Control Point indication has been disabled. */
     UDS_EVT_REGIST_USER_INDICATION_ENABLE,        /**< Indicate that Registered User indication has been enabled. */
     UDS_EVT_REGIST_USER_INDICATION_DISABLE,       /**< Indicate that Registered User indication has been disabled. */
     UDS_EVT_DB_CHANGE_INCR_SEND_CPLT,             /**< Indicate that Database Change Increment has been notified. */
@@ -164,11 +165,12 @@ typedef enum {
     UDS_EVT_USER_GRANT_ACCESS,                    /**< Indicate that User is waiting to be granted access. */
     UDS_EVT_REGIST_NEW_USER,                      /**< Indicate that User is waiting to be granted access. */
     UDS_EVT_DEL_USER_DATA,
-    UDS_EVT_DEL_USERS,
+    UDS_EVT_DEL_USERS,    
 } uds_evt_type_t;
 
 /**@brief UDS Characteristics Flags. */
-enum uds_chars_flag_bits {
+enum uds_chars_flag_bits
+{
     UDS_CHARS_WEIGHT_PRESENT     = 0x01,     /**< Flag bit for Weight Present. */
     UDS_CHARS_AGE_PRESENT        = 0x02,     /**< Flag bit for Age Present. */
     UDS_CHARS_BIRTH_DATE_PRESENT = 0x04,     /**< Flag bit for Date of Birth Present. */
@@ -178,7 +180,8 @@ enum uds_chars_flag_bits {
 };
 
 /**@brief Registered User Data Flags. */
-enum uds_regi_user_data_flag_bits {
+enum uds_regi_user_data_flag_bits
+{
     UDS_REGI_USER_NAME_PRESENT = 0x01,       /**< Flag bit for Registered User Name Present. */
     UDS_USER_NAME_TRUNCATED    = 0x02,       /**< Flag bit for User Name is truncated. */
 };
@@ -189,42 +192,47 @@ enum uds_regi_user_data_flag_bits {
  * @{
  */
 /**@brief UDS Characteristic - birthdate's structure. */
-typedef struct {
+typedef struct
+{
     uint16_t year;     /**< year time element of birth date. */
     uint8_t  month;    /**< month time element of birth date. */
     uint8_t  day;      /**< day time element of birth date. */
 } birth_date_t;
 
 /**@brief UDS Characteristics Flags structure. */
-typedef struct {
-    uint8_t weight_present     : 1;    /**< Weight Present. */
-    uint8_t age_present        : 1;    /**< Age Present. */
-    uint8_t birth_date_present : 1;    /**< Date of Birth Present. */
-    uint8_t first_name_present : 1;    /**< First Name Present. */
-    uint8_t height_present     : 1;    /**< Height Present. */
-    uint8_t gender_present     : 1;    /**< Gender Present. */
+typedef struct
+{
+    uint8_t weight_present     :1;    /**< Weight Present. */
+    uint8_t age_present        :1;    /**< Age Present. */
+    uint8_t birth_date_present :1;    /**< Date of Birth Present. */  
+    uint8_t first_name_present :1;    /**< First Name Present. */
+    uint8_t height_present     :1;    /**< Height Present. */
+    uint8_t gender_present     :1;    /**< Gender Present. */
 } uds_chars_flag_t;
 
 /**@brief UDS Characteristics value structure. */
-typedef struct {
+typedef struct
+{
     uint16_t     weight;              /**< User's weight. */
-    uint8_t      age;                 /**< User's age. */
-    birth_date_t date_of_birth;       /**< User's birth date. */
-    uint16_t     height;              /**< User's height. */
-    uint8_t      gender;              /**< User's gender. */
+	uint8_t      age;                 /**< User's age. */
+	birth_date_t date_of_birth;       /**< User's birth date. */
+	uint16_t     height;              /**< User's height. */
+	uint8_t      gender;              /**< User's gender. */
     uint8_t     *p_first_name;        /**< User's first name. */
     uint16_t     name_length;         /**< Length of User's first name. */
 } uds_chars_val_t;
 
 /**@brief Registered User Data Flags structure. */
-typedef struct {
-    uint8_t regi_user_name_present : 1;    /**< Registered User Name Present. */
-    uint8_t user_name_truncated    : 1;    /**< User Name is truncated. */
-    uint8_t reserved               : 6;    /**< Reserved for Future Use. */
+typedef struct
+{
+    uint8_t regi_user_name_present :1;    /**< Registered User Name Present. */
+    uint8_t user_name_truncated    :1;    /**< User Name is truncated. */
+    uint8_t reserved               :6;    /**< Reserved for Future Use. */ 
 } uds_regi_user_data_flag_t;
 
 /**@brief User Data Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t                  conn_idx;            /**< The index of the connection. */
     uds_evt_type_t           evt_type;            /**< The UDS event type. */
     const uint8_t            *p_data;             /**< Pointer to event data. */
@@ -248,7 +256,8 @@ typedef void (*uds_evt_handler_t)(uds_evt_t *p_evt);
  * @{
  */
 /**@brief UDS Registered User Data stream. */
-typedef struct {
+typedef struct 
+{
     uint8_t          *p_data;         /**< Pointer to Registered User Data stream. */
     uint16_t         length;          /**< Length of Registered User Data stream. */
     uint16_t         offset;          /**< Offset of Registered User Data stream. */
@@ -257,13 +266,11 @@ typedef struct {
     uint16_t         segm_offset;     /**< Offset of Registered User Data segmentations' number. */
 } uds_regi_user_data_stream_t;
 
-/**@brief User Data Service init structure.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief User Data Service init structure. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     uds_evt_handler_t         evt_handler;              /**< User Data Service event handler. */
-    uint32_t
-    char_mask;                /**< Initialize the mask of supported characteristics, \
-                              and configured with \ref UDS_CHAR_MASK. */
+    uint32_t                  char_mask;                /**< Initialize the mask of supported characteristics, and configured with \ref UDS_CHAR_MASK. */
     uint8_t                   user_index;               /**< Initialize the user index. */
     uint8_t                   db_change_incr_val;       /**< Initialize the Database Change Increment value. */
     uds_regi_user_data_flag_t uds_regi_user_data_flag;  /**< Initialize the Registered User Data Flags structure. */

@@ -57,38 +57,37 @@
 #ifndef __ANS_C_H__
 #define __ANS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup ANS_C_MACRO Defines
  * @{
  */
-#define ANS_C_CONNECTION_MAX    (10 < CFG_MAX_CONNECTIONS ? \
-                                10 : CFG_MAX_CONNECTIONS)      /**< Maximum number of HRS Client connections. */
-#define ANS_C_ERROR_CMD_NOT_SUP               0xa0             /**< Command not supported. */
-#define ANS_C_UTF_8_STR_LEN_MAX               18               /**< Maximum length of “UTF-8 string”. */
-#define ANS_C_ALERT_NTF_CTRL_PT_VAL_LEN       2                /**< Length of Alert Notification Control Point value. */
+#define ANS_C_CONNECTION_MAX                  10                            /**< Maximum number of HRS Client connections. */
+#define ANS_C_ERROR_CMD_NOT_SUP               0xa0                          /**< Command not supported. */
+#define ANS_C_UTF_8_STR_LEN_MAX               18                            /**< Maximum length of “UTF-8 string”. */
+#define ANS_C_ALERT_NTF_CTRL_PT_VAL_LEN       2                             /**< Length of Alert Notification Control Point value. */
 
 /**
  * @defgroup ANS_C_CAT_ID_BIT_MASK Category ID Bit Masks
  * @{
  * @brief Category ID Bit Masks.
  */
-#define ANS_SMPL_ALERT_SUP              (0x01 << 0)                  /**< Bit for Simple Alert Supported. */
-#define ANS_EMAIL_SUP                   (0x01 << 1)                  /**< Bit for Email Supported. */
-#define ANS_NEWS_SUP                    (0x01 << 2)                  /**< Bit for News Supported. */
-#define ANS_CALL_SUP                    (0x01 << 3)                  /**< Bit for Call Supported. */
-#define ANS_MISSED_CALL_SUP             (0x01 << 4)                  /**< Bit for Missed Call Supported. */
-#define ANS_SMS_MMS_SUP                 (0x01 << 5)                  /**< Bit for SMS/MMS Supported. */
-#define ANS_VOICE_MAIL_SUP              (0x01 << 6)                  /**< Bit for Voice Mail Supported. */
-#define ANS_SCHEDULE_SUP                (0x01 << 7)                  /**< Bit for Schedule Supported. */
-#define ANS_HG_PRIO_ALERT_SUP           (0x01 << 8)                  /**< Bit for High Prioritized Alert Supported. */
-#define ANS_INSTANT_MES                 (0x01 << 9)                  /**< Bit for Instant Message Supported. */
-#define ANS_ALL_CAT_SUP                 (0x03ff)                     /**< Bit for All Category Supported. */
+#define ANS_C_SMPL_ALERT_SUP              (0x01 << 0)                  /**< Bit for Simple Alert Supported. */
+#define ANS_C_EMAIL_SUP                   (0x01 << 1)                  /**< Bit for Email Supported. */
+#define ANS_C_NEWS_SUP                    (0x01 << 2)                  /**< Bit for News Supported. */
+#define ANS_C_CALL_SUP                    (0x01 << 3)                  /**< Bit for Call Supported. */
+#define ANS_C_MISSED_CALL_SUP             (0x01 << 4)                  /**< Bit for Missed Call Supported. */
+#define ANS_C_SMS_MMS_SUP                 (0x01 << 5)                  /**< Bit for SMS/MMS Supported. */
+#define ANS_C_VOICE_MAIL_SUP              (0x01 << 6)                  /**< Bit for Voice Mail Supported. */
+#define ANS_C_SCHEDULE_SUP                (0x01 << 7)                  /**< Bit for Schedule Supported. */
+#define ANS_C_HG_PRIO_ALERT_SUP           (0x01 << 8)                  /**< Bit for High Prioritized Alert Supported. */
+#define ANS_C_INSTANT_MES                 (0x01 << 9)                  /**< Bit for Instant Message Supported. */
+#define ANS_C_ALL_CAT_SUP                 (0x03ff)                     /**< Bit for All Category Supported. */
 /** @} */
 /** @} */
 
@@ -97,7 +96,8 @@
  * @{
  */
 /**@brief Alert Notification Service Categories of alerts/messages. */
-typedef enum {
+typedef enum
+{
     ANS_C_CAT_ID_SMPL_ALERT,            /**< Simple Alert: General text alert or non-text alert. */
     ANS_C_CAT_ID_EMAIL,                 /**< Email: Alert when Email messages arrives. */
     ANS_C_CAT_ID_NEWS,                  /**< News: News feeds such as RSS, Atom. */
@@ -113,7 +113,8 @@ typedef enum {
 } ans_c_alert_cat_id_t;
 
 /**@brief Alert Notification Service Client Control point ID. */
-typedef enum {
+typedef enum
+{
     ANS_C_CTRL_PT_EN_NEW_INC_ALERT_NTF,       /**< Enable New Incoming Alert Notification. */
     ANS_C_CTRL_PT_EN_UNREAD_CAT_STA_NTF,      /**< Enable Unread Category Status Notification. */
     ANS_C_CTRL_PT_DIS_NEW_INC_ALERT_NTF,      /**< Disable New Incoming Alert Notification. */
@@ -123,21 +124,19 @@ typedef enum {
 } ans_c_ctrl_pt_id_t;
 
 /**@brief Alert Notification Service Client Event type. */
-typedef enum {
+typedef enum
+{
     ANS_C_EVT_INVALID,                              /**< ANS Client invalid event type. */
     ANS_C_EVT_DISCOVERY_COMPLETE,                   /**< ANS Client has found ANS service and its characteristics. */
-    ANS_C_EVT_DISCOVERY_FAIL,                       /**< ANS Client found ANS service failed \
-                                                         because of invalid operation or no found at the peer. */
+    ANS_C_EVT_DISCOVERY_FAIL  ,                     /**< ANS Client found ANS service failed because of invalid operation or no found at the peer. */
     ANS_C_EVT_NEW_ALERT_NTF_SET_SUCCESS,            /**< ANS Client has set NEW Alert notification. */
     ANS_C_EVT_UNREAD_ALERT_STA_NTF_SET_SUCCESS,     /**< ANS Client has set Unread Alert Status notification. */
-    ANS_C_EVT_SUP_NEW_ALERT_CAT_RECEIV,             /**< ANS Client has received Supported New Alert Category value \
-                                                         (Read from peer). */
-    ANS_C_EVT_SUP_UNREAD_ALERT_CAT_REC,             /**< ANS Client has received Supported Unread Alert Category value \
-                                                        (Read from peer). */
-    ANS_C_EVT_NEW_ALERT_RECEIVE,     /**< ANS Client has received New Alert value (Notification from peer). */
-    ANS_C_EVT_UNREAD_ALERT_RECEIVE,  /**< ANS Client has received Unread Alert Status value (Notification from peer). */
-    ANS_C_EVT_CTRL_POINT_SET_SUCCESS,   /**< ANS Client has written Control Point completely. */
-    ANS_C_EVT_WRITE_OP_ERR,             /**< Error occured when ANS Client wrote to peer. */
+    ANS_C_EVT_SUP_NEW_ALERT_CAT_RECEIV,             /**< ANS Client has received Supported New Alert Category value (Read from peer). */
+    ANS_C_EVT_SUP_UNREAD_ALERT_CAT_REC,             /**< ANS Client has received Supported Unread Alert Category value (Read from peer). */
+    ANS_C_EVT_NEW_ALERT_RECEIVE,                    /**< ANS Client has received New Alert value (Notification from peer). */
+    ANS_C_EVT_UNREAD_ALERT_RECEIVE,                 /**< ANS Client has received Unread Alert Status value (Notification from peer). */
+    ANS_C_EVT_CTRL_POINT_SET_SUCCESS,               /**< ANS Client has written Control Point completely. */
+    ANS_C_EVT_WRITE_OP_ERR,                         /**< Error occured when ANS Client wrote to peer. */
 } ans_c_evt_type_t;
 /** @} */
 
@@ -146,7 +145,8 @@ typedef enum {
  * @{
  */
 /**@brief Alert Notification Service Client decoded New Alert value. */
-typedef struct {
+typedef struct
+{
     ans_c_alert_cat_id_t  cat_id;                              /**< Category ID. */
     uint8_t               alert_num;                           /**< Number of new alert. */
     uint8_t               str_info[ANS_C_UTF_8_STR_LEN_MAX];   /**< Text String Information. */
@@ -154,42 +154,40 @@ typedef struct {
 } ans_c_new_alert_t;
 
 /**@brief Alert Notification Service Client decoded Unread Alert Status value. */
-typedef struct {
+typedef struct
+{
     ans_c_alert_cat_id_t  cat_id;         /**< Category ID. */
     uint8_t               unread_num;     /**< Number of unread alert. */
 } ans_c_unread_alert_t;
 
 /**@brief Alert Notification Service Client Control Point value. */
-typedef struct {
+typedef struct
+{
     ans_c_ctrl_pt_id_t    cmd_id;     /**< Command ID. */
     ans_c_alert_cat_id_t  cat_id;     /**< Category ID. */
 } ans_c_ctrl_pt_t;
 
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t ans_srvc_start_handle;            /**< ANS Service start handle. */
     uint16_t ans_srvc_end_handle;              /**< ANS Service end handle. */
-    uint16_t ans_sup_new_alert_cat_handle;     /**< ANS Supported New Alert Category characteristic Value handle \
-                                                    which has been got from peer. */
-    uint16_t ans_new_alert_handle;             /**< ANS New Alert characteristic Value handle \
-                                                    which has been got from peer. */
-    uint16_t ans_new_alert_cccd_handle;        /**< ANS CCCD handle of New Alert characteristic \
-                                                    which has been got from peer. */
-    uint16_t ans_sup_unread_alert_cat_handle;  /**< ANS Supported Unread Alert Category characteristic Value handle \
-                                                    which has been got from peer. */
-    uint16_t ans_unread_alert_handle;          /**< ANS Unread Alert characteristic Value handle \
-                                                    which has been got from peer. */
-    uint16_t ans_unread_alert_cccd_handle;     /**< ANS CCCD handle of Unread Alert characteristic \
-                                                    which has been got from peer. */
-    uint16_t ans_ctrl_pt_handle;               /**< ANS Control Point characteristic Value handle \
-                                                    which has been got from peer. */
+    uint16_t ans_sup_new_alert_cat_handle;     /**< ANS Supported New Alert Category characteristic Value handle which has been got from peer. */
+    uint16_t ans_new_alert_handle;             /**< ANS New Alert characteristic Value handle which has been got from peer. */
+    uint16_t ans_new_alert_cccd_handle;        /**< ANS CCCD handle of New Alert characteristic which has been got from peer. */
+    uint16_t ans_sup_unread_alert_cat_handle;  /**< ANS Supported Unread Alert Category characteristic Value handle which has been got from peer. */
+    uint16_t ans_unread_alert_handle;          /**< ANS Unread Alert characteristic Value handle which has been got from peer. */
+    uint16_t ans_unread_alert_cccd_handle;     /**< ANS CCCD handle of Unread Alert characteristic which has been got from peer. */
+    uint16_t ans_ctrl_pt_handle;               /**< ANS Control Point characteristic Value handle which has been got from peer. */
 } ans_c_handles_t;
 
 /**@brief Alert Notification Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t          conn_idx;                          /**< The index of the connection. */
     ans_c_evt_type_t evt_type;                          /**< The ANS event type. */
-    union {
+    union
+    {
         uint16_t             sup_new_alert_cat_ids;     /**< Alert status received. */
         uint16_t             sup_unread_alert_cat_ids;  /**< Ringer setting received. */
         ans_c_new_alert_t    new_alert;                 /**< New Alert value. */

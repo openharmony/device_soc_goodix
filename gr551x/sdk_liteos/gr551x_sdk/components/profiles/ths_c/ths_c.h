@@ -39,7 +39,6 @@
  * @addtogroup BLE_SRV BLE Services
  * @{
  */
-
 /**
  * @defgroup BLE_SDK_THS_C Throughput Service Client (THS_C)
  * @{
@@ -50,7 +49,7 @@
  *          interact with it.
  *
  *          The application must provide to register, then call \ref ths_client_init(). After the module can
- *          send setting parameters and throughput data to peer, it will notify application.
+ *          send setting parameters and throughput data to peer, it will notify application. 
  *          It includes only Throughput Service notify data, only Throughput Service Client write data
  *          and both send data test mode \ref ths_c_transport_mode_t.
  */
@@ -58,11 +57,11 @@
 #ifndef __THS_C_H__
 #define __THS_C_H__
 
+#include "ble_prf_types.h"
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_prf_types.h"
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup THS_C_MACRO Defines
@@ -73,18 +72,17 @@
  * @{
  * @brief THS service and characteristcs UUID.
  */
-#define THS_C_CONNECTION_MAX    (10 < CFG_MAX_CONNECTIONS ? \
-                                10 : CFG_MAX_CONNECTIONS)    /**< Maximum number of THS Client connections. */
-#define THS_SVC_UUID            {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                 0xD3, 0x01, 0x03, 0xED, 0xA6}      /**< UUID of THS Service. */
-#define THS_TX_CHAR_UUID        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                 0xD3, 0x02, 0x03, 0xED, 0xA6}      /**< UUID of THS Tx Characteristic. */
-#define THS_RX_CHAR_UUID        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                 0xD3, 0x03, 0x03, 0xED, 0xA6}      /**< UUID of THS Rx Characteristic. */
-#define THS_SETTING_CHAR_UUID   {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                 0xD3, 0x04, 0x03, 0xED, 0xA6}      /**< UUID of THS Setting Characteristic. */
-#define THS_TOGGLE_CHAR_UUID    {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                 0xD3, 0x05, 0x03, 0xED, 0xA6}      /**< UUID of THS Toggle Characteristic. */
+#define THS_C_CONNECTION_MAX                10                                                    /**< Maximum number of THS Client connections. */
+#define THS_SVC_UUID                        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                             0x0A, 0x46, 0x44, 0xD3, 0x01, 0x03, 0xED, 0xA6}      /**< UUID of THS Service. */
+#define THS_TX_CHAR_UUID                    {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                             0x0A, 0x46, 0x44, 0xD3, 0x02, 0x03, 0xED, 0xA6}      /**< UUID of THS Tx Characteristic. */
+#define THS_RX_CHAR_UUID                    {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                             0x0A, 0x46, 0x44, 0xD3, 0x03, 0x03, 0xED, 0xA6}      /**< UUID of THS Rx Characteristic. */
+#define THS_SETTING_CHAR_UUID               {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                             0x0A, 0x46, 0x44, 0xD3, 0x04, 0x03, 0xED, 0xA6}      /**< UUID of THS Setting Characteristic. */
+#define THS_TOGGLE_CHAR_UUID                {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                             0x0A, 0x46, 0x44, 0xD3, 0x05, 0x03, 0xED, 0xA6}      /**< UUID of THS Toggle Characteristic. */
 /** @} */
 /** @} */
 
@@ -93,15 +91,16 @@
  * @{
  */
 /**@brief Throughput Service Client data transport mode. */
-typedef enum {
+typedef enum
+{
     THS_C_SLAVE_NOTIFY_MODE,          /** The device recieves data from the peer via notify. */
     THS_C_MASTER_WRITE_MODE,          /** The device writes data to the peer. */
-    THS_C_DOUBLE_MODE,                /** The device recieve data from the peer via notify and \
-                                      write data to the peer at the same time. */
+    THS_C_DOUBLE_MODE,                /** The device recieve data from the peer via notify and write data to the peer at the same time. */
 } ths_c_transport_mode_t;
 
 /**@brief Throughput service settings types. */
-typedef enum {
+typedef enum
+{
     THS_C_SETTINGS_TYPE_CI,           /**< BLE Connection Interval parameter. */
     THS_C_SETTINGS_TYPE_MTU,          /**< MTU Size. */
     THS_C_SETTINGS_TYPE_PDU,          /**< PDU Size. */
@@ -111,11 +110,11 @@ typedef enum {
 } ths_c_settings_type_t;
 
 /**@brief Throughput Service Client event type. */
-typedef enum {
+typedef enum
+{
     THS_C_EVT_INVALID,                      /**< THS Client invalid event. */
     THS_C_EVT_DISCOVERY_COMPLETE,           /**< THS Client has found THS service and its characteristics. */
-    THS_C_EVT_DISCOVERY_FAIL,               /**< THS Client found THS service failed because of invalid operation \
-                                            or no found at the peer. */
+    THS_C_EVT_DISCOVERY_FAIL,               /**< THS Client found THS service failed because of invalid operation or no found at the peer. */
     THS_C_EVT_TX_NTF_SET_SUCCESS,           /**< THS Client has set peer Tx notify. */
     THS_C_EVT_SETTING_NTF_SET_SUCCESS,      /**< THS Client has set peer Settings notify. */
     THS_C_EVT_TOGGLE_SET_SUCCESS,           /**< THS Client has set toggle no. */
@@ -132,7 +131,8 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t ths_srvc_start_handle;       /**< THS Service start handle. */
     uint16_t ths_srvc_end_handle;         /**< THS Service end handle. */
     uint16_t ths_tx_handle;               /**< THS Tx characteristic handle which has been got from peer. */
@@ -144,7 +144,8 @@ typedef struct {
 } ths_c_handles_t;
 
 /**@brief Throughput Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t           conn_idx;            /**< The connection index. */
     ths_c_evt_type_t  evt_type;            /**< THS client event type. */
     uint8_t          *p_data;              /**< Pointer to event data. */

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 GOODIX.
+# Copyright (c) 2024 GOODIX.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,6 +19,4 @@ config("public") {
 
 hdf_driver("fs_adapter") {
   sources = [ "fs_init.c" ]
-
-  deps = [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
 }

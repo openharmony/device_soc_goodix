@@ -1,0 +1,86 @@
+# Copyright (c) 2024 GOODIX.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+template("gr551x_executable") {
+  executable("${target_name}.elf") {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                             "force_link_libs",
+                             "gen_asm",
+                           ])
+
+    if (defined(ldflags)) {
+      ldflags += [ "-Wl,--whole-archive" ]
+    } else {
+      ldflags = [ "-Wl,--whole-archive" ]
+    }
+    foreach(force_link_lib, invoker.force_link_libs) {
+      ldflags += [ "-l${force_link_lib}" ]
+    }
+    ldflags += [ "-Wl,--no-whole-archive" ]
+  }
+
+  action("${target_name}.bin") {
+    script = "//build/lite/run_shell_cmd.py"
+    args = [
+      "${compile_prefix}objcopy${toolchain_cmd_suffix}",
+      "-O",
+      "binary",
+      rebase_path("${root_build_dir}/bin/${invoker.target_name}.elf"),
+      rebase_path("${root_build_dir}/bin/${invoker.target_name}.bin"),
+    ]
+    outputs = [ "${root_build_dir}/bin/${invoker.target_name}.bin" ]
+    deps = [ ":${invoker.target_name}.elf" ]
+  }
+
+  action("${target_name}.hex") {
+    script = "//build/lite/run_shell_cmd.py"
+    args = [
+      "${compile_prefix}objcopy${toolchain_cmd_suffix}",
+      "-O",
+      "ihex",
+      rebase_path("${root_build_dir}/bin/${invoker.target_name}.elf"),
+      rebase_path("${root_build_dir}/bin/${invoker.target_name}.hex"),
+    ]
+    outputs = [ "${root_build_dir}/bin/${invoker.target_name}.hex" ]
+    deps = [ ":${invoker.target_name}.elf" ]
+  }
+
+  if (defined(invoker.gen_asm) && invoker.gen_asm) {
+    action("${target_name}.asm") {
+      script = "//build/lite/run_shell_cmd.py"
+      args = [
+        "${compile_prefix}objdump${toolchain_cmd_suffix}",
+        "-D",
+        rebase_path(
+            "${root_build_dir}/unstripped/bin/${invoker.target_name}.elf"),
+        ">",
+        rebase_path("${root_build_dir}/bin/${invoker.target_name}.asm"),
+      ]
+      outputs = [ "${root_build_dir}/bin/${invoker.target_name}.asm" ]
+      deps = [ ":${invoker.target_name}.elf" ]
+    }
+  }
+
+  group("${target_name}") {
+    deps = [
+      ":${target_name}.bin",
+      ":${target_name}.hex",
+    ]
+
+    if (defined(invoker.gen_asm) && invoker.gen_asm) {
+      deps += [ ":${target_name}.asm" ]
+    }
+  }
+}

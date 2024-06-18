@@ -39,67 +39,32 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include <string.h>
+#include "rscs_c.h"
 #include "ble_prf_utils.h"
 #include "utility.h"
-#include "rscs_c.h"
+#include <string.h>
 
-#define UUID_OFFSET_8 8
-#define INDIX_OFFSET_1 1
-#define INDIX_OFFSET_2 2
-#define INDIX_OFFSET_3 3
-#define ATTR_VALUE_LEN 2
 /*
  * STRUCT DEFINE
  *****************************************************************************************
  */
 /**@brief Running Speed and Cadence Service Client environment variable. */
-struct rscs_c_env_t {
+struct rscs_c_env_t
+{
     rscs_c_handles_t     handles;            /**< Handles of RSCS characteristics which will be got for peer. */
     rscs_c_evt_handler_t evt_handler;        /**< Handler of RSCS Client event  */
-    uint8_t              prf_id;             /**< RSCS Client profile id. */
 };
-
-/*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static void rscs_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp);
-static void rscs_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle);
-static void rscs_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);
-static void rscs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
 static struct rscs_c_env_t s_rscs_c_env;    /**< Running Speed and Cadence Service Client environment variable. */
-
-/**@brief Running Speed and Cadence Service Client interface required by profile manager. */
-static ble_prf_manager_cbs_t rscs_c_mgr_cbs = {
-    NULL,
-    NULL,
-    NULL
-};
-
-/**@brief Running Speed and Cadence Service GATT Client Callbacks. */
-static gattc_prf_cbs_t rscs_c_gattc_cbs = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    rscs_c_att_read_cb,
-    rscs_c_att_write_cb,
-    rscs_c_att_ntf_ind_cb,
-    rscs_c_srvc_browse_cb,
-    NULL,
-};
-
-/**@brief Running Speed and Cadence Service Client Information. */
-static const prf_client_info_t rscs_c_prf_info = {
-    .max_connection_nb = RSCS_C_CONNECTION_MAX,
-    .manager_cbs       = &rscs_c_mgr_cbs,
-    .gattc_prf_cbs     = &rscs_c_gattc_cbs
+static uint8_t             s_target_uuid[2]   = {LO_U16(BLE_ATT_SVC_RUNNING_SPEED_CADENCE), HI_U16(BLE_ATT_SVC_RUNNING_SPEED_CADENCE)};
+static ble_uuid_t          s_rscs_service_uuid =
+{
+    .uuid_len = 2,
+    .uuid     = s_target_uuid,
 };
 
 /*
@@ -115,7 +80,8 @@ static const prf_client_info_t rscs_c_prf_info = {
  */
 static void rscs_c_evt_handler_excute(rscs_c_evt_t *p_evt)
 {
-    if (s_rscs_c_env.evt_handler != NULL && RSCS_C_EVT_INVALID != p_evt->evt_type) {
+    if (NULL != s_rscs_c_env.evt_handler && RSCS_C_EVT_INVALID != p_evt->evt_type)
+    {
         s_rscs_c_env.evt_handler(p_evt);
     }
 }
@@ -133,12 +99,8 @@ static void rscs_c_meas_value_encode(uint8_t *p_data, uint16_t length, rscs_c_me
 {
     uint8_t   flags = 0;
     uint8_t   index = 0;
-    uint8_t   ret = 0;
     flags = p_data[index++];
-    ret = memset_s(p_rsc_meas_buff, sizeof(rscs_c_meas_val_t), 0, sizeof(rscs_c_meas_val_t));
-    if (ret < 0) {
-        return;
-    }
+    memset(p_rsc_meas_buff, 0, sizeof(rscs_c_meas_val_t));
     // Instantaneous speed field
     p_rsc_meas_buff->inst_speed = BUILD_U16(p_data[index], p_data[index + 1]);
     index += sizeof(uint16_t);
@@ -146,26 +108,31 @@ static void rscs_c_meas_value_encode(uint8_t *p_data, uint16_t length, rscs_c_me
     p_rsc_meas_buff->inst_cadence = p_data[index++];
 
     // Instantaneous stride length field
-    if (flags & RSCS_C_MEAS_FLAG_INST_STRIDE_LEN_BIT) {
+    if (flags & RSCS_C_MEAS_FLAG_INST_STRIDE_LEN_BIT)
+    {
         p_rsc_meas_buff->inst_stride_length_present = true;
         p_rsc_meas_buff->inst_stride_length         = BUILD_U16(p_data[index], p_data[index + 1]);
         index += sizeof(uint16_t);
     }
 
     // Total distance field
-    if (flags & RSCS_C_MEAS_FLAG_TOTAL_DISTANCE_BIT) {
+    if (flags & RSCS_C_MEAS_FLAG_TOTAL_DISTANCE_BIT)
+    {
         p_rsc_meas_buff->total_distance_present = true;
         p_rsc_meas_buff->total_distance         = BUILD_U32(p_data[index],
-            p_data[index + INDIX_OFFSET_1],
-            p_data[index + INDIX_OFFSET_2],
-            p_data[index + INDIX_OFFSET_3]);
+                p_data[index + 1],
+                p_data[index + 2],
+                p_data[index + 3]);
         index += sizeof(uint32_t);
     }
 
     // Running or Walking field
-    if (flags & RSCS_C_MEAS_FLAG_RUNNING_OR_WALKING_BIT) {
+    if (flags & RSCS_C_MEAS_FLAG_RUNNING_OR_WALKING_BIT)
+    {
         p_rsc_meas_buff->is_run_or_walk = true;
-    } else {
+    }
+    else
+    {
         p_rsc_meas_buff->is_run_or_walk = false;
     }
 }
@@ -179,23 +146,27 @@ static void rscs_c_meas_value_encode(uint8_t *p_data, uint16_t length, rscs_c_me
  * @param[in] p_read_rsp: The information of read response.
  *****************************************************************************************
  */
-static void rscs_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp)
+static void rscs_c_att_read_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_read_t *p_read_rsp)
 {
     rscs_c_evt_t rscs_c_evt;
 
     rscs_c_evt.conn_idx = conn_idx;
     rscs_c_evt.evt_type = RSCS_C_EVT_INVALID;
 
-    if (BLE_SUCCESS != status) {
+    if (BLE_SUCCESS != status)
+    {
         return;
     }
 
-    if (p_read_rsp->vals[0].handle == s_rscs_c_env.handles.rscs_rsc_feature_handle) {
+    if (p_read_rsp->value[0].handle == s_rscs_c_env.handles.rscs_rsc_feature_handle)
+    {
         rscs_c_evt.evt_type          = RSCS_C_EVT_RSC_FEATURE_RECEIVE;
-        rscs_c_evt.value.rsc_feature = BUILD_U16(p_read_rsp->vals[0].p_value[0], p_read_rsp->vals[0].p_value[1]);
-    } else if (p_read_rsp->vals[0].handle == s_rscs_c_env.handles.rscs_sensor_loc_handle) {
+        rscs_c_evt.value.rsc_feature = BUILD_U16(p_read_rsp->value[0].p_value[0], p_read_rsp->value[0].p_value[1]);
+    }
+    else if (p_read_rsp->value[0].handle == s_rscs_c_env.handles.rscs_sensor_loc_handle)
+    {
         rscs_c_evt.evt_type             = RSCS_C_EVT_SENSOR_LOC_RECEIVE;
-        rscs_c_evt.value.rsc_sensor_loc = (rscs_c_sensor_loc_t)p_read_rsp->vals[0].p_value[0];
+        rscs_c_evt.value.rsc_sensor_loc = (rscs_c_sensor_loc_t)p_read_rsp->value[0].p_value[0];
     }
 
     rscs_c_evt_handler_excute(&rscs_c_evt);
@@ -210,25 +181,30 @@ static void rscs_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc
  * @param[in] handle:     The handle of attribute.
  *****************************************************************************************
  */
-static void rscs_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle)
+static void rscs_c_att_write_evt_handler(uint8_t conn_idx, uint8_t status, uint16_t handle)
 {
     rscs_c_evt_t rscs_c_evt;
 
     rscs_c_evt.conn_idx = conn_idx;
     rscs_c_evt.evt_type = RSCS_C_EVT_INVALID;
 
-    if (handle == s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle) {
+    if (handle == s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle)
+    {
         rscs_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                              RSCS_C_EVT_RSC_MEAS_NTF_SET_SUCCESS :
-                              RSCS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle) {
+                               RSCS_C_EVT_RSC_MEAS_NTF_SET_SUCCESS :
+                               RSCS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle)
+    {
         rscs_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                              RSCS_C_EVT_CTRL_PT_IND_SET_SUCCESS :
-                              RSCS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_rscs_c_env.handles.rscs_ctrl_pt_handle) {
+                               RSCS_C_EVT_CTRL_PT_IND_SET_SUCCESS :
+                               RSCS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_rscs_c_env.handles.rscs_ctrl_pt_handle)
+    {
         rscs_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                              RSCS_C_EVT_CTRL_PT_SET_SUCCESS :
-                              RSCS_C_EVT_WRITE_OP_ERR;
+                               RSCS_C_EVT_CTRL_PT_SET_SUCCESS :
+                               RSCS_C_EVT_WRITE_OP_ERR;
     }
 
     rscs_c_evt_handler_excute(&rscs_c_evt);
@@ -243,23 +219,22 @@ static void rscs_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handl
  * @param[in] p_ntf_ind: The information of notification or indication.
  *****************************************************************************************
  */
-static void rscs_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind)
+static void rscs_c_att_ntf_ind_evt_handler(uint8_t conn_idx, const ble_gattc_evt_ntf_ind_t *p_ntf_ind)
 {
     rscs_c_evt_t rscs_c_evt;
-    uint8_t ret;
 
     rscs_c_evt.conn_idx = conn_idx;
     rscs_c_evt.evt_type = RSCS_C_EVT_INVALID;
 
-    if (p_ntf_ind->handle == s_rscs_c_env.handles.rscs_rsc_meas_handle) {
+    if (p_ntf_ind->handle == s_rscs_c_env.handles.rscs_rsc_meas_handle)
+    {
         rscs_c_evt.evt_type = RSCS_C_EVT_RSC_MEAS_VAL_RECEIVE;
         rscs_c_meas_value_encode(p_ntf_ind->p_value, p_ntf_ind->length, &rscs_c_evt.value.rsc_meas_buff);
-    } else if (p_ntf_ind->handle == s_rscs_c_env.handles.rscs_ctrl_pt_handle) {
+    }
+    else if (p_ntf_ind->handle == s_rscs_c_env.handles.rscs_ctrl_pt_handle)
+    {
         rscs_c_evt.evt_type = RSCS_C_EVT_CTRL_PT_RSP_RECEIVE;
-        ret = memcpy_s(rscs_c_evt.value.ctrl_pt_rsp, p_ntf_ind->p_value, p_ntf_ind->length);
-        if (ret < 0) {
-            return;
-        }
+        memcpy(rscs_c_evt.value.ctrl_pt_rsp, p_ntf_ind->p_value, p_ntf_ind->length);
     }
 
     rscs_c_evt_handler_excute(&rscs_c_evt);
@@ -274,7 +249,7 @@ static void rscs_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p
  * @param[in] p_browse_srvc: The information of service browse.
  *****************************************************************************************
  */
-static void rscs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc)
+static void rscs_c_srvc_browse_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_browse_srvc_t *p_browse_srvc)
 {
     rscs_c_evt_t  rscs_c_evt;
     uint16_t      uuid_disc;
@@ -283,44 +258,84 @@ static void rscs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_ga
     rscs_c_evt.conn_idx = conn_idx;
     rscs_c_evt.evt_type = RSCS_C_EVT_DISCOVERY_FAIL;
 
-    if (BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status) {
+    if(BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status)
+    {
         return;
     }
 
-    if (status != BLE_SUCCESS) {
-        return;
-    }
-    uuid_disc = p_browse_srvc->uuid[0] | p_browse_srvc->uuid[1] << UUID_OFFSET_8;
+    if (BLE_SUCCESS == status)
+    {
+        uuid_disc = p_browse_srvc->uuid[0] | p_browse_srvc->uuid[1] << 8;
 
-    if (BLE_ATT_SVC_RUNNING_SPEED_CADENCE == uuid_disc) {
-        s_rscs_c_env.handles.rscs_srvc_start_handle = p_browse_srvc->start_hdl;
-        s_rscs_c_env.handles.rscs_srvc_end_handle   = p_browse_srvc->end_hdl;
+        if (BLE_ATT_SVC_RUNNING_SPEED_CADENCE == uuid_disc)
+        {
+            s_rscs_c_env.handles.rscs_srvc_start_handle = p_browse_srvc->start_hdl;
+            s_rscs_c_env.handles.rscs_srvc_end_handle   = p_browse_srvc->end_hdl;
 
-        for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++) {
-            uuid_disc   = p_browse_srvc->info[i].attr.uuid[0] | p_browse_srvc->info[i].attr.uuid[1] << UUID_OFFSET_8;
-            handle_disc = p_browse_srvc->start_hdl + i + 1;
+            for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++)
+            {
+                    uuid_disc   = p_browse_srvc->info[i].attr.uuid[0] | p_browse_srvc->info[i].attr.uuid[1] << 8;
+                    handle_disc = p_browse_srvc->start_hdl + i + 1;
 
-            if (BLE_GATTC_BROWSE_ATTR_VAL == p_browse_srvc->info[i].attr_type) {
-                if (BLE_ATT_CHAR_RSC_MEAS == uuid_disc) {
-                    s_rscs_c_env.handles.rscs_rsc_meas_handle      = handle_disc;
-                    s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle = handle_disc + 1;
-                } else if (BLE_ATT_CHAR_RSC_FEAT == uuid_disc) {
-                    s_rscs_c_env.handles.rscs_rsc_feature_handle = handle_disc;
-                } else if (BLE_ATT_CHAR_SENSOR_LOC == uuid_disc) {
-                    s_rscs_c_env.handles.rscs_sensor_loc_handle = handle_disc;
-                } else if (BLE_ATT_CHAR_SC_CNTL_PT == uuid_disc) {
-                    s_rscs_c_env.handles.rscs_ctrl_pt_handle      = handle_disc;
-                    s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle = handle_disc + 1;
-                }
-            } else if (BLE_GATTC_BROWSE_NONE == p_browse_srvc->info[i].attr_type) {
-                break;
+                    if (BLE_GATTC_BROWSE_ATTR_VAL == p_browse_srvc->info[i].attr_type)
+                    {
+                        if (BLE_ATT_CHAR_RSC_MEAS == uuid_disc)
+                        {
+                            s_rscs_c_env.handles.rscs_rsc_meas_handle      = handle_disc;
+                            s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle = handle_disc + 1;
+                        }
+                        else if (BLE_ATT_CHAR_RSC_FEAT == uuid_disc)
+                        {
+                            s_rscs_c_env.handles.rscs_rsc_feature_handle = handle_disc;
+                        }
+                        else if (BLE_ATT_CHAR_SENSOR_LOC == uuid_disc)
+                        {
+                            s_rscs_c_env.handles.rscs_sensor_loc_handle = handle_disc;
+                        }
+                        else if (BLE_ATT_CHAR_SC_CNTL_PT == uuid_disc)
+                        {
+                            s_rscs_c_env.handles.rscs_ctrl_pt_handle      = handle_disc;
+                            s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle = handle_disc + 1;
+                        }
+                    }
+                    else if (BLE_GATTC_BROWSE_NONE == p_browse_srvc->info[i].attr_type)
+                    {
+                        break;
+                    }
             }
-        }
 
-        rscs_c_evt.evt_type = RSCS_C_EVT_DISCOVERY_COMPLETE;
+            rscs_c_evt.evt_type = RSCS_C_EVT_DISCOVERY_COMPLETE;
+        }
     }
 
     rscs_c_evt_handler_excute(&rscs_c_evt);
+}
+
+static void rscs_c_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTC_EVT_SRVC_BROWSE:
+            rscs_c_srvc_browse_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.srvc_browse);
+            break;
+
+        case BLE_GATTC_EVT_READ_RSP:
+            rscs_c_att_read_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.read_rsp);
+            break;
+
+        case BLE_GATTC_EVT_WRITE_RSP:
+            rscs_c_att_write_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, p_evt->evt.gattc_evt.params.write_rsp.handle);
+            break;
+
+        case BLE_GATTC_EVT_NTF_IND:
+            rscs_c_att_ntf_ind_evt_handler(p_evt->evt.gattc_evt.index, &p_evt->evt.gattc_evt.params.ntf_ind);
+            break;
+    }
 }
 
 /*
@@ -329,97 +344,72 @@ static void rscs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_ga
  */
 sdk_err_t rscs_client_init(rscs_c_evt_handler_t evt_handler)
 {
-    sdk_err_t ret;
-    if (evt_handler == NULL) {
+    if (NULL == evt_handler)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memset_s(&s_rscs_c_env, sizeof(s_rscs_c_env), 0, sizeof(s_rscs_c_env));
-    if (ret < 0) {
-        return ret;
-    }
+    memset(&s_rscs_c_env, 0, sizeof(s_rscs_c_env)) ;
     s_rscs_c_env.evt_handler = evt_handler;
 
-    return ble_client_prf_add(&rscs_c_prf_info, &s_rscs_c_env.prf_id);
+    return ble_gattc_prf_add(&s_rscs_service_uuid, rscs_c_ble_evt_handler);
 }
 
 sdk_err_t rscs_c_disc_srvc_start(uint8_t conn_idx)
 {
-    uint8_t target_uuid[2];
-    target_uuid[0] = LO_U16(BLE_ATT_SVC_RUNNING_SPEED_CADENCE);
-    target_uuid[1] = HI_U16(BLE_ATT_SVC_RUNNING_SPEED_CADENCE);
-    const ble_uuid_t rscs_service_uuid = {
-        .uuid_len = 2,
-        .uuid     = target_uuid,
-    };
-
-    return ble_gattc_prf_services_browse(s_rscs_c_env.prf_id, conn_idx, &rscs_service_uuid);
+    return ble_gattc_services_browse(conn_idx, &s_rscs_service_uuid);
 }
 
 sdk_err_t rscs_c_rsc_meas_notify_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_attr_value_t write_attr_value;
     uint16_t ntf_value = is_enable ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND;
 
-    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle) {
+    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ntf_value;
-
-    return ble_gattc_prf_write(s_rscs_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_rscs_c_env.handles.rscs_rsc_meas_cccd_handle, 0, 2, (uint8_t *)&ntf_value);
 }
 
 sdk_err_t rscs_c_rsc_feature_read(uint8_t conn_idx)
 {
-    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_rsc_feature_handle) {
+    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_rsc_feature_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    return  ble_gattc_prf_read(s_rscs_c_env.prf_id, conn_idx, s_rscs_c_env.handles.rscs_rsc_feature_handle, 0);
+    return  ble_gattc_read(conn_idx, s_rscs_c_env.handles.rscs_rsc_feature_handle, 0);
 }
 
 sdk_err_t rscs_c_sensor_loc_read(uint8_t conn_idx)
 {
-    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_sensor_loc_handle) {
+    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_sensor_loc_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    return  ble_gattc_prf_read(s_rscs_c_env.prf_id, conn_idx, s_rscs_c_env.handles.rscs_sensor_loc_handle, 0);
+    return  ble_gattc_read(conn_idx, s_rscs_c_env.handles.rscs_sensor_loc_handle, 0);
 }
 
 sdk_err_t rscs_c_ctrl_pt_indicate_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_attr_value_t write_attr_value;
     uint16_t ind_value = is_enable ? PRF_CLI_START_IND : PRF_CLI_STOP_NTFIND;
 
-    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle) {
+    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ind_value;
-
-    return ble_gattc_prf_write(s_rscs_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_rscs_c_env.handles.rscs_ctrl_pt_cccd_handle, 0, 2, (uint8_t *)&ind_value);
 }
 
 sdk_err_t rscs_c_ctrl_pt_set(uint8_t conn_idx, uint16_t ctrl_value)
 {
-    gattc_write_attr_value_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_ctrl_pt_handle) {
+    if (BLE_ATT_INVALID_HDL == s_rscs_c_env.handles.rscs_ctrl_pt_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_rscs_c_env.handles.rscs_ctrl_pt_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ctrl_value;
-
-    return ble_gattc_prf_write(s_rscs_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_rscs_c_env.handles.rscs_ctrl_pt_handle, 0, 2, (uint8_t *)&ctrl_value);
 }

@@ -45,35 +45,30 @@
  * @{
  * @brief Log Notification Service module.
  *
- * @details The Log Notification Service shall expose the Log Info characteristic and
- *          the Log Control Point characteristic.
+ * @details The Log Notification Service shall expose the Log Info characteristic and the Log Control Point characteristic.
  *
- *          After \ref lns_init_t variable is intialized, the application
- *          must call \ref lns_service_init() to add Log Notification Service and
- *          Log Info and Log Control Point characteristics to the BLE Stack database.
+ *          The application must call \ref lns_service_init() to add Log Notification Service and Log Info 
+ *          and Log Control Point characteristics to the BLE Stack database.
  */
 
 #ifndef __LNS_H__
 #define __LNS_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 #include "fault_trace.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup LNS_MACRO Defines
  * @{
  */
-#define LNS_CONNECTION_MAX        (10 < CFG_MAX_CONNECTIONS ? \
-                                  10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of Log Notification \
-                                                                   Service connections. */
-#define LNS_SERVICE_UUID  0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                          0x01, 0x08, 0xED, 0xA6     /**< The UUID of Log Notification Service for \
-                          setting advertising data. */
-#define LNS_LOG_INFO_VAL_LEN      244   /**< Length of Log Information value. */
-#define LNS_LOG_CTRL_PT_VAL_LEN   1     /**< Length of Log Control Point value. */
+#define LNS_CONNECTION_MAX          10                                                 /**< Maximum number of Log Notification Service connections. */
+#define LNS_SERVICE_UUID            0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                    0x0A, 0x46, 0x44, 0xD3, 0x01, 0x08, 0xED, 0xA6     /**< The UUID of Log Notification Service for setting advertising data. */
+#define LNS_LOG_INFO_VAL_LEN        244                                                /**< Length of Log Information value. */
+#define LNS_LOG_CTRL_PT_VAL_LEN     1                                                  /**< Length of Log Control Point value. */
 /** @} */
 
 /**
@@ -81,14 +76,16 @@
  * @{
  */
 /**@brief Log Notification Service Control Point. */
-typedef enum {
+typedef enum
+{
     LNS_CTRL_PT_TRACE_STATUS_GET = 0x01,    /**< Get trace info status. */
     LNS_CTRL_PT_TRACE_INFO_DUMP,            /**< Dump saved trace info. */
     LNS_CTRL_PT_TRACE_INFO_CLEAR,           /**< Clear trace information. */
 } lns_ctrl_pt_t;
 
 /**@brief Log Notification Service event type. */
-typedef enum {
+typedef enum
+{
     LNS_EVT_INVALID,                    /**< Invalid lns event type. */
     LNS_EVT_LOG_INFO_NTF_ENABLE,        /**< Trace Information notification is enabled. */
     LNS_EVT_LOG_INFO_NTF_DISABLE,       /**< Trace Information notification is disabled. */
@@ -105,13 +102,15 @@ typedef enum {
  * @{
  */
 /**@brief Log Notification Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t             conn_idx;        /**< The index of the connection. */
     lns_evt_type_t      evt_type;        /**< The lns event type. */
 } lns_evt_t;
 
 /**@brief Log Information data. */
-typedef struct {
+typedef struct 
+{
     uint8_t   *p_data;     /**< Pointer to data. */
     uint32_t   length;     /**< Length of data. */
     uint32_t   offset;     /**< Offset of data. */

@@ -3,7 +3,7 @@
  *
  * @file mlmr.h
  *
- * @brief Goodix UART Service API
+ * @brief Multi Link Multi Role Service API
  *
  *****************************************************************************************
  * @attention
@@ -42,109 +42,114 @@
  */
 
 /**
- * @defgroup BLE_SDK_GUS Goodix UART Service (GUS)
+ * @defgroup BLE_SDK_MLMR Multi Link Multi Role Service (MLMR)
  * @{
- * @brief Definitions and prototypes for the GUS interface.
+ * @brief Definitions and prototypes for the MLMR interface.
  *
- * @details The Goodix UART Service is a customized GATT-based service with Tx, Rx and Flow Control
+ * @details The Multi Link Multi Role Service is a customized GATT-based service with Tx, Rx and Flow Control
  *          characteristics. The application uses the service to send and receive data to and
  *          from the peer. The application data is sent to the peer as Handle Value Notification,
  *          and the data received from the peer is transmitted with GATT Write Command.
  *
- *          After \ref gus_init_t variable is initialized , the application must call \ref gus_service_init()
+ *          After \ref mlmr_init_t variable is initialized , the application must call \ref mlmr_service_init()
  *          to add the Goodix Uart Service and Rx, Tx, Flow Control characteristics to the BLE Stack
- *          database. The application can send the data to the peer with \ref gus_tx_data_send() after
- *          \ref GUS_EVT_TX_PORT_OPENED received. The application should copy the received data to its own buffer
- *          when handling \ref GUS_EVT_RX_DATA_RECEIVED.
+ *          database. The application can send the data to the peer with \ref mlmr_tx_data_send() after 
+ *          \ref MLMR_EVT_TX_PORT_OPENED received. The application should copy the received data to its own buffer
+ *          when handling \ref MLMR_EVT_RX_DATA_RECEIVED.
  */
 
-#ifndef GUS_H
-#define GUS_H
+#ifndef __MLMR_H__
+#define __MLMR_H__
 
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 
 /**
- * @defgroup GUS_MACRO Defines
+ * @defgroup MLMR_MACRO Defines
  * @{
  */
-#define GUS_CONNECTION_MAX  (10 < CFG_MAX_CONNECTIONS ? \
-                            10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of Goodix UART Service connections. */
-#define FLOW_ON             0x01   /**< Indicate that GUS can receive data from peer. */
-#define FLOW_OFF            0x00   /**< Indicate that GUS can not receive data from peer. */
-#define GUS_MAX_DATA_LEN    247    /**< Maximum length of application data packet which is transmitted via GUS. */
-#define GUS_FLOW_CTRL_LEN   1      /**< Maximum length of ble flow control data packet which is transmitted via GUS. */
-#define GUS_SERVICE_UUID    0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x01, 0x02, \
-                            0xED, 0xA6     /**< The UUID of Goodix UART Service for setting advertising data. */
+#define MLMR_CONNECTION_MAX      10                                                 /**< Maximum number of Multi Link Multi Role Service connections. */
+#define MLMR_MAX_DATA_LEN        247                                                /**< Maximum length of application data packet which is transmitted via MLMR. */
+#define MLMR_FLOW_CTRL_LEN       1                                                  /**< Maximum length of ble flow control data packet which is transmitted via MLMR. */
+#define MLMR_SERVICE_UUID        0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                0x0A, 0x46, 0x44, 0xD3, 0x01, 0x02, 0xED, 0xA6     /**< The UUID of Multi Link Multi Role Service for setting advertising data. */
 /** @} */
 
 /**
- * @defgroup GUS_ENUM Enumerations
+ * @defgroup MLMR_ENUM Enumerations
  * @{
  */
-/**@brief Goodix UART Service event types. */
-typedef enum {
-    GUS_EVT_INVALID,                /**< Invalid GUS event. */
-    GUS_EVT_RX_DATA_RECEIVED,       /**< The data from the peer has been received. */
-    GUS_EVT_TX_DATA_SENT,           /**< The data from the application has been sent, \
-                                         and the service is ready to accept new data from the application. */
-    GUS_EVT_TX_PORT_OPENED,         /**< Tx port has been opened. */
-    GUS_EVT_TX_PORT_CLOSED,         /**< Tx port has been closed. */
-    GUS_EVT_FLOW_CTRL_ENABLE,       /**< GUS flow control been enabled. */
-    GUS_EVT_FLOW_CTRL_DISABLE,      /**< GUS flow control been disabled. */
-    GUS_EVT_TX_FLOW_OFF,            /**< Tx flow off control request. */
-    GUS_EVT_TX_FLOW_ON,             /**< Tx flow on control request. */
-} gus_evt_type_t;
+/**@brief Multi Link Multi Role Service event types. */
+typedef enum
+{
+    MLMR_EVT_INVALID,                /**< Invalid MLMR event. */
+    MLMR_EVT_RX_DATA_RECEIVED,       /**< The data from the peer has been received. */
+    MLMR_EVT_TX_DATA_SENT,           /**< The data from the application has been sent, and the service is ready to accept new data from the application. */
+    MLMR_EVT_TX_PORT_OPENED,         /**< Tx port has been opened. */
+    MLMR_EVT_TX_PORT_CLOSED,         /**< Tx port has been closed. */
+    MLMR_EVT_FLOW_CTRL_ENABLE,       /**< MLMR flow control been enabled. */
+    MLMR_EVT_FLOW_CTRL_DISABLE,      /**< MLMR flow control been disabled. */
+    MLMR_EVT_TX_FLOW_OFF,            /**< Tx flow off control request. */
+    MLMR_EVT_TX_FLOW_ON,             /**< Tx flow on control request. */
+} mlmr_evt_type_t;
+
+/**@brief Flow control state for MLMR service. */
+enum mlmr_flow_ctrl_state
+{
+  MLMR_FLOW_CTRL_STATE_OFF = 0,      /**< Indicate that MLMR can not receive data from peer. */
+  MLMR_FLOW_CTRL_STATE_ON            /**< Indicate that MLMR can receive data from peer. */
+};
+/**@brief Underlying type used for the MLMR flow control state. */
+typedef uint8_t mlmr_flow_ctrl_state_t;
 /** @} */
 
 /**
- * @defgroup GUS_STRUCT Structures
+ * @defgroup MLMR_STRUCT Structures
  * @{
  */
-/**@brief Goodix UART Service event. */
-typedef struct {
-    gus_evt_type_t  evt_type;   /**< The GUS event. */
+/**@brief Multi Link Multi Role Service event. */
+typedef struct
+{
+    mlmr_evt_type_t  evt_type;   /**< The MLMR event. */
     uint8_t         conn_idx;   /**< The index of the connection for the data transmission. */
     uint8_t        *p_data;     /**< Pointer to the buffer within received data. */
     uint16_t        length;     /**< Length of received data. */
-} gus_evt_t;
+} mlmr_evt_t;
 /** @} */
 
 /**
- * @defgroup GUS_TYPEDEF Typedefs
+ * @defgroup MLMR_TYPEDEF Typedefs
  * @{
  */
-/**@brief Goodix UART Service event handler type. */
-typedef void (*gus_evt_handler_t)(gus_evt_t *p_evt);
+/**@brief Multi Link Multi Role Service event handler type. */
+typedef void (*mlmr_evt_handler_t)(mlmr_evt_t *p_evt);
 /** @} */
 
 /**
- * @addtogroup GUS_STRUCT Structures
+ * @addtogroup MLMR_STRUCT Structures
  * @{
  */
-/** @brief Goodix UART Service init stucture.
- *  This contains all option and data needed for initialization of the service. */
-typedef struct {
-    gus_evt_handler_t
-    evt_handler;       /**< Goodix UART Service event handler which must be provided
-                            by the application to send and receive the data. */
-} gus_init_t;
+/**@brief Multi Link Multi Role Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
+    mlmr_evt_handler_t evt_handler;                     /**< Multi Link Multi Role Service event handler which must be provided by the application to send and receive the data. */
+} mlmr_init_t;
 /** @} */
 
 /**
- * @defgroup GUS_FUNCTION Functions
+ * @defgroup MLMR_FUNCTION Functions
  * @{
  */
 /**
  *****************************************************************************************
- * @brief Initialize a Goodix UART Service instance and add in the database.
+ * @brief Initialize a Multi Link Multi Role Service instance and add in the database.
  *
- * @param[in] p_gus_init: Pointer to Goodix UART Service initialization variables.
+ * @param[in] p_mlmr_init: Pointer to Multi Link Multi Role Service initialization variables.
  *
  * @return Result of service initialization.
  *****************************************************************************************
  */
-sdk_err_t gus_service_init(gus_init_t *p_gus_init);
+sdk_err_t mlmr_service_init(mlmr_init_t *p_mlmr_init);
 
 /**
  *****************************************************************************************
@@ -157,19 +162,19 @@ sdk_err_t gus_service_init(gus_init_t *p_gus_init);
  * @return Result of sending data.
  *****************************************************************************************
  */
-sdk_err_t gus_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length);
+sdk_err_t mlmr_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length);
 
 /**
  *****************************************************************************************
- * @brief Send GUS Rx flow control state to peer device
+ * @brief Send MLMR Rx flow control state to peer device
  *
  * @param[in] conn_idx:  Index of the connection.
- * @param[in] flow_ctrl: GUS Rx flow control state
+ * @param[in] flow_ctrl: MLMR Rx flow control state
  *
- * @return Result of sending GUS Rx flow control state.
+ * @return Result of sending MLMR Rx flow control state.
  *****************************************************************************************
  */
-sdk_err_t gus_rx_flow_ctrl_set(uint8_t conn_idx, uint8_t flow_ctrl);
+sdk_err_t mlmr_rx_flow_ctrl_set(uint8_t conn_idx, mlmr_flow_ctrl_state_t flow_ctrl);
 /** @} */
 
 #endif

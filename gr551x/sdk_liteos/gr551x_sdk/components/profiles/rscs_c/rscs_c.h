@@ -52,41 +52,36 @@
  *          After Running Speed and Cadence Service Client discoveries peer Running Speed and Cadence Service,
  *          application can call \ref rscs_c_rsc_meas_notify_set(), then will receive Running Speed and Cadence
  *          data from peer, and can call \ref rscs_c_sensor_loc_read() and \ref rscs_c_rsc_feature_read() to get
- *          sensor location information and the supported features of the Server,
- *          also can call \ref rscs_c_ctrl_pt_set()
+ *          sensor location information and the supported features of the Server, also can call \ref rscs_c_ctrl_pt_set()
  *          to send control point to peer.
  */
 
 #ifndef __RSCS_C_H__
 #define __RSCS_C_H__
 
+#include "ble_prf_types.h"
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_prf_types.h"
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup RSCS_C_MACRO Defines
  * @{
  */
-#define RSCS_C_CONNECTION_MAX         (10 < CFG_MAX_CONNECTIONS ? \
-                                      10 : CFG_MAX_CONNECTIONS)      /**< Maximum number of HRS Client connections. */
-/**< Maximum length of SC Control Point response value. */
-#define RSCS_C_PT_RSP_LEN_MAX         (3 + RSCS_C_SENSOR_LOC_SUP_NB)
-#define RSCS_C_ERROR_PROC_IN_PROGRESS 0x80        /**< Error code: A previously triggered SC Control Point \
-                                                  operation is still in progress. */
-#define RSCS_C_ERROR_CCCD_INVALID     0x81        /**< Error code: The Client Characteristic Configuration \
-                                                  descriptor is not configured. */
+#define RSCS_C_CONNECTION_MAX               10                              /**< Maximum number of HRS Client connections. */
+#define RSCS_C_PT_RSP_LEN_MAX               (3 + RSCS_C_SENSOR_LOC_SUP_NB)  /**< Maximum length of SC Control Point response value. */
+#define RSCS_C_ERROR_PROC_IN_PROGRESS       0x80                            /**< Error code: A previously triggered SC Control Point operation is still in progress. */
+#define RSCS_C_ERROR_CCCD_INVALID           0x81                            /**< Error code: The Client Characteristic Configuration descriptor is not configured. */
 
 /**
  * @defgroup RSCS_C_MEAS_FLAG_BIT Measurement Flag Bits
  * @{
  * @brief Running Speed and Cadence Measurement Flags.
  */
-#define RSCS_C_MEAS_FLAG_INST_STRIDE_LEN_BIT    (0x01 << 0) /**< Flag bit for Instantaneous Stride Length Measurement.*/
-#define RSCS_C_MEAS_FLAG_TOTAL_DISTANCE_BIT     (0x01 << 1) /**< Flag bit for Total Distance Measurement. */
-#define RSCS_C_MEAS_FLAG_RUNNING_OR_WALKING_BIT (0x01 << 2) /**< Flag bit for Running or Walking. */
+#define RSCS_C_MEAS_FLAG_INST_STRIDE_LEN_BIT           (0x01 << 0)     /**< Flag bit for Instantaneous Stride Length Measurement. */
+#define RSCS_C_MEAS_FLAG_TOTAL_DISTANCE_BIT            (0x01 << 1)     /**< Flag bit for Total Distance Measurement. */
+#define RSCS_C_MEAS_FLAG_RUNNING_OR_WALKING_BIT        (0x01 << 2)     /**< Flag bit for Running or Walking. */
 /** @} */
 
 /**
@@ -94,12 +89,11 @@
  * @{
  * @brief Running Speed and Cadence Service feature bits.
  */
-#define RSCS_C_FEAT_INSTANT_STRIDE_LEN_BIT         (0x01 << 0) /**< Bit for Instantaneous Stride Length \
-                                                                    Measurement Supported. */
-#define RSCS_C_FEAT_TOTAL_DISTANCE_BIT             (0x01 << 1) /**< Bit for Total Distance Measurement Supported.*/
-#define RSCS_C_FEAT_RUNNING_OR_WALKING_STATUS_BIT  (0x01 << 2) /**< Bit for Running or Walking Status Supported.*/
-#define RSCS_C_FEAT_CALIBRATION_PROCEDURE_BIT      (0x01 << 3) /**< Bit for Calibration Procedure Supported.*/
-#define RSCS_C_FEAT_MULTIPLE_SENSORS_BIT           (0x01 << 4) /**< Bit for Multiple Sensor Locations Supported.*/
+#define RSCS_C_FEAT_INSTANT_STRIDE_LEN_BIT             (0x01 << 0)     /**< Bit for Instantaneous Stride Length Measurement Supported. */
+#define RSCS_C_FEAT_TOTAL_DISTANCE_BIT                 (0x01 << 1)     /**< Bit for Total Distance Measurement Supported. */
+#define RSCS_C_FEAT_RUNNING_OR_WALKING_STATUS_BIT      (0x01 << 2)     /**< Bit for Running or Walking Status Supported. */
+#define RSCS_C_FEAT_CALIBRATION_PROCEDURE_BIT          (0x01 << 3)     /**< Bit for Calibration Procedure Supported. */
+#define RSCS_C_FEAT_MULTIPLE_SENSORS_BIT               (0x01 << 4)     /**< Bit for Multiple Sensor Locations Supported. */
 /** @} */
 /** @} */
 
@@ -108,23 +102,24 @@
  * @{
  */
 /**@brief Running Speed and Cadence Service Client event type. */
-typedef enum {
-    RSCS_C_EVT_INVALID,                    /**< RSCS Client invalid event. */
+typedef enum
+{
+    RSCS_C_EVT_INVALID,                    /*<* RSCS Client invalid event. */
     RSCS_C_EVT_DISCOVERY_COMPLETE,         /**< RSCS Client has found RSCS service and its characteristics. */
-    RSCS_C_EVT_DISCOVERY_FAIL,             /**< RSCS Client found RSCS service failed because of invalid operation \
-                                           or no found at the peer. */
+    RSCS_C_EVT_DISCOVERY_FAIL,             /**< RSCS Client found RSCS service failed because of invalid operation or no found at the peer. */
     RSCS_C_EVT_RSC_MEAS_NTF_SET_SUCCESS,   /**< RSCS Client has set Notification of RSC Measure characteristic. */
     RSCS_C_EVT_CTRL_PT_IND_SET_SUCCESS,    /**< RSCS Client has set Indication of Control Point characteristic. */
-    RSCS_C_EVT_RSC_MEAS_VAL_RECEIVE,       /**< RSCS Client has received RSC Measurement value notification from peer.*/
+    RSCS_C_EVT_RSC_MEAS_VAL_RECEIVE,       /**< RSCS Client has received RSC Measurement value notification from peer. */
     RSCS_C_EVT_RSC_FEATURE_RECEIVE,        /**< RSCS Client has received RSC Feature Value read response. */
     RSCS_C_EVT_SENSOR_LOC_RECEIVE,         /**< RSCS Client has received Sensor Location Value read response. */
     RSCS_C_EVT_CTRL_PT_SET_SUCCESS,        /**< RSCS Client has writen Control Point completely. */
-    RSCS_C_EVT_CTRL_PT_RSP_RECEIVE,        /**< RSCS Client has received Indication of Control Point characteristic.*/
+    RSCS_C_EVT_CTRL_PT_RSP_RECEIVE,        /**< RSCS Client has received Indication of Control Point characteristic. */
     RSCS_C_EVT_WRITE_OP_ERR,               /**< Error occured when RSCS Client writen to peer. */
 } rscs_c_evt_type_t;
 
 /**@brief Running Speed and Cadence Service Sensor Location. */
-typedef enum {
+typedef enum
+{
     RSCS_C_SENSOR_LOC_OTHER,          /**< Sensor location: other. */
     RSCS_C_SENSOR_LOC_SHOE_TOP,       /**< Sensor location: top of shoe. */
     RSCS_C_SENSOR_LOC_SHOE_IN,        /**< Sensor location: inside of shoe. */
@@ -137,7 +132,8 @@ typedef enum {
 } rscs_c_sensor_loc_t;
 
 /**@brief Running Speed and Cadence Service Control Point Operation Code.*/
-typedef enum {
+typedef enum
+{
     RSCS_C_CTRL_PT_OP_RESERVED,         /**< Reserved for future use. */
     RSCS_C_CTRL_PT_OP_SET_CUMUL_VAL,    /**< Set Cumulative value Operation Code.*/
     RSCS_C_CTRL_PT_OP_START_CALIB,      /**< Start Sensor Calibration Operation Code.*/
@@ -147,7 +143,8 @@ typedef enum {
 } rscs_c_ctrl_pt_op_code_t;
 
 /**@brief Running Speed and Cadence Service Control Point Response value.*/
-typedef enum {
+typedef enum
+{
     RSCS_C_CTRL_PT_RSP_RESERVED,        /**< Reserved value. */
     RSCS_C_CTRL_PT_RSP_SUCCESS,         /**< Operation Succeeded. */
     RSCS_C_CTRL_PT_RSP_NOT_SUP,         /**< Operation Code Not Supported. */
@@ -161,7 +158,8 @@ typedef enum {
  * @{
  */
 /**@brief Running Speed and Cadence Measurement Character value structure. */
-typedef struct {
+typedef struct
+{
     bool        inst_stride_length_present;   /**< If Instantaneous Stride Length is present. */
     bool        total_distance_present;       /**< If Total Distance is present. */
     bool        is_run_or_walk;               /**< True: Running, False: Walking. */
@@ -172,34 +170,32 @@ typedef struct {
 } rscs_c_meas_val_t;
 
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t rscs_srvc_start_handle;       /**< RSCS Service start handle. */
     uint16_t rscs_srvc_end_handle;         /**< RSCS Service end handle. */
-    uint16_t rscs_rsc_meas_handle;         /**< RSCS RSC Measurement characteristic Value handle \
-                                           which has been got from peer. */
-    uint16_t rscs_rsc_meas_cccd_handle;    /**< RSCS CCCD handle of RSC Measurement characteristic \
-                                           which has been got from peer. */
-    uint16_t rscs_sensor_loc_handle;       /**< RSCS Sensor Location characteristic Value handle \
-                                           which has been got from peer. */
-    uint16_t rscs_rsc_feature_handle;      /**< RSCS RSC Feature characteristic Value handle \
-                                           which has been got from peer. */
-    uint16_t rscs_ctrl_pt_handle;          /**< RSCS Control Point characteristic Value handle \
-                                           which has been got from peer. */
-    uint16_t rscs_ctrl_pt_cccd_handle;     /**< RSCS CCCD handle of Control Point characteristic \
-                                           which has been got from peer. */
+    uint16_t rscs_rsc_meas_handle;         /**< RSCS RSC Measurement characteristic Value handle which has been got from peer. */
+    uint16_t rscs_rsc_meas_cccd_handle;    /**< RSCS CCCD handle of RSC Measurement characteristic which has been got from peer. */
+    uint16_t rscs_sensor_loc_handle;       /**< RSCS Sensor Location characteristic Value handle which has been got from peer. */
+    uint16_t rscs_rsc_feature_handle;      /**< RSCS RSC Feature characteristic Value handle which has been got from peer. */
+    uint16_t rscs_ctrl_pt_handle;          /**< RSCS Control Point characteristic Value handle which has been got from peer. */
+    uint16_t rscs_ctrl_pt_cccd_handle;     /**< RSCS CCCD handle of Control Point characteristic which has been got from peer. */
 } rscs_c_handles_t;
 
 /**@brief Running Speed and Cadence Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t                  conn_idx;            /**< The connection index. */
     rscs_c_evt_type_t        evt_type;            /**< RSCS Client event type. */
     uint16_t                 handle;              /**< Handle of characteristic. */
-    union {
+    union
+    {
         rscs_c_meas_val_t    rsc_meas_buff;                             /**< Buffer of RSC measurement value. */
         uint16_t             rsc_feature;                               /**< RSC feature received. */
         rscs_c_sensor_loc_t  rsc_sensor_loc;                            /**< RSC sensor location received. */
         uint8_t              ctrl_pt_rsp[RSCS_C_PT_RSP_LEN_MAX];        /**< SC Control Point Response. */
     } value;                                                            /**< Decoded result of value received. */
+
 } rscs_c_evt_t;
 /** @} */
 

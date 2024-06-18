@@ -39,18 +39,11 @@
  * INCLUDE FILES
  *******************************************************************************
  */
+#include "ble_prf_utils.h"
+#include "utility.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "utility.h"
-#include "ble_prf_utils.h"
 
-#define OFFSET_2 2
-#define OFFSET_3 3
-#define OFFSET_4 4
-#define OFFSET_5 5
-#define OFFSET_6 6
-#define VALUE_7 7
-#define VALUE_8 8
 /*
  * GLOBAL FUNCTION DEFINITIONS
  *******************************************************************************
@@ -60,48 +53,49 @@ void prf_pack_char_pres_fmt(uint8_t                   *p_packed_val,
 {
     *p_packed_val       = p_char_pres_fmt->format;
     *(p_packed_val + 1) = p_char_pres_fmt->exponent;
-
-    htole16(p_packed_val + OFFSET_2, p_char_pres_fmt->unit);
-
-    *(p_packed_val + OFFSET_4) = p_char_pres_fmt->name_space;
-
-    htole16(p_packed_val + OFFSET_5, p_char_pres_fmt->description);
+    
+    htole16(p_packed_val + 2, p_char_pres_fmt->unit);
+    
+    *(p_packed_val + 4) = p_char_pres_fmt->name_space;
+    
+    htole16(p_packed_val + 5, p_char_pres_fmt->description);
 }
 
 void prf_unpack_char_pres_fmt(const uint8_t       *p_packed_val,
                               prf_char_pres_fmt_t *p_char_pres_fmt)
 {
+
     p_char_pres_fmt->format      = *p_packed_val;
     p_char_pres_fmt->exponent    = *(p_packed_val + 1);
-    p_char_pres_fmt->unit        =  le16toh(p_packed_val + OFFSET_2);
-    p_char_pres_fmt->name_space  = *(p_packed_val + OFFSET_4);
-    p_char_pres_fmt->description =  le16toh(p_packed_val + OFFSET_5);
+    p_char_pres_fmt->unit        =  le16toh(p_packed_val + 2);
+    p_char_pres_fmt->name_space  = *(p_packed_val + 4);
+    p_char_pres_fmt->description =  le16toh(p_packed_val + 5);
 }
 
 uint8_t prf_pack_date_time(uint8_t               *p_packed_val,
                            const prf_date_time_t *p_date_time)
 {
     htole16(p_packed_val, p_date_time->year);
-    *(p_packed_val + OFFSET_2) = p_date_time->month;
-    *(p_packed_val + OFFSET_3) = p_date_time->day;
-    *(p_packed_val + OFFSET_4) = p_date_time->hour;
-    *(p_packed_val + OFFSET_5) = p_date_time->min;
-    *(p_packed_val + OFFSET_6) = p_date_time->sec;
+    *(p_packed_val + 2) = p_date_time->month;
+    *(p_packed_val + 3) = p_date_time->day;
+    *(p_packed_val + 4) = p_date_time->hour;
+    *(p_packed_val + 5) = p_date_time->min;
+    *(p_packed_val + 6) = p_date_time->sec;
 
-    return VALUE_7;
+    return 7;
 }
 
 uint8_t prf_unpack_date_time(const uint8_t   *p_packed_val,
                              prf_date_time_t *p_date_time)
 {
     p_date_time->year  = le16toh(&(p_packed_val[0]));
-    p_date_time->month = p_packed_val[OFFSET_2];
-    p_date_time->day   = p_packed_val[OFFSET_3];
-    p_date_time->hour  = p_packed_val[OFFSET_4];
-    p_date_time->min   = p_packed_val[OFFSET_5];
-    p_date_time->sec   = p_packed_val[OFFSET_6];
+    p_date_time->month = p_packed_val[2];
+    p_date_time->day   = p_packed_val[3];
+    p_date_time->hour  = p_packed_val[4];
+    p_date_time->min   = p_packed_val[5];
+    p_date_time->sec   = p_packed_val[6];
 
-    return VALUE_7;
+    return 7;
 }
 
 uint8_t prf_find_idx_by_handle(uint16_t handle,  uint16_t start_hdl,
@@ -113,8 +107,8 @@ uint8_t prf_find_idx_by_handle(uint16_t handle,  uint16_t start_hdl,
     uint8_t  bit     = 0;
 
     for (uint8_t i = 1; i < char_nb; i++) {
-        byte = i / VALUE_8;
-        bit  = i % VALUE_8;
+        byte = i / 8;
+        bit  = i % 8;
         if ((p_char_mask[byte] >> bit) & 0x01) {
             // check if value handle correspond to requested handle
             if (cur_hdl == handle) {
@@ -138,18 +132,17 @@ uint16_t prf_find_handle_by_idx(uint8_t idx, uint16_t start_hdl,
 
     if (!idx) {
         found_hdl = start_hdl;
-        return found_hdl;
-    }
+    } else {
+        for(uint8_t i = 1; i <= idx; i++) {
+            byte = i / 8;
+            bit  = i % 8;
 
-    for (uint8_t i = 1; i <= idx; i++) {
-        byte = i / VALUE_8;
-        bit  = i % VALUE_8;
+            if ((p_char_mask[byte] >> bit) & 0x01) {
+                cur_hdl++;
 
-        if ((p_char_mask[byte] >> bit) & 0x01) {
-            cur_hdl++;
-
-            if (i == idx) {
-                found_hdl = cur_hdl;
+                if (i == idx) {
+                    found_hdl = cur_hdl;
+                }
             }
         }
     }
@@ -160,8 +153,9 @@ uint16_t prf_find_handle_by_idx(uint8_t idx, uint16_t start_hdl,
 bool prf_is_cccd_value_valid(uint16_t cccd_value)
 {
     if (PRF_CLI_STOP_NTFIND == cccd_value || \
-            PRF_CLI_START_NTF == cccd_value || \
-            PRF_CLI_START_IND == cccd_value) {
+        PRF_CLI_START_NTF == cccd_value || \
+        PRF_CLI_START_IND == cccd_value)
+    {
         return true;
     }
 

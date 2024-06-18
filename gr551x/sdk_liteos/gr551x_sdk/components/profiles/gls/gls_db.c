@@ -46,17 +46,18 @@
  *****************************************************************************************
  */
 /**@brief Glucose Service record structure. */
-struct gls_db_single_rec_t {
+struct gls_db_single_rec_t
+{
     bool        is_recorded;
     gls_rec_t   record;
 };
 
 /**@brief Glucose Service Database environment variable. */
-struct gls_db_env_t {
-    struct gls_db_single_rec_t  database[GLS_DB_RECORDS_MAX];  /**< Glucose Service measurement values \
-                                                                    records database. */
+struct gls_db_env_t
+{
+    struct gls_db_single_rec_t  database[GLS_DB_RECORDS_MAX];  /**< Glucose Service measurement values records database. */
     uint8_t                     rec_index[GLS_DB_RECORDS_MAX]; /**< Glucose Service measurement values record indexs. */
-    uint16_t                    num_records;     /**< Number of  measurement values records in database. */
+    uint16_t                    num_records;                   /**< Number of  measurement values records in database. */
 };
 
 /*
@@ -83,19 +84,29 @@ uint16_t gls_db_le_or_eq_record_num_get(gls_racp_filter_t *p_filter)
     gls_rec_t gls_res;
     uint16_t  num_get = 0;
 
-    for (uint8_t i = 0; i < s_gls_db_env.num_records; i++) {
-        if (!gls_db_record_get(i, &gls_res)) {
-            return num_get;
+    for (uint8_t i = 0; i < s_gls_db_env.num_records; i++)
+    {
+        if (gls_db_record_get(i, &gls_res))
+        {
+            if (GLS_RACP_FILTER_SEQ_NUMBER == p_filter->racp_filter_type)
+            {
+                if (p_filter->val.seq_num.max >= gls_res.meas_val.sequence_number)
+                {
+                    num_get++;
+                }
+            }
+            else if (GLS_RACP_FILTER_USER_FACING_TIME == p_filter->racp_filter_type)
+            {
+                if (-1 != gls_racp_user_time_compare(&p_filter->val.time.max,
+                                                     &gls_res.meas_val.base_time))
+                {
+                    num_get++;
+                }
+            }
         }
-        if (GLS_RACP_FILTER_SEQ_NUMBER == p_filter->racp_filter_type) {
-            if (p_filter->val.seq_num.max >= gls_res.meas_val.sequence_number) {
-                num_get++;
-            }
-        } else if (GLS_RACP_FILTER_USER_FACING_TIME == p_filter->racp_filter_type) {
-            if (-1 != gls_racp_user_time_compare(&p_filter->val.time.max,
-                                                 &gls_res.meas_val.base_time)) {
-                num_get++;
-            }
+        else
+        {
+            break;
         }
     }
 
@@ -116,21 +127,33 @@ uint16_t gls_db_gt_or_eq_record_num_get(gls_racp_filter_t *p_filter)
     gls_rec_t gls_res;
     uint16_t  num_get = 0;
 
-    for (uint8_t i = 0; i < s_gls_db_env.num_records; i++) {
-        if (gls_db_record_get(i, &gls_res)) {
-            return num_get;
+    for (uint8_t i = 0; i < s_gls_db_env.num_records; i++)
+    {
+        if (gls_db_record_get(i, &gls_res))
+        {
+            if (GLS_RACP_FILTER_SEQ_NUMBER == p_filter->racp_filter_type)
+            {
+                if (p_filter->val.seq_num.min <= gls_res.meas_val.sequence_number)
+                {
+                    num_get++;
+                }
+            }
+            else if (GLS_RACP_FILTER_USER_FACING_TIME == p_filter->racp_filter_type)
+            {
+                if (-1 != gls_racp_user_time_compare(&gls_res.meas_val.base_time,
+                                                     &p_filter->val.time.min))
+                {
+                    num_get++;
+                }
+            }
         }
-        if (GLS_RACP_FILTER_SEQ_NUMBER == p_filter->racp_filter_type) {
-            if (p_filter->val.seq_num.min <= gls_res.meas_val.sequence_number) {
-                num_get++;
-            }
-        } else if (GLS_RACP_FILTER_USER_FACING_TIME == p_filter->racp_filter_type) {
-            if (-1 != gls_racp_user_time_compare(&gls_res.meas_val.base_time,
-                                                 &p_filter->val.time.min)) {
-                num_get++;
-            }
+        else
+        {
+            break;
         }
     }
+
+    return num_get;
 }
 
 /**
@@ -147,20 +170,31 @@ uint16_t gls_db_within_range_record_num_get(gls_racp_filter_t *p_filter)
     gls_rec_t gls_res;
     uint16_t  num_get = 0;
 
-    for (uint8_t i = 0; i < s_gls_db_env.num_records; i++) {
-        if (gls_db_record_get(i, &gls_res)) {
-            return num_get;
+
+    for (uint8_t i = 0; i < s_gls_db_env.num_records; i++)
+    {
+        if (gls_db_record_get(i, &gls_res))
+        {
+            if (GLS_RACP_FILTER_SEQ_NUMBER == p_filter->racp_filter_type)
+            {
+                if ((gls_res.meas_val.sequence_number >= p_filter->val.seq_num.min) && \
+                        (gls_res.meas_val.sequence_number <= p_filter->val.seq_num.max))
+                {
+                    num_get++;
+                }
+            }
+            else if (GLS_RACP_FILTER_USER_FACING_TIME == p_filter->racp_filter_type)
+            {
+                if ((-1 != gls_racp_user_time_compare(&gls_res.meas_val.base_time, &p_filter->val.time.min)) && \
+                        (-1 != gls_racp_user_time_compare(&p_filter->val.time.max, &gls_res.meas_val.base_time)))
+                {
+                    num_get++;
+                }
+            }
         }
-        if (GLS_RACP_FILTER_SEQ_NUMBER == p_filter->racp_filter_type) {
-            if ((gls_res.meas_val.sequence_number >= p_filter->val.seq_num.min) && \
-                    (gls_res.meas_val.sequence_number <= p_filter->val.seq_num.max)) {
-                num_get++;
-            }
-        } else if (GLS_RACP_FILTER_USER_FACING_TIME == p_filter->racp_filter_type) {
-            if ((-1 != gls_racp_user_time_compare(&gls_res.meas_val.base_time, &p_filter->val.time.min)) && \
-                    (-1 != gls_racp_user_time_compare(&p_filter->val.time.max, &gls_res.meas_val.base_time))) {
-                num_get++;
-            }
+        else
+        {
+            break;
         }
     }
 
@@ -173,7 +207,8 @@ uint16_t gls_db_within_range_record_num_get(gls_racp_filter_t *p_filter)
  */
 void gls_db_init(void)
 {
-    for (uint8_t i = 0; i < GLS_DB_RECORDS_MAX; i++) {
+    for (uint8_t i = 0; i < GLS_DB_RECORDS_MAX; i++)
+    {
         s_gls_db_env.database[i].is_recorded = false;
         s_gls_db_env.rec_index[i]            = 0xFF;
     }
@@ -185,12 +220,15 @@ bool gls_db_record_add(gls_rec_t *p_rec)
 {
     uint8_t i = 0;
 
-    if (GLS_DB_RECORDS_MAX <= s_gls_db_env.num_records) {
+    if (GLS_DB_RECORDS_MAX <= s_gls_db_env.num_records)
+    {
         return false;
     }
 
-    for (i = 0; i < GLS_DB_RECORDS_MAX; i++) {
-        if (!s_gls_db_env.database[i].is_recorded) {
+    for (i = 0; i < GLS_DB_RECORDS_MAX; i++)
+    {
+        if (!s_gls_db_env.database[i].is_recorded)
+        {
             s_gls_db_env.database[i].is_recorded = true;
             s_gls_db_env.database[i].record      = *p_rec;
             s_gls_db_env.rec_index[s_gls_db_env.num_records] = i;
@@ -204,7 +242,8 @@ bool gls_db_record_add(gls_rec_t *p_rec)
 
 bool gls_db_record_delete(uint8_t rec_idx)
 {
-    if (rec_idx >= s_gls_db_env.num_records) {
+    if (rec_idx >= s_gls_db_env.num_records)
+    {
         return false;
     }
 
@@ -212,7 +251,8 @@ bool gls_db_record_delete(uint8_t rec_idx)
 
     s_gls_db_env.num_records--;
 
-    for (uint8_t i = rec_idx; i < s_gls_db_env.num_records; i++) {
+    for (uint8_t i = rec_idx; i < s_gls_db_env.num_records; i++)
+    {
         s_gls_db_env.rec_index[i] = s_gls_db_env.rec_index[i + 1];
     }
 
@@ -228,7 +268,8 @@ uint16_t gls_db_filter_records_num_get(gls_racp_filter_t *p_filter)
 {
     uint16_t  num_get = 0;
 
-    switch (p_filter->racp_operator) {
+    switch (p_filter->racp_operator)
+    {
         case GLS_RACP_OPERATOR_ALL_RECS:
             num_get = s_gls_db_env.num_records;
             break;
@@ -247,7 +288,8 @@ uint16_t gls_db_filter_records_num_get(gls_racp_filter_t *p_filter)
 
         case GLS_RACP_OPERATOR_FIRST_REC:
         case GLS_RACP_OPERATOR_LAST_REC:
-            if (s_gls_db_env.num_records != 0) {
+            if (0 != s_gls_db_env.num_records)
+            {
                 num_get = 1;
             }
             break;
@@ -261,7 +303,8 @@ uint16_t gls_db_filter_records_num_get(gls_racp_filter_t *p_filter)
 
 bool gls_db_record_get(uint8_t rec_idx, gls_rec_t *p_rec)
 {
-    if (rec_idx >= s_gls_db_env.num_records) {
+    if (rec_idx >= s_gls_db_env.num_records)
+    {
         return false;
     }
 
@@ -272,7 +315,8 @@ bool gls_db_record_get(uint8_t rec_idx, gls_rec_t *p_rec)
 
 void gls_db_record_clear(void)
 {
-    for (uint8_t i = 0; i < GLS_DB_RECORDS_MAX; i++) {
+    for (uint8_t i = 0; i < GLS_DB_RECORDS_MAX; i++)
+    {
         s_gls_db_env.database[i].is_recorded = false;
         s_gls_db_env.rec_index[i]            = 0xFF;
     }

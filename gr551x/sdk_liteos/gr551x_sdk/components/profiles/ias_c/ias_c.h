@@ -56,18 +56,17 @@
 #ifndef __IAS_C_H__
 #define __IAS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup IAS_C_MACRO Defines
  * @{
  */
-#define IAS_C_CONNECTION_MAX    (10 < CFG_MAX_CONNECTIONS ? \
-                                10 : CFG_MAX_CONNECTIONS)       /**< Maximum number of IAS Client connections. */
+#define IAS_C_CONNECTION_MAX                10                        /**< Maximum number of IAS Client connections. */
 /** @} */
 
 /**
@@ -75,18 +74,19 @@
  * @{
  */
 /**@brief Immediate Alert Service Alert levels. */
-typedef enum {
+typedef enum
+{
     IAS_C_ALERT_NONE,     /**< No alert. */
     IAS_C_ALERT_MILD,     /**< Mild alert. */
     IAS_C_ALERT_HIGH,     /**< High alert. */
 } ias_c_alert_level_t;
 
 /**@brief Immediate Alert Service Client event type. */
-typedef enum {
+typedef enum
+{
     IAS_C_EVT_INVALID,                      /**< IAS Client invalid event. */
     IAS_C_EVT_DISCOVERY_COMPLETE,           /**< IAS Client has found BAS service and its characteristics. */
-    IAS_C_EVT_DISCOVERY_FAIL,               /**< IAS Client found BAS service failed because of invalid operation \
-                                                 or no found at the peer. */
+    IAS_C_EVT_DISCOVERY_FAIL,               /**< IAS Client found BAS service failed because of invalid operation or no found at the peer. */
     IAS_C_EVT_ALERT_LEVEL_SET_SUCCESS,      /**< IAS Client has set Alert Level characteristic. */
     IAS_C_EVT_ALERT_LEVEL_SET_ERR,          /**< Error occured when IAS Client set Alert Level characteristic. */
 } ias_c_evt_type_t;
@@ -97,14 +97,16 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
-    uint16_t ias_srvc_start_handle;    /**< IAS Service start handle. */
-    uint16_t ias_srvc_end_handle;      /**< IAS Service end handle. */
-    uint16_t ias_alert_level_handle;   /**< IAS Alert Level characteristic Value handle which has been got from peer. */
+typedef struct
+{
+    uint16_t ias_srvc_start_handle;      /**< IAS Service start handle. */
+    uint16_t ias_srvc_end_handle;        /**< IAS Service end handle. */
+    uint16_t ias_alert_level_handle;     /**< IAS Alert Level characteristic Value handle which has been got from peer. */
 } ias_c_handles_t;
 
 /**@brief Immediate Alert Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t          conn_idx;            /**< The connection index. */
     ias_c_evt_type_t evt_type;            /**< IAS Client event type. */
 } ias_c_evt_t;
