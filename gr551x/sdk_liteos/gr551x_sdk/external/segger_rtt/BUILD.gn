@@ -18,5 +18,5 @@ config("public") {
 }
 
 kernel_module("segger_rtt") {
-  sources = [ "SEGGER_RTT.c" ]
+  # sources = [ "SEGGER_RTT.c" ] Due to copyright reason, please download SEGGER_RTT files fomr Segger JLink SDK
 }
