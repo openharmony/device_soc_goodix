@@ -24,7 +24,6 @@ config("public") {
 
 kernel_module("platform") {
   sources = [
-    "arch/arm/cortex-m/gcc/startup_gr55xx.s",
     "boards/board_SK.c",
     "soc/common/gr_platform.c",
     "soc/common/gr_system.c",

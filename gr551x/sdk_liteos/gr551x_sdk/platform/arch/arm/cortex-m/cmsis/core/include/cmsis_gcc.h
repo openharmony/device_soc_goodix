@@ -5,7 +5,7 @@
  * @date     27. May 2021
  ******************************************************************************/
 /*
- * Copyright (c) 2009-2021 ARM Limited. All rights reserved.
+ * Copyright (c) 2024 GOODIX.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
