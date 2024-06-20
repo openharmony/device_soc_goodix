@@ -42,63 +42,37 @@
 #include "otas_c.h"
 #include <string.h>
 
-#define ATTR_VALUE_LEN 2
-#define UUID_LEN_16 16
 /*
  * STRUCT DEFINE
  *****************************************************************************************
  */
 /**@brief OTA Service Client environment variable. */
-struct otas_c_env_t {
-    otas_c_handles_t      handles;            /**< Handles of OTA characteristics which will be got for peer. */
-    otas_c_evt_handler_t  evt_handler;        /**< Handler of OTA client event  */
-    uint8_t               prf_id;             /**< OTA Client profile id. */
+struct otas_c_env_t
+{
+    otas_c_handles_t        handles;                /**< Handles of OTA characteristics which will be got for peer. */
+    otas_c_evt_handler_t    evt_handler;            /**< Handler of OTA client event  */
+    uint8_t                 prf_id;                 /**< OTA Client profile id. */
+    ble_gatts_create_db_t   otas_c_gatts_db;        /**< OTA Client attributs database. */
 };
 
 /*
  * LOCAL FUNCTION DECLARATION
  *****************************************************************************************
  */
-static void otas_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle);
-static void otas_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);
-static void otas_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
 static struct otas_c_env_t s_otas_c_env;
-static uint8_t            s_otas_uuid[16]              = OTAS_SVC_UUID;
-static uint8_t            s_otas_tx_char_uuid[16]      = OTAS_TX_CHAR_UUID;
-static uint8_t            s_otas_rx_char_uuid[16]      = OTAS_RX_CHAR_UUID;
-static uint8_t            s_otas_ctrl_char_uuid[16]    = OTAS_CTRL_CHAR_UUID;
-
-
-/**@brief OTA Client interface required by profile manager. */
-static ble_prf_manager_cbs_t otas_c_mgr_cbs = {
-    NULL,
-    NULL,
-    NULL
-};
-
-/**@brief OTA GATT Client Callbacks. */
-static gattc_prf_cbs_t otas_c_gattc_cbs = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    otas_c_att_write_cb,
-    otas_c_att_ntf_ind_cb,
-    otas_c_srvc_browse_cb,
-    NULL,
-};
-
-/**@brief OTA Client Information. */
-static const prf_client_info_t otas_c_prf_info = {
-    .max_connection_nb = OTAS_C_CONNECTION_MAX,
-    .manager_cbs       = &otas_c_mgr_cbs,
-    .gattc_prf_cbs     = &otas_c_gattc_cbs
+static uint8_t             s_otas_uuid[16]              = OTAS_SVC_UUID;
+static uint8_t             s_otas_tx_char_uuid[16]      = OTAS_TX_CHAR_UUID;
+static uint8_t             s_otas_rx_char_uuid[16]      = OTAS_RX_CHAR_UUID;
+static uint8_t             s_otas_ctrl_char_uuid[16]    = OTAS_CTRL_CHAR_UUID;
+static ble_uuid_t          s_otas_c_service_uuid =
+{
+    .uuid_len = 16,
+    .uuid     = s_otas_uuid,
 };
 
 /*
@@ -114,7 +88,8 @@ static const prf_client_info_t otas_c_prf_info = {
  */
 static void otas_c_evt_handler_execute(otas_c_evt_t *p_evt)
 {
-    if (s_otas_c_env.evt_handler != NULL && OTAS_C_EVT_INVALID != p_evt->evt_type) {
+    if (NULL != s_otas_c_env.evt_handler && OTAS_C_EVT_INVALID != p_evt->evt_type)
+    {
         s_otas_c_env.evt_handler(p_evt);
     }
 }
@@ -128,22 +103,27 @@ static void otas_c_evt_handler_execute(otas_c_evt_t *p_evt)
  * @param[in] handle:     The handle of attribute.
  *****************************************************************************************
  */
-static void otas_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle)
+static void otas_c_att_write_evt_handler(uint8_t conn_idx, uint8_t status, uint16_t handle)
 {
     otas_c_evt_t otas_c_evt;
 
     otas_c_evt.conn_idx = conn_idx;
     otas_c_evt.evt_type = OTAS_C_EVT_INVALID;
 
-    if (handle == s_otas_c_env.handles.otas_tx_cccd_handle) {
+    if (handle == s_otas_c_env.handles.otas_tx_cccd_handle)
+    {
         otas_c_evt.evt_type = (BLE_SUCCESS == status) ? \
                               OTAS_C_EVT_TX_NTF_SET_SUCCESS : \
                               OTAS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_otas_c_env.handles.otas_ctrl_handle) {
+    }
+    else if (handle == s_otas_c_env.handles.otas_ctrl_handle)
+    {
         otas_c_evt.evt_type = (BLE_SUCCESS == status) ? \
                               OTAS_C_EVT_CTRL_SUCCESS : \
                               OTAS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_otas_c_env.handles.otas_rx_handle) {
+    }
+    else if (handle == s_otas_c_env.handles.otas_rx_handle)
+    {
         otas_c_evt.evt_type = (BLE_SUCCESS == status) ? \
                               OTAS_C_EVT_TX_CPLT : \
                               OTAS_C_EVT_WRITE_OP_ERR;
@@ -161,7 +141,7 @@ static void otas_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handl
  * @param[in] p_ntf_ind: The information of notification or indication.
  *****************************************************************************************
  */
-static void otas_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind)
+static void otas_c_att_ntf_ind_evt_handler(uint8_t conn_idx, const ble_gattc_evt_ntf_ind_t *p_ntf_ind)
 {
     otas_c_evt_t otas_c_evt;
 
@@ -170,7 +150,8 @@ static void otas_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p
     otas_c_evt.p_data   = p_ntf_ind->p_value;
     otas_c_evt.length   = p_ntf_ind->length;
 
-    if (p_ntf_ind->handle == s_otas_c_env.handles.otas_tx_handle) {
+    if (p_ntf_ind->handle == s_otas_c_env.handles.otas_tx_handle)
+    {
         otas_c_evt.evt_type = OTAS_C_EVT_PEER_DATA_RECEIVE;
     }
 
@@ -186,7 +167,7 @@ static void otas_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p
  * @param[in] p_browse_srvc: The information of service browse.
  *****************************************************************************************
  */
-static void otas_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc)
+static void otas_c_srvc_browse_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_browse_srvc_t *p_browse_srvc)
 {
     otas_c_evt_t  otas_c_evt;
     uint16_t     handle_disc;
@@ -194,41 +175,76 @@ static void otas_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_ga
     otas_c_evt.conn_idx = conn_idx;
     otas_c_evt.evt_type = OTAS_C_EVT_DISCOVERY_FAIL;
 
-    if (BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status) {
+    if(BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status)
+    {
         return;
     }
 
-    if (status != BLE_SUCCESS) {
-        return;
-    }
+    if (BLE_SUCCESS == status)
+    {
+        if (16 == p_browse_srvc->uuid_len && 0 == memcmp(p_browse_srvc->uuid, s_otas_uuid, 16))
+        {
+            s_otas_c_env.handles.otas_srvc_start_handle = p_browse_srvc->start_hdl;
+            s_otas_c_env.handles.otas_srvc_end_handle   = p_browse_srvc->end_hdl;
 
-    if (p_browse_srvc->uuid_len == UUID_LEN_16 && memcmp(p_browse_srvc->uuid, s_otas_uuid, UUID_LEN_16) == 0) {
-        s_otas_c_env.handles.otas_srvc_start_handle = p_browse_srvc->start_hdl;
-        s_otas_c_env.handles.otas_srvc_end_handle   = p_browse_srvc->end_hdl;
+            for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++)
+            {
+                handle_disc = p_browse_srvc->start_hdl + i + 1;
 
-        for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++) {
-            handle_disc = p_browse_srvc->start_hdl + i + 1;
+                if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_ATTR_VAL)
+                {
+                    if (0 == memcmp(p_browse_srvc->info[i].attr.uuid, s_otas_rx_char_uuid, 16))
+                    {
+                        s_otas_c_env.handles.otas_rx_handle = handle_disc;
+                    }
+                    else if (0 == (memcmp(p_browse_srvc->info[i].attr.uuid, s_otas_tx_char_uuid, 16)))
+                    {
+                        s_otas_c_env.handles.otas_tx_handle      = handle_disc;
+                        s_otas_c_env.handles.otas_tx_cccd_handle = handle_disc + 1;
+                    }  
+                    else if (0 == memcmp(p_browse_srvc->info[i].attr.uuid, s_otas_ctrl_char_uuid, 16))
+                    {
+                        s_otas_c_env.handles.otas_ctrl_handle = handle_disc;
+                    }
+                }
 
-            if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_ATTR_VAL) {
-                if (memcmp(p_browse_srvc->info[i].attr.uuid, s_otas_rx_char_uuid, UUID_LEN_16) == 0) {
-                    s_otas_c_env.handles.otas_rx_handle = handle_disc;
-                } else if ((memcmp(p_browse_srvc->info[i].attr.uuid, s_otas_tx_char_uuid, UUID_LEN_16) == 0)) {
-                    s_otas_c_env.handles.otas_tx_handle      = handle_disc;
-                    s_otas_c_env.handles.otas_tx_cccd_handle = handle_disc + 1;
-                } else if (memcmp(p_browse_srvc->info[i].attr.uuid, s_otas_ctrl_char_uuid, UUID_LEN_16) == 0) {
-                    s_otas_c_env.handles.otas_ctrl_handle = handle_disc;
+                if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_NONE)
+                {
+                    break;
                 }
             }
 
-            if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_NONE) {
-                break;
-            }
+            otas_c_evt.evt_type = OTAS_C_EVT_DISCOVERY_COMPLETE;
         }
-
-        otas_c_evt.evt_type = OTAS_C_EVT_DISCOVERY_COMPLETE;
     }
 
     otas_c_evt_handler_execute(&otas_c_evt);
+}
+
+static void otas_c_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTC_EVT_SRVC_BROWSE:
+            otas_c_srvc_browse_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.srvc_browse);
+            break;
+
+        case BLE_GATTC_EVT_READ_RSP:
+            break;
+
+        case BLE_GATTC_EVT_WRITE_RSP:
+            otas_c_att_write_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, p_evt->evt.gattc_evt.params.write_rsp.handle);
+            break;
+
+        case BLE_GATTC_EVT_NTF_IND:
+            otas_c_att_ntf_ind_evt_handler(p_evt->evt.gattc_evt.index, &p_evt->evt.gattc_evt.params.ntf_ind);
+            break;
+    }
 }
 
 /*
@@ -237,77 +253,56 @@ static void otas_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_ga
  */
 sdk_err_t otas_client_init(otas_c_evt_handler_t evt_handler)
 {
-    sdk_err_t ret;
-    if (evt_handler == NULL) {
+    if (NULL == evt_handler)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memset_s(&s_otas_c_env, sizeof(s_otas_c_env), 0, sizeof(s_otas_c_env));
-    if (ret < 0) {
-        return ret;
-    }
+    memset(&s_otas_c_env, 0, sizeof(s_otas_c_env));
     s_otas_c_env.evt_handler = evt_handler;
 
-    return ble_client_prf_add(&otas_c_prf_info, &s_otas_c_env.prf_id);
+    return ble_gattc_prf_add(&s_otas_c_service_uuid, otas_c_ble_evt_handler);
 }
-
 
 sdk_err_t otas_c_disc_srvc_start(uint8_t conn_idx)
 {
-    const ble_uuid_t ths_uuid = {
+    const ble_uuid_t otas_uuid =
+    {
         .uuid_len = 16,
         .uuid     = s_otas_uuid,
     };
 
-    return ble_gattc_prf_services_browse(s_otas_c_env.prf_id, conn_idx, &ths_uuid);
+    return ble_gattc_services_browse(conn_idx, &otas_uuid);
 }
-
 
 sdk_err_t otas_c_tx_notify_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_attr_value_t write_attr_value;
     uint16_t ntf_value = is_enable ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND;
 
-    if (BLE_ATT_INVALID_HDL == s_otas_c_env.handles.otas_tx_cccd_handle) {
+    if (BLE_ATT_INVALID_HDL == s_otas_c_env.handles.otas_tx_cccd_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_otas_c_env.handles.otas_tx_cccd_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ntf_value;
-
-    return ble_gattc_prf_write(s_otas_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_otas_c_env.handles.otas_tx_cccd_handle, 0, 2, (uint8_t *)&ntf_value);
 }
 
 sdk_err_t otas_c_ctrl_data_send(uint8_t conn_idx, uint32_t data)
 {
-    gattc_write_no_resp_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_otas_c_env.handles.otas_ctrl_handle) {
+    if (BLE_ATT_INVALID_HDL == s_otas_c_env.handles.otas_ctrl_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.signed_write  = false;
-    write_attr_value.handle        = s_otas_c_env.handles.otas_ctrl_handle;
-    write_attr_value.length        = sizeof(uint32_t);
-    write_attr_value.p_value       = (uint8_t*)&data;
-
-    return ble_gattc_prf_write_no_resp(s_otas_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write_no_resp(conn_idx, false, s_otas_c_env.handles.otas_ctrl_handle, sizeof(uint32_t), (uint8_t*)&data);
 }
 
 sdk_err_t otas_c_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
-    gattc_write_no_resp_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_otas_c_env.handles.otas_rx_handle) {
+    if (BLE_ATT_INVALID_HDL == s_otas_c_env.handles.otas_rx_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.signed_write  = false;
-    write_attr_value.handle        = s_otas_c_env.handles.otas_rx_handle;
-    write_attr_value.length        = length;
-    write_attr_value.p_value       = p_data;
-
-    return ble_gattc_prf_write_no_resp(s_otas_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write_no_resp(conn_idx, false, s_otas_c_env.handles.otas_rx_handle, length, p_data);
 }

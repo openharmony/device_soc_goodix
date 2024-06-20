@@ -48,7 +48,8 @@
  * @defgroup RING_BUFFER_STRUCT Structures
  * @{
  */
-typedef struct {
+typedef struct
+{
     uint32_t             buffer_size;           /**< Size of ring buffer. */
     uint8_t             *p_buffer;              /**< Pointer to buffer saved data. */
     uint32_t             write_index;           /**< Index of write. */

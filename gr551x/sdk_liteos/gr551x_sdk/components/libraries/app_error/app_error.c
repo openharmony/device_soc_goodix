@@ -41,26 +41,27 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
+#include "app_error.h"
+#include "app_error_cfg.h"
+#include "app_log.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include "app_error_cfg.h"
-#include "app_log.h"
-#include "app_error.h"
 
 /*
  * DEFINITIONS
  *****************************************************************************************
  */
 #define APP_ERROR_INFO_LEN          512
-#define APP_ERROR_CODE_NB           43
+#define APP_ERROR_CODE_NB           46
 
 /*
  * STRUCTURES
  *****************************************************************************************
  */
 /**@brief SDK error code information. */
-typedef struct {
+typedef struct 
+{
     sdk_err_t  error_code;
     char      *error_info;
 } error_code_info_t;
@@ -69,8 +70,10 @@ typedef struct {
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
-#ifndef GR5515_E
-static error_code_info_t s_error_code_info[APP_ERROR_CODE_NB] = {
+static char  s_error_print_info[APP_ERROR_INFO_LEN] = { 0 };
+
+static error_code_info_t s_error_code_info[APP_ERROR_CODE_NB] =
+{
     {SDK_SUCCESS,                              "Successful."},
     {SDK_ERR_INVALID_PARAM,                    "Invalid parameter supplied."},
     {SDK_ERR_POINTER_NULL,                     "Invalid pointer supplied."},
@@ -114,10 +117,11 @@ static error_code_info_t s_error_code_info[APP_ERROR_CODE_NB] = {
     {SDK_ERR_INVALID_CID,                      "Invalid CID supplied."},
     {SDK_ERR_INVALID_CHL_NUM,                  "Invalid channel number supplied."},
     {SDK_ERR_NOT_ENOUGH_CREDITS,               "Not enough credits."},
+    {SDK_ERR_REPEAT_CID,                       "Invalid repeat CID."},
+    {SDK_ERR_CACHE_NOT_ENABLE,                 "Cache feature is not enabled."},
+    {SDK_ERR_CACHE_INVALID,                    "Cache data is invalid."},
 };
-#else
-static error_code_info_t s_error_code_info[];
-#endif
+
 
 /*
  * GLOBAL FUNCTION DEFINITIONS
@@ -126,36 +130,34 @@ static error_code_info_t s_error_code_info[];
 __WEAK void app_error_fault_handler(app_error_info_t *p_error_info)
 {
 #if APP_ERROR_INFO_PRINT_ENABLE
-    uint32_t ret;
-    char s_error_print_info[APP_ERROR_INFO_LEN];
-    ret = memset_s(s_error_print_info, sizeof(s_error_print_info), 0, APP_ERROR_INFO_LEN);
-    if (ret < 0) {
-        return;
-    }
+    memset(s_error_print_info, 0, APP_ERROR_INFO_LEN);
 
-    if (APP_ERROR_API_RET == p_error_info->error_type) {
-        for (uint8_t i = 0; ; i++) {
-            if (p_error_info->value.error_code == s_error_code_info[i].error_code) {
-                ret = sprintf_s(s_error_print_info, sizeof (s_error_print_info),
-                                "Error code 0x%04X: %s",
-                                p_error_info->value.error_code,
-                                s_error_code_info[i].error_info);
+    if (APP_ERROR_API_RET == p_error_info->error_type)
+    {
+        for (uint8_t i = 0; ; i++)
+        {
+            if (p_error_info->value.error_code == s_error_code_info[i].error_code)
+            {
+                sprintf(s_error_print_info,
+                        "Error code 0x%04X: %s",
+                        p_error_info->value.error_code,
+                        s_error_code_info[i].error_info);
                 break;
-            } else if (i == APP_ERROR_CODE_NB) {
-                ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info), \
-                                "Error code 0x%04X: No found information.", p_error_info->value.error_code);
+            }
+            else if (APP_ERROR_CODE_NB == i)
+            {
+                sprintf(s_error_print_info, "Error code 0x%04X: No found information.", p_error_info->value.error_code);
                 break;
             }
         }
-    } else if (APP_ERROR_BOOL_COMPARE == p_error_info->error_type) {
-        ret = sprintf_s(s_error_print_info, sizeof(s_error_print_info),
-                        "(%s) is not established.",
-                        p_error_info->value.expr);
+    }
+    else if (APP_ERROR_BOOL_COMPARE == p_error_info->error_type)
+    {
+        sprintf(s_error_print_info,
+                "(%s) is not established.",
+                p_error_info->value.expr);
     }
 
-    if (ret < 0) {
-        return;
-    }
     app_log_output(APP_LOG_LVL_ERROR,
                    APP_LOG_TAG,
                    p_error_info->file,

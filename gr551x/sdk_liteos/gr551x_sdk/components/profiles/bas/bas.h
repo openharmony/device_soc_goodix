@@ -69,20 +69,16 @@
 #ifndef __BAS_H__
 #define __BAS_H__
 
+#include "gr_includes.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup BAS_MACRO Defines
  * @{
  */
-#define BAS_INSTANCE_MAX        1         /**< Maximum number of Battery Service instances. \
-                                               The value is configurable. */
-#define BAS_CONNECTION_MAX      (10 < CFG_MAX_CONNECTIONS ? \
-                                 10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of BAS connections.
-                                                                 The value is configurable. */
+#define BAS_INSTANCE_MAX        1         /**< Maximum number of Battery Service instances. The value is configurable. */
+#define BAS_CONNECTION_MAX      10        /**< Maximum number of BAS connections.The value is configurable. */
 #define BAS_LVL_MAX_LEN         1         /**< Maximun length of battery level value. */
 
 /**
@@ -102,7 +98,8 @@
  * @{
  */
 /**@brief Battery Service event types. */
-typedef enum {
+typedef enum
+{
     BAS_EVT_INVALID,                      /**< Indicate that it's an invalid event. */
     BAS_EVT_NOTIFICATION_ENABLED,         /**< Indicate that notification has been enabled. */
     BAS_EVT_NOTIFICATION_DISABLED,        /**< Indicate that notification has been disabled. */
@@ -114,7 +111,8 @@ typedef enum {
  * @{
  */
 /**@brief Battery Service event. */
-typedef struct {
+typedef struct
+{
     bas_evt_type_t evt_type;     /**< The BAS event type. */
     uint8_t        conn_idx;     /**< The index of the connection. */
 } bas_evt_t;
@@ -132,12 +130,11 @@ typedef void (*bas_evt_handler_t)(bas_evt_t *p_evt);
  * @defgroup BAS_STRUCT Structures
  * @{
  */
-/**@brief Battery Service init structure.
- * This contains all options and data needed for initialization of the service. */
-typedef struct {
+/**@brief Battery Service init structure. This contains all options and data needed for initialization of the service. */
+typedef struct
+{
     bas_evt_handler_t evt_handler;    /**< Battery Service event handler. */
-    uint8_t
-    char_mask;      /**< Initial mask of supported characteristics, and configured with \ref BAS_CHAR_MASK */
+    uint8_t           char_mask;      /**< Initial mask of supported characteristics, and configured with \ref BAS_CHAR_MASK */
     uint8_t           batt_lvl;       /**< Initial value of Battery Level characteristic. */
 } bas_init_t;
 /** @} */
@@ -156,7 +153,7 @@ typedef struct {
  * @return Result of service initialization.
  *****************************************************************************************
  */
-sdk_err_t bas_service_init(bas_init_t bas_init[], uint8_t ins_num);
+sdk_err_t bas_service_init(bas_init_t bas_init[],uint8_t ins_num);
 
 /**
  *****************************************************************************************
@@ -170,6 +167,16 @@ sdk_err_t bas_service_init(bas_init_t bas_init[], uint8_t ins_num);
  *****************************************************************************************
  */
 sdk_err_t bas_batt_lvl_update(uint8_t conn_idx, uint8_t ins_idx, uint8_t batt_lvl);
+
+/**
+ *****************************************************************************************
+ * @brief Provide the interface for other modules to obtain the bas service start handle .
+ *
+ * @return The bas service start handle.
+ *****************************************************************************************
+ */
+uint16_t bas_service_start_handle_get(void);
+
 /** @} */
 
 #endif

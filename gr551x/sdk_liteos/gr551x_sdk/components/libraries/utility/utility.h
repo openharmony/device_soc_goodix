@@ -71,54 +71,39 @@ extern "C" {
 #define B_FAIL       ((uint8_t)0xFF)
 
 #ifndef BV
-static inline uint8_t BV(uint32_t n)
-{
-    return (uint8_t)(1 << n);
-}
+#define BV(n)      (uint8_t)(1 << (n))
 #endif
 
 #ifndef BF
-static inline uint8_t BF(uint32_t x, uint32_t b, uint32_t s)
-{
-    return ((uint8_t)((x) & (b)) >> (s));
-}
+#define BF(x, b, s)  ((uint8_t)((x) & (b)) >> (s))
 #endif
 
 #ifndef MIN
-static inline uint32_t MIN(uint32_t n, uint32_t m)
-{
-    return (((n) < (m)) ? (n) : (m));
-}
+#define MIN(n, m)   (((n) < (m)) ? (n) : (m))
 #endif
 
 #ifndef MAX
-static inline uint32_t MAX(uint32_t n, uint32_t m)
-{
-    return (((n) < (m)) ? (m) : (n));
-}
+#define MAX(n, m)   (((n) < (m)) ? (m) : (n))
 #endif
 
 #ifndef ABS
-static inline uint32_t ABS(int32_t n)
-{
-    return (((n) < 0) ? -(n) : (n));
-}
+#define ABS(n)     (((n) < 0) ? -(n) : (n))
 #endif
 
 #ifndef ALIGN_NUM
 #define ALIGN_NUM(align, num) (((num) - 1) + (align) - (((num) - 1) % (align)))
 #endif
 
-#define BIT_MASK(n)     (uint8_t)(((1) << (n)) - 1)
+#define BIT_MASK(n)     (uint8_t)(((1) << n) - 1)
 
-/* takes a byte out of a uint32:var -uint32, ByteNum - byte tao take out(0-3) */
+/*takes a byte out of a uint32:var -uint32, ByteNum - byte tao take out(0-3)*/
 #define BREAK_U32(var, ByteNum) (uint8_t)((uint32_t)(((var) >> ((uint8_t)((ByteNum) * 8))) & 0x00FF))
 
 #define BUILD_U32(Byte0, Byte1, Byte2, Byte3) \
-        ((uint32_t)((uint32_t)((Byte0) & 0x00FF) + \
-        ((uint32_t)((Byte1) & 0x00FF) << 8) + \
-        ((uint32_t)((Byte2) & 0x00FF) << 16) + \
-        ((uint32_t)((Byte3) & 0x00FF) << 24)))
+          ((uint32_t)((uint32_t)((Byte0) & 0x00FF) + \
+          ((uint32_t)((Byte1) & 0x00FF) << 8) + \
+          ((uint32_t)((Byte2) & 0x00FF) << 16) + \
+          ((uint32_t)((Byte3) & 0x00FF) << 24)))
 
 #define HI_UINT32_T(a) (((a) >> 24) & 0xFF)
 #define L3_UINT32_T(a) (((a) >> 16) & 0xFF)
@@ -153,16 +138,16 @@ static inline uint32_t ABS(int32_t n)
 #endif
 
 #ifndef GET_BITFIELD
-#define GET_BITFIELD(var, MSB, LSB)  ((uint8_t)((var) << (7 - (MSB))) >> ((7 - (MSB)) + (LSB)))
+#define GET_BITFIELD(var, MSB, LSB)  ((uint8_t)((var) << (7 - MSB)) >> ((7 - MSB) + LSB))
 #endif
 
 #ifndef SET_BITFIELD
 #define SET_BITFIELD(var, MSB, LSB, value)  ((uint8_t)(var) = \
-        (uint8_t)(((var) & (~(BIT_MASK(((MSB) - (LSB)))<<(LSB)))) | (((value) & BIT_MASK(((MSB) - (LSB)))) << (LSB))))
+        (uint8_t)((var & (~(BIT_MASK((MSB - LSB))<<LSB))) | ((value & BIT_MASK((MSB - LSB))) << LSB)))
 #endif
 
 #ifndef CLR_BITFIELD
-#define CLR_BITFIELD(var, MSB, LSB)  ((uint8_t)(var) &=  (uint8_t)(~(BIT_MASK((MSB) - (LSB))<<(LSB))))
+#define CLR_BITFIELD(var, MSB, LSB)  ((uint8_t)(var) &=  (uint8_t)(~(BIT_MASK(MSB - LSB)<<LSB)))
 #endif
 
 #ifndef CONTAINER_OF
@@ -211,7 +196,7 @@ static inline uint32_t ABS(int32_t n)
  * @param[in]  x:     The 16 digit number need to be transformed.
  *****************************************************************************************
  */
-void htole16(uint8_t *p_buf, uint16_t x);
+void htole16(void *p_buf, uint16_t x);
 
 /**
  *****************************************************************************************
@@ -221,7 +206,7 @@ void htole16(uint8_t *p_buf, uint16_t x);
  * @param[in]  x:     The 32 digit number need to be transformed.
  *****************************************************************************************
  */
-void htole32(uint8_t *p_buf, uint32_t x);
+void htole32(void *p_buf, uint32_t x);
 
 /**
  *****************************************************************************************
@@ -231,40 +216,40 @@ void htole32(uint8_t *p_buf, uint32_t x);
  * @param[in]  x:     The 64 digit number need to be transformed.
  *****************************************************************************************
  */
-void htole64(uint8_t *p_buf, uint64_t x);
+void htole64(void *p_buf, uint64_t x);
 
 /**
  *****************************************************************************************
  * @brief Function for transforming a array into a 16 digit unsigned number according to Little-Endian.
  *
  * @param[in] p_buf: Pointer to a array need to be transformed.
- *
+ * 
  * @retval ::The result of transforming
  *****************************************************************************************
  */
-uint16_t le16toh(const uint8_t *p_buf);
+uint16_t le16toh(const void *p_buf);
 
 /**
  *****************************************************************************************
  * @brief Function for transforming a array into a 32 digit unsigned number according to Little-Endian.
  *
  * @param[in] p_buf: Pointer to a array need to be transformed.
- *
+ * 
  * @retval ::The result of transforming
  *****************************************************************************************
  */
-uint32_t le32toh(const uint8_t *p_buf);
+uint32_t le32toh(const void *p_buf);
 
 /**
  *****************************************************************************************
  * @brief Function for transforming a array into a 64 digit unsigned number according to Little-Endian.
  *
  * @param[in] p_buf: Pointer to a array need to be transformed.
- *
+ * 
  * @retval ::The result of transforming
  *****************************************************************************************
  */
-uint64_t le64toh(const uint8_t *p_buf);
+uint64_t le64toh(const void *p_buf);
 
 /**
  *****************************************************************************************
@@ -274,7 +259,7 @@ uint64_t le64toh(const uint8_t *p_buf);
  * @param[in]  x:     The 16 digit number need to be transformed.
  *****************************************************************************************
  */
-void htobe16(uint8_t *p_buf, uint16_t x);
+void htobe16(void *p_buf, uint16_t x);
 
 /**
  *****************************************************************************************
@@ -284,7 +269,7 @@ void htobe16(uint8_t *p_buf, uint16_t x);
  * @param[in]  x:     The 16 digit number need to be transformed.
  *****************************************************************************************
  */
-void htobe32(uint8_t *p_buf, uint32_t x);
+void htobe32(void *p_buf, uint32_t x);
 
 /**
  *****************************************************************************************
@@ -294,47 +279,47 @@ void htobe32(uint8_t *p_buf, uint32_t x);
  * @param[in]  x:     The 16 digit number need to be transformed.
  *****************************************************************************************
  */
-void htobe64(uint8_t *p_buf, uint64_t x);
+void htobe64(void *p_buf, uint64_t x);
 
 /**
  *****************************************************************************************
  * @brief Function for transforming a array into a 16 digit unsigned number according to Big-Endian.
  *
  * @param[in] p_buf: Pointer to a array need to be transformed.
- *
+ * 
  * @retval ::The result of transforming
  *****************************************************************************************
  */
-uint16_t be16toh(const uint8_t *p_buf);
+uint16_t be16toh(const void *buf);
 
 /**
  *****************************************************************************************
  * @brief Function for transforming a array into a 32 digit unsigned number according to Big-Endian.
  *
  * @param[in] p_buf: Pointer to a array need to be transformed.
- *
+ * 
  * @retval ::The result of transforming
  *****************************************************************************************
  */
-uint32_t be32toh(const uint8_t *p_buf);
+uint32_t be32toh(const void *buf);
 
 /**
  *****************************************************************************************
  * @brief Function for transforming a array into a 64 digit unsigned number according to Big-Endian.
  *
  * @param[in] p_buf: Pointer to a array need to be transformed.
- *
+ * 
  * @retval ::The result of transforming
  *****************************************************************************************
  */
-uint64_t be64toh(const uint8_t *p_buf);
+uint64_t be64toh(const void *buf);
 
 /**
  *****************************************************************************************
  * @brief Function for getting the first 8 bits of an address.
  *
  * @param[in] pp_buf: Pointer to an address.
- *
+ * 
  * @retval ::The result of getting
  *****************************************************************************************
  */
@@ -345,7 +330,7 @@ uint8_t get_u8_inc(const uint8_t **pp_buf);
  * @brief Function for getting the first 16 bits of an address.
  *
  * @param[in] pp_buf: Pointer to an address.
- *
+ * 
  * @retval ::The result of getting
  *****************************************************************************************
  */
@@ -356,7 +341,7 @@ uint16_t get_u16_inc(const uint8_t **pp_buf);
  * @brief Function for getting the first 32 bits of an address.
  *
  * @param[in] pp_buf: Pointer to an address.
- *
+ * 
  * @retval ::The result of getting
  *****************************************************************************************
  */

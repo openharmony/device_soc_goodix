@@ -38,8 +38,8 @@
 #ifndef __APP_ERROR_H__
 #define __APP_ERROR_H__
 
-#include <stdint.h>
 #include "ble_error.h"
+#include <stdint.h>
 
 /**
  * @defgroup APP_ERROR_MAROC Defines
@@ -48,32 +48,39 @@
 
 /**@brief Macro for calling error handler function if supplied error code isn`t GR_SUCCESS. */
 #define APP_ERROR_CHECK(ERROR_CODE)                         \
-    do {                                                    \
-        if ((ERROR_CODE) != SDK_SUCCESS) {                  \
-            app_error_info_t error_info = {                 \
+    do                                                      \
+    {                                                       \
+        if (ERROR_CODE != SDK_SUCCESS)                      \
+        {                                                   \
+            app_error_info_t error_info =                   \
+            {                                               \
                 .error_type       = APP_ERROR_API_RET,      \
-                .value.error_code = (ERROR_CODE),           \
+                .value.error_code = ERROR_CODE,             \
                 .file             = __FILE__,               \
                 .func             = __FUNCTION__,           \
                 .line             = __LINE__,               \
             };                                              \
             app_error_fault_handler(&error_info);           \
         }                                                   \
-    } while (0)
+    } while(0)
 
 /**@brief Macro for calling error handler function if supplied boolean value is false. */
 #define APP_BOOL_CHECK(BOOL_VAL)                        \
-    do {                                                \
-        if (!(BOOL_VAL)) {                              \
-            app_error_info_t error_info = {             \
+    do                                                  \
+    {                                                   \
+        if (!BOOL_VAL)                                  \
+        {                                               \
+            app_error_info_t error_info =               \
+            {                                           \
                 .error_type = APP_ERROR_BOOL_COMPARE,   \
                 .value.expr = #BOOL_VAL,                \
-                .file = __FILE__,                        \
-                .func       = __FUNCTION__, .line = __LINE__, \
+                .file       = __FILE__,                 \
+                .func       = __FUNCTION__,             \
+                .line       = __LINE__,                 \
             };                                          \
             app_error_fault_handler(&error_info);       \
         }                                               \
-    } while (0)
+    } while(0)
 /** @} */
 
 /**
@@ -81,7 +88,8 @@
  * @{
  */
 /**@brief App error check type.*/
-typedef enum {
+typedef enum
+{
     APP_ERROR_API_RET,          /**< API return error code check failed. */
     APP_ERROR_BOOL_COMPARE,     /**< Bool value check failed. */
 } app_error_type_t;
@@ -92,9 +100,11 @@ typedef enum {
  * @{
  */
 /**@brief App error info.*/
-typedef struct {
+typedef struct
+{
     app_error_type_t error_type;     /**< Error occurred type. */
-    union {
+    union
+    {
         sdk_err_t    error_code;     /**< Error code. */
         char const  *expr;           /**< Error expression. */
     } value;

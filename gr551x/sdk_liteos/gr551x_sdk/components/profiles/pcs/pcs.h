@@ -58,18 +58,17 @@
 #ifndef __PCS_H__
 #define __PCS_H__
 
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 
 /**
  * @defgroup PCS_MACRO Defines
  * @{
  */
-#define PCS_CONNECTION_MAX  (10 < CFG_MAX_CONNECTIONS ? \
-                            10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of Power Consumption Service connections. */
-#define PCS_MAX_DATA_LEN    244    /**< Maximum length of application data packet which is transmitted via PCS. */
-#define PCS_SERVICE_UUID    0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x01, 0x05, \
-                            0xED, 0xA6   /**< The UUID of Power Consumption Service for setting advertising data. */
+#define PCS_CONNECTION_MAX      10                                               /**< Maximum number of Power Consumption Service connections. */
+#define PCS_MAX_DATA_LEN        244                                              /**< Maximum length of application data packet which is transmitted via PCS. */
+#define PCS_SERVICE_UUID        0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                0x0A, 0x46, 0x44, 0xD3, 0x01, 0x05, 0xED, 0xA6   /**< The UUID of Power Consumption Service for setting advertising data. */
 
 #define PCS_SET_PARAM_SUCCESS   0x00               /**< PCS parameters set successfully. */
 #define PCS_SET_PARAM_FAIL      0x81               /**< PCS parameters set unsuccessfully. */
@@ -86,7 +85,8 @@
  * @{
  */
 /**@brief PCS Service event types. */
-typedef enum {
+typedef enum
+{
     PCS_EVT_INVALID,                    /**< Invalid PCS event. */
     PCS_EVT_TX_ENABLE,                  /**< TX notify has been enabled. */
     PCS_EVT_TX_DISABLE,                 /**< TX notify has been disabled. */
@@ -98,7 +98,8 @@ typedef enum {
 } pcs_evt_type_t;
 
 /**@brief PCS Service settings types. */
-typedef enum {
+typedef enum
+{
     PCS_SETTING_TYPE_ADV_INTERVAL,       /**< BLE Advertising Interval parameter. */
     PCS_SETTING_TYPE_CONN_PARAM,         /**< BLE Connection parameter. */
     PCS_SETTING_TYPE_PHY,                /**< Radio Phy mode, 1M, 2M, Encoded. */
@@ -112,7 +113,8 @@ typedef enum {
  * @{
  */
 /**@brief PCS Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t         conn_idx;           /**< The index of the connection. */
     pcs_evt_type_t  evt_type;           /**< The PCS event type. */
     uint8_t        *p_data;             /**< Pointer to data. */
@@ -132,9 +134,9 @@ typedef void (*pcs_evt_handler_t)(pcs_evt_t *p_evt);
  * @addtogroup PCS_STRUCT Structures
  * @{
  */
-/**@brief PCS Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief PCS Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     pcs_evt_handler_t evt_handler;    /**< PCS Service event handler. */
 } pcs_init_t;
 /** @} */

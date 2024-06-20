@@ -53,7 +53,8 @@ static ble_srv_disc_state_t srv_disc_procedure[BLE_SRV_DISC_PROC_NB];
  */
 void ble_srv_disc_proc_state_set(uint8_t srv_disc_proc_id, ble_srv_disc_state_t srv_disc_state)
 {
-    if (BLE_SRV_DISC_PROC_MAX <= srv_disc_proc_id) {
+    if (BLE_SRV_DISC_PROC_MAX <= srv_disc_proc_id)
+    {
         return;
     }
 

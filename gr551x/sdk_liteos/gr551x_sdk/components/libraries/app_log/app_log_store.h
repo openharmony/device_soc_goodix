@@ -40,7 +40,7 @@
 
 #include "custom_config.h"
 #if APP_LOG_STORE_ENABLE
-#include "gr55xx_sys.h"
+#include "grx_sys.h"
 #include "ring_buffer.h"
 #include <string.h>
 #include <stdarg.h>
@@ -61,16 +61,20 @@
  * @{
  */
 /**@brief APP LOG Store flash data dump callback type. */
-typedef void (*app_log_store_dump_cb_t)(uint8_t *p_data, uint16_t len);
+typedef void (*app_log_store_dump_process_cb_t)(uint8_t *p_data, uint16_t len);
+typedef void (*app_log_store_dump_start_cb_t)(uint32_t len);
+typedef void (*app_log_store_dump_finish_cb_t)(void);
+typedef void (*app_log_sem_process)(void);
 /** @} */
 
 /**
  * @defgroup APP_LOG_STORE_STRUCT Structures
  * @{
  */
-/**@brief The date and time structure. The packed size is 7 bytes. */
-typedef struct {
-    uint16_t year;              /**< Year time element. */
+ /**@brief The date and time structure. The packed size is 7 bytes. */
+typedef struct
+{
+    uint8_t  year;              /**< Year time element. */
     uint8_t  month;             /**< Month time element. */
     uint8_t  day;               /**< Day time element. */
     uint8_t  hour;              /**< Hour time element. */
@@ -80,21 +84,34 @@ typedef struct {
 } app_log_store_time_t;
 
 /**@brief App log store operation functions. */
-typedef struct {
+typedef struct
+{
     bool     (*flash_init)(void);                                                          /**< Flash init. */
     bool     (*flash_erase)(const uint32_t addr, const uint32_t size);                     /**< Flash erase. */
     uint32_t (*flash_read)(const uint32_t addr, uint8_t *buf, const uint32_t size);        /**< Flash read. */
     uint32_t (*flash_write)(const uint32_t addr, const uint8_t *buf, const uint32_t size); /**< Flash write. */
     void     (*time_get)(app_log_store_time_t *p_time);                                    /**< Get real time. */
+    app_log_sem_process sem_give;
+    app_log_sem_process sem_take;
 } app_log_store_op_t;
 
 /**@brief App log store init stucture. */
-typedef struct {
+typedef struct
+{
     uint16_t   nv_tag;        /**< NVDS Tag for app log store env. */
     uint32_t   db_addr;       /**< Start address of app log db flash. */
     uint32_t   db_size;       /**< Size of app log db flash. */
     uint16_t   blk_size;      /**< Block size in the flash for erase minimum granularity */
 } app_log_store_info_t;
+/** @} */
+
+/**@brief App log store dump stucture. */
+typedef struct
+{
+    app_log_store_dump_process_cb_t dump_process_cb;   /**< App log store dump callback. */
+    app_log_store_dump_start_cb_t   dump_start_cb;     /**< App log store dump start callback. */
+    app_log_store_dump_finish_cb_t  dump_finish_cb;    /**< App log store dump finish callback. */
+} app_log_dump_cbs_t;
 /** @} */
 
 /**
@@ -134,21 +151,15 @@ uint16_t app_log_store_save(const uint8_t *p_data, uint16_t length);
  * @return Result of dump.
  *****************************************************************************************
  */
-uint16_t app_log_store_dump(app_log_store_dump_cb_t dump_cb);
+uint16_t app_log_store_dump(app_log_dump_cbs_t *p_dump_cbs);
 
-/**
- *****************************************************************************************
- * @brief Flush app log store cache to flash.
- *****************************************************************************************
- */
-void app_log_store_flush(void);
 
 /**
  *****************************************************************************************
  * @brief App log store clear.
  *****************************************************************************************
  */
-void app_log_store_clear(void);
+uint16_t app_log_store_clear(void);
 
 /**
  *****************************************************************************************
@@ -159,10 +170,19 @@ bool app_log_store_dump_ongoing(void);
 
 /**
  *****************************************************************************************
+ * @brief Continue log dump.
+ *****************************************************************************************
+ */
+void app_log_dump_continue(void);
+/**
+ *****************************************************************************************
  * @brief App log store schedule for save and dump.
  *****************************************************************************************
  */
 void app_log_store_schedule(void);
+
 /** @} */
 #endif
 #endif
+
+

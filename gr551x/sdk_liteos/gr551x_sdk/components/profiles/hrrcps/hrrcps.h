@@ -57,24 +57,21 @@
 #ifndef __HRRCPS_H__
 #define __HRRCPS_H__
 
+#include "ble_prf_types.h"
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_prf_types.h"
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup HRRCPS_MACRO Defines
  * @{
  */
-#define HRRCPS_CONNECTION_MAX      (10 < CFG_MAX_CONNECTIONS ? \
-                                    10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of \
-                                                                    HRS RSCS Relay Control Point Service connections. */
-#define HRRCPS_CTRL_PT_VAL_LEN      2   /**< Length of the value of Control Point characteristic. */
-#define HRRCPS_CTRL_PT_RSP_VAL_LEN  4   /**< Length of the value of Control Point Response characteristic. */
-#define HRRCPS_SERVICE_UUID         0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                                    0x01, 0x06, 0xED, 0xA6      /**< The UUID of HRS RSCS Relay Control Point Service \
-                                                                     for setting advertising data. */
+#define HRRCPS_CONNECTION_MAX       10                                                  /**< Maximum number of HRS RSCS Relay Control Point Service connections. */
+#define HRRCPS_CTRL_PT_VAL_LEN      2                                                   /**< Length of the value of Control Point characteristic. */
+#define HRRCPS_CTRL_PT_RSP_VAL_LEN  4                                                   /**< Length of the value of Control Point Response characteristic. */
+#define HRRCPS_SERVICE_UUID         0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                    0x0A, 0x46, 0x44, 0xD3, 0x01, 0x06, 0xED, 0xA6      /**< The UUID of HRS RSCS Relay Control Point Service for setting advertising data. */
 /** @} */
 
 /**
@@ -82,7 +79,8 @@
  * @{
  */
 /**@brief HRS RSCS Relay Control Point Service Control Point IDs. */
-typedef enum {
+typedef enum
+{
     HRRCPS_CTRL_PT_SCAN_HRS = 0x01,        /**< Scan HRS device. */
     HRRCPS_CTRL_PT_SCAN_RSCS,              /**< Scan RSCS device. */
     HRRCPS_CTRL_PT_HRS_SEN_LOC_READ,       /**< Read HRS sensor location. */
@@ -99,13 +97,15 @@ typedef enum {
 } hrrcps_ctrl_pt_id_t;
 
 /**@brief HRS RSCS Relay Control Point Service Response IDs of Control Point. */
-typedef enum {
+typedef enum
+{
     HRRCPS_RSP_ID_OK = 0x01,               /**< Success. */
     HRRCPS_RSP_ID_ERROR,                   /**< Fail. */
 } hrrcps_rsp_id_t;
 
 /**@brief HRS RSCS Relay Control Point Service event type. */
-typedef enum {
+typedef enum
+{
     HRRCPS_EVT_INVALID,                     /**< Invalid HRRCPS event type. */
     HRRCPS_EVT_CTRL_PT_IND_ENABLE,          /**< HRR Control Point indicaiton is enabled. */
     HRRCPS_EVT_CTRL_PT_IND_DISABLE,         /**< HRR Control Point indicaiton is disabled. */
@@ -127,7 +127,8 @@ typedef enum {
  * @{
  */
 /**@brief HRS RSCS Relay Control Point Response value. */
-typedef struct {
+typedef struct
+{
     hrrcps_ctrl_pt_id_t  cmd_id;        /**< Control Point ID. */
     hrrcps_rsp_id_t      rsp_id;        /**< Response ID. */
     bool                 is_inc_prama;  /**< Parameter is included or not. */
@@ -135,7 +136,8 @@ typedef struct {
 } hrrcps_rsp_val_t;
 
 /**@brief HRS RSCS Relay Control Point Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t           conn_idx;        /**< The index of the connection. */
     hrrcps_evt_type_t evt_type;        /**< The HRRCPS event type. */
 } hrrcps_evt_t;

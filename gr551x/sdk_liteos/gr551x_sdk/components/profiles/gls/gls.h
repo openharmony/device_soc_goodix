@@ -64,41 +64,38 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 #include "ble_prf_utils.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup GLS_MACRO Defines
  * @{
  */
-#define GLS_CONNECTION_MAX          (10 < CFG_MAX_CONNECTIONS ?\
-                                    10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of Glucose Profile connections. */
-#define GLS_MEAS_VAL_LEN_MAX                20   /**< Maximum length of GLS measurement value. */
-#define GLS_MEAS_CTX_LEN_MAX                20   /**< Maximum length of GLS measurement context value. */
-#define GLS_REC_ACCESS_CTRL_LEN_MIN         2    /**< Minimum length of Record Access Control Point packet. */
-#define GLS_REC_ACCESS_CTRL_LEN_MAX         21   /**< Maximum length of Record Access Control Point packet. */
+#define GLS_CONNECTION_MAX                  10                           /**< Maximum number of Glucose Profile connections. */
+#define GLS_MEAS_VAL_LEN_MAX                20                           /**< Maximum length of GLS measurement value. */
+#define GLS_MEAS_CTX_LEN_MAX                20                           /**< Maximum length of GLS measurement context value. */
+#define GLS_REC_ACCESS_CTRL_LEN_MIN         2                            /**< Minimum length of Record Access Control Point packet. */
+#define GLS_REC_ACCESS_CTRL_LEN_MAX         21                           /**< Maximum length of Record Access Control Point packet. */
 
 
 #define GLS_NTF_OF_NULL              0x00       /**< Mask for no notify. */
 #define GLS_NTF_OF_MEAS              0x01       /**< Mask for measurement notify. */
 #define GLS_NTF_OF_MEAS_CTX          0x10       /**< Mask for measurement context notify. */
 
-#define GLS_ERROR_PROC_IN_PROCESS    0x80       /**< Error code: A previously triggered SC Control Point operation \
-                                                     is still in progress. */
-#define GLS_ERROR_CCCD_INVALID       0x81       /**< Error code: The Client Characteristic Configuration descriptor \
-                                                     is not configured. */
+#define GLS_ERROR_PROC_IN_PROCESS    0x80       /**< Error code: A previously triggered SC Control Point operation is still in progress. */
+#define GLS_ERROR_CCCD_INVALID       0x81       /**< Error code: The Client Characteristic Configuration descriptor is not configured. */
 
 /**
  * @defgroup GLS_CHAR_MASK Characteristics Mask
  * @{
  * @brief Bit masks for the initialization of \ref gls_init_t.char_mask.
  */
-#define GLS_CHAR_MANDATORY      0x0f8f /**< Bit mask for mandatory characteristic in GLS. */
-#define GLS_CHAR_MEAS_CTX_SUP   0x0070 /**< Bit mask for Glucose Measurement Context characteristic that is optional. */
-#define GLS_CHAR_FULL           0x0fff     /**< Bit mask of the full characteristic. */
+#define GLS_CHAR_MANDATORY              0x0f8f     /**< Bit mask for mandatory characteristic in GLS. */
+#define GLS_CHAR_MEAS_CTX_SUP           0x0070     /**< Bit mask for Glucose Measurement Context characteristic that is optional. */
+#define GLS_CHAR_FULL                   0x0fff     /**< Bit mask of the full characteristic. */
 /** @} */
 
 /**
@@ -157,21 +154,16 @@
  */
 #define GLS_MEAS_STATUS_BATT_LOW       (0x01 << 0)      /**< Device battery low at time of measurement */
 #define GLS_MEAS_STATUS_SENSOR_FAULT   (0x01 << 1)      /**< Sensor malfunction or faulting at time of measurement */
-#define GLS_MEAS_STATUS_SAMPLE_SIZE    (0x01 << 2)      /**< Sample size for blood or control solution insufficient \
-                                                             at time of measurement */
+#define GLS_MEAS_STATUS_SAMPLE_SIZE    (0x01 << 2)      /**< Sample size for blood or control solution insufficient at time of measurement */
 #define GLS_MEAS_STATUS_STRIP_INSERT   (0x01 << 3)      /**< Strip insertion error */
 #define GLS_MEAS_STATUS_STRIP_TYPE     (0x01 << 4)      /**< Strip type incorrect for device */
 #define GLS_MEAS_STATUS_RESULT_HIGH    (0x01 << 5)      /**< Sensor result higher than the device can process */
 #define GLS_MEAS_STATUS_RESULT_LOW     (0x01 << 6)      /**< Sensor result lower than the device can process */
-#define GLS_MEAS_STATUS_TEMP_HIGH      (0x01 << 7)      /**< Sensor temperature too high for valid test/result \
-                                                             at time of measurement */
-#define GLS_MEAS_STATUS_TEMP_LOW       (0x01 << 8)      /**< Sensor temperature too low for valid test/result \
-                                                             at time of measurement */
-#define GLS_MEAS_STATUS_STRIP_PULL     (0x01 << 9)      /**< Sensor read interrupted because strip was pulled too soon \
-                                                             at time of measurement */
+#define GLS_MEAS_STATUS_TEMP_HIGH      (0x01 << 7)      /**< Sensor temperature too high for valid test/result at time of measurement */
+#define GLS_MEAS_STATUS_TEMP_LOW       (0x01 << 8)      /**< Sensor temperature too low for valid test/result at time of measurement */
+#define GLS_MEAS_STATUS_STRIP_PULL     (0x01 << 9)      /**< Sensor read interrupted because strip was pulled too soon at time of measurement */
 #define GLS_MEAS_STATUS_GENERAL_FAULT  (0x01 << 10)     /**< General device fault has occurred in the sensor */
-#define GLS_MEAS_STATUS_TIME_FAULT     (0x01 << 11)     /**< Time fault has occurred in the sensor and \
-                                                             time may be inaccurate */
+#define GLS_MEAS_STATUS_TIME_FAULT     (0x01 << 11)     /**< Time fault has occurred in the sensor and time may be inaccurate */
 /** @} */
 /** @} */
 
@@ -180,7 +172,8 @@
  * @{
  */
 /**@brief Glucose measurement type */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_TYPE_CAP_BLOOD = 0x01,     /**< Capillary whole blood */
     GLS_MEAS_TYPE_CAP_PLASMA,           /**< Capillary plasma */
     GLS_MEAS_TYPE_VEN_BLOOD,            /**< Venous whole blood */
@@ -194,7 +187,8 @@ typedef enum {
 } gls_meas_type_t;
 
 /**@brief Glucose measurement location */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_LOC_FINGER = 0x01,     /**< Finger */
     GLS_MEAS_LOC_AST,               /**< Alternate Site Test (AST) */
     GLS_MEAS_LOC_EAR,               /**< Earlobe */
@@ -203,7 +197,8 @@ typedef enum {
 } gls_meas_loc_t;
 
 /**@brief Glucose measurement context carbohydrate ID */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_CTX_CARB_BREAKFAST = 0x01,      /**< Breakfast */
     GLS_MEAS_CTX_CARB_LUNCH,                 /**< Lunch */
     GLS_MEAS_CTX_CARB_DINNER,                /**< Dinner */
@@ -214,7 +209,8 @@ typedef enum {
 } gls_meas_ctx_carb_id_t;
 
 /**@brief Glucose measurement context meal */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_CTX_MEAL_PREPRANDIAL  = 0x01,   /**< Preprandial (before meal) */
     GLS_MEAS_CTX_MEAL_POSTPRANDIAL,          /**< Postprandial (after meal) */
     GLS_MEAS_CTX_MEAL_FASTING,               /**< Fasting */
@@ -223,7 +219,8 @@ typedef enum {
 } gls_meas_ctx_meal_t;
 
 /**@brief Glucose measurement context tester */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_CTX_TESTER_SELF       = 0x01,       /**< Self */
     GLS_MEAS_CTX_TESTER_PRO,                     /**< Health care professional */
     GLS_MEAS_CTX_TESTER_LAB,                     /**< Lab test */
@@ -231,7 +228,8 @@ typedef enum {
 } gls_meas_ctx_tester_t;
 
 /**@brief Glucose measurement context health */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_CTX_HEALTH_MINOR      = 0x01,       /**< Minor health issues */
     GLS_MEAS_CTX_HEALTH_MAJOR,                   /**< Major health issues */
     GLS_MEAS_CTX_HEALTH_MENSES,                  /**< During menses */
@@ -241,7 +239,8 @@ typedef enum {
 } gls_meas_ctx_health_t;
 
 /**@brief Glucose measurement context medication ID */
-typedef enum {
+typedef enum
+{
     GLS_MEAS_CTX_MED_RAPID    = 0x01,    /**< Rapid acting insulin */
     GLS_MEAS_CTX_MED_SHORT,              /**< Short acting insulin */
     GLS_MEAS_CTX_MED_INTERMED,           /**< Intermediate acting insulin */
@@ -250,7 +249,8 @@ typedef enum {
 } gls_meas_ctx_medic_id_t;
 
 /**@brief Glucose Service event type. */
-typedef enum {
+typedef enum
+{
     GLS_EVT_INVALID = 0x00,                 /**< Invalid event. */
     GLS_EVT_MEAS_NOTIFICATION_ENABLED,      /**< Glucose Measurement notification enabled event. */
     GLS_EVT_MEAS_NOTIFICATION_DISABLED,     /**< Glucose Measurement notification disabled event. */
@@ -267,13 +267,15 @@ typedef enum {
  * @{
  */
 /**@brief SFLOAT format (IEEE-11073 16-bit FLOAT, defined as a 16-bit value with 12-bit mantissa and 4-bit exponent). */
-typedef struct {
+typedef struct
+{
     int8_t  exponent;            /**< Base 10 exponent, only 4 bits. */
     int16_t mantissa;            /**< Mantissa, only 12 bits. */
-} ieee_float16_t;
+} gls_ieee_float16_t;
 
 /**@brief Glucose Service event. */
-typedef struct {
+typedef struct
+{
     gls_evt_type_t  evt_type;    /**< The GLS event type. */
     uint8_t         conn_idx;    /**< The index of the connection. */
     const uint8_t  *p_data;      /**< Pointer to event data. */
@@ -294,43 +296,46 @@ typedef void (*gls_evt_handler_t)(gls_evt_t *p_evt);
  * @{
  */
 /**@brief Glucose Measurement structure. This contains glucose measurement value. */
-typedef struct {
-    uint8_t         flags;                       /**< Flags. */
-    uint16_t        sequence_number;             /**< Sequence number. */
-    prf_date_time_t base_time;                   /**< Time stamp. */
-    int16_t         time_offset;                 /**< Time offset. */
-    ieee_float16_t  glucose_concentration;       /**< Glucose concentration. */
-    uint8_t         type;                        /**< Type. */
-    uint8_t         sample_location;             /**< Sample location. */
-    uint16_t        sensor_status_annunciation;  /**< Sensor status annunciation. */
+typedef struct
+{
+    uint8_t             flags;                       /**< Flags. */
+    uint16_t            sequence_number;             /**< Sequence number. */
+    prf_date_time_t     base_time;                   /**< Time stamp. */
+    int16_t             time_offset;                 /**< Time offset. */
+    gls_ieee_float16_t  glucose_concentration;       /**< Glucose concentration. */
+    uint8_t             type;                        /**< Type. */
+    uint8_t             sample_location;             /**< Sample location. */
+    uint16_t            sensor_status_annunciation;  /**< Sensor status annunciation. */
 } gls_meas_val_t;
 
 /**@brief Glucose measurement context structure */
-typedef struct {
-    uint8_t         flags;                  /**< Flags. */
-    uint8_t         extended_flags;         /**< Extended Flags. */
-    uint8_t         carbohydrate_id;        /**< Carbohydrate ID. */
-    ieee_float16_t  carbohydrate;           /**< Carbohydrate. */
-    uint8_t         meal;                   /**< Meal. */
-    uint8_t         tester_and_health;      /**< Tester and health. */
-    uint16_t        exercise_duration;      /**< Exercise Duration. */
-    uint8_t         exercise_intensity;     /**< Exercise Intensity. */
-    uint8_t         medication_id;          /**< Medication ID. */
-    ieee_float16_t  medication;             /**< Medication. */
-    uint16_t        hba1c;                  /**< HbA1c. */
+typedef struct
+{
+    uint8_t             flags;                  /**< Flags. */
+    uint8_t             extended_flags;         /**< Extended Flags. */
+    uint8_t             carbohydrate_id;        /**< Carbohydrate ID. */
+    gls_ieee_float16_t  carbohydrate;           /**< Carbohydrate. */
+    uint8_t             meal;                   /**< Meal. */
+    uint8_t             tester_and_health;      /**< Tester and health. */
+    uint16_t            exercise_duration;      /**< Exercise Duration. */
+    uint8_t             exercise_intensity;     /**< Exercise Intensity. */
+    uint8_t             medication_id;          /**< Medication ID. */
+    gls_ieee_float16_t  medication;             /**< Medication. */
+    uint16_t            hba1c;                  /**< HbA1c. */
 } gls_meas_ctx_t;
 
 /**@brief Glucose measurement record */
-typedef struct {
+typedef struct
+{
     gls_meas_val_t  meas_val;      /**< Glucose measurement value. */
     gls_meas_ctx_t  meas_ctx;      /**< Glucose measurement context. */
 } gls_rec_t;
 
 /**@brief Glucose Service init stucture. This contains all option and data needed for initialization of the service. */
-typedef struct {
+typedef struct
+{
     gls_evt_handler_t  evt_handler;            /**< Glucose Service event handler. */
-    uint16_t
-    char_mask;              /**< Initial mask of supported characteristics, and configured with \ref GLS_CHAR_MASK. */
+    uint16_t           char_mask;              /**< Initial mask of supported characteristics, and configured with \ref GLS_CHAR_MASK. */
     uint16_t           feature;                /**< Initial value for features. */
 } gls_init_t;
 /** @} */

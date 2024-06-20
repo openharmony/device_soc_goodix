@@ -39,7 +39,7 @@
  * @addtogroup SYSTEM
  * @{
  */
-
+ 
 /**
  * @addtogroup PWR Power Manager
  * @{
@@ -61,108 +61,114 @@
  * @{
  */
 
-/** @brief power manager setting parameter.
- *        Use pwr_mgmt_var_set to transfer the parameters in the structure to PMU,
+/**@brief power manager setting parameter.
+ *        Use pwr_mgmt_var_set to transfer the parameters in the structure to PMU, 
  *        and then the pwr_mgmt_mode_set function will use the new parameters for
  *        power management.
- *        Note that this is an advanced API, the wrong setting of parameters may
+ *        Note that this is an advanced API, the wrong setting of parameters may 
  *        lead to abnormal power management, so please use it carefully.
  */
-typedef struct {
+typedef struct
+{
     uint32_t  pwr_mgmt_app_timer_thrd;    /**< App timer threshold. */
     uint32_t  pwr_mgmt_ble_core_thrd;     /**< BLE timer threshold. */
     uint32_t  pwr_mgmt_rtc_timer_thrd;    /**< RTC timer threshold. */
 } pwr_mgmt_var_box_t;
 
-/** @brief power manager boot type. */
-typedef enum {
+/**@brief power manager boot type. */
+typedef enum 
+{
     COLD_BOOT = 0,                    /**< Cold boot state. */
     WARM_BOOT,                        /**< Warm boot state. */
 } boot_mode_t;
 
-/** @brief power manager model. */
-typedef enum {
+/**@brief power manager model. */
+typedef enum
+{
     PMR_MGMT_ACTIVE_MODE = 0x0,       /**< Full speed state. */
     PMR_MGMT_IDLE_MODE,               /**< Idle state. */
     PMR_MGMT_SLEEP_MODE,              /**< Deep sleep state. */
 } pwr_mgmt_mode_t;
 
-/** @brief power manager device work state. */
-typedef enum {
+/**@brief power manager device work state. */
+typedef enum
+{
     DEVICE_BUSY = 0x0,                /**< Device busy state. */
     DEVICE_IDLE,                      /**< Device idle state. */
 } pwr_mgmt_dev_state_t;
 
-/** @brief power manager app timer work state. */
-typedef enum {
+/**@brief power manager app timer work state. */
+typedef enum
+{
     EVENT_APP_TIMER_START = 0,        /**< App-timer start state. */
     EVENT_APP_TIMER_STOP,             /**< App-timer stop state. */
 } notify_timer_event_t;
 
-/** @brief  PMU Tracking*/
-enum {
-    TRC_PWR_WFE_MODE = 0,           /**< WFE mode. */
-    TRC_PWR_DSLEEP_MODE,            /**< Deep sleep mode. */
-    TRC_PWR_ACTIVE_MODE,            /**< Active mode. */
-    TRC_PWR_BLE_RET_DSLEEP,         /**< BLE return deep sleep. */
-    TRC_PWR_APP_TIMER_REFUSE,       /**< App timer refuse. */
-    TRC_PWR_APP_TIMER_PASS,         /**< App timer pass. */
-    TRC_PWR_BLE_TIMER_PASS,         /**< BLE timer pass. */
+/**@brief  PMU Tracking*/
+enum
+{
+   TRC_PWR_WFE_MODE = 0,           /**< WFE mode. */
+   TRC_PWR_DSLEEP_MODE,            /**< Deep sleep mode. */
+   TRC_PWR_ACTIVE_MODE,            /**< Active mode. */
+   TRC_PWR_BLE_RET_DSLEEP,         /**< BLE return deep sleep. */
+   TRC_PWR_APP_TIMER_REFUSE,       /**< App timer refuse. */
+   TRC_PWR_APP_TIMER_PASS,         /**< App timer pass. */
+   TRC_PWR_BLE_TIMER_PASS,         /**< BLE timer pass. */
 };
 
-/** @brief parameter configuration table. */
-typedef struct {
-    uint16_t pwr_dur;             /**< Duration. */
-    uint16_t pwr_ext;             /**< External wake-up. */
-    uint16_t pwr_osc;             /**< OSC. */
-    uint8_t  pwr_delay_hslot;     /**< Delay half slot. */
-    uint16_t pwr_delay_hus;       /**< Delay half us. */
-    uint16_t pwr_push_hus;        /**< Push half us. */
-    uint32_t pwr_timer_ths;       /**< APP timer threshold. */
-    uint32_t pwr_ble_ths;         /**< BLE timer threshold. */
-} pwr_table_t;
+/**@brief parameter configuration table. */ 
+typedef struct 
+{
+   uint16_t pwr_dur;             /**< Duration. */
+   uint16_t pwr_ext;             /**< External wake-up. */
+   uint16_t pwr_osc;             /**< OSC. */
+   uint8_t  pwr_delay_hslot;     /**< Delay half slot. */
+   uint16_t pwr_delay_hus;       /**< Delay half us. */
+   uint16_t pwr_push_hus;        /**< Push half us. */
+   uint32_t pwr_timer_ths;       /**< APP timer threshold. */
+   uint32_t pwr_ble_ths;         /**< BLE timer threshold. */
+} pwr_table_t; 
 
-/** @brief Trace function type. */
+/**@brief Trace function type. */ 
 typedef void (*trace_func_t)(uint8_t);
 
-/** @brief Peripheral function type. */
+/**@brief Peripheral function type. */ 
 typedef void (*periph_func_t)(void);
 
-/** @brief Before sleep function type. */
+/**@brief Before sleep function type. */ 
 typedef void (*pwr_before_sleep_func_t)(void);
 
-/** @brief Device check function type. */
+/**@brief Device check function type. */ 
 typedef pwr_mgmt_dev_state_t (*pwr_dev_check_func_t)(void);
 
-/** @brief function registered to dump io configuration. */
+/**@brief function registered to dump io configuration. */
 typedef void (*io_dump_func_t)(void);
 
-/** @brief mem check process type. */
+/**@brief mem check process type. */
 typedef void (*mem_check_proc_t)(void);
 
-/** @brief pwr table. */
-#define MAX_PWR_TABLE_LEN 12
-extern pwr_table_t pwr_table[MAX_PWR_TABLE_LEN];
-
+/**@brief pwr table. */ 
+extern pwr_table_t pwr_table[];
+ 
 /** @} */
 
 /** @addtogroup GR55XX_PWR_FUNCTIONS Functions
  * @{ */
 /**
  *****************************************************************************************
- * @brief This function allows ARM to enter deep sleep mode, but users should not use this
+ * @brief This function allows ARM to enter deep sleep mode, but users should not use this 
  *        function directly.
- *        Note that this function is only available in environments where non-RTOS is used,
+ *        Note that this function is only available in environments where non-RTOS is used, 
  *             and that users can only execute it while in main.c.
- * @retval    : pwr_mgmt_mode_t
+ * @return Power Management Mode :: pwr_mgmt_mode_t
  *****************************************************************************************
  */
 pwr_mgmt_mode_t pwr_mgmt_shutdown(void);
 
 /**
  ****************************************************************************************
- * @brief  Get the current boot mode.
- * @retval : cold boot or warm boot.
+ * @brief  Get the current boot mode.     
+ * @return Boot Mode ::boot_mode_t
  ****************************************************************************************
  */
 boot_mode_t pwr_mgmt_get_wakeup_flag(void);
@@ -171,7 +177,6 @@ boot_mode_t pwr_mgmt_get_wakeup_flag(void);
  ****************************************************************************************
  * @brief  Mark the mode of next boot, cold boot or warm boot.
  * @param[in] boot_mode : cold boot or warm boot.
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_set_wakeup_flag(boot_mode_t boot_mode);
@@ -179,45 +184,45 @@ void pwr_mgmt_set_wakeup_flag(boot_mode_t boot_mode);
 /**
  ****************************************************************************************
  * @brief  Set the specified sleep mode. When the setting is completed, the system will
- *         automatically enter the specified sleep mode through the strategy.
+ *         automatically enter the specified sleep mode through the strategy.  
  * @param[in] pm_mode : sleep level
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_mode_set(pwr_mgmt_mode_t pm_mode);
 
 /**
  ****************************************************************************************
- * @brief       Get the specified sleep mode.
- * @retval    : pwr_mgmt_mode_t
+ * @brief       Get the specified sleep mode.   
+ * @return Power Management Mode :: pwr_mgmt_mode_t
  ****************************************************************************************
  */
 pwr_mgmt_mode_t pwr_mgmt_mode_get(void);
 
 /**
  ****************************************************************************************
- * @brief       Get the power state of baseband.
- * @retval    : pwr_mgmt_mode_t
+ * @brief       Get the power state of baseband.   
+ * @return Power Management Mode :: pwr_mgmt_mode_t
  ****************************************************************************************
  */
 pwr_mgmt_mode_t pwr_mgmt_baseband_state_get(void);
 
 /**
  ****************************************************************************************
- * @brief       Get the state of extenal timer.
- * @retval    : pwr_mgmt_mode_t
+ * @brief       Get the state of extenal timer.   
+ * @return Power Management Mode :: pwr_mgmt_mode_t
  ****************************************************************************************
  */
 pwr_mgmt_mode_t pwr_mgmt_check_ext_timer(void);
+
+
 
 /**
  ****************************************************************************************
  * @brief  Sleep Policy Scheduling Function.
  *         Note that:
- *         1. This function shall only be used in non-RTOS environments;
+ *         1. This function shall only be used in non-RTOS environments; 
  *         2. This function shall only be used in main function;
  *         3. Local variables shall not be used in main function when this api used.
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_schedule(void);
@@ -225,12 +230,10 @@ void pwr_mgmt_schedule(void);
 /**
  ****************************************************************************************
  * @brief       Wake the BLE core via an external request.
- * @return      status
- * @retval      The status of the requested operation.
- *
- *              false, if the BLE core is not sleeping.
- *              true,  if the BLE core was woken up successfully.
- *
+ * @return      The status of the requested operation.
+ * @retval      False The BLE core is not sleeping.
+ * @retval      True  The BLE core was woken up successfully.
+ *              
  ****************************************************************************************
  */
 bool pwr_mgmt_ble_wakeup(void);
@@ -239,18 +242,17 @@ bool pwr_mgmt_ble_wakeup(void);
 /**
  ****************************************************************************************
  * @brief  Check whether there are ble events in the queue, and if so, handle them immediately.
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_check_ble_event(void);
 
+
 /**
  ****************************************************************************************
- * @brief  This function is used to push startup information in app timer.
- *         This information will optimize power management strategy.
+ * @brief  This function is used to push startup information in app timer. 
+ *         This information will optimize power management strategy. 
  *         Note that this function is an advanced API and users should not use it directly.
  * @param[in] timer_event :  EVENT_APP_TIMER_START or EVENT_APP_TIMER_STOP
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_notify_timer_event(notify_timer_event_t timer_event);
@@ -258,36 +260,34 @@ void pwr_mgmt_notify_timer_event(notify_timer_event_t timer_event);
 /**
  ****************************************************************************************
  * @brief  Query the sleep mode that the current system can access.
- * @retval : void
+ * @return Power Management Mode :: pwr_mgmt_mode_t
  ****************************************************************************************
  */
 pwr_mgmt_mode_t pwr_mgmt_get_sleep_mode(void);
 
+
 /**
  ****************************************************************************************
  * @brief  Update wakeup param.
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_update_wkup_param(void);
 
 /**
  ****************************************************************************************
- * @brief  Execution of this function allows ARM to enter the WFE state and exit the WFE
+ * @brief  Execution of this function allows ARM to enter the WFE state and exit the WFE 
  *         state when an event or interrupt occurs.
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_wfe_sleep(void);
 
 /**
  ****************************************************************************************
- * @brief  Execution of this function allows ARM to enter the ultra sleep state and wakeup
+ * @brief  Execution of this function allows ARM to enter the ultra sleep state and wakeup 
  *         the chip when an event occurs.
  * @param  time_ms : Specifies the wake-up time during ultra sleep. If time_ms is equal to 0,
                      then sleep timer will not be enabled.
                      This parameter must be a number between min_value = 0 and max_value = 131071
- * @retval : void
  ****************************************************************************************
  */
 void pwr_mgmt_ultra_sleep(uint32_t time_ms);
@@ -297,16 +297,14 @@ void pwr_mgmt_ultra_sleep(uint32_t time_ms);
  * @brief    PMU Initialization Function.
  * @param    p_pwr_table : PMU parameter configuration table.
  * @param    sys_clk     : the clock of system
- * @return   void
  ****************************************************************************************
  */
-void pwr_mgmt_init(pwr_table_t *p_pwr_table, mcu_clock_type_t sys_clk);
+void pwr_mgmt_init( pwr_table_t *p_pwr_table, mcu_clock_type_t sys_clk);
 
 /**
  ****************************************************************************************
  * @brief    Peripheral Controller Initialization Register interface.
  * @param    p_periph_init : the pointer of device init function.
- * @return   void
  ****************************************************************************************
  */
 void pwr_mgmt_dev_init(periph_func_t p_periph_init);
@@ -314,7 +312,6 @@ void pwr_mgmt_dev_init(periph_func_t p_periph_init);
 /**
  ****************************************************************************************
  * @brief    Device config resume interface.
- * @return   void
  ****************************************************************************************
  */
 void pwr_mgmt_dev_resume(void);
@@ -322,7 +319,7 @@ void pwr_mgmt_dev_resume(void);
 /**
  ****************************************************************************************
  * @brief    Device config suspend interface.
- * @return   void
+ * @return   Power Management Device state ::pwr_mgmt_dev_state_t
  ****************************************************************************************
  */
 pwr_mgmt_dev_state_t pwr_mgmt_dev_suspend(void);
@@ -332,7 +329,6 @@ pwr_mgmt_dev_state_t pwr_mgmt_dev_suspend(void);
  * @brief    Mem state control under deep sleep & work state.
  * @param    mem_sleep_state : control in deep sleep.
  * @param    mem_work_state  : control in work state.
- * @return   void
  ****************************************************************************************
  */
 void pwr_mgmt_mem_ctl_set(uint32_t mem_sleep_state, uint32_t mem_work_state);
@@ -342,69 +338,62 @@ void pwr_mgmt_mem_ctl_set(uint32_t mem_sleep_state, uint32_t mem_work_state);
  * @brief    Set PMU callback function.
  * @param    dev_check_fun    : Device check callback function.
  * @param    before_sleep_fun : Pre-execution callback function for deep sleep.
- * @return   void
  ****************************************************************************************
  */
 void pwr_mgmt_set_callback(pwr_dev_check_func_t dev_check_fun, pwr_before_sleep_func_t before_sleep_fun);
 
-/**
-****************************************************************************************
-* @brief  Set the wakeup source.
-* @param[in] wakeup_source :
-*            PWR_WKUP_COND_EXT
-*            PWR_WKUP_COND_TIMER
-*            PWR_WKUP_COND_BLE
-*            PWR_WKUP_COND_CALENDAR
-*            PWR_WKUP_COND_BOD_FEDGE
-*            PWR_WKUP_COND_MSIO_COMP
-* @retval :  void
-****************************************************************************************
-*/
+ /**
+ ****************************************************************************************
+ * @brief  Set the wakeup source.
+ * @param[in] wakeup_source : 
+ *            PWR_WKUP_COND_EXT      
+ *            PWR_WKUP_COND_TIMER  
+ *            PWR_WKUP_COND_BLE 
+ *            PWR_WKUP_COND_CALENDAR 
+ *            PWR_WKUP_COND_BOD_FEDGE
+ *            PWR_WKUP_COND_MSIO_COMP
+ ****************************************************************************************
+ */
 void pwr_mgmt_wakeup_source_setup(uint32_t wakeup_source);
 
-/**
-****************************************************************************************
-* @brief  Clear the wakeup source.
-* @param[in] wakeup_source :
-*            PWR_WKUP_COND_EXT
-*            PWR_WKUP_COND_TIMER
-*            PWR_WKUP_COND_BLE
-*            PWR_WKUP_COND_CALENDAR
-*            PWR_WKUP_COND_BOD_FEDGE
-*            PWR_WKUP_COND_MSIO_COMP
-* @retval :  void
-****************************************************************************************
-*/
+ /**
+ ****************************************************************************************
+ * @brief  Clear the wakeup source.
+ * @param[in] wakeup_source : 
+ *            PWR_WKUP_COND_EXT      
+ *            PWR_WKUP_COND_TIMER  
+ *            PWR_WKUP_COND_BLE 
+ *            PWR_WKUP_COND_CALENDAR 
+ *            PWR_WKUP_COND_BOD_FEDGE
+ *            PWR_WKUP_COND_MSIO_COMP
+ ****************************************************************************************
+ */
 void pwr_mgmt_wakeup_source_clear(uint32_t wakeup_source);
 
-/**
-****************************************************************************************
-* @brief  Save context function.
-* @retval :  void
-****************************************************************************************
-*/
+ /**
+ ****************************************************************************************
+ * @brief  Save context function.
+ ****************************************************************************************
+ */
 void pwr_mgmt_save_context(void);
 
-/**
-****************************************************************************************
-* @brief  Load context function.
-* @retval :  void
-****************************************************************************************
-*/
+ /**
+ ****************************************************************************************
+ * @brief  Load context function.
+ ****************************************************************************************
+ */
 void pwr_mgmt_load_context(void);
 
-/**
-****************************************************************************************
-* @brief  Disable nvic irq.
-* @retval :  void
-****************************************************************************************
-*/
+ /**
+ ****************************************************************************************
+ * @brief  Disable nvic irq.
+ ****************************************************************************************
+ */
 void pwr_mgmt_disable_nvic_irq(void);
 
 /**
  ****************************************************************************************
  * @brief  Enable nvic irq.
- * @retval :  void
  ****************************************************************************************
  */
 void pwr_mgmt_enable_nvic_irq(void);
@@ -412,7 +401,6 @@ void pwr_mgmt_enable_nvic_irq(void);
 /**
  ****************************************************************************************
  * @brief  Check nvic irq.
- * @retval :  void
  ****************************************************************************************
  */
 bool pwr_mgmt_check_pend_irq(void);
@@ -420,8 +408,7 @@ bool pwr_mgmt_check_pend_irq(void);
 /**
  ****************************************************************************************
  * @brief  Trace function register.
-  * @param[in] trace_func: Trace function.
- * @retval :  void
+ * @param[in] trace_func: Trace function.
  ****************************************************************************************
  */
 void pwr_mgmt_register_trace_func(trace_func_t trace_func);
@@ -429,7 +416,7 @@ void pwr_mgmt_register_trace_func(trace_func_t trace_func);
 /**
  ****************************************************************************************
  * @brief  function registered to dump io configuration.
- * @retval : void
+ * @param[in] dump_func Pointer to IO configuration dump function 
  ****************************************************************************************
  */
 void pwr_mgmt_register_io_dump_func(io_dump_func_t dump_func);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 GOODIX.
+ * Copyright (c) 2024 GOODIX.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 #include "iot_errno.h"
 #include "iot_uart.h"
 #include "app_uart.h"
+#include "app_uart_dma.h"
 #include "app_io.h"
 #include "los_sem.h"
 
@@ -43,8 +44,9 @@ static app_uart_params_t uart_param[APP_UART_ID_MAX] = {
                 .pull = APP_IO_PULLUP,
             }
         },
-        .use_mode = {
-            .type = APP_UART_TYPE_DMA,
+        .dma_cfg = {
+            .tx_dma_instance = DMA0,
+            .rx_dma_instance = DMA0,
             .tx_dma_channel = DMA_Channel0,
             .rx_dma_channel = DMA_Channel1,
         }
@@ -67,9 +69,6 @@ static app_uart_params_t uart_param[APP_UART_ID_MAX] = {
                 .pull = APP_IO_PULLUP,
             }
         },
-        .use_mode = {
-            .type = APP_UART_TYPE_INTERRUPT, /* UART1 only supports interrupt mode */
-        }
     },
 };
 
@@ -78,7 +77,7 @@ static uint32_t uart_tx_mutex[APP_UART_ID_MAX];
 static uint32_t uart_rx_mutex[APP_UART_ID_MAX];
 static uint32_t g_rx_num[APP_UART_ID_MAX];
 
-static const app_uart_evt_handler_t *evt_handler[APP_UART_ID_MAX] = {
+static const app_uart_evt_handler_t evt_handler[APP_UART_ID_MAX] = {
     app_uart0_callback,
     app_uart1_callback
 };
@@ -105,6 +104,10 @@ static void app_uart1_callback(app_uart_evt_t *p_evt)
 
 struct app_uart_params_t* uart_cfg(unsigned int id, const IotUartAttribute *param)
 {
+    if (id >= APP_UART_ID_MAX) {
+        return IOT_FAILURE;
+    }
+
     app_uart_params_t *params = &uart_param[id];
     params->init.baud_rate = param->baudRate;
     params->init.rx_timeout_mode = UART_RECEIVER_TIMEOUT_ENABLE;
@@ -159,11 +162,20 @@ unsigned int IoTUartInit(unsigned int id, const IotUartAttribute *param)
     if (id >= APP_UART_ID_MAX) {
         return IOT_FAILURE;
     }
+
     params = uart_cfg(id, param);
 
     ret = app_uart_init(params, evt_handler[id], &uart_buffer);
     if (ret != 0) {
         return IOT_FAILURE;
+    }
+
+    if (id == APP_UART_ID_0) {
+        // Only UART0 support DMA
+        ret = app_uart_dma_init(params);
+        if (ret != 0) {
+            return IOT_FAILURE;
+        }
     }
 
     uwRet = LOS_BinarySemCreate(0, &uart_rx_sem[id]);
@@ -192,11 +204,19 @@ int IoTUartRead(unsigned int id, unsigned char *data, unsigned int dataLen)
     int ret = 0;
     uint32_t uwRet = 0;
 
+    if (id >= APP_UART_ID_MAX) {
+        return IOT_FAILURE;
+    }
+
     LOS_MuxPend(uart_rx_mutex[id], LOS_WAIT_FOREVER);
 
     g_rx_num[id] = 0;
     LOS_SemPend(uart_rx_sem[id], 0);
-    ret = app_uart_receive_async(id, data, dataLen);
+    if (id == APP_UART_ID_0) {
+        ret = app_uart_dma_receive_async(id, data, dataLen);
+    } else {
+        ret = app_uart_receive_async(id, data, dataLen);
+    }
     if (ret != 0) {
         LOS_MuxPost(uart_rx_mutex[id]);
         return IOT_FAILURE;
@@ -217,6 +237,10 @@ int IoTUartWrite(unsigned int id, const unsigned char *data, unsigned int dataLe
 {
     int ret = 0;
 
+    if (id >= APP_UART_ID_MAX) {
+        return IOT_FAILURE;
+    }
+
     LOS_MuxPend(uart_tx_mutex[id], LOS_WAIT_FOREVER);
     ret = app_uart_transmit_sync(id, data, dataLen, UART_TIMEOUT);
     if (ret != 0) {
@@ -230,6 +254,10 @@ int IoTUartWrite(unsigned int id, const unsigned char *data, unsigned int dataLe
 
 unsigned int IoTUartDeinit(unsigned int id)
 {
+    if (id >= APP_UART_ID_MAX) {
+        return IOT_FAILURE;
+    }
+
     app_uart_deinit(id);
     LOS_SemDelete(uart_rx_sem[id]);
     LOS_SemDelete(uart_tx_mutex[id]);

@@ -49,7 +49,8 @@
  ****************************************************************************************
  */
 /**@brief Phone Alert Status Service Attributes Indexes. */
-enum {
+enum
+{
     // Phone Alert Status Service
     PASS_IDX_SVC,
 
@@ -75,94 +76,55 @@ enum {
  *****************************************************************************************
  */
 /**@brief Phone Alert Status Service environment variable. */
-struct pass_env_t {
-    pass_init_t  pass_init;    /**< Phone Alert Status Service initialization variables. */
-    uint16_t     start_hdl;    /**< Phone Alert Status Service start handle. */
-    uint16_t
-    alert_status_ntf_cfg[PASS_CONNECTION_MAX];     /**< The configuration of Alert Status Notification
-                                                        which is configured by the peer devices. */
-    uint16_t
-    ringer_setting_ntf_cfg[PASS_CONNECTION_MAX];   /**< The configuration of Ringer Setting Notification
-                                                        which is configured by the peer devices. */
+struct pass_env_t
+{
+    pass_init_t             pass_init;                                     /**< Phone Alert Status Service initialization variables. */
+    uint16_t                start_hdl;                                     /**< Phone Alert Status Service start handle. */
+    uint16_t                alert_status_ntf_cfg[PASS_CONNECTION_MAX];     /**< The configuration of Alert Status Notification which is configured by the peer devices. */
+    uint16_t                ringer_setting_ntf_cfg[PASS_CONNECTION_MAX];   /**< The configuration of Ringer Setting Notification which is configured by the peer devices. */
+    ble_gatts_create_db_t   pass_gatts_db;                                 /**< Running Speed and Cadence Service attributs database. */
 };
-
-/*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static sdk_err_t   pass_init(void);
-static void        pass_read_att_cb(uint8_t  conn_idx, const gatts_read_req_cb_t  *p_param);
-static void        pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-static void        pass_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value);
-
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
 static struct pass_env_t s_pass_env;
+static const uint8_t     s_pass_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_PHONE_ALERT_STATUS);
 
 /**@brief Full PASS Database Description - Used to add attributes into the database. */
-static const attm_desc_t pass_attr_tab[PASS_IDX_NB] = {
+static const ble_gatts_attm_desc_t pass_attr_tab[PASS_IDX_NB] =
+{
     // Phone Alert Status Service Declaration
-    [PASS_IDX_SVC]              = {BLE_ATT_DECL_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [PASS_IDX_SVC]              = {BLE_ATT_DECL_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
 
     // Alert Status Characteristic - Declaration
-    [PASS_IDX_ALERT_STATUS_CHAR]    = {BLE_ATT_DECL_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [PASS_IDX_ALERT_STATUS_CHAR]    = {BLE_ATT_DECL_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Alert Status Characteristic - Value
-    [PASS_IDX_ALERT_STATUS_VAL]     = {
-        BLE_ATT_CHAR_ALERT_STATUS,
-        NOTIFY_PERM_UNSEC | READ_PERM_UNSEC,
-        ATT_VAL_LOC_USER,
-        PASS_ALERT_STATUS_VAL_LEN
-    },
+    [PASS_IDX_ALERT_STATUS_VAL]     = {BLE_ATT_CHAR_ALERT_STATUS,
+                                       BLE_GATTS_NOTIFY_PERM_UNSEC | BLE_GATTS_READ_PERM_UNSEC,
+                                       BLE_GATTS_ATT_VAL_LOC_USER,
+                                       PASS_ALERT_STATUS_VAL_LEN},
     // Alert Status Characteristic - Client Characteristic Configuration Descriptor
-    [PASS_IDX_ALERT_STATUS_NTF_CFG] = {BLE_ATT_DESC_CLIENT_CHAR_CFG, READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC, 0, 0},
+    [PASS_IDX_ALERT_STATUS_NTF_CFG] = {BLE_ATT_DESC_CLIENT_CHAR_CFG, BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC, 0, 0},
 
     // Ringer Setting Characteristic - Declaration
-    [PASS_IDX_RINGER_SET_CHAR]    = {BLE_ATT_DECL_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [PASS_IDX_RINGER_SET_CHAR]    = {BLE_ATT_DECL_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Ringer Setting Characteristic - Value
-    [PASS_IDX_RINGER_SET_VAL]     = {
-        BLE_ATT_CHAR_RINGER_SETTING,
-        NOTIFY_PERM_UNSEC | READ_PERM_UNSEC,
-        ATT_VAL_LOC_USER,
-        PASS_RINGER_SET_VAL_LEN
-    },
+    [PASS_IDX_RINGER_SET_VAL]     = {BLE_ATT_CHAR_RINGER_SETTING,
+                                     BLE_GATTS_NOTIFY_PERM_UNSEC | BLE_GATTS_READ_PERM_UNSEC,
+                                     BLE_GATTS_ATT_VAL_LOC_USER,
+                                     PASS_RINGER_SET_VAL_LEN},
     // Ringer Setting Characteristic - Client Characteristic Configuration Descriptor
-    [PASS_IDX_RINGER_SET_NTF_CFG] = {BLE_ATT_DESC_CLIENT_CHAR_CFG, READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC, 0, 0},
+    [PASS_IDX_RINGER_SET_NTF_CFG] = {BLE_ATT_DESC_CLIENT_CHAR_CFG, BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC, 0, 0},
 
     // Ringer Setting Characteristic - Declaration
-    [PASS_IDX_RINGER_CTRL_PT_CHAR]  = {BLE_ATT_DECL_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [PASS_IDX_RINGER_CTRL_PT_CHAR]  = {BLE_ATT_DECL_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Ringer Setting Characteristic - Value
-    [PASS_IDX_RINGER_CTRL_PT_VAL]   = {
-        BLE_ATT_CHAR_RINGER_CNTL_POINT,
-        WRITE_CMD_PERM_UNSEC,
-        ATT_VAL_LOC_USER,
-        PASS_RINGER_CTRL_PT_VAL_LEN
-    },
-};
-
-/**@brief PASS Task interface required by profile manager. */
-static ble_prf_manager_cbs_t pass_task_cbs = {
-    (prf_init_func_t) pass_init,
-    NULL,
-    NULL,
-};
-
-/**@brief PASS Task Callbacks. */
-static gatts_prf_cbs_t pass_cb_func = {
-    pass_read_att_cb,
-    pass_write_att_cb,
-    NULL,
-    NULL,
-    pass_cccd_set_cb
-};
-
-/**@brief PASS Information. */
-static const prf_server_info_t pass_prf_info = {
-    .max_connection_nb = PASS_CONNECTION_MAX,
-    .manager_cbs       = &pass_task_cbs,
-    .gatts_prf_cbs     = &pass_cb_func,
+    [PASS_IDX_RINGER_CTRL_PT_VAL]   = {BLE_ATT_CHAR_RINGER_CNTL_POINT,
+                                       BLE_GATTS_WRITE_CMD_PERM_UNSEC,
+                                       BLE_GATTS_ATT_VAL_LOC_USER,
+                                       PASS_RINGER_CTRL_PT_VAL_LEN},
 };
 
 /*
@@ -171,60 +133,25 @@ static const prf_server_info_t pass_prf_info = {
  */
 /**
  *****************************************************************************************
- * @brief Initialize Phone Alert Status Service and create db in att
- *
- * @return Error code to know if profile initialization succeed or not.
- *****************************************************************************************
- */
-static sdk_err_t pass_init(void)
-{
-    // The start hanlde must be set with PRF_INVALID_HANDLE to be allocated automatically by BLE Stack.
-    uint16_t          start_hdl       = PRF_INVALID_HANDLE;
-    const uint8_t     pass_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_PHONE_ALERT_STATUS);
-    sdk_err_t         error_code;
-    gatts_create_db_t gatts_db;
-
-    error_code = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (error_code < 0) {
-        return error_code;
-    }
-
-    gatts_db.shdl                 = &start_hdl;
-    gatts_db.uuid                 = pass_svc_uuid;
-    gatts_db.attr_tab_cfg         = (uint8_t *) & (s_pass_env.pass_init.char_mask);
-    gatts_db.max_nb_attr          = PASS_IDX_NB;
-    gatts_db.srvc_perm            = 0;
-    gatts_db.attr_tab_type        = SERVICE_TABLE_TYPE_16;
-    gatts_db.attr_tab.attr_tab_16 = pass_attr_tab;
-
-    error_code = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_pass_env.start_hdl = *gatts_db.shdl;
-    }
-
-    return error_code;
-}
-
-/**
- *****************************************************************************************
  * @brief Handles reception of the attribute info request message.
  *
  * @param[in] conn_idx: Connection index
  * @param[in] p_param:  The parameters of the read request.
  *****************************************************************************************
  */
-static void   pass_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param)
+static void pass_read_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_read_t *p_param)
 {
-    gatts_read_cfm_t  cfm;
+    ble_gatts_read_cfm_t  cfm;
     uint8_t           handle    = p_param->handle;
     uint8_t           tab_index = prf_find_idx_by_handle(handle,
-                                                         s_pass_env.start_hdl,
-                                                         PASS_IDX_NB,
-                                                         (uint8_t *)&s_pass_env.pass_init.char_mask);
+                                  s_pass_env.start_hdl,
+                                  PASS_IDX_NB,
+                                  (uint8_t *)&s_pass_env.pass_init.char_mask);
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case PASS_IDX_ALERT_STATUS_VAL:
             cfm.length = PASS_ALERT_STATUS_VAL_LEN;
             cfm.value  = &s_pass_env.pass_init.alert_status;
@@ -262,13 +189,13 @@ static void   pass_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_pa
  * @param[in]: p_param:  The parameters of the write request.
  *****************************************************************************************
  */
-static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void pass_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
     uint16_t          handle      = p_param->handle;
     uint16_t          tab_index   = 0;
     uint16_t          cccd_value  = 0;
     pass_evt_t        event;
-    gatts_write_cfm_t cfm;
+    ble_gatts_write_cfm_t cfm;
 
     tab_index  = prf_find_idx_by_handle(handle,
                                         s_pass_env.start_hdl,
@@ -279,7 +206,8 @@ static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_
     event.evt_type = PASS_EVT_INVALID;
     event.conn_idx = conn_idx;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case PASS_IDX_ALERT_STATUS_NTF_CFG:
             cccd_value     = le16toh(&p_param->value[0]);
             event.evt_type = ((PRF_CLI_START_NTF == cccd_value) ? \
@@ -296,11 +224,14 @@ static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_
             s_pass_env.ringer_setting_ntf_cfg[conn_idx] = cccd_value;
             break;
 
-        case PASS_IDX_RINGER_CTRL_PT_VAL: {
-            switch (p_param->value[0]) {
+        case PASS_IDX_RINGER_CTRL_PT_VAL:
+        {
+            switch (p_param->value[0])
+            {
                 case PASS_CTRL_PT_SILENT_MODE:
                     if ((PASS_RINGER_SET_NORMAL == s_pass_env.pass_init.ringer_setting) && \
-                            (PASS_RINGER_ACTIVE & s_pass_env.pass_init.alert_status)) {
+                            (PASS_RINGER_ACTIVE & s_pass_env.pass_init.alert_status))
+                    {
                         event.evt_type = PASS_EVT_SILENT_MODE_SET;
                     }
                     break;
@@ -311,7 +242,8 @@ static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_
 
                 case PASS_CTRL_PT_CANCEL_SLIENT_MODE:
                     if ((PASS_RINGER_SET_SILENT == s_pass_env.pass_init.ringer_setting) && \
-                            (PASS_RINGER_ACTIVE & s_pass_env.pass_init.alert_status)) {
+                            (PASS_RINGER_ACTIVE & s_pass_env.pass_init.alert_status))
+                    {
                         event.evt_type = PASS_EVT_SILENT_MODE_CANCEL;
                     }
                     break;
@@ -320,7 +252,7 @@ static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_
                     break;
             }
         }
-            break;
+        break;
 
         default:
             cfm.status = BLE_ATT_ERR_INVALID_HANDLE;
@@ -329,8 +261,8 @@ static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_
 
     ble_gatts_write_cfm(conn_idx, &cfm);
 
-    if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && PASS_EVT_INVALID != event.evt_type
-            && s_pass_env.pass_init.evt_handler) {
+    if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && PASS_EVT_INVALID != event.evt_type && s_pass_env.pass_init.evt_handler)
+    {
         s_pass_env.pass_init.evt_handler(&event);
     }
 }
@@ -344,12 +276,13 @@ static void   pass_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_
  * @param[in]: cccd_value: The value of cccd attribute.
  *****************************************************************************************
  */
-static void pass_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
+static void pass_cccd_set_evt_handler(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
 {
     uint16_t          tab_index   = 0;
     pass_evt_t        event;
 
-    if (!prf_is_cccd_value_valid(cccd_value)) {
+    if (!prf_is_cccd_value_valid(cccd_value))
+    {
         return;
     }
 
@@ -361,7 +294,8 @@ static void pass_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_va
     event.evt_type = PASS_EVT_INVALID;
     event.conn_idx = conn_idx;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case PASS_IDX_ALERT_STATUS_NTF_CFG:
             event.evt_type = ((PRF_CLI_START_NTF == cccd_value) ? \
                               PASS_EVT_ALERT_STATUS_NTF_ENABLE : \
@@ -380,7 +314,8 @@ static void pass_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_va
             break;
     }
 
-    if (PASS_EVT_INVALID != event.evt_type && s_pass_env.pass_init.evt_handler) {
+    if (PASS_EVT_INVALID != event.evt_type && s_pass_env.pass_init.evt_handler)
+    {
         s_pass_env.pass_init.evt_handler(&event);
     }
 }
@@ -395,13 +330,14 @@ static void pass_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_va
 static sdk_err_t pass_alert_status_send(uint8_t conn_idx)
 {
     sdk_err_t        error_code = SDK_ERR_NTF_DISABLED;
-    gatts_noti_ind_t alert_status_ntf;
+    ble_gatts_noti_ind_t alert_status_ntf;
 
-    if (PRF_CLI_START_NTF == s_pass_env.alert_status_ntf_cfg[conn_idx]) {
+    if (PRF_CLI_START_NTF == s_pass_env.alert_status_ntf_cfg[conn_idx])
+    {
         alert_status_ntf.type   = BLE_GATT_NOTIFICATION;
         alert_status_ntf.handle = prf_find_handle_by_idx(PASS_IDX_ALERT_STATUS_VAL,
-                                                         s_pass_env.start_hdl,
-                                                         (uint8_t *)&s_pass_env.pass_init.char_mask);
+                                  s_pass_env.start_hdl,
+                                  (uint8_t *)&s_pass_env.pass_init.char_mask);
         alert_status_ntf.length = PASS_ALERT_STATUS_VAL_LEN;
         alert_status_ntf.value  = &s_pass_env.pass_init.alert_status;
         error_code              = ble_gatts_noti_ind(conn_idx, &alert_status_ntf);
@@ -420,19 +356,43 @@ static sdk_err_t pass_alert_status_send(uint8_t conn_idx)
 sdk_err_t pass_ringer_set_send(uint8_t conn_idx)
 {
     sdk_err_t        error_code = SDK_ERR_NTF_DISABLED;
-    gatts_noti_ind_t ringer_set_ntf;
+    ble_gatts_noti_ind_t ringer_set_ntf;
 
-    if (PRF_CLI_START_NTF == s_pass_env.ringer_setting_ntf_cfg[conn_idx]) {
+    if (PRF_CLI_START_NTF == s_pass_env.ringer_setting_ntf_cfg[conn_idx])
+    {
         ringer_set_ntf.type   = BLE_GATT_NOTIFICATION;
         ringer_set_ntf.handle = prf_find_handle_by_idx(PASS_IDX_RINGER_SET_VAL,
-                                                       s_pass_env.start_hdl,
-                                                       (uint8_t *)&s_pass_env.pass_init.char_mask);
+                                s_pass_env.start_hdl,
+                                (uint8_t *)&s_pass_env.pass_init.char_mask);
         ringer_set_ntf.length = PASS_ALERT_STATUS_VAL_LEN;
         ringer_set_ntf.value  = &s_pass_env.pass_init.ringer_setting;
         error_code            = ble_gatts_noti_ind(conn_idx, &ringer_set_ntf);
     }
 
     return error_code;
+}
+
+static void pass_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            pass_read_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.read_req);
+            break;
+
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            pass_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            pass_cccd_set_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt.gatts_evt.params.cccd_recovery.handle, p_evt->evt.gatts_evt.params.cccd_recovery.cccd_val);
+            break;
+    }
 }
 
 /*
@@ -446,7 +406,8 @@ uint8_t pass_ringer_setting_get(void)
 
 void pass_alert_status_set(uint8_t conn_idx, uint8_t new_status)
 {
-    if (new_status != s_pass_env.pass_init.alert_status) {
+    if (new_status != s_pass_env.pass_init.alert_status)
+    {
         s_pass_env.pass_init.alert_status = new_status;
         pass_alert_status_send(conn_idx);
     }
@@ -454,7 +415,8 @@ void pass_alert_status_set(uint8_t conn_idx, uint8_t new_status)
 
 void pass_ringer_setting_set(uint8_t conn_idx, uint8_t new_setting)
 {
-    if (new_setting != s_pass_env.pass_init.ringer_setting) {
+    if (new_setting != s_pass_env.pass_init.ringer_setting)
+    {
         s_pass_env.pass_init.ringer_setting = new_setting;
         pass_ringer_set_send(conn_idx);
     }
@@ -462,16 +424,23 @@ void pass_ringer_setting_set(uint8_t conn_idx, uint8_t new_setting)
 
 sdk_err_t pass_service_init(pass_init_t *p_pass_init)
 {
-    sdk_err_t ret;
-    if (p_pass_init == NULL) {
+    if (NULL == p_pass_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memcpy_s(&s_pass_env.pass_init, sizeof(pass_init_t), p_pass_init, sizeof(pass_init_t));
-    if (ret < 0) {
-        return ret;
-    }
+    memcpy(&s_pass_env.pass_init, p_pass_init, sizeof(pass_init_t));
 
-    return ble_server_prf_add(&pass_prf_info);
+    s_pass_env.start_hdl  = PRF_INVALID_HANDLE;
+
+    s_pass_env.pass_gatts_db.shdl                 = &s_pass_env.start_hdl;
+    s_pass_env.pass_gatts_db.uuid                 = s_pass_svc_uuid;
+    s_pass_env.pass_gatts_db.attr_tab_cfg         = (uint8_t *)&(s_pass_env.pass_init.char_mask);
+    s_pass_env.pass_gatts_db.max_nb_attr          = PASS_IDX_NB;
+    s_pass_env.pass_gatts_db.srvc_perm            = 0; 
+    s_pass_env.pass_gatts_db.attr_tab_type        = BLE_GATTS_SERVICE_TABLE_TYPE_16;
+    s_pass_env.pass_gatts_db.attr_tab.attr_tab_16 = pass_attr_tab;
+
+    return ble_gatts_prf_add(&s_pass_env.pass_gatts_db, pass_ble_evt_handler);
 }
 

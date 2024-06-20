@@ -51,8 +51,8 @@
 #ifndef __BLE_PRF_UTILS_H__
 #define __BLE_PRF_UTILS_H__
 
-#include <stdbool.h>
 #include "ble_prf_types.h"
+#include <stdbool.h>
 
 /**
  * @defgroup BLE_PRF_UTILS_FUNCTION Functions

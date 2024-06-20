@@ -35,17 +35,17 @@
  *****************************************************************************************
  */
 
-/**
-* @addtogroup SYSTEM
-* @{
-*/
-
+ /**
+ * @addtogroup SYSTEM
+ * @{
+ */
+ 
 /**
  * @addtogroup SYS_CFG System Configuration
  * @{
  * @brief Definitions and prototypes for SYS_CFG interface.
  */
-
+ 
 #ifndef __GR55XX_SYS_CFG_H__
 #define __GR55XX_SYS_CFG_H__
 
@@ -54,31 +54,33 @@
 /** @addtogroup GR55XX_SYS_CFG_DEFINES Defines
  * @{
  */
-#define ARRAY_EMPTY  /** < Empty Array. */
+#define __ARRAY_EMPTY  /**< Empty Array. */
 /** @} */
 
 /**
  * @defgroup GR55XX_SYS_CFG_STRUCT Structures
  * @{
  */
-/** @brief BLE Sleep configure defination. */
-typedef struct {
+/**@brief BLE Sleep configure defination. */
+typedef struct
+{
     uint8_t  sleep_enable;           /**< Sleep enable flag. */
     uint8_t  ext_wakeup_enable;      /**< External wake-up support. */
     uint16_t twosc;                  /**< Twosc delay. */
     uint16_t twext;                  /**< Twext delay. */
     uint16_t twrm;                   /**< Twrm delay. */
-    uint16_t sleep_algo_dur;         /**< Duration of sleep and wake-up algorithm
-                                          (depends on CPU speed) expressed in half us.. */
+    uint16_t sleep_algo_dur;         /**< Duration of sleep and wake-up algorithm (depends on CPU speed) expressed in half us.. */
 } ble_slp_config_t ;
 
-/** @brief BLE Scheduler configure defination. */
-typedef struct {
+/**@brief BLE Scheduler configure defination. */
+typedef struct
+{
     uint8_t prog_delay;             /**< Programme delay. */
 } ble_sch_config_t;
 
-/** @brief GR55XX Chip configure defination */
-typedef struct {
+/**@brief GR55XX Chip configure defination */
+typedef struct
+{
     ble_slp_config_t ble_slp_cfg;    /**< BLE Sleep configure. */
     ble_sch_config_t ble_sch_cfg;    /**< BLE Sch configure. */
 } gr55xx_chip_config_t;

@@ -43,14 +43,14 @@
 #include "ble_prf_types.h"
 #include "ble_prf_utils.h"
 #include "utility.h"
-#define OFFSET_100 100
-#define OFFSET_20 20
+
 /*
  * ENUMERATIONS
  *****************************************************************************************
  */
 /**@brief Tx Power Service attributes index. */
-enum tps_attr_idx_tag {
+enum tps_attr_idx_tag
+{
     TPS_IDX_SVC,
 
     TPS_IDX_TX_POWER_LVL_CHAR,
@@ -64,9 +64,11 @@ enum tps_attr_idx_tag {
  *****************************************************************************************
  */
 /**@brief Tx Power Service environment variable. */
-struct tps_env_t {
-    tps_init_t tps_init;            /**< Tx Power Service initialization variables. */
-    uint16_t   start_hdl;           /**< Tx Power Service start handle. */
+struct tps_env_t
+{
+    tps_init_t tps_init;                    /**< Tx Power Service initialization variables. */
+    uint16_t   start_hdl;                   /**< Tx Power Service start handle. */
+    ble_gatts_create_db_t     tps_serv_db;  /**< Tx Power Service DataBase. */
 };
 
 /*
@@ -79,89 +81,56 @@ static uint8_t s_char_mask = 0x07;   /**< Features added into ATT database.
                                       *   bit1 - Tx Power Level Characteristic Declaration
                                       *   bit2 - Tx Power Level Characteristic Value
                                       */
+static const uint8_t s_tps_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_TX_POWER);
 
 /**@brief TPS Database Description - Used to add attributes into the database. */
-static const attm_desc_t tps_attr_tab[TPS_IDX_NB] = {
+static const ble_gatts_attm_desc_t tps_attr_tab[TPS_IDX_NB] =
+{
     // Tx Power Service Declaration
-    [TPS_IDX_SVC]               = {BLE_ATT_DECL_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [TPS_IDX_SVC]               = {BLE_ATT_DECL_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Tx Power Level Characteristic Declaration
-    [TPS_IDX_TX_POWER_LVL_CHAR] = {BLE_ATT_DECL_CHARACTERISTIC,  READ_PERM_UNSEC, 0, 0},
+    [TPS_IDX_TX_POWER_LVL_CHAR] = {BLE_ATT_DECL_CHARACTERISTIC,  BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Tx Power Level Characteristic Value
-    [TPS_IDX_TX_POWER_LVL_VAL]  = {BLE_ATT_CHAR_TX_POWER_LEVEL,  READ_PERM_UNSEC, 0, sizeof(int8_t)},
+    [TPS_IDX_TX_POWER_LVL_VAL]  = {BLE_ATT_CHAR_TX_POWER_LEVEL,  BLE_GATTS_READ_PERM_UNSEC, 0, sizeof(int8_t)},
 };
 
 /*
  * LOCAL FUNCTION DECLARATIONS
  *****************************************************************************************
  */
-static sdk_err_t tps_init(void);
-
-/**@brief TPS Task interface required by profile manager. */
-static ble_prf_manager_cbs_t tps_mgr_cbs = {
-    (prf_init_func_t)tps_init,
-    NULL,
-    NULL
-};
-
-/**@brief TPS GATT server Callbacks. */
-static gatts_prf_cbs_t tps_gatts_cbs = {
-    NULL,
-    NULL,
-    NULL,
-    NULL
-};
-
-/**@brief TPS Information. */
-static const prf_server_info_t tps_prf_info = {
-    /* There shall be only one connection on a device */
-    .max_connection_nb = 1,
-    .manager_cbs       = &tps_mgr_cbs,
-    .gatts_prf_cbs     = &tps_gatts_cbs
-};
 
 /*
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
-/**
- *****************************************************************************************
- * @brief Initialize TP service and create db in BLE Stack.
- *
- * @return BLE_ATT_ERR_NO_ERROR on success, otherwise error code.
- *****************************************************************************************
- */
-static sdk_err_t tps_init(void)
+static void tps_ble_evt_handler(const ble_evt_t *p_evt)
 {
-    const uint8_t tps_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_TX_POWER);
-    gatts_create_db_t gatts_db;
-    sdk_err_t ret;
-    uint16_t start_hdl = PRF_INVALID_HANDLE; /* The start hanlde is an in/out
-                                              * parameter of ble_gatts_srvc_db_create().
-                                              * It must be set with PRF_INVALID_HANDLE
-                                              * to be allocated automatically by BLE Stack. */
-
-    ret = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (ret < 0) {
-        return ret;
+    if (NULL == p_evt)
+    {
+        return;
     }
 
-    gatts_db.shdl                 = &start_hdl;
-    gatts_db.uuid                 = (uint8_t *)tps_svc_uuid;
-    gatts_db.attr_tab_cfg         = &s_char_mask;
-    gatts_db.max_nb_attr          = TPS_IDX_NB;
-    gatts_db.srvc_perm            = 0;
-    gatts_db.attr_tab_type        = SERVICE_TABLE_TYPE_16;
-    gatts_db.attr_tab.attr_tab_16 = tps_attr_tab;
+    uint16_t  handle;
 
-    sdk_err_t   error_code  = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_tps_env.start_hdl = *gatts_db.shdl;
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            break;
 
-        uint16_t handle = prf_find_handle_by_idx(TPS_IDX_TX_POWER_LVL_VAL, s_tps_env.start_hdl, &s_char_mask);
-        ble_gatts_value_set(handle, sizeof(uint8_t), 0, (uint8_t *)&s_tps_env.tps_init.initial_tx_power_level);
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            break;
+
+        case BLE_GATTS_EVT_NTF_IND:
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            break;
+
+        case BLE_GATT_COMMON_EVT_PRF_REGISTER:
+            handle = prf_find_handle_by_idx(TPS_IDX_TX_POWER_LVL_VAL, s_tps_env.start_hdl, &s_char_mask);
+            ble_gatts_value_set(handle, sizeof(uint8_t), 0, (uint8_t *)&s_tps_env.tps_init.initial_tx_power_level);
+            break;
     }
-
-    return error_code;
 }
 
 /*
@@ -170,23 +139,42 @@ static sdk_err_t tps_init(void)
  */
 sdk_err_t tps_service_init(tps_init_t *p_tps_init)
 {
-    if (p_tps_init == NULL) {
+    if (NULL == p_tps_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
     s_tps_env.tps_init.initial_tx_power_level = p_tps_init->initial_tx_power_level;
 
-    return ble_server_prf_add(&tps_prf_info);
+    memset(&s_tps_env.tps_serv_db, 0, sizeof(ble_gatts_create_db_t));
+
+    s_tps_env.start_hdl                        = PRF_INVALID_HANDLE;
+    s_tps_env.tps_serv_db.shdl                 = &s_tps_env.start_hdl;
+    s_tps_env.tps_serv_db.uuid                 = s_tps_svc_uuid;
+    s_tps_env.tps_serv_db.attr_tab_cfg         = &s_char_mask;
+    s_tps_env.tps_serv_db.max_nb_attr          = TPS_IDX_NB;
+    s_tps_env.tps_serv_db.srvc_perm            = 0;
+    s_tps_env.tps_serv_db.attr_tab_type        = BLE_GATTS_SERVICE_TABLE_TYPE_16;
+    s_tps_env.tps_serv_db.attr_tab.attr_tab_16 = tps_attr_tab;
+
+    return ble_gatts_prf_add(&s_tps_env.tps_serv_db, tps_ble_evt_handler);
 }
 
-sdk_err_t   tps_tx_power_level_set(int8_t tx_power_level)
+sdk_err_t tps_tx_power_level_set(int8_t tx_power_level)
 {
-    if (tx_power_level < -OFFSET_100 || tx_power_level > OFFSET_20) {
+    if (tx_power_level < -100 || tx_power_level > 20)
+    {
         return SDK_ERR_INVALID_PARAM;
-    } else {
+    }
+    else
+    {
         uint16_t handle = prf_find_handle_by_idx(TPS_IDX_TX_POWER_LVL_VAL, s_tps_env.start_hdl, &s_char_mask);
 
         return ble_gatts_value_set(handle, sizeof(int8_t), 0, (uint8_t *)&tx_power_level);
     }
 }
 
+uint16_t tps_service_start_handle_get(void)
+{
+    return s_tps_env.start_hdl;
+}

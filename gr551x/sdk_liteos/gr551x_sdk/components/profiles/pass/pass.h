@@ -56,17 +56,16 @@
 #ifndef __PASS_H__
 #define __PASS_H__
 
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup PASS_MACRO Defines
  * @{
  */
-#define PASS_CONNECTION_MAX (10 < CFG_MAX_CONNECTIONS ? \
-                            10 : CFG_MAX_CONNECTIONS) /**< Maximum number of Phone Alert Status Service connections. */
+#define PASS_CONNECTION_MAX         10                           /**< Maximum number of Phone Alert Status Service connections. */
 #define PASS_ALERT_STATUS_VAL_LEN   1                            /**< Length of Alert Status value. */
 #define PASS_RINGER_SET_VAL_LEN     1                            /**< Length of Ringer Setting value. */
 #define PASS_RINGER_CTRL_PT_VAL_LEN 1                            /**< Length of Ringer Control Point value. */
@@ -76,9 +75,9 @@
  * @{
  * @brief Bit masks for the initialization of \ref pass_init_t.char_mask.
  */
-#define PASS_CHAR_MANDATORY         0x003f    /**< Bit mask for mandatory characteristic in PASS. */
-#define PASS_CHAR_RING_CTRL_PT_SUP  0x0180    /**< Bit mask for Ringer Control Point characteristic in PASS. */
-#define PASS_CHAR_FULL              0x01ff    /**< Bit mask of the full characteristic. */
+#define PASS_CHAR_MANDATORY         0x003f                       /**< Bit mask for mandatory characteristic in PASS. */
+#define PASS_CHAR_RING_CTRL_PT_SUP  0x0180                       /**< Bit mask for Ringer Control Point characteristic in PASS. */
+#define PASS_CHAR_FULL              0x01ff                       /**< Bit mask of the full characteristic. */
 /** @} */
 
 /**
@@ -108,14 +107,16 @@
  * @{
  */
 /**@brief Phone Alert Status Service Ringer Control Point. */
-typedef enum {
+typedef enum
+{
     PASS_CTRL_PT_SILENT_MODE = 0x01,    /**< Silent Mode. */
     PASS_CTRL_PT_MUTE_ONCE,             /**< Mute Once. */
     PASS_CTRL_PT_CANCEL_SLIENT_MODE,    /**< Cancel Silent Mode. */
 } pass_ringer_ctrl_pt_t;
 
 /**@brief Phone Alert Status Service event type. */
-typedef enum {
+typedef enum
+{
     PASS_EVT_INVALID,                  /**< Invalid PASS event type. */
     PASS_EVT_ALERT_STATUS_NTF_ENABLE,  /**< Alert Status notification is enabled. */
     PASS_EVT_ALERT_STATUS_NTF_DISABLE, /**< Alert Status notification is disabled. */
@@ -132,7 +133,8 @@ typedef enum {
  * @{
  */
 /**@brief Phone Alert Status Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t             conn_idx;        /**< The index of the connection. */
     pass_evt_type_t      evt_type;        /**< The CTS event type. */
 } pass_evt_t;
@@ -150,12 +152,11 @@ typedef void (*pass_evt_handler_t)(pass_evt_t *p_evt);
  * @defgroup PASS_STRUCT Structures
  * @{
  */
-/**@brief Phone Alert Status Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Phone Alert Status Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     pass_evt_handler_t  evt_handler;     /**< Phone Alert Status Service event handler. */
-    uint16_t
-    char_mask;       /**< Initial mask of supported characteristics, and configured with \ref PASS_CHAR_MASK. */
+    uint16_t            char_mask;       /**< Initial mask of supported characteristics, and configured with \ref PASS_CHAR_MASK. */
     uint8_t             alert_status;    /**< Initial alert status. */
     uint8_t             ringer_setting;  /**< Initial ringer setting. */
 } pass_init_t;

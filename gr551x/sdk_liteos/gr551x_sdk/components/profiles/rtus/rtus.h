@@ -57,20 +57,19 @@
 #ifndef __RTUS_H__
 #define __RTUS_H__
 
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup RTUS_MACRO Defines
  * @{
  */
-#define RTUS_CONNECTION_MAX               (10 < CFG_MAX_CONNECTIONS ? \
-                                           10 : CFG_MAX_CONNECTIONS)      /**< Maximum number of RTUS connections. */
-#define RTUS_CTRL_PT_VAL_LEN               1     /**< Length of Time Update Control Point value. */
-#define RTUS_UPDATE_STATE_VAL_LEN          2     /**< Length of Time Update State value. */
-#define RTUS_CHAR_FULL                     0x1f  /**< Bit mask for mandatory characteristic in RTUS. */
+#define RTUS_CONNECTION_MAX               10                              /**< Maximum number of RTUS connections. */
+#define RTUS_CTRL_PT_VAL_LEN               1                              /**< Length of Time Update Control Point value. */
+#define RTUS_UPDATE_STATE_VAL_LEN          2                              /**< Length of Time Update State value. */
+#define RTUS_CHAR_FULL                     0x1f                           /**< Bit mask for mandatory characteristic in RTUS. */
 /** @} */
 
 /**
@@ -78,19 +77,22 @@
  * @{
  */
 /**@brief RTUS Time Update Control Point. */
-typedef enum {
+typedef enum
+{
     RTUS_CTRL_PT_GET_UPDATE = 0x01,        /**< Get reference update. */
     RTUS_CTRL_PT_CANCEL_UPDATE,            /**< Cancel reference update. */
 } rtus_ctrl_pt_t;
 
 /**@brief RTUS Current State. */
-typedef enum {
+typedef enum
+{
     RTUS_CUR_STATE_IDLE,         /**< Idle update state. */
     RTUS_CUR_STATE_PENDING,      /**< Update pending state. */
 } rtus_cur_state_t;
 
 /**@brief RTUS Time Update Result. */
-typedef enum {
+typedef enum
+{
     RTUS_UPDATE_RESULT_SCCESSFUL,          /**< Time update successful. */
     RTUS_UPDATE_RESULT_CANCELED,           /**< Time update canceled. */
     RTUS_UPDATE_RESULT_NO_CONN_TO_REF,     /**< No Connection To Reference. */
@@ -100,7 +102,8 @@ typedef enum {
 } rtus_update_result_t;
 
 /**@brief RTUS Event type. */
-typedef enum {
+typedef enum
+{
     RTUS_EVT_INVALID,                /**< Invalid event. */
     RTUS_EVT_GET_UPDATE,             /**< Get reference update. */
     RTUS_EVT_CANCEL_UPDATE,          /**< Cancel reference update. */
@@ -112,13 +115,15 @@ typedef enum {
  * @{
  */
 /**@brief RTUS Time Update State. */
-typedef struct {
+typedef struct
+{
     rtus_cur_state_t      cur_state;     /**< RTUS Current State. */
     rtus_update_result_t  update_result; /**< Time Update Result. */
 } rtus_update_state_t;
 
 /**@brief RTUS Event data. */
-typedef struct {
+typedef struct
+{
     uint8_t         conn_idx;        /**< The index of the connection. */
     rtus_evt_type_t evt_type;        /**< RTUS event type. */
 } rtus_evt_t;
@@ -136,9 +141,9 @@ typedef void (*rtus_evt_handler_t)(rtus_evt_t *p_evt);
  * @defgroup RTUS_STRUCT Structures
  * @{
  */
-/**@brief Reference Time Update Service init structure.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Reference Time Update Service init structure. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     rtus_evt_handler_t   evt_handler;        /**< Reference Time Update Service event handler. */
     uint16_t             char_mask;          /**< Initial mask of supported characteristics. */
 } rtus_init_t;

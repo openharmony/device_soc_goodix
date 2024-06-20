@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 GOODIX.
+ * Copyright (c) 2024 GOODIX.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,10 +33,7 @@ int printf(const char *__restrict __format, ...)
 
     va_end(ap);
     if (len > 0) {
-        char const *s = buf;
-        while (*s) {
-            _putchar(*s++);
-        }
+        _write(stdout, buf, len);
     }
     return len;
 }
@@ -53,3 +50,9 @@ int sprintf(char *__restrict   __s, const char *__restrict  __format, ...)
     return val;
 }
 
+int HiLogWriteInternal(const char *buffer, size_t bufLen)
+{
+    printf(buffer);
+    printf("\n");
+    return 0;
+}

@@ -38,10 +38,10 @@
 #ifndef __APP_ERROR_CFG_H__
 #define __APP_ERROR_CFG_H__
 
+#include "grx_sys.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "gr55xx.h"
 
 /**
  * @defgroup APP_ERROR_CFG_MAROC Defines
@@ -49,22 +49,20 @@
  */
 #define APP_IS_USING_FREEROTS               false                                 /**< Is using FREEROTS or not. */
 #define APP_ERROR_DUMP_STACK_INFO_ENABLE    1                                     /**< Enable dump stack information. */
-/**< Enable error information prinf. */
-#define APP_ERROR_INFO_PRINT_ENABLE         1
-/**< Supported function call stack max depth, default is 16. */
-#define APP_ERROR_CALL_STACK_DEPTH_MAX      16
+#define APP_ERROR_INFO_PRINT_ENABLE         1                                     /**< Enable error information prinf. */
+#define APP_ERROR_CALL_STACK_DEPTH_MAX      16                                    /**< Supported function call stack max depth, default is 16. */
 
 #if APP_ERROR_INFO_PRINT_ENABLE
-#define APP_ERROR_INFO_PRINT(...)           printf(__VA_ARGS__);printf("\r\n") /**< Print line. */
+    #define APP_ERROR_INFO_PRINT(...)           printf(__VA_ARGS__);printf("\r\n");/**< Print line. */
 #else
-#define APP_ERROR_INFO_PRINT(...)
+    #define APP_ERROR_INFO_PRINT(...)
 #endif
 
 #if APP_IS_USING_FREEROTS
-#include "FreeRTOS.h"
-extern uint32_t *vTaskStackAddr(void);
-extern uint32_t  vTaskStackSize(void);
-extern char     *vTaskName(void);
+    #include "FreeRTOS.h"
+    extern uint32_t *vTaskStackAddr(void);
+    extern uint32_t  vTaskStackSize(void);
+    extern char     *vTaskName(void);
 #endif
 
 /** @} */

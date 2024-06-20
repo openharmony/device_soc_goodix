@@ -54,10 +54,10 @@
 #ifndef __GLS_DB_H__
 #define __GLS_DB_H__
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "gls.h"
 #include "gls_racp.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup GLS_DB_MAROC Defines

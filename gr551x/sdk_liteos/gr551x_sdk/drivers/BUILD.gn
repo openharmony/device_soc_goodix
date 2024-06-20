@@ -1,0 +1,54 @@
+# Copyright (c) 2024 GOODIX.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//kernel/liteos_m/liteos.gni")
+
+config("public") {
+  include_dirs = [
+    "inc",
+    "inc/hal",
+  ]
+}
+
+kernel_module("drivers") {
+  sources = [
+    "src/app_adc.c",
+    "src/app_adc_dma.c",
+    "src/app_aon_wdt.c",
+    "src/app_bod.c",
+    "src/app_comp.c",
+    "src/app_dma.c",
+    "src/app_dual_tim.c",
+    "src/app_gpiote.c",
+    "src/app_graphics_qspi.c",
+    "src/app_i2c.c",
+    "src/app_i2c_dma.c",
+    "src/app_i2s.c",
+    "src/app_i2s_dma.c",
+    "src/app_io.c",
+    "src/app_iso7816.c",
+    "src/app_pwm.c",
+    "src/app_pwm_dma.c",
+    "src/app_pwr_mgmt.c",
+    "src/app_qspi.c",
+    "src/app_qspi_dma.c",
+    "src/app_rng.c",
+    "src/app_rtc.c",
+    "src/app_soft_encoder.c",
+    "src/app_spi.c",
+    "src/app_spi_dma.c",
+    "src/app_tim.c",
+    "src/app_uart.c",
+    "src/app_uart_dma.c",
+  ]
+}

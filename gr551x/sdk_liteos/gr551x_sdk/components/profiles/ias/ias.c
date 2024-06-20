@@ -35,7 +35,7 @@
  *****************************************************************************************
  */
 
-/*
+/* 
  * INCLUDE FILES
  *****************************************************************************************
  */
@@ -55,7 +55,8 @@
  *****************************************************************************************
  */
 /**@brief IAS Attributes database index list. */
-enum ias_attr_idx_t {
+enum ias_attr_idx_t
+{
     IAS_IDX_SVC,
 
     IAS_IDX_ALERT_LVL_CHAR,
@@ -65,9 +66,11 @@ enum ias_attr_idx_t {
 };
 
 /**@brief Immediate Alert Service environment variable. */
-struct ias_env_t {
-    ias_init_t ias_init;              /**< Immediate Alert Service initialization variables. */
-    uint16_t   start_hdl;             /**< Immediate Alert Service start handle. */
+struct ias_env_t
+{
+    ias_init_t ias_init;                    /**< Immediate Alert Service initialization variables. */
+    uint16_t   start_hdl;                   /**< Immediate Alert Service start handle. */
+    ble_gatts_create_db_t     ias_serv_db;  /**< Immediate Alert Service DataBase. */
 };
 /*
  * LOCAL VARIABLE DEFINITIONS
@@ -79,46 +82,23 @@ static uint8_t s_char_mask = 0x07;   /**< Features added into ATT database.
                                       *   bit1 - Alert Level Characteristic Declaration
                                       *   bit2 - Alert Level Characteristic Value
                                       */
+static const uint8_t s_ias_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_IMMEDIATE_ALERT);
 
-/**@brief IAS Database Description - Used to add attributes into the database. */
-static const attm_desc_t ias_attr_tab[IAS_IDX_NB] = {
+/**@brief IAS Database Description - Used to add attributes into the database. */ 
+static const ble_gatts_attm_desc_t ias_attr_tab[IAS_IDX_NB] =
+{
     // Immediate Alert Service Declaration
-    [IAS_IDX_SVC]            = {BLE_ATT_DECL_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [IAS_IDX_SVC]            = {BLE_ATT_DECL_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Alert Level Characteristic Declaration
-    [IAS_IDX_ALERT_LVL_CHAR] = {BLE_ATT_DECL_CHARACTERISTIC,  READ_PERM_UNSEC, 0, 0},
+    [IAS_IDX_ALERT_LVL_CHAR] = {BLE_ATT_DECL_CHARACTERISTIC,  BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Alert Level Characteristic Value
-    [IAS_IDX_ALERT_LVL_VAL]  = {BLE_ATT_CHAR_ALERT_LEVEL,     WRITE_CMD_PERM_UNSEC, 0, sizeof(uint8_t)},
+    [IAS_IDX_ALERT_LVL_VAL]  = {BLE_ATT_CHAR_ALERT_LEVEL,     BLE_GATTS_WRITE_CMD_PERM_UNSEC, 0, sizeof(uint8_t)},
 };
 
 /*
  * LOCAL FUNCTION DECLARATIONS
  *****************************************************************************************
  */
-static sdk_err_t   ias_init(void);
-static void        ias_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-
-/**@brief IAS interface required by profile manager. */
-static ble_prf_manager_cbs_t ias_mgr_cbs = {
-    (prf_init_func_t)ias_init,
-    NULL,
-    NULL
-};
-
-/**@brief IAS GATT server Callbacks. */
-static gatts_prf_cbs_t ias_gatts_cbs = {
-    NULL,
-    ias_write_att_cb,
-    NULL,
-    NULL
-};
-
-/**@brief IAS Information. */
-static const prf_server_info_t ias_prf_info = {
-    /* There shall be only one connection with a device. */
-    .max_connection_nb = 1,
-    .manager_cbs       = &ias_mgr_cbs,
-    .gatts_prf_cbs     = &ias_gatts_cbs
-};
 
 /*
  * LOCAL FUNCTION DEFINITIONS
@@ -131,41 +111,6 @@ static const prf_server_info_t ias_prf_info = {
  * @return Error code to know if service initialization succeed or not.
  *****************************************************************************************
  */
-static sdk_err_t ias_init(void)
-{
-    const uint8_t ias_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_IMMEDIATE_ALERT);
-    gatts_create_db_t gatts_db;
-    sdk_err_t ret;
-    uint16_t start_hdl = PRF_INVALID_HANDLE; /* The start hanlde is an in/out
-                                              * parameter of ble_gatts_srvc_db_create().
-                                              * It must be set with PRF_INVALID_HANDLE
-                                              * to be allocated automatically by BLE Stack. */
-
-    ret = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (ret < 0) {
-        return ret;
-    }
-
-    gatts_db.shdl                 = &start_hdl;
-    gatts_db.uuid                 = (uint8_t *)ias_svc_uuid;
-    gatts_db.attr_tab_cfg         = &s_char_mask;
-    gatts_db.max_nb_attr          = IAS_IDX_NB;
-    gatts_db.srvc_perm            = 0;
-    gatts_db.attr_tab_type        = SERVICE_TABLE_TYPE_16;
-    gatts_db.attr_tab.attr_tab_16 = ias_attr_tab;
-
-    sdk_err_t   error_code = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_ias_env.start_hdl = *gatts_db.shdl;
-
-        uint16_t handle = prf_find_handle_by_idx(IAS_IDX_ALERT_LVL_VAL, s_ias_env.start_hdl, &s_char_mask);
-        uint8_t initial_alert_level = INITIAL_ALERT_LEVEL;
-
-        ble_gatts_value_set(handle, sizeof(uint8_t), 0, &initial_alert_level);
-    }
-
-    return error_code;
-}
 
 /**
  *****************************************************************************************
@@ -175,33 +120,40 @@ static sdk_err_t ias_init(void)
  * @param[in] p_param:  The parameters of the read request.
  *****************************************************************************************
  */
-static void   ias_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void ias_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
     uint16_t handle = prf_find_handle_by_idx(IAS_IDX_ALERT_LVL_VAL, s_ias_env.start_hdl, &s_char_mask);
-    gatts_write_cfm_t cfm;
+    ble_gatts_write_cfm_t cfm;
 
     cfm.handle = p_param->handle;
 
-    if (handle != p_param->handle) {
+    if (handle != p_param->handle)
+    {
         cfm.status = BLE_ATT_ERR_INVALID_HANDLE;
-    } else {
-        if (p_param->length != sizeof(uint8_t)) {
+    }
+    else
+    {
+        if (p_param->length != sizeof(uint8_t))
+        {
             cfm.status = SDK_ERR_INVALID_ATT_VAL_LEN;
-        } else {
-            // Send write response
+        } 
+        else 
+        {
+            //Send write response
             uint8_t value = p_param->value[0];
 
             cfm.status = (uint8_t)ble_gatts_value_set(cfm.handle, sizeof(uint8_t), 0, &value);
-            if (cfm.status != BLE_SUCCESS) {
-                return;
-            }
-            /* Alert level updated by the peer, notify app the event. */
-            if (s_ias_env.ias_init.evt_handler) {
-                ias_evt_t evt;
+            if (BLE_SUCCESS == cfm.status)
+            {
+                /* Alert level updated by the peer, notify app the event. */
+                if (s_ias_env.ias_init.evt_handler)
+                {
+                    ias_evt_t evt;
 
-                evt.evt_type    = IAS_EVT_ALERT_LEVEL_UPDATED;
-                evt.alert_level = value;
-                s_ias_env.ias_init.evt_handler(&evt);
+                    evt.evt_type    = IAS_EVT_ALERT_LEVEL_UPDATED;
+                    evt.alert_level = value;
+                    s_ias_env.ias_init.evt_handler(&evt);
+                }
             }
         }
     }
@@ -221,13 +173,47 @@ sdk_err_t ias_alert_level_get(uint8_t *p_alert_level)
     return ble_gatts_value_get(handle, &length, p_alert_level);
 }
 
+static void ias_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if(NULL == p_evt)
+    {
+        return ;
+    }
+
+    switch(p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            break;
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            ias_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+        case BLE_GATTS_EVT_NTF_IND:
+            break;
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            break;
+        default:
+            break;
+    }
+}
 sdk_err_t ias_service_init(ias_init_t *p_ias_init)
 {
-    if (p_ias_init == NULL) {
+    if (NULL == p_ias_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
     s_ias_env.ias_init.evt_handler = p_ias_init->evt_handler;
 
-    return ble_server_prf_add(&ias_prf_info);
+    memset(&s_ias_env.ias_serv_db, 0, sizeof(ble_gatts_create_db_t));
+
+    s_ias_env.start_hdl           = PRF_INVALID_HANDLE;
+    s_ias_env.ias_serv_db.shdl                 = &s_ias_env.start_hdl;
+    s_ias_env.ias_serv_db.uuid                 = s_ias_svc_uuid;
+    s_ias_env.ias_serv_db.attr_tab_cfg         = &s_char_mask;
+    s_ias_env.ias_serv_db.max_nb_attr          = IAS_IDX_NB;
+    s_ias_env.ias_serv_db.srvc_perm            = 0;
+    s_ias_env.ias_serv_db.attr_tab_type        = BLE_GATTS_SERVICE_TABLE_TYPE_16;
+    s_ias_env.ias_serv_db.attr_tab.attr_tab_16 = ias_attr_tab;
+
+    return ble_gatts_prf_add(&s_ias_env.ias_serv_db, ias_ble_evt_handler);
 }

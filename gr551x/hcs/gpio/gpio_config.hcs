@@ -5,7 +5,6 @@ root {
                 configNum  = 1;
                 gpioIndex  = [0];
                 pull       = [0];
-                handleMode = [0];
         }
     }
 }

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 GOODIX.
+# Copyright (c) 2024 GOODIX.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,37 +11,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/lite/config/component/lite_component.gni")
-import("//build/lite/config/subsystem/lite_subsystem.gni")
 import("//kernel/liteos_m/liteos.gni")
 
-copy("link-script") {
-  sources = [ "sdk_liteos/platform/startup/gr551x.ld" ]
+action("resolve-link-script") {
+  script = "//build/lite/run_shell_cmd.py"
+  args = [
+    "${compile_prefix}cpp${toolchain_cmd_suffix}",
+    "-include",
+    rebase_path("sdk_liteos/config/custom_config.h"),
+    "-E",
+    rebase_path("sdk_liteos/platform/linker/gr5515.ld.tmpl"),
+    "-o",
+    rebase_path("$root_build_dir/bin/link.ld"),
+    "-P",
+  ]
   outputs = [ "$root_build_dir/bin/link.ld" ]
 }
 
 copy("sdk_lib") {
-  sources =
-      [ "sdk_liteos/gr551x_sdk/components/sdk/linker/lib_gcc/libble_sdk.a" ]
+  sources = [ "sdk_liteos/gr551x_sdk/platform/soc/linker/gcc/libble_sdk.a" ]
   outputs = [ "$root_build_dir/libs/libble_sdk.a" ]
 }
 
 copy("rom_symbol") {
-  sources = [
-    "sdk_liteos/gr551x_sdk/components/patch/symbol_table/rom_symbol_gcc.txt",
-  ]
+  sources =
+      [ "sdk_liteos/gr551x_sdk/platform/soc/linker/gcc/rom_symbol_gcc.txt" ]
   outputs = [ "$root_build_dir/libs/rom_symbol_gcc.txt" ]
 }
 
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
+module_group("gr551x") {
   deps = [
-    ":link-script",
+    ":resolve-link-script",
     ":rom_symbol",
     ":sdk_lib",
-    "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static",
-    "//build/lite/config/component/cJSON:cjson_static",
   ]
+
   modules = [
     "sdk_liteos",
     "components",

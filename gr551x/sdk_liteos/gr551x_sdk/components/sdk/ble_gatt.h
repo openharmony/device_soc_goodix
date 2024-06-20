@@ -35,16 +35,16 @@
  *****************************************************************************************
  */
 
-/**
-* @addtogroup BLE
-* @{
-*/
-
-/**
-* @addtogroup BLE_GATT Generic Attribute Profile (GATT)
-* @{
-* @brief Definitions and prototypes for the GATT interface.
-*/
+ /**
+ * @addtogroup BLE
+ * @{
+ */
+ 
+  /**
+ * @addtogroup BLE_GATT Generic Attribute Profile (GATT)
+ * @{
+ * @brief Definitions and prototypes for the GATT interface.
+ */
 
 /**
   @addtogroup BLE_GATTS Generic Attribute Profile (GATT) Common
@@ -54,6 +54,7 @@
 #ifndef __BLE_GATT_H__
 #define __BLE_GATT_H__
 
+#include "ble_error.h"
 #include <stdint.h>
 
 /** @addtogroup BLE_GATT_COMMON Enumerations
@@ -62,10 +63,12 @@
 /**
  * @brief GATT common events.
  */
-typedef enum {
+typedef enum
+{
     BLE_GATT_NOTIFICATION = 0x00,           /**< Handle Value Notification. */
     BLE_GATT_INDICATION,                    /**< Handle Value Indication. */
-} gatt_evt_type_t;
+} ble_gatt_evt_type_t;
+
 /** @} */
 
 /** @addtogroup BLE_GATT_COMMON_STRUCTURES Structures
@@ -74,22 +77,38 @@ typedef enum {
 /**
  * @brief GATT UUID structure.
  */
-typedef struct {
+typedef struct
+{
     uint8_t  uuid_len;       /**< UUID length. */
     uint8_t *uuid;           /**< UUID value. */
 } ble_uuid_t;
 
 /**
- * @brief GATT common callback function description.
+ * @brief GATT MTU Exchange event for @ref BLE_GATT_COMMON_EVT_MTU_EXCHANGE.
  */
-typedef struct {
-    /**< Exchange MTU callback function. */
-    void (*app_gatt_mtu_exchange_cb)(uint8_t conn_idx, uint8_t status, uint16_t mtu);
-    /**< Profile register callback function. @note prf_index range is from 0 to profile count - 1.
-         prf_index is current profile index. */
-    void (*app_gatt_prf_register_cb)(uint8_t status, uint8_t prf_index);
-} gatt_common_cb_fun_t;
+typedef struct
+{
+    uint16_t           mtu;              /**< MTU Exchanged value. */
+ } ble_gatt_common_evt_mtu_exchange_t;
 
+ /**
+ * @brief GATT Server Profile Register event for @ref BLE_GATT_COMMON_EVT_PRF_REGISTER.
+ */
+typedef struct
+{
+    uint8_t      prf_index;         /**< Profile Index. */
+ } ble_gatt_common_evt_prf_reg_t;
+
+/**@brief GATT Common structure. */
+typedef struct
+{
+    uint8_t  index;                                                     /**< Index of connection. */
+    union
+    {
+        ble_gatt_common_evt_mtu_exchange_t        mtu_exchange;         /**< MTU exchanged event. */
+        ble_gatt_common_evt_prf_reg_t             prf_reg;              /**< Server Profile Register event. */
+    } params;                                                           /**< Event Parameters. */
+} ble_gatt_common_evt_t;
 /** @} */
 
 /** @addtogroup BLE_GATT_FUNCTIONS Functions
@@ -98,9 +117,9 @@ typedef struct {
 /**
  ****************************************************************************************
  * @brief Set ATT_MTU size.
- *
+ * 
  * @param[in]  mtu:        ATT_MTU size.
- *
+ * 
  * @note This function should be called before exchange MTU operation. This MTU size is used to all connections.
  *       If not set these parameters, the stack will config the default value as (max_mtu = 512).
  *

@@ -49,7 +49,7 @@
  * @details The Link Loss Service uses the Alert Level characteristic to cause an alert in the
  *          device when the link is lost.
  *
- *          The application must provide an event handler to set \ref lls_init_t.evt_handler.
+ *          The application must provide an event handler to set \ref lls_init_t.evt_handler. 
  *          After \ref lls_init_t variable is initialized, the application must call \ref lls_service_init()
  *          to add Alert Level Characteristic to the BLE Stack database, the service will notify the application
  *          with the event handler when the link has been lost, and which Alert Level has been set.
@@ -62,23 +62,25 @@
 #ifndef __LLS_H__
 #define __LLS_H__
 
-#include <stdint.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include <stdint.h>
 
 /**
  * @defgroup LLS_ENUM Enumerations
  * @{
  */
 /** Link Loss Service alert levels. */
-typedef enum {
+typedef enum
+{
     LLS_ALERT_LEVEL_NO_ALERT,       /**< No alert. */
     LLS_ALERT_LEVEL_MILD_ALERT,     /**< Mild alert. */
     LLS_ALERT_LEVEL_HIGH_ALERT,     /**< High alert. */
 } lls_alert_levels_t;
 
 /**@brief Link Loss Service event type. */
-typedef enum {
+typedef enum
+{
     LLS_EVT_INVALID,            /**< Invalid LLS event. */
     LLS_EVT_LINK_LOSS_ALERT     /**< Link loss alert event. */
 } lls_evt_type_t;
@@ -89,7 +91,8 @@ typedef enum {
  * @{
  */
 /**@brief Link Loss Service event. */
-typedef struct {
+typedef struct
+{
     lls_evt_type_t evt_type;            /**< Type of event. */
     lls_alert_levels_t alert_level;     /**< Alert level. */
 } lls_evt_t;
@@ -107,9 +110,9 @@ typedef void (*lls_evt_handler_t)(lls_evt_t *p_evt);
  * @addtogroup LLS_STRUCT Structures
  * @{
  */
-/**@brief Link Loss Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Link Loss Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     lls_evt_handler_t  evt_handler;          /**< Link Loss Service event handler. */
     lls_alert_levels_t initial_alert_level;  /**< Initial value of the alert level. */
 } lls_init_t;

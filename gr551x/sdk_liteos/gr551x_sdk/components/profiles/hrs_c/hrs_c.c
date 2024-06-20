@@ -39,63 +39,32 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include <string.h>
+#include "hrs_c.h"
 #include "ble_prf_utils.h"
 #include "utility.h"
-#include "hrs_c.h"
-#define OFFSET_8 8
-#define ATTR_VALUE_LEN 2
+#include <string.h>
+
 /*
  * STRUCT DEFINE
  *****************************************************************************************
  */
 /**@brief Heart Rate Service environment variable. */
-struct hrs_c_env_t {
+struct hrs_c_env_t
+{
     hrs_c_handles_t     handles;            /**< Handles of HRS characteristics which will be got for peer. */
     hrs_c_evt_handler_t evt_handler;        /**< Handler of HRS Client event  */
-    uint8_t             prf_id;             /**< HRS Client profile id. */
 };
-
-/*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static void hrs_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp);
-static void hrs_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle);
-static void hrs_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);
-static void hrs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
 static struct hrs_c_env_t s_hrs_c_env;     /**< Heart Rate Service Client environment variable. */
-
-/**@brief Heart Rate Service Client interface required by profile manager. */
-static ble_prf_manager_cbs_t hrs_c_mgr_cbs = {
-    NULL,
-    NULL,
-    NULL
-};
-
-/**@brief Heart Rate Service GATT Client Callbacks. */
-static gattc_prf_cbs_t hrs_c_gattc_cbs = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    hrs_c_att_read_cb,
-    hrs_c_att_write_cb,
-    hrs_c_att_ntf_ind_cb,
-    hrs_c_srvc_browse_cb,
-    NULL,
-};
-
-/**@brief Heart Rate Service Client Information. */
-static const prf_client_info_t hrs_c_prf_info = {
-    .max_connection_nb = HRS_C_CONNECTION_MAX,
-    .manager_cbs       = &hrs_c_mgr_cbs,
-    .gattc_prf_cbs     = &hrs_c_gattc_cbs
+static uint8_t s_target_uuid[2] = {LO_U16(BLE_ATT_SVC_HEART_RATE), HI_U16(BLE_ATT_SVC_HEART_RATE)};
+static ble_uuid_t s_hrs_service_uuid = 
+{
+    .uuid_len = 2,
+    .uuid     = s_target_uuid,
 };
 
 /*
@@ -111,7 +80,8 @@ static const prf_client_info_t hrs_c_prf_info = {
  */
 static void hrs_c_evt_handler_excute(hrs_c_evt_t *p_evt)
 {
-    if (s_hrs_c_env.evt_handler != NULL && HRS_C_EVT_INVALID != p_evt->evt_type) {
+    if (NULL != s_hrs_c_env.evt_handler && HRS_C_EVT_INVALID != p_evt->evt_type)
+    {
         s_hrs_c_env.evt_handler(p_evt);
     }
 }
@@ -129,39 +99,45 @@ static void hrs_c_meas_value_encode(uint8_t *p_data, uint16_t length, hrs_c_hr_m
 {
     uint8_t   flags = 0;
     uint8_t   index = 0;
-    uint8_t ret;
 
     flags = p_data[index++];
 
-    ret = memset_s(p_hr_meas_buff, sizeof(hrs_c_hr_meas_t), 0, sizeof(hrs_c_hr_meas_t));
-    if (ret < 0) {
-        return ret;
-    }
+    memset(p_hr_meas_buff, 0, sizeof(hrs_c_hr_meas_t));
 
-    if (flags & HRS_C_BIT_RATE_FORMAT) {
-        p_hr_meas_buff->hr_value = p_data[index] | (p_data[index + 1] << OFFSET_8);
+    if (flags & HRS_C_BIT_RATE_FORMAT)
+    {
+        p_hr_meas_buff->hr_value = p_data[index] | (p_data[index + 1] << 8);
         index += sizeof(uint16_t);
-    } else {
+    }
+    else
+    {
         p_hr_meas_buff->hr_value = p_data[index++];
     }
 
-    if (flags & HRS_C_BIT_SENSOR_CONTACT_SUPPORTED) {
-        if (flags & HRS_C_BIT_SENSOR_CONTACT_DETECTED) {
+    if (flags & HRS_C_BIT_SENSOR_CONTACT_SUPPORTED)
+    {
+        if (flags & HRS_C_BIT_SENSOR_CONTACT_DETECTED)
+        {
             p_hr_meas_buff->is_sensor_contact_detected = true;
-        } else {
+        }
+        else
+        {
             p_hr_meas_buff->is_sensor_contact_detected = false;
         }
     }
 
-    if (flags & HRS_C_BIT_ENERGY_EXPENDED_STATUS) {
-        p_hr_meas_buff->energy_expended = p_data[index] | (p_data[index + 1] << OFFSET_8);
+    if (flags & HRS_C_BIT_ENERGY_EXPENDED_STATUS)
+    {
+        p_hr_meas_buff->energy_expended = p_data[index] | (p_data[index + 1] << 8);
         index += sizeof(uint16_t);
     }
 
-    if (flags & HRS_C_BIT_INTERVAL) {
-        for (uint8_t i = 0; index < length; i++) {
+    if (flags & HRS_C_BIT_INTERVAL)
+    {
+        for (uint8_t i = 0; index < length; i++)
+        {
             p_hr_meas_buff->rr_intervals_num++;
-            p_hr_meas_buff->rr_intervals[i]  = (p_data[index] | (p_data[index + 1] << OFFSET_8)) * 1000 / 1024.0;
+            p_hr_meas_buff->rr_intervals[i]  = (p_data[index] | (p_data[index + 1] << 8)) * 1000 / 1024.0;
             index += sizeof(uint16_t);
         }
     }
@@ -169,27 +145,29 @@ static void hrs_c_meas_value_encode(uint8_t *p_data, uint16_t length, hrs_c_hr_m
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving read response.
+ * @brief This event handler function will be called when receiving read response.
  *
  * @param[in] conn_idx:   The connection index.
  * @param[in] status:     The status of GATTC operation.
  * @param[in] p_read_rsp: The information of read response.
  *****************************************************************************************
  */
-static void hrs_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp)
+static void hrs_c_att_read_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_read_t *p_read_rsp)
 {
     hrs_c_evt_t hrs_c_evt;
 
     hrs_c_evt.conn_idx = conn_idx;
     hrs_c_evt.evt_type = HRS_C_EVT_INVALID;
 
-    if (BLE_SUCCESS != status) {
+    if (BLE_SUCCESS != status)
+    {
         return;
     }
 
-    if (p_read_rsp->vals[0].handle == s_hrs_c_env.handles.hrs_sensor_loc_handle) {
+    if (p_read_rsp->value[0].handle == s_hrs_c_env.handles.hrs_sensor_loc_handle)
+    {
         hrs_c_evt.evt_type         = HRS_C_EVT_SENSOR_LOC_READ_RSP;
-        hrs_c_evt.value.sensor_loc = (hrs_c_sensor_loc_t)p_read_rsp->vals[0].p_value[0];
+        hrs_c_evt.value.sensor_loc = (hrs_c_sensor_loc_t)p_read_rsp->value[0].p_value[0];
     }
 
     hrs_c_evt_handler_excute(&hrs_c_evt);
@@ -197,28 +175,31 @@ static void hrs_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving read response.
+ * @brief This event handler function will be called when receiving read response.
  *
  * @param[in] conn_idx:   The connection index.
  * @param[in] status:     The status of GATTC operation.
  * @param[in] handle:     The handle of attribute.
  *****************************************************************************************
  */
-static void hrs_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle)
+static void hrs_c_att_write_evt_handler(uint8_t conn_idx, uint8_t status, uint16_t handle)
 {
     hrs_c_evt_t hrs_c_evt;
 
     hrs_c_evt.conn_idx = conn_idx;
     hrs_c_evt.evt_type = HRS_C_EVT_INVALID;
 
-    if (handle == s_hrs_c_env.handles.hrs_hr_meas_cccd_handle) {
+    if (handle == s_hrs_c_env.handles.hrs_hr_meas_cccd_handle)
+    {
         hrs_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             HRS_C_EVT_HR_MEAS_NTF_SET_SUCCESS :
-                             HRS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_hrs_c_env.handles.hrs_ctrl_point_handle) {
+                              HRS_C_EVT_HR_MEAS_NTF_SET_SUCCESS :
+                              HRS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_hrs_c_env.handles.hrs_ctrl_point_handle)
+    {
         hrs_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             HRS_C_EVT_CTRL_POINT_SET :
-                             HRS_C_EVT_WRITE_OP_ERR;
+                              HRS_C_EVT_CTRL_POINT_SET :
+                              HRS_C_EVT_WRITE_OP_ERR;
     }
 
     hrs_c_evt_handler_excute(&hrs_c_evt);
@@ -226,21 +207,22 @@ static void hrs_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving notification or indication.
+ * @brief This event handler function will be called when receiving notification or indication.
  *
  * @param[in] conn_idx:  The connection index.
  * @param[in] status:    The status of GATTC operation.
  * @param[in] p_ntf_ind: The information of notification or indication.
  *****************************************************************************************
  */
-static void hrs_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind)
+static void hrs_c_att_ntf_ind_evt_handler(uint8_t conn_idx, const ble_gattc_evt_ntf_ind_t *p_ntf_ind)
 {
     hrs_c_evt_t hrs_c_evt;
 
     hrs_c_evt.conn_idx = conn_idx;
     hrs_c_evt.evt_type = HRS_C_EVT_INVALID;
 
-    if (p_ntf_ind->handle == s_hrs_c_env.handles.hrs_hr_meas_handle) {
+    if (p_ntf_ind->handle == s_hrs_c_env.handles.hrs_hr_meas_handle)
+    {
         hrs_c_evt.evt_type = HRS_C_EVT_HR_MEAS_VAL_RECEIVE;
         hrs_c_meas_value_encode(p_ntf_ind->p_value, p_ntf_ind->length, &hrs_c_evt.value.hr_meas_buff);
     }
@@ -250,14 +232,14 @@ static void hrs_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving browse service indication.
+ * @brief This event handler function will be called when receiving browse service indication.
  *
  * @param[in] conn_idx:      The connection index.
  * @param[in] status:        The status of GATTC operation.
  * @param[in] p_browse_srvc: The information of service browse.
  *****************************************************************************************
  */
-static void hrs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc)
+static void hrs_c_srvc_browse_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_browse_srvc_t *p_browse_srvc)
 {
     hrs_c_evt_t  hrs_c_evt;
     uint16_t     uuid_disc;
@@ -266,46 +248,86 @@ static void hrs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gat
     hrs_c_evt.conn_idx = conn_idx;
     hrs_c_evt.evt_type = HRS_C_EVT_DISCOVERY_FAIL;
 
-    if (BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status) {
+    if(BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status)
+    {
         return;
     }
 
-    if (status != BLE_SUCCESS) {
-        return;
-    }
-    uuid_disc = p_browse_srvc->uuid[0] | p_browse_srvc->uuid[1] << OFFSET_8;
+    if (BLE_SUCCESS == status)
+    {
+        uuid_disc = p_browse_srvc->uuid[0] | p_browse_srvc->uuid[1] << 8;
 
-    if (BLE_ATT_SVC_HEART_RATE == uuid_disc) {
-        s_hrs_c_env.handles.hrs_srvc_start_handle = p_browse_srvc->start_hdl;
-        s_hrs_c_env.handles.hrs_srvc_end_handle   = p_browse_srvc->end_hdl;
+        if (BLE_ATT_SVC_HEART_RATE == uuid_disc)
+        {
+            s_hrs_c_env.handles.hrs_srvc_start_handle = p_browse_srvc->start_hdl;
+            s_hrs_c_env.handles.hrs_srvc_end_handle   = p_browse_srvc->end_hdl;
 
-        for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++) {
-            uuid_disc   = p_browse_srvc->info[i].attr.uuid[0] | p_browse_srvc->info[i].attr.uuid[1] << OFFSET_8;
-            handle_disc = p_browse_srvc->start_hdl + i + 1;
+            for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++)
+            {
+                uuid_disc   = p_browse_srvc->info[i].attr.uuid[0] | p_browse_srvc->info[i].attr.uuid[1] << 8;
+                handle_disc = p_browse_srvc->start_hdl + i + 1;
 
-            if (BLE_GATTC_BROWSE_ATTR_VAL == p_browse_srvc->info[i].attr_type) {
-                if (BLE_ATT_CHAR_HEART_RATE_MEAS == uuid_disc) {
-                    s_hrs_c_env.handles.hrs_hr_meas_handle = handle_disc;
-                } else if (BLE_ATT_CHAR_BODY_SENSOR_LOCATION == uuid_disc) {
-                    s_hrs_c_env.handles.hrs_sensor_loc_handle = handle_disc;
-                } else if (BLE_ATT_CHAR_HEART_RATE_CNTL_POINT == uuid_disc) {
-                    s_hrs_c_env.handles.hrs_ctrl_point_handle = handle_disc;
+                if (BLE_GATTC_BROWSE_ATTR_VAL == p_browse_srvc->info[i].attr_type)
+                {
+                    if (BLE_ATT_CHAR_HEART_RATE_MEAS == uuid_disc)
+                    {
+                        s_hrs_c_env.handles.hrs_hr_meas_handle = handle_disc;
+                    }
+                    else if (BLE_ATT_CHAR_BODY_SENSOR_LOCATION == uuid_disc)
+                    {
+                        s_hrs_c_env.handles.hrs_sensor_loc_handle = handle_disc;
+                    }
+                    else if (BLE_ATT_CHAR_HEART_RATE_CNTL_POINT == uuid_disc)
+                    {
+                        s_hrs_c_env.handles.hrs_ctrl_point_handle = handle_disc;
+                    }
                 }
-            } else if (BLE_GATTC_BROWSE_ATTR_DESC == p_browse_srvc->info[i].attr_type) {
-                if (BLE_ATT_DESC_CLIENT_CHAR_CFG == uuid_disc) {
-                    s_hrs_c_env.handles.hrs_hr_meas_cccd_handle = handle_disc;
+                else if (BLE_GATTC_BROWSE_ATTR_DESC == p_browse_srvc->info[i].attr_type)
+                {
+                    if (BLE_ATT_DESC_CLIENT_CHAR_CFG == uuid_disc)
+                    {
+                        s_hrs_c_env.handles.hrs_hr_meas_cccd_handle = handle_disc;
+                    }
                 }
-            } else if (BLE_GATTC_BROWSE_NONE == p_browse_srvc->info[i].attr_type) {
-                break;
+                else if (BLE_GATTC_BROWSE_NONE == p_browse_srvc->info[i].attr_type)
+                {
+                    break;
+                }
             }
-        }
 
-        hrs_c_evt.evt_type = HRS_C_EVT_DISCOVERY_COMPLETE;
+            hrs_c_evt.evt_type = HRS_C_EVT_DISCOVERY_COMPLETE;
+        }
     }
 
     hrs_c_evt_handler_excute(&hrs_c_evt);
 }
 
+static void hrs_c_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTC_EVT_SRVC_BROWSE:
+            hrs_c_srvc_browse_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.srvc_browse);
+            break;
+
+        case BLE_GATTC_EVT_READ_RSP:
+            hrs_c_att_read_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.read_rsp);
+            break;
+
+        case BLE_GATTC_EVT_WRITE_RSP:
+            hrs_c_att_write_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, p_evt->evt.gattc_evt.params.write_rsp.handle);
+            break;
+
+        case BLE_GATTC_EVT_NTF_IND:
+            hrs_c_att_ntf_ind_evt_handler(p_evt->evt.gattc_evt.index, &p_evt->evt.gattc_evt.params.ntf_ind);
+            break;
+    }
+}
 
 /*
  * GLOBAL FUNCTION DEFINITIONS
@@ -313,74 +335,52 @@ static void hrs_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gat
  */
 sdk_err_t hrs_client_init(hrs_c_evt_handler_t evt_handler)
 {
-    sdk_err_t ret;
-    if (evt_handler == NULL) {
+    if (NULL == evt_handler)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memset_s(&s_hrs_c_env, sizeof(s_hrs_c_env), 0, sizeof(s_hrs_c_env));
-    if (ret < 0) {
-        return ret;
-    }
+    memset(&s_hrs_c_env, 0, sizeof(s_hrs_c_env));
     s_hrs_c_env.evt_handler = evt_handler;
 
-    return ble_client_prf_add(&hrs_c_prf_info, &s_hrs_c_env.prf_id);
+    return ble_gattc_prf_add(&s_hrs_service_uuid, hrs_c_ble_evt_handler);
 }
 
 sdk_err_t hrs_c_disc_srvc_start(uint8_t conn_idx)
 {
-    uint8_t target_uuid[2];
-
-    target_uuid[0] = LO_U16(BLE_ATT_SVC_HEART_RATE);
-    target_uuid[1] = HI_U16(BLE_ATT_SVC_HEART_RATE);
-
-    const ble_uuid_t hrs_service_uuid = {
-        .uuid_len = 2,
-        .uuid     = target_uuid,
-    };
-
-    return ble_gattc_prf_services_browse(s_hrs_c_env.prf_id, conn_idx, &hrs_service_uuid);
+    return ble_gattc_services_browse(conn_idx, &s_hrs_service_uuid);
 }
 
 sdk_err_t hrs_c_heart_rate_meas_notify_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_attr_value_t write_attr_value;
     uint16_t ntf_value = is_enable ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND;
 
-    if (BLE_ATT_INVALID_HDL == s_hrs_c_env.handles.hrs_hr_meas_cccd_handle) {
+    if (BLE_ATT_INVALID_HDL == s_hrs_c_env.handles.hrs_hr_meas_cccd_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_hrs_c_env.handles.hrs_hr_meas_cccd_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ntf_value;
-
-    return ble_gattc_prf_write(s_hrs_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_hrs_c_env.handles.hrs_hr_meas_cccd_handle, 0, 2, (uint8_t *)&ntf_value);
 }
 
 sdk_err_t hrs_c_sensor_loc_read(uint8_t conn_idx)
 {
-    if (BLE_ATT_INVALID_HDL == s_hrs_c_env.handles.hrs_sensor_loc_handle) {
+    if (BLE_ATT_INVALID_HDL == s_hrs_c_env.handles.hrs_sensor_loc_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    return ble_gattc_prf_read(s_hrs_c_env.prf_id, conn_idx, s_hrs_c_env.handles.hrs_sensor_loc_handle, 0);
+    return ble_gattc_read(conn_idx, s_hrs_c_env.handles.hrs_sensor_loc_handle, 0);
 }
 
 sdk_err_t hrs_c_ctrl_point_set(uint8_t conn_idx, uint16_t ctrl_value)
 {
-    gattc_write_attr_value_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_hrs_c_env.handles.hrs_ctrl_point_handle) {
+    if (BLE_ATT_INVALID_HDL == s_hrs_c_env.handles.hrs_ctrl_point_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_hrs_c_env.handles.hrs_ctrl_point_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ctrl_value;
-
-    return ble_gattc_prf_write(s_hrs_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_hrs_c_env.handles.hrs_ctrl_point_handle, 0, 2, (uint8_t *)&ctrl_value);
 }
+
 

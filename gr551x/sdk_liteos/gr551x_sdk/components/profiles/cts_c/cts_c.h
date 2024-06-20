@@ -59,29 +59,27 @@
 #ifndef __CTS_C_H__
 #define __CTS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 #include "ble_prf_utils.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup CTS_C_MACRO Defines
  * @{
  */
-#define CTS_C_CONNECTION_MAX            (10 < CFG_MAX_CONNECTIONS ? \
-                                        10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of HRS Client connections. */
-
-#define CTS_C_CUR_TIME_VAL_LEN           10     /**< Length of current time value. */
-#define CTS_C_LOC_TIME_INFO_VAL_LEN      2      /**< Length of local time information value. */
-#define CTS_C_TIME_Y_M_D_UNKNOWN         0      /**< Year or Month or Day is not known. */
-#define CTS_C_TIME_YEAR_VALID_VAL_MIN    1582   /**< Minimum value of valid year. */
-#define CTS_C_TIME_YEAR_VALID_VAL_MAX    9999   /**< Maximum value of valid year. */
-#define CTS_C_TIME_ZONE_OFFSET_MIN      (-48)   /**< Minimum Value of Offset from UTC. */
-#define CTS_C_TIME_ZONE_OFFSET_MAX       56     /**< Maximum Value of Offset from UTC. */
-#define CTS_C_TIME_ACCURACY_OUT_RANGE    254    /**< Accuracy out of range. */
-#define CTS_C_TIME_ACCURACT_UNKNOWN      255    /**< Accuracy Unknown. */
-#define CTS_C_ERROR_FIELDS_IGNORED       0x80   /**< The server ignored one or more fields. */
+#define CTS_C_CONNECTION_MAX             10                                 /**< Maximum number of HRS Client connections. */
+#define CTS_C_CUR_TIME_VAL_LEN           10                                 /**< Length of current time value. */
+#define CTS_C_LOC_TIME_INFO_VAL_LEN      2                                  /**< Length of local time information value. */
+#define CTS_C_TIME_Y_M_D_UNKNOWN         0                                  /**< Year or Month or Day is not known. */
+#define CTS_C_TIME_YEAR_VALID_VAL_MIN    1582                               /**< Minimum value of valid year. */
+#define CTS_C_TIME_YEAR_VALID_VAL_MAX    9999                               /**< Maximum value of valid year. */
+#define CTS_C_TIME_ZONE_OFFSET_MIN      -48                                 /**< Minimum Value of Offset from UTC. */
+#define CTS_C_TIME_ZONE_OFFSET_MAX       56                                 /**< Maximum Value of Offset from UTC. */
+#define CTS_C_TIME_ACCURACY_OUT_RANGE    254                                /**< Accuracy out of range. */
+#define CTS_C_TIME_ACCURACT_UNKNOWN      255                                /**< Accuracy Unknown. */
+#define CTS_C_ERROR_FIELDS_IGNORED       0x80                               /**< The server ignored one or more fields. */
 
 /**
  * @defgroup CTS_C_ADJ_REASON Current Time Adjust Reason
@@ -101,7 +99,8 @@
  * @{
  */
 /**@brief Current Time Day of week. */
-typedef enum {
+typedef enum
+{
     CTS_C_WEEK_UNKNOWN_DAY,             /**< Day of week is not known. */
     CTS_C_WEEK_MONDAY,                  /**< Monday. */
     CTS_C_WEEK_TUSEDAY,                 /**< Tuesday. */
@@ -113,7 +112,8 @@ typedef enum {
 } cts_c_week_day_t;
 
 /**@brief Local time information:Daylight Saving Time Offset. */
-typedef enum {
+typedef enum
+{
     CTS_C_DST_OFFSET_STANDAR_TIME       = 0x00,   /**< Standard Time. */
     CTS_C_DST_OFFSET_HALF_HOUR          = 0x02,   /**< Half An Hour Daylight Time (+0.5h). */
     CTS_C_DST_OFFSET_DAYLIGHT_TIME      = 0x04,   /**< Daylight Time (+1h). */
@@ -121,7 +121,8 @@ typedef enum {
 } cts_c_dst_offset_t;
 
 /**@brief Reference time information:Time Source. */
-typedef enum {
+typedef enum
+{
     CTS_C_REF_TIME_SRC_UNKNOWN,               /**< Unknown. */
     CTS_C_REF_TIME_SRC_NET_TIME_PROTOCOL,     /**< Network Time Protocol. */
     CTS_C_REF_TIME_SRC_GPS,                   /**< GPS. */
@@ -132,24 +133,18 @@ typedef enum {
 } cts_c_ref_time_source_t;
 
 /**@brief Current Time Service Client event type. */
-typedef enum {
+typedef enum
+{
     CTS_C_EVT_INVALID,                    /**< CTS Client invalid event. */
     CTS_C_EVT_DISCOVERY_COMPLETE,         /**< CTS Client has found CTS service and its characteristics. */
-    CTS_C_EVT_DISCOVERY_FAIL,             /**< CTS Client found CTS service failed because of invalid operation or \
-                                               no found at the peer. */
+    CTS_C_EVT_DISCOVERY_FAIL,             /**< CTS Client found CTS service failed because of invalid operation or no found at the peer. */
     CTS_C_EVT_CUR_TIME_NTF_SET_SUCCESS,   /**< CTS Client has set Notification of Current Time characteristic. */
-    CTS_C_EVT_VALID_CUR_TIME_REC,         /**< CTS Client has received valid Current Time value \
-                                               (Read or Notification from peer). */
-    CTS_C_EVT_INVALID_CUR_TIME_REC,       /**< CTS Client has received invalid Current Time value \
-                                               (Read or Notification from peer). */
-    CTS_C_EVT_VALID_LOC_TIME_INFO_REC,    /**< CTS Client has received valid Local Time Information value \
-                                               (Read from peer). */
-    CTS_C_EVT_INVALID_LOC_TIME_INFO_REC,  /**< CTS Client has received invalid Local Time Information value \
-                                               (Read from peer). */
-    CTS_C_EVT_VALID_REF_TIME_INFO_REC,    /**< CTS Client has received valid Reference Time Information Value \
-                                               (Read from peer). */
-    CTS_C_EVT_INVALID_REF_TIME_INFO_REC,  /**< CTS Client has received invalid Reference Time Information Value \
-                                               (Read from peer). */
+    CTS_C_EVT_VALID_CUR_TIME_REC,         /**< CTS Client has received valid Current Time value (Read or Notification from peer). */
+    CTS_C_EVT_INVALID_CUR_TIME_REC,       /**< CTS Client has received invalid Current Time value (Read or Notification from peer). */
+    CTS_C_EVT_VALID_LOC_TIME_INFO_REC,    /**< CTS Client has received valid Local Time Information value (Read from peer). */
+    CTS_C_EVT_INVALID_LOC_TIME_INFO_REC,  /**< CTS Client has received invalid Local Time Information value (Read from peer). */
+    CTS_C_EVT_VALID_REF_TIME_INFO_REC,    /**< CTS Client has received valid Reference Time Information Value (Read from peer). */
+    CTS_C_EVT_INVALID_REF_TIME_INFO_REC,  /**< CTS Client has received invalid Reference Time Information Value (Read from peer). */
     CTS_C_EVT_CUR_TIME_SET_SUCCESS,       /**< CTS Client has writen Current Time completely. */
     CTS_C_EVT_LOC_TIME_INFO_SET_SUCCESS,  /**< CTS Client has writen Local Time Information completely. */
     CTS_C_EVT_WRITE_OP_ERR,               /**< Error occured when CTS Client writen to peer. */
@@ -161,40 +156,41 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t cts_srvc_start_handle;            /**< CTS Service start handle. */
     uint16_t cts_srvc_end_handle;              /**< CTS Service end handle. */
-    uint16_t cts_cur_time_handle;              /**< CTS Current Time characteristic Value handle \
-                                                    which has been got from peer. */
-    uint16_t cts_cur_time_cccd_handle;         /**< CTS CCCD handle of Current Time characteristic \
-                                                    which has been got from peer. */
-    uint16_t cts_loc_time_info_handle;         /**< CTS Local Time Information characteristic Value handle \
-                                                    which has been got from peer. */
-    uint16_t cts_ref_time_info_handle;         /**< CTS Reference Time Information characteristic Value handle \
-                                                    which has been got from peer. */
+    uint16_t cts_cur_time_handle;              /**< CTS Current Time characteristic Value handle which has been got from peer. */
+    uint16_t cts_cur_time_cccd_handle;         /**< CTS CCCD handle of Current Time characteristic which has been got from peer. */
+    uint16_t cts_loc_time_info_handle;         /**< CTS Local Time Information characteristic Value handle which has been got from peer. */
+    uint16_t cts_ref_time_info_handle;         /**< CTS Reference Time Information characteristic Value handle which has been got from peer. */
 } cts_c_handles_t;
 
 /**@brief Exact Time 256. */
-typedef struct {
+typedef struct
+{
     prf_date_time_t date_time;       /**< Date Time. */
     uint8_t         day_of_week;     /**< Day of Week. */
     uint8_t         fractions_256;   /**< 1/256th of a second. */
 } cts_c_exact_time_256_t;
 
 /**@brief Current Time value. */
-typedef struct {
+typedef struct
+{
     cts_c_exact_time_256_t day_date_time;   /**< Exact Time 256. */
     uint8_t                adjust_reason;   /**< Adjust Reason. */
 } cts_c_cur_time_t;
 
 /**@brief Local Time Information. */
-typedef struct {
+typedef struct
+{
     int8_t             time_zone;     /**< Time Zone, Offset from UTC in number of 15 minutes increments. */
     cts_c_dst_offset_t dst_offset;    /**< Daylight Saving Time Offset. */
 } cts_c_loc_time_info_t;
 
 /**@brief Reference Time Information. */
-typedef struct {
+typedef struct
+{
     cts_c_ref_time_source_t   source;             /**< Time Source. */
     uint8_t                   accuracy;           /**< Accuracy of time information. */
     uint8_t                   days_since_update;  /**< Days Since Update. */
@@ -202,10 +198,12 @@ typedef struct {
 } cts_c_ref_time_info_t;
 
 /**@brief Current Time Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t                   conn_idx;        /**< The index of the connection. */
     cts_c_evt_type_t          evt_type;        /**< The CTS client event type. */
-    union {
+    union
+    {
         cts_c_cur_time_t      cur_time;        /**< Curren time received. */
         cts_c_loc_time_info_t loc_time_info;   /**< Local time information received. */
         cts_c_ref_time_info_t ref_time_info;   /**< Referen time information received. */
@@ -315,6 +313,16 @@ sdk_err_t cts_c_cur_time_set(uint8_t conn_idx, cts_c_cur_time_t *p_cur_time);
  *****************************************************************************************
  */
 sdk_err_t cts_c_loc_time_info_set(uint8_t conn_idx, cts_c_loc_time_info_t *p_loc_time_info);
+
+/**
+ *****************************************************************************************
+ * @brief Data accepts data and processing functions.
+ *
+ * @param[in] p_data:   Serial port data.
+ * @param[in] length:   Data length.
+ *****************************************************************************************
+ */
+void cts_c_data_parse(uint8_t *p_data, uint16_t length);
 /** @} */
 
 #endif

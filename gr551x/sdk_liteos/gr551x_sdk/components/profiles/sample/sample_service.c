@@ -1,9 +1,9 @@
 /**
  *****************************************************************************************
  *
- * @file sample_profile.c
+ * @file sample_service.c
  *
- * @brief sample_profile Server Implementation.
+ * @brief sample profile Server Implementation.
  *
  *****************************************************************************************
  * @attention
@@ -48,10 +48,8 @@
  *****************************************************************************************
  */
 /**@brief The UUIDs of GUS characteristics. */
-#define SAMPLE_SERVER_TX_UUID      {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,
-                                    0x0A, 0x46, 0x44, 0xD3, 0x02, 0x01, 0xED, 0xA6}
-#define SAMPLE_SERVER_RX_UUID      {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,
-                                    0x0A, 0x46, 0x44, 0xD3, 0x03, 0x01, 0xED, 0xA6}
+#define SAMPLE_SERVER_TX_UUID      {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x02, 0x01, 0xED, 0xA6}
+#define SAMPLE_SERVER_RX_UUID      {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x03, 0x01, 0xED, 0xA6}
 
 /**@brief Macros for conversion of 128bit to 16bit UUID. */
 #define ATT_128_PRIMARY_SERVICE     BLE_ATT_16_TO_128_ARRAY(BLE_ATT_DECL_PRIMARY_SERVICE)
@@ -63,7 +61,8 @@
  *****************************************************************************************
  */
 /**@brief Sample Service Attributes Indexes. */
-enum samples_attr_idx_t {
+enum samples_attr_idx_t
+{
     SAMPLES_IDX_SVC,
 
     SAMPLES_IDX_TX_CHAR,
@@ -80,22 +79,13 @@ enum samples_attr_idx_t {
  *****************************************************************************************
  */
 /**@brief Samples Service environment variable. */
-typedef struct {
-    samples_init_t  samples_init;                            /**< Sample Service initialization variables. */
-    uint16_t        start_hdl;                               /**< Service start handle. */
-    uint16_t
-    tx_ntf_cfg[SAMPLES_CONNECTION_MAX];      /**< TX Character Notification configuration of peer devices. */
+typedef struct
+{
+    samples_init_t          samples_init;                            /**< Sample Service initialization variables. */
+    uint16_t                start_hdl;                               /**< Service start handle. */ 
+    uint16_t                tx_ntf_cfg[SAMPLES_CONNECTION_MAX];      /**< TX Character Notification configuration of peer devices. */
+    ble_gatts_create_db_t   sample_gatts_db;                            /**< Running Speed and Cadence Service attributs database. */
 } samples_env_t;
-
-/*
-* LOCAL FUNCTION DECLARATION
-*****************************************************************************************
-*/
-static sdk_err_t   samples_init(void);
-static void        samples_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-static void        samples_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param);
-static void        samples_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value);
-static void        samples_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
@@ -106,61 +96,34 @@ static uint8_t            s_samples_ins_cnt = 0;                 /**< Number of 
 static uint8_t            s_now_ins_cnt = 0;
 static samples_evt_type_t s_now_notify_cmp_type = SAMPLES_EVT_TX_NOTIFY_COMPLETE;
 static const uint16_t     s_samples_features = 0xFFFF;
+static const uint8_t      s_samples_svc_uuid[] = {SAMPLES_SERVICE_UUID};
 
 /**@brief Full SAMPLES Database Description - Used to add attributes into the database. */
-static const attm_desc_128_t samples_att_db[SAMPLES_IDX_NB] = {
+static const ble_gatts_attm_desc_128_t samples_attr_tab[SAMPLES_IDX_NB] =
+{
     // SAMPLE service
-    [SAMPLES_IDX_SVC]     = {ATT_128_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [SAMPLES_IDX_SVC]     = {ATT_128_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
 
     // SAMPLE TX Characteristic Declaration
-    [SAMPLES_IDX_TX_CHAR] = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [SAMPLES_IDX_TX_CHAR] = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // SAMPLE TX Characteristic Value
-    [SAMPLES_IDX_TX_VAL]  = {
-        SAMPLE_SERVER_TX_UUID,
-        NOTIFY_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        SAMPLES_MAX_DATA_LEN
-    },
+    [SAMPLES_IDX_TX_VAL]  = {SAMPLE_SERVER_TX_UUID,
+                             BLE_GATTS_NOTIFY_PERM_UNSEC,
+                             (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                             SAMPLES_MAX_DATA_LEN },
     // SAMPLE TX Characteristic - Client Characteristic Configuration Descriptor
-    [SAMPLES_IDX_TX_CFG]  = {
-        ATT_128_CLIENT_CHAR_CFG,
-        READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC,
-        0,
-        0
-    },
+    [SAMPLES_IDX_TX_CFG]  = {ATT_128_CLIENT_CHAR_CFG,
+                             BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC,
+                             0,
+                             0},
 
     // SAMPLE RX Characteristic Declaration
-    [SAMPLES_IDX_RX_CHAR]  = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0 },
+    [SAMPLES_IDX_RX_CHAR]  = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0 },
     // SAMPLE RX Characteristic Value
-    [SAMPLES_IDX_RX_VAL]   = {
-        SAMPLE_SERVER_RX_UUID,
-        WRITE_CMD_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        SAMPLES_MAX_DATA_LEN
-    },
-};
-
-/**@brief SAMPLE Server Task interface required by profile manager. */
-static ble_prf_manager_cbs_t samples_tack_cbs = {
-    (prf_init_func_t) samples_init,
-    NULL,
-    NULL
-};
-
-/**@brief SAMPLE Server Task Callbacks. */
-static gatts_prf_cbs_t samples_cb_func = {
-    samples_read_att_cb,
-    samples_write_att_cb,
-    NULL,
-    samples_ntf_ind_cb,
-    samples_cccd_set_cb
-};
-
-/**@brief SAMPLE Server Information. */
-static const prf_server_info_t samples_prf_info = {
-    .max_connection_nb = SAMPLES_CONNECTION_MAX,
-    .manager_cbs       = &samples_tack_cbs,
-    .gatts_prf_cbs     = &samples_cb_func
+    [SAMPLES_IDX_RX_VAL]   = {SAMPLE_SERVER_RX_UUID,
+                              BLE_GATTS_WRITE_CMD_PERM_UNSEC,
+                              (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                              SAMPLES_MAX_DATA_LEN},
 };
 
 /*
@@ -169,64 +132,28 @@ static const prf_server_info_t samples_prf_info = {
  */
 /**
  *****************************************************************************************
- * @brief Initialize Sample Service and create db in att
- *
- * @return Error code to know if profile initialization succeed or not.
- *****************************************************************************************
- */
-static sdk_err_t samples_init(void)
-{
-    const uint8_t     samples_svc_uuid[] = {SAMPLES_SERVICE_UUID};
-    sdk_err_t         error_code         = SDK_SUCCESS;
-    uint16_t          start_hdl          = 0;
-    gatts_create_db_t gatts_db;
-    sdk_err_t ret;
-
-    ret = memset(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (ret < 0) {
-        return ret;
-    }
-    for (uint8_t i = 0; i < s_samples_ins_cnt; i++) {
-        gatts_db.shdl                  = &start_hdl;
-        gatts_db.uuid                  = samples_svc_uuid;
-        gatts_db.attr_tab_cfg          = (uint8_t *)&s_samples_features;
-        gatts_db.max_nb_attr           = SAMPLES_IDX_NB;
-        gatts_db.srvc_perm             = SRVC_UUID_TYPE_SET(UUID_TYPE_128);
-        gatts_db.attr_tab_type         = SERVICE_TABLE_TYPE_128;
-        gatts_db.attr_tab.attr_tab_128 = samples_att_db;
-
-        error_code = ble_gatts_srvc_db_create(&gatts_db);
-        if (error_code == SDK_SUCCESS) {
-            s_samples_env[i].start_hdl = *(gatts_db.shdl);
-        } else {
-            return error_code;
-        }
-    }
-
-    return error_code;
-}
-
-/**
- *****************************************************************************************
  * @brief Handles reception of the attribute info request message.
  *
  * @param[in] conn_idx: Connection index
  * @param[in] p_param:  Pointer to the parameters of the read request.
  *****************************************************************************************
  */
-static void samples_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param)
+static void samples_read_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_read_t *p_param)
 {
     uint8_t          handle    = p_param->handle;
     uint8_t          tab_index = 0;
     uint8_t          i         = 0;
-    gatts_read_cfm_t cfm;
-
-    for (i = 0; i < s_samples_ins_cnt; i++) {
+    ble_gatts_read_cfm_t cfm;
+    
+    for (i = 0; i < s_samples_ins_cnt; i++)
+    {
         tab_index = prf_find_idx_by_handle(handle,
                                            s_samples_env[i].start_hdl,
-                                           SAMPLES_IDX_NB,
+                                           SAMPLES_IDX_NB, 
                                            (uint8_t *)&s_samples_features);
-        if (tab_index > 0) {
+
+        if (tab_index > 0)
+        {
             break;
         }
     }
@@ -234,12 +161,13 @@ static void samples_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_p
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case SAMPLES_IDX_TX_CFG:
             cfm.length = sizeof(uint16_t);
             cfm.value = (uint8_t *)&s_samples_env[i].tx_ntf_cfg[conn_idx];
             break;
-
+        
         default:
             break;
     }
@@ -255,40 +183,43 @@ static void samples_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_p
  * @param[in] p_param:  Pointer to the parameters of the write request.
  *****************************************************************************************
  */
-static void samples_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void samples_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
     uint8_t           handle     = p_param->handle;
     uint8_t           tab_index  = 0;
     uint8_t           i          = 0;
     uint16_t          cccd_value = 0;
     samples_evt_t     event;
-    gatts_write_cfm_t cfm;
+    ble_gatts_write_cfm_t cfm;
 
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    for (i = 0; i < s_samples_ins_cnt; i++) {
+    for (i = 0; i < s_samples_ins_cnt; i++)
+    {
         tab_index = prf_find_idx_by_handle(handle,
                                            s_samples_env[i].start_hdl,
                                            SAMPLES_IDX_NB,
                                            (uint8_t *)&s_samples_features);
-        if (tab_index > 0) {
+        if (tab_index > 0)
+        {
             break;
         }
     }
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case SAMPLES_IDX_RX_VAL:
-            event.conn_idx = conn_idx;
-            event.evt_type = SAMPLES_EVT_RX_RECEIVE_DATA;
+                event.conn_idx = conn_idx;
+                event.evt_type = SAMPLES_EVT_RX_RECEIVE_DATA;
             break;
 
         case SAMPLES_IDX_TX_CFG:
             cccd_value = le16toh(&p_param->value[0]);
             event.conn_idx = conn_idx;
             event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? \
-                             SAMPLES_EVT_TX_NOTIFICATION_ENABLED :\
-                             SAMPLES_EVT_TX_NOTIFICATION_DISABLED;
+                              SAMPLES_EVT_TX_NOTIFICATION_ENABLED :\
+                              SAMPLES_EVT_TX_NOTIFICATION_DISABLED;
             s_samples_env[i].tx_ntf_cfg[conn_idx] = cccd_value;
             break;
 
@@ -298,7 +229,8 @@ static void samples_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p
     }
     if ((BLE_ATT_ERR_INVALID_HANDLE != cfm.status) &&\
         (SAMPLES_EVT_INVALID != event.evt_type) &&\
-        (s_samples_env[i].samples_init.evt_handler)) {
+        (s_samples_env[i].samples_init.evt_handler))
+    {
         s_samples_env[i].samples_init.evt_handler(&event);
     }
 
@@ -314,35 +246,39 @@ static void samples_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p
  * @param[in]: cccd_value: The value of cccd attribute.
  *****************************************************************************************
  */
-static void samples_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
+static void samples_cccd_set_evt_handler(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
 {
     uint8_t           tab_index  = 0;
     uint8_t           i          = 0;
     samples_evt_t     event;
 
-    if (!prf_is_cccd_value_valid(cccd_value)) {
+    if (!prf_is_cccd_value_valid(cccd_value))
+    {
         return;
     }
 
     event.evt_type = SAMPLES_EVT_INVALID;
     event.conn_idx = conn_idx;
 
-    for (i = 0; i < s_samples_ins_cnt; i++) {
+    for (i = 0; i < s_samples_ins_cnt; i++)
+    {
         tab_index = prf_find_idx_by_handle(handle,
                                            s_samples_env[i].start_hdl,
                                            SAMPLES_IDX_NB,
                                            (uint8_t *)&s_samples_features);
-        if (tab_index > 0) {
+        if (tab_index > 0)
+        {
             break;
         }
     }
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case SAMPLES_IDX_TX_CFG:
             event.conn_idx = conn_idx;
             event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? \
-                             SAMPLES_EVT_TX_NOTIFICATION_ENABLED :\
-                             SAMPLES_EVT_TX_NOTIFICATION_DISABLED;
+                              SAMPLES_EVT_TX_NOTIFICATION_ENABLED :\
+                              SAMPLES_EVT_TX_NOTIFICATION_DISABLED;
             s_samples_env[i].tx_ntf_cfg[conn_idx] = cccd_value;
             break;
 
@@ -350,7 +286,8 @@ static void samples_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd
             break;
     }
     if ((SAMPLES_EVT_INVALID != event.evt_type) &&\
-            (s_samples_env[i].samples_init.evt_handler)) {
+        (s_samples_env[i].samples_init.evt_handler))
+    {
         s_samples_env[i].samples_init.evt_handler(&event);
     }
 }
@@ -365,18 +302,48 @@ static void samples_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd
  * @return If the event was consumed or not.
  *****************************************************************************************
  */
-static void samples_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind)
+static void samples_ntf_ind_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gatts_evt_ntf_ind_t *p_ntf_ind)
 {
-    if (s_samples_env[s_now_ins_cnt].samples_init.evt_handler != NULL) {
+    if (s_samples_env[s_now_ins_cnt].samples_init.evt_handler != NULL)
+    {
         samples_evt_t event;
         event.conn_idx = conn_idx;
 
-        if (status == BLE_SUCCESS) {
-            if (BLE_GATT_NOTIFICATION == p_ntf_ind->type) {
+        if (status == BLE_SUCCESS)
+        {
+            if (BLE_GATT_NOTIFICATION == p_ntf_ind->type)
+            {
                 event.evt_type = s_now_notify_cmp_type;
                 s_samples_env[s_now_ins_cnt].samples_init.evt_handler(&event);
             }
         }
+    }
+}
+
+static void samples_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            samples_read_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.read_req);
+            break;
+
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            samples_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+
+        case BLE_GATTS_EVT_NTF_IND:
+            samples_ntf_ind_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt_status, &p_evt->evt.gatts_evt.params.ntf_ind_sended);
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            samples_cccd_set_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt.gatts_evt.params.cccd_recovery.handle, p_evt->evt.gatts_evt.params.cccd_recovery.cccd_val);
+            break;
     }
 }
 
@@ -387,15 +354,17 @@ static void samples_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts
 sdk_err_t samples_notify_tx_data(uint8_t conn_idx, uint8_t ins_idx, uint8_t *p_data, uint16_t length)
 {
     sdk_err_t        error_code = SDK_ERR_NTF_DISABLED;
-    gatts_noti_ind_t send_cmd;
+    ble_gatts_noti_ind_t send_cmd;
 
-    if (PRF_CLI_START_NTF == s_samples_env[ins_idx].tx_ntf_cfg[conn_idx]) {
-        if (ins_idx <= s_samples_ins_cnt) {
+    if (PRF_CLI_START_NTF == s_samples_env[ins_idx].tx_ntf_cfg[conn_idx])
+    {
+        if (ins_idx <= s_samples_ins_cnt)
+        {
             // Fill in the parameter structure
             send_cmd.type   = BLE_GATT_NOTIFICATION;
             send_cmd.handle = prf_find_handle_by_idx(SAMPLES_IDX_TX_VAL,
-                s_samples_env[ins_idx].start_hdl,
-                (uint8_t *)&s_samples_features);
+                                                     s_samples_env[ins_idx].start_hdl,
+                                                     (uint8_t *)&s_samples_features);
             // pack measured value in database
             send_cmd.length       = length;
             send_cmd.value        = p_data;
@@ -412,20 +381,34 @@ sdk_err_t samples_notify_tx_data(uint8_t conn_idx, uint8_t ins_idx, uint8_t *p_d
 
 sdk_err_t samples_service_init(samples_init_t samples_init[], uint8_t ins_num)
 {
-    sdk_err_t ret;
+    sdk_err_t   error_code = SDK_SUCCESS;
 
-    if (ins_num > SAMPLES_INSTANCE_MAX) {
+    if (ins_num > SAMPLES_INSTANCE_MAX)
+    {
         return SDK_ERR_INVALID_PARAM;
     }
 
-    for (uint8_t i = 0; i < ins_num; i++) {
-        ret = memcpy_s(&s_samples_env[i].samples_init, sizeof(samples_init_t),
-                       &samples_init[i], sizeof(samples_init_t));
-        if (ret < 0) {
-            return ret;
-        }
+    for (uint8_t i = 0; i < ins_num; i++)
+    {
+        memcpy(&s_samples_env[i].samples_init, &samples_init[i], sizeof(samples_init_t));
     }
 
     s_samples_ins_cnt = ins_num;
-    return ble_server_prf_add(&samples_prf_info);
+
+    for (uint8_t i = 0; i < ins_num; i++)
+    {
+        s_samples_env[i].start_hdl  = PRF_INVALID_HANDLE;
+
+        s_samples_env[i].sample_gatts_db.shdl                  = &s_samples_env[i].start_hdl;
+        s_samples_env[i].sample_gatts_db.uuid                  = s_samples_svc_uuid;
+        s_samples_env[i].sample_gatts_db.attr_tab_cfg          = (uint8_t *)&s_samples_features;
+        s_samples_env[i].sample_gatts_db.max_nb_attr           = SAMPLES_IDX_NB;
+        s_samples_env[i].sample_gatts_db.srvc_perm             = BLE_GATTS_SRVC_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128); 
+        s_samples_env[i].sample_gatts_db.attr_tab_type         = BLE_GATTS_SERVICE_TABLE_TYPE_128;
+        s_samples_env[i].sample_gatts_db.attr_tab.attr_tab_128 = samples_attr_tab;
+        
+        error_code |= ble_gatts_prf_add(&s_samples_env[i].sample_gatts_db, samples_ble_evt_handler);
+    }
+
+    return error_code;
 }
