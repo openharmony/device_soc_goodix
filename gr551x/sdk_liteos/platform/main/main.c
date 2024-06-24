@@ -125,6 +125,8 @@ void OSVectorInit(void)
 
 static void *OHOS_SystemInitWrapper(void *parg)
 {
+    // Avoiding HCTEST being called before real LiteParamService
+    LiteParamService();
     UNUSED(parg);
     LiteParamService();
     OHOS_SystemInit();
