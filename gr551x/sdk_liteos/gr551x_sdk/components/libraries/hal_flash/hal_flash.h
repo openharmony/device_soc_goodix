@@ -59,15 +59,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_hal.h"
-
-#if defined(GR5515_C)
-exflash_handle_t g_exflash_handle;
-#else
-extern exflash_handle_t g_exflash_handle;
-#endif
-
-extern uint32_t sys_security_enable_status_check(void);
 
 /** @addtogroup HAL_FLASH_DRIVER_FUNCTIONS Functions
  * @{ */
@@ -80,7 +71,7 @@ extern uint32_t sys_security_enable_status_check(void);
  * @retval false            If failure.
  *******************************************************************************
  */
-bool hal_flash_init(void);
+bool hal_flash_init( void );
 
 /**
  *******************************************************************************
@@ -94,9 +85,6 @@ bool hal_flash_init(void);
  *******************************************************************************
  */
 uint32_t hal_flash_read(const uint32_t addr, uint8_t *buf, const uint32_t size);
-
-
-#if defined(GR5515_D)
 
 /**
  *******************************************************************************
@@ -114,8 +102,6 @@ uint32_t hal_flash_read(const uint32_t addr, uint8_t *buf, const uint32_t size);
  */
 uint32_t hal_flash_read_align_word(const uint32_t addr, uint8_t *buf, const uint32_t size);
 
-#endif
-
 /**
  *******************************************************************************
  * @brief Write flash Memory.
@@ -131,7 +117,7 @@ uint32_t hal_flash_write(const uint32_t addr, const uint8_t *buf, const uint32_t
 
 /**
  *******************************************************************************
- * @brief Write flash Memory reliably.
+ * @brief Write flash Memory reliably. 
  *
  * @note It's possible that the data was not written into Flash Memory
  *       successfully. This function reads the data from Flash Memory to check
@@ -220,7 +206,7 @@ bool hal_flash_erase_chip(void);
  */
 uint32_t hal_flash_sector_size(void);
 
-#if defined(GR5515_D) && defined(ENCRYPT_ENABLE)
+#if defined(ENCRYPT_ENABLE)
 
 /**
  ****************************************************************************************

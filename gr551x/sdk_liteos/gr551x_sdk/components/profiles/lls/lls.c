@@ -1,7 +1,7 @@
 /**
  *****************************************************************************************
  *
- * @file bas.c
+ * @file lls.c
  *
  * @brief Link Loss Server Implementation.
  *
@@ -49,7 +49,8 @@
  *****************************************************************************************
  */
 /**@brief LLS Attributes database index list. */
-enum lls_attr_idx_t {
+enum lls_attr_idx_t
+{
     LLS_IDX_SVC,
 
     LLS_IDX_ALERT_LVL_CHAR,
@@ -63,9 +64,11 @@ enum lls_attr_idx_t {
  *****************************************************************************************
  */
 /**@brief Link Loss Service environment variable. */
-struct lls_env_t {
-    lls_init_t lls_init;         /**< Link Loss Service initialization variables. */
-    uint16_t   start_hdl;        /**< Link Loss Service start handle. */
+struct lls_env_t
+{
+    lls_init_t            lls_init;                    /**< Link Loss Service initialization variables. */
+    uint16_t              start_hdl;                   /**< Link Loss Service start handle. */
+    ble_gatts_create_db_t lls_serv_db;  /**< Link Loss Service DataBase. */
 };
 
 /*
@@ -79,92 +82,27 @@ static uint8_t          s_char_mask = 0x07;   /**< Features added into ATT datab
                                                * bit1 - Alert Level Characteristic Declaration
                                                * bit2 - Alert Level Characteristic Value
                                                */
+static const uint8_t s_lls_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_LINK_LOSS);
 
 /**@brief Full LLS Database Description - Used to add attributes into the
  *        database.
  */
-static const attm_desc_t lls_attr_tab[LLS_IDX_NB] = {
+static const ble_gatts_attm_desc_t lls_attr_tab[LLS_IDX_NB] =
+{
     // Link Loss Service Declaration
-    [LLS_IDX_SVC]            = {BLE_ATT_DECL_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [LLS_IDX_SVC]            = {BLE_ATT_DECL_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Alert Level Characteristic Declaration
-    [LLS_IDX_ALERT_LVL_CHAR] = {BLE_ATT_DECL_CHARACTERISTIC,  READ_PERM_UNSEC, 0, 0},
+    [LLS_IDX_ALERT_LVL_CHAR] = {BLE_ATT_DECL_CHARACTERISTIC,  BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Alert Level Characteristic Value
-    [LLS_IDX_ALERT_LVL_VAL]  = {BLE_ATT_CHAR_ALERT_LEVEL,
-                                READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC, 0, sizeof(uint8_t)},
+    [LLS_IDX_ALERT_LVL_VAL]  = {BLE_ATT_CHAR_ALERT_LEVEL,     BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC, 0, sizeof(uint8_t)},
 };
 
 /*
  * LOCAL FUNCTION DECLARATIONS
  *******************************************************************************
  */
-static sdk_err_t   lls_init(void);
 static void        lls_on_connect(uint8_t conn_idx);
 static void        lls_on_disconnect(uint8_t conn_idx, uint8_t reason);
-static void        lls_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-
-/**@brief LLS interface required by profile manager. */
-static ble_prf_manager_cbs_t lls_mgr_cbs = {
-    (prf_init_func_t)lls_init,
-    lls_on_connect,
-    lls_on_disconnect
-};
-
-/**@brief LLS GATT server callbacks. */
-static gatts_prf_cbs_t lls_gatts_cbs = {
-    NULL,
-    lls_write_att_cb,
-    NULL,
-    NULL
-};
-
-/**@brief LLS Information. */
-static const prf_server_info_t lls_prf_info = {
-    /* There shall be only one connection on a device. */
-    .max_connection_nb = 1,
-    .manager_cbs       = &lls_mgr_cbs,
-    .gatts_prf_cbs     = &lls_gatts_cbs
-};
-
-/**
- *****************************************************************************************
- * @brief Initialize Link Loss service and create database in BLE Stack.
- *
- * @return BLE_ATT_ERR_NO_ERROR on success, otherwise error code.
- *****************************************************************************************
- */
-static sdk_err_t lls_init(void)
-{
-    const uint8_t lls_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_LINK_LOSS);
-    gatts_create_db_t gatts_db;
-    sdk_err_t ret;
-    uint16_t start_hdl = PRF_INVALID_HANDLE; /* The start hanlde is an in/out
-                                              * parameter of ble_gatts_srvc_db_create().
-                                              * It must be set with PRF_INVALID_HANDLE
-                                              * to be allocated automatically by BLE Stack. */
-
-    ret = memset_S(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (ret < 0) {
-        return ret;
-    }
-
-    gatts_db.shdl                 = &start_hdl;
-    gatts_db.uuid                 = (uint8_t *)lls_svc_uuid;
-    gatts_db.attr_tab_cfg         = &s_char_mask;
-    gatts_db.max_nb_attr          = LLS_IDX_NB;
-    gatts_db.srvc_perm            = 0;
-    gatts_db.attr_tab_type        = SERVICE_TABLE_TYPE_16;
-    gatts_db.attr_tab.attr_tab_16 = lls_attr_tab;
-
-    sdk_err_t   error_code = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_lls_env.start_hdl = *gatts_db.shdl;
-
-        uint16_t handle = prf_find_handle_by_idx(LLS_IDX_ALERT_LVL_VAL,  s_lls_env.start_hdl, &s_char_mask);
-        ble_gatts_value_set(handle, sizeof(uint8_t), 0, (unsigned char *)(&s_lls_env.lls_init.initial_alert_level));
-    }
-
-    return error_code;
-}
 
 /**
  *****************************************************************************************
@@ -178,11 +116,14 @@ static void lls_on_connect(uint8_t conn_idx)
     lls_evt_t   evt;
     sdk_err_t   ret;
 
-    if (s_lls_env.lls_init.evt_handler) {
+    if (s_lls_env.lls_init.evt_handler)
+    {
         evt.evt_type = LLS_EVT_LINK_LOSS_ALERT;
 
         ret = lls_alert_level_get((unsigned char *)(&evt.alert_level));
-        if (SDK_SUCCESS == ret && s_lls_env.lls_init.evt_handler) {
+
+        if (SDK_SUCCESS == ret && s_lls_env.lls_init.evt_handler)
+        {
             /* Inform Application the link is (re)connected */
             s_lls_env.lls_init.evt_handler(&evt);
         }
@@ -200,7 +141,8 @@ static void lls_on_connect(uint8_t conn_idx)
 static void lls_on_disconnect(uint8_t conn_idx, uint8_t reason)
 {
     /* The reason is HCI Connection Timeout */
-    if (BLE_LL_ERR_CON_TIMEOUT == reason || BLE_LL_ERR_INSTANT_PASSED == reason) {
+    if (BLE_LL_ERR_CON_TIMEOUT == reason || BLE_LL_ERR_INSTANT_PASSED == reason)
+    {
         /* Link loss detected, inform application */
         lls_evt_t evt;
         sdk_err_t ret;
@@ -208,8 +150,11 @@ static void lls_on_disconnect(uint8_t conn_idx, uint8_t reason)
         evt.evt_type = LLS_EVT_LINK_LOSS_ALERT;
 
         ret = lls_alert_level_get((unsigned char *)(&evt.alert_level));
-        if (SDK_SUCCESS == ret) {
-            if (s_lls_env.lls_init.evt_handler) {
+
+        if (SDK_SUCCESS == ret)
+        {
+            if (s_lls_env.lls_init.evt_handler)
+            {
                 s_lls_env.lls_init.evt_handler(&evt);
             }
         }
@@ -226,20 +171,26 @@ static void lls_on_disconnect(uint8_t conn_idx, uint8_t reason)
  * @param[in] p_param:  Pointer to the parameters of the write request.
  *****************************************************************************************
  */
-static void   lls_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void lls_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
     uint16_t handle = prf_find_handle_by_idx(LLS_IDX_ALERT_LVL_VAL, s_lls_env.start_hdl, &s_char_mask);
-    gatts_write_cfm_t cfm;
+    ble_gatts_write_cfm_t cfm;
 
     cfm.handle = p_param->handle;
 
-    if (handle != p_param->handle) {
+    if (handle != p_param->handle)
+    {
         cfm.status = BLE_ATT_ERR_INVALID_HANDLE;
-    } else {
-        if (p_param->length != sizeof(uint8_t)) {
+    }
+    else
+    {
+        if (p_param->length != sizeof(uint8_t))
+        {
             cfm.status = SDK_ERR_INVALID_ATT_VAL_LEN;
-        } else {
-            // Send write response
+        }
+        else
+        {
+            //Send write response
             uint8_t value = p_param->value[0];
 
             cfm.status = (uint8_t)ble_gatts_value_set(cfm.handle, sizeof(uint8_t), 0, &value);
@@ -249,22 +200,70 @@ static void   lls_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
     ble_gatts_write_cfm(conn_idx, &cfm);
 }
 
+static void lls_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if(NULL == p_evt)
+    {
+        return ;
+    }
+
+    uint16_t  handle;
+
+    switch(p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            break;
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            lls_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+        case BLE_GATTS_EVT_NTF_IND:
+            break;
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            break;
+        case BLE_GAPC_EVT_CONNECTED:
+            lls_on_connect(p_evt->evt.gapc_evt.index);
+            break;
+        case BLE_GAPC_EVT_DISCONNECTED:
+            lls_on_disconnect(p_evt->evt.gapc_evt.index,p_evt->evt.gapc_evt.params.disconnected.reason);
+            break;
+        case BLE_GATT_COMMON_EVT_PRF_REGISTER:
+            handle = prf_find_handle_by_idx(LLS_IDX_ALERT_LVL_VAL, s_lls_env.start_hdl, &s_char_mask);
+            ble_gatts_value_set(handle, sizeof(uint8_t), 0, (uint8_t *)&s_lls_env.lls_init.initial_alert_level);
+            break;
+        default:
+            break;
+    }
+}
+
 /*
  * GLOBAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
 sdk_err_t lls_service_init(lls_init_t *p_lls_init)
 {
-    if (p_lls_init == NULL) {
+    if (NULL == p_lls_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    s_lls_env.lls_init.evt_handler = p_lls_init->evt_handler;
+    s_lls_env.lls_init.evt_handler         = p_lls_init->evt_handler;
+    s_lls_env.lls_init.initial_alert_level = p_lls_init->initial_alert_level;
 
-    return ble_server_prf_add(&lls_prf_info);
+    memset(&s_lls_env.lls_serv_db, 0, sizeof(ble_gatts_create_db_t));
+
+    s_lls_env.start_hdl                        = PRF_INVALID_HANDLE;
+    s_lls_env.lls_serv_db.shdl                 = &s_lls_env.start_hdl;
+    s_lls_env.lls_serv_db.uuid                 = s_lls_svc_uuid;
+    s_lls_env.lls_serv_db.attr_tab_cfg         = &s_char_mask;
+    s_lls_env.lls_serv_db.max_nb_attr          = LLS_IDX_NB;
+    s_lls_env.lls_serv_db.srvc_perm            = 0;
+    s_lls_env.lls_serv_db.attr_tab_type        = BLE_GATTS_SERVICE_TABLE_TYPE_16;
+    s_lls_env.lls_serv_db.attr_tab.attr_tab_16 = lls_attr_tab;
+
+    return ble_gatts_prf_add(&s_lls_env.lls_serv_db, lls_ble_evt_handler);
 }
 
-sdk_err_t   lls_alert_level_get(uint8_t *p_alert_level)
+sdk_err_t lls_alert_level_get(uint8_t *p_alert_level)
 {
     uint16_t handle = prf_find_handle_by_idx(LLS_IDX_ALERT_LVL_VAL, s_lls_env.start_hdl, (uint8_t *)&s_char_mask);
     uint16_t length = sizeof(uint8_t);

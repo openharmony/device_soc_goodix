@@ -57,7 +57,7 @@
  * @defgroup DIS_C_MACRO Defines
  * @{
  */
-#define BLE_SRV_DISC_PROC_MAX    6    /**< Maximum number of services discovery procedure in one application. */
+#define BLE_SRV_DISC_PROC_MAX         6            /**< Maximum number of services discovery procedure in one application. */
 /** @} */
 
 /**
@@ -65,14 +65,16 @@
  * @{
  */
 /**@brief BLE Service Discovery Procedure State. */
-typedef enum {
+typedef enum
+{
     BLE_SRV_DISC_NO_IMPLEMENT,    /**< Service discovery procedure has not been implemented. */
     BLE_SRV_DISC_UNDERWAY,        /**< Service discovery procedure is underway. */
     BLE_SRV_DISC_COMPLETELY,      /**< Service discovery procedure has been completed. */
 } ble_srv_disc_state_t;
 
 /**@brief BLE Service Discovery Procedure ID. */
-typedef enum {
+typedef enum
+{
     BLE_SRV_DISC_PROC_ID_0,       /**< Service discovery procedure ID_0. */
     BLE_SRV_DISC_PROC_ID_1,       /**< Service discovery procedure ID_1. */
     BLE_SRV_DISC_PROC_ID_2,       /**< Service discovery procedure ID_2. */

@@ -60,16 +60,17 @@
 #ifndef __TPS_H__
 #define __TPS_H__
 
-#include <stdint.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include <stdint.h>
 
 /**
  * @defgroup TPS_STRUCT Structures
  * @{
  */
 /**@brief Tx Power Servic init stucture. This contains all option and data needed for initialization of the service. */
-typedef struct {
+typedef struct
+{
     int8_t initial_tx_power_level;        /**< Initial value of Tx Power Level characteristic (in dBm) */
 } tps_init_t;
 /** @} */
@@ -99,6 +100,16 @@ sdk_err_t tps_service_init(tps_init_t *p_tps_init);
  *****************************************************************************************
  */
 sdk_err_t tps_tx_power_level_set(int8_t tx_power_level);
+
+/**
+ *****************************************************************************************
+ * @brief Provide the interface for other modules to obtain the tps service start handle .
+ *
+ * @return The tps service start handle.
+ *****************************************************************************************
+ */
+uint16_t tps_service_start_handle_get(void);
+
 /** @} */
 
 #endif

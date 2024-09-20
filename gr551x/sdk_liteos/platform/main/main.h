@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 GOODIX.
+ * Copyright (c) 2024 GOODIX.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -24,6 +25,7 @@ void HardwareRandomInit(void);
 void OSVectorInit(void);
 void FileSystemInit(void);
 void OHOS_SystemInit(void); // this is the service loader function for OHOS
+void GR551xPwrMgmtInit(void);
 void WDT_IRQHandler(void);
 void BLE_SDK_Handler(void);
 void BLE_IRQHandler(void);
@@ -43,7 +45,7 @@ void AES_IRQHandler(void);
 void HMAC_IRQHandler(void);
 void EXT2_IRQHandler(void);
 void RNG_IRQHandler(void);
-void PMU_IRQHandler(void);
+void BOD_ASSERT_IRQHandler(void);
 void PKC_IRQHandler(void);
 void XQSPI_IRQHandler(void);
 void QSPI1_IRQHandler(void);

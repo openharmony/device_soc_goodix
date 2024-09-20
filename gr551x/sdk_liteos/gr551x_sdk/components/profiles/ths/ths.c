@@ -49,14 +49,10 @@
 *****************************************************************************************
 */
 #define SETTINGS_CHAR_VALUE_LEN           10   /**< Maximum length of the value of Settings characteristic. */
-#define THS_TX_CHARACTERISTIC_UUID        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                           0xD3, 0x02, 0x03, 0xED, 0xA6}
-#define THS_RX_CHARACTERISTIC_UUID        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                           0xD3, 0x03, 0x03, 0xED, 0xA6}
-#define THS_SETTINGS_CHARACTERISTIC_UUID  {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                           0xD3, 0x04, 0x03, 0xED, 0xA6}
-#define THS_TOGGLE_CHARACTERISTIC_UUID    {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, \
-                                           0xD3, 0x05, 0x03, 0xED, 0xA6}
+#define THS_TX_CHARACTERISTIC_UUID        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x02, 0x03, 0xED, 0xA6}
+#define THS_RX_CHARACTERISTIC_UUID        {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x03, 0x03, 0xED, 0xA6}
+#define THS_SETTINGS_CHARACTERISTIC_UUID  {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x04, 0x03, 0xED, 0xA6}
+#define THS_TOGGLE_CHARACTERISTIC_UUID    {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x05, 0x03, 0xED, 0xA6}
 
 /**@brief Macros for conversion of 128bit to 16bit UUID. */
 #define ATT_128_PRIMARY_SERVICE     BLE_ATT_16_TO_128_ARRAY(BLE_ATT_DECL_PRIMARY_SERVICE)
@@ -68,7 +64,8 @@
  *****************************************************************************************
  */
 /**@brief Throughput Service Attributes Indexes. */
-enum ths_attr_idx_t {
+enum ths_attr_idx_t
+{
     THS_IDX_SVC,
 
     THS_IDX_TX_CHAR,
@@ -93,23 +90,14 @@ enum ths_attr_idx_t {
  *****************************************************************************************
  */
 /**@brief Throughput service environment variable. */
-struct ths_env_t {
-    ths_init_t    ths_init;                             /**< Throughput Service initialization variables. */
-    uint16_t      start_hdl;                            /**< Service start handle. */
-    uint16_t      data_ntf_cfg[THS_CONNECTION_MAX];     /**< Notification configuration for sending the data. */
-    uint16_t
-    settings_ntf_cfg[THS_CONNECTION_MAX]; /**< Notification configuration for notifying the settings change. */
+struct ths_env_t
+{
+    ths_init_t              ths_init;                             /**< Throughput Service initialization variables. */
+    uint16_t                start_hdl;                            /**< Service start handle. */
+    uint16_t                data_ntf_cfg[THS_CONNECTION_MAX];     /**< Notification configuration for sending the data. */
+    uint16_t                settings_ntf_cfg[THS_CONNECTION_MAX]; /**< Notification configuration for notifying the settings change. */
+    ble_gatts_create_db_t   ths_att_db;                           /**< Throughput Service attributs database. */
 };
-
-/*
-* LOCAL FUNCTION DECLARATION
-*****************************************************************************************
-*/
-static sdk_err_t   ths_init(void);
-static void        ths_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-static void        ths_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param);
-static void        ths_gatts_cmpl_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind);
-static void        ths_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
@@ -118,88 +106,55 @@ static void        ths_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t c
 static struct ths_env_t s_ths_env;
 static uint8_t          s_noti_cfg_idx;
 static const uint16_t   s_char_mask = 0x07FF;
+static const uint8_t    s_ths_svc_uuid[] = {THS_SERVICE_UUID};
 
 /**@brief Full THS Database Description - Used to add attributes into the database. */
-static const attm_desc_128_t ths_attr_tab[THS_IDX_NB] = {
+static const ble_gatts_attm_desc_128_t ths_attr_tab[THS_IDX_NB] =
+{
     // ths service
-    [THS_IDX_SVC]           = {ATT_128_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [THS_IDX_SVC]           = {ATT_128_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
 
     // ths tx Declaration
-    [THS_IDX_TX_CHAR]       = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [THS_IDX_TX_CHAR]       = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // ths tx Value
-    [THS_IDX_TX_VAL]        = {
-        THS_TX_CHARACTERISTIC_UUID,
-        (NOTIFY_PERM_UNSEC),
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        THS_MAX_DATA_LEN
-    },
+    [THS_IDX_TX_VAL]        = {THS_TX_CHARACTERISTIC_UUID,
+                               (BLE_GATTS_NOTIFY_PERM_UNSEC),
+                               (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                               THS_MAX_DATA_LEN},
     // ths tx Characteristic Configuration
-    [THS_IDX_TX_CFG]        = {
-        ATT_128_CLIENT_CHAR_CFG,
-        (READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC | WRITE_CMD_PERM_UNSEC),
-        0,
-        0
-    },
+    [THS_IDX_TX_CFG]        = {ATT_128_CLIENT_CHAR_CFG,
+                               (BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC | BLE_GATTS_WRITE_CMD_PERM_UNSEC),
+                               0,
+                               0},
 
     // ths rx
-    [THS_IDX_RX_CHAR]       = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [THS_IDX_RX_CHAR]       = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // ths rx Value
-    [THS_IDX_RX_VAL]        = {
-        THS_RX_CHARACTERISTIC_UUID,
-        WRITE_CMD_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        THS_MAX_DATA_LEN
-    },
+    [THS_IDX_RX_VAL]        = {THS_RX_CHARACTERISTIC_UUID,
+                               BLE_GATTS_WRITE_CMD_PERM_UNSEC,
+                               (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                               THS_MAX_DATA_LEN},
 
     // ths settings
-    [THS_IDX_SETTINGS_CHAR] = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [THS_IDX_SETTINGS_CHAR] = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // ths settings Value
-    [THS_IDX_SETTINGS_VAL]  = {
-        THS_SETTINGS_CHARACTERISTIC_UUID,
-        (WRITE_CMD_PERM_UNSEC | NOTIFY_PERM_UNSEC),
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        SETTINGS_CHAR_VALUE_LEN
-    },
+    [THS_IDX_SETTINGS_VAL]  = {THS_SETTINGS_CHARACTERISTIC_UUID,
+                               (BLE_GATTS_WRITE_CMD_PERM_UNSEC | BLE_GATTS_NOTIFY_PERM_UNSEC),
+                               (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                               SETTINGS_CHAR_VALUE_LEN},
     // ths settings cfg
-    [THS_IDX_SETTINGS_CFG]  = {
-        ATT_128_CLIENT_CHAR_CFG,
-        (READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC | WRITE_CMD_PERM_UNSEC),
-        0,
-        0
-    },
+    [THS_IDX_SETTINGS_CFG]  = {ATT_128_CLIENT_CHAR_CFG,
+                               (BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC | BLE_GATTS_WRITE_CMD_PERM_UNSEC),
+                               0,
+                               0},
 
     // ths toggle
-    [THS_IDX_TOGGLE_CHAR]   = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [THS_IDX_TOGGLE_CHAR]   = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // ths toggle Value
-    [THS_IDX_TOGGLE_VAL]    = {
-        THS_TOGGLE_CHARACTERISTIC_UUID,
-        WRITE_CMD_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        sizeof(uint8_t)
-    },
-};
-
-/**@brief Throughput Service interface required by profile manager. */
-static ble_prf_manager_cbs_t ths_mgr_cbs = {
-    (prf_init_func_t)ths_init,
-    NULL,
-    NULL
-};
-
-/**@brief Throughput GATT Server Callbacks. */
-static gatts_prf_cbs_t ths_gatts_cbs = {
-    ths_read_att_cb,
-    ths_write_att_cb,
-    NULL,
-    ths_gatts_cmpl_cb,
-    ths_cccd_set_cb
-};
-
-/**@brief Throughput Service Information. */
-static const prf_server_info_t ths_prf_info = {
-    .max_connection_nb = THS_CONNECTION_MAX,
-    .manager_cbs       = &ths_mgr_cbs,
-    .gatts_prf_cbs     = &ths_gatts_cbs
+    [THS_IDX_TOGGLE_VAL]    = {THS_TOGGLE_CHARACTERISTIC_UUID,
+                               BLE_GATTS_WRITE_CMD_PERM_UNSEC,
+                               (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                               sizeof(uint8_t)},
 };
 
 /*
@@ -208,58 +163,24 @@ static const prf_server_info_t ths_prf_info = {
  */
 /**
  *****************************************************************************************
- * @brief Initialize throughput service, and create database in ATT.
- *
- * @return Error code to know if profile initialization succeed or not.
- *****************************************************************************************
- */
-static sdk_err_t ths_init(void)
-{
-    const uint8_t     ths_svc_uuid[] = {THS_SERVICE_UUID};
-    uint16_t          start_hdl = PRF_INVALID_HANDLE;
-    sdk_err_t         error_code;
-    gatts_create_db_t gatts_db;
-
-    error_code = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (error_code < 0) {
-        return error_code;
-    }
-
-    gatts_db.shdl                  = &start_hdl;
-    gatts_db.uuid                  = ths_svc_uuid;
-    gatts_db.attr_tab_cfg          = (uint8_t *)&s_char_mask;
-    gatts_db.max_nb_attr           = THS_IDX_NB;
-    gatts_db.srvc_perm             = SRVC_UUID_TYPE_SET(UUID_TYPE_128);
-    gatts_db.attr_tab_type         = SERVICE_TABLE_TYPE_128;
-    gatts_db.attr_tab.attr_tab_128 = ths_attr_tab;
-
-    error_code = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_ths_env.start_hdl = *gatts_db.shdl;
-    }
-
-    return error_code;
-}
-
-/**
- *****************************************************************************************
  * @brief Handles reception of the attribute info request message.
  *
  * @param[in] conn_idx: Connection index.
  * @param[in] p_param:  Pointer to the parameters of the read request.
  *****************************************************************************************
  */
-static void   ths_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param)
+static void   ths_read_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_read_t *p_param)
 {
-    gatts_read_cfm_t cfm;
-    uint8_t          handle    = p_param->handle;
-    uint8_t          tab_index = 0;
+    ble_gatts_read_cfm_t    cfm;
+    uint8_t                 handle    = p_param->handle;
+    uint8_t                 tab_index = 0;
 
     tab_index  = prf_find_idx_by_handle(handle, s_ths_env.start_hdl, THS_IDX_NB, (uint8_t *)&s_char_mask);
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case THS_IDX_TX_CFG:
             cfm.length = sizeof(uint16_t);
             cfm.value  = (uint8_t *)&s_ths_env.data_ntf_cfg[conn_idx];
@@ -289,12 +210,12 @@ static void   ths_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_par
  * @return If the request was consumed or not.
  *****************************************************************************************
  */
-static void   ths_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void   ths_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
-    uint8_t           handle    = p_param->handle;
-    uint8_t           tab_index = 0;
-    ths_evt_t         event;
-    gatts_write_cfm_t cfm;
+    uint8_t                 handle    = p_param->handle;
+    uint8_t                 tab_index = 0;
+    ths_evt_t               event;
+    ble_gatts_write_cfm_t   cfm;
 
     tab_index  = prf_find_idx_by_handle(handle, s_ths_env.start_hdl, THS_IDX_NB, (uint8_t *)&s_char_mask);
     cfm.handle = handle;
@@ -303,7 +224,8 @@ static void   ths_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
     event.conn_idx = conn_idx;
     event.evt_type = THS_EVT_INVALID;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case THS_IDX_TX_CFG:
             s_ths_env.data_ntf_cfg[conn_idx] = le16toh(&p_param->value[0]);
             break;
@@ -318,7 +240,8 @@ static void   ths_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
 
         case THS_IDX_SETTINGS_VAL:
             event.evt_type = THS_EVT_SETTINGS_CHANGED;
-            if (THS_SETTINGS_TYPE_TRANS_MODE == p_param->value[0]) {
+            if (THS_SETTINGS_TYPE_TRANS_MODE == p_param->value[0])
+            {
                 s_ths_env.ths_init.transport_mode = (ths_transport_mode_t)p_param->value[1];
             }
             break;
@@ -332,8 +255,8 @@ static void   ths_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
             break;
     }
 
-    if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && THS_EVT_INVALID != event.evt_type &&
-        s_ths_env.ths_init.evt_handler) {
+    if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && THS_EVT_INVALID != event.evt_type && s_ths_env.ths_init.evt_handler)
+    {
         event.length   = p_param->length;
         event.p_data   = (uint8_t *)p_param->value;
         s_ths_env.ths_init.evt_handler(&event);
@@ -351,17 +274,19 @@ static void   ths_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
  * @param[in]: cccd_value: The value of cccd attribute.
  *****************************************************************************************
  */
-static void ths_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
+static void ths_cccd_set_evt_handler(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
 {
     uint8_t  tab_index = 0;
 
-    if (!prf_is_cccd_value_valid(cccd_value)) {
+    if (!prf_is_cccd_value_valid(cccd_value))
+    {
         return;
     }
 
     tab_index  = prf_find_idx_by_handle(handle, s_ths_env.start_hdl, THS_IDX_NB, (uint8_t *)&s_char_mask);
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case THS_IDX_TX_CFG:
             s_ths_env.data_ntf_cfg[conn_idx] = cccd_value;
             break;
@@ -377,21 +302,50 @@ static void ths_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
 
 /**
  *****************************************************************************************
- * @brief Handles reception of the complete event.
+ * @brief Handles reception of the notification complete event.
  *
  * @param[in] conn_idx: Connection index.
  * @param[in] p_param:  Pointer to the parameters of the complete event.
  *****************************************************************************************
  */
-static void ths_gatts_cmpl_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind)
+static void ths_ntf_cplt_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gatts_evt_ntf_ind_t *p_ntf_ind)
 {
-    if (s_ths_env.ths_init.evt_handler && SDK_SUCCESS == status) {
-        if (BLE_GATT_NOTIFICATION == p_ntf_ind->type && THS_IDX_TX_VAL == s_noti_cfg_idx) {
+    if (s_ths_env.ths_init.evt_handler && SDK_SUCCESS == status)
+    {
+        if (BLE_GATT_NOTIFICATION == p_ntf_ind->type && THS_IDX_TX_VAL == s_noti_cfg_idx)
+        {
             ths_evt_t event;
             event.conn_idx  = conn_idx;
             event.evt_type  = THS_EVT_DATA_SENT;
             s_ths_env.ths_init.evt_handler(&event);
         }
+    }
+}
+
+static void ths_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            ths_read_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.read_req);
+            break;
+
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            ths_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+
+        case BLE_GATTS_EVT_NTF_IND:
+            ths_ntf_cplt_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt_status, &p_evt->evt.gatts_evt.params.ntf_ind_sended);
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            ths_cccd_set_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt.gatts_evt.params.cccd_recovery.handle, p_evt->evt.gatts_evt.params.cccd_recovery.cccd_val);
+            break;
     }
 }
 
@@ -403,18 +357,19 @@ sdk_err_t ths_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
     sdk_err_t   error_code = SDK_ERR_NTF_DISABLED;
 
-    if (PRF_CLI_START_NTF == s_ths_env.data_ntf_cfg[conn_idx]) {
-        gatts_noti_ind_t send_cmd;
+    if (PRF_CLI_START_NTF == s_ths_env.data_ntf_cfg[conn_idx])
+    {
+            ble_gatts_noti_ind_t send_cmd;
 
-        // Fill in the parameter structure
-        send_cmd.type   = BLE_GATT_NOTIFICATION;
-        send_cmd.handle = prf_find_handle_by_idx(THS_IDX_TX_VAL, s_ths_env.start_hdl, (uint8_t *)&s_char_mask);
-        // Pack measured value in database
-        send_cmd.length = length;
-        send_cmd.value  = p_data;
-        // Send notification to peer device
-        error_code      = ble_gatts_noti_ind(conn_idx, &send_cmd);
-        s_noti_cfg_idx  = THS_IDX_TX_VAL;
+            // Fill in the parameter structure
+            send_cmd.type   = BLE_GATT_NOTIFICATION;
+            send_cmd.handle = prf_find_handle_by_idx(THS_IDX_TX_VAL, s_ths_env.start_hdl, (uint8_t *)&s_char_mask);
+            // Pack measured value in database
+            send_cmd.length = length;
+            send_cmd.value  = p_data;
+            // Send notification to peer device
+            error_code      = ble_gatts_noti_ind(conn_idx, &send_cmd);
+            s_noti_cfg_idx  = THS_IDX_TX_VAL;
     }
 
     return error_code;
@@ -424,8 +379,9 @@ sdk_err_t ths_settings_notify(uint8_t conn_idx, uint8_t *p_settings, uint16_t le
 {
     sdk_err_t   error_code = SDK_ERR_NTF_DISABLED;
 
-    if (PRF_CLI_START_NTF == s_ths_env.settings_ntf_cfg[conn_idx]) {
-        gatts_noti_ind_t send_cmd;
+    if (PRF_CLI_START_NTF == s_ths_env.settings_ntf_cfg[conn_idx])
+    {
+        ble_gatts_noti_ind_t send_cmd;
 
         // Fill in the parameter structure
         send_cmd.type   = BLE_GATT_NOTIFICATION;
@@ -450,16 +406,24 @@ ths_transport_mode_t ths_transport_mode_get(void)
 
 sdk_err_t ths_service_init(ths_init_t *p_ths_init)
 {
-    sdk_err_t ret;
-    if (p_ths_init == NULL) {
+    if (NULL == p_ths_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memcpy_s(&s_ths_env.ths_init, sizeof(ths_init_t), p_ths_init, sizeof(ths_init_t));
-    if (ret < 0) {
-        return ret;
-    }
+    memcpy(&s_ths_env.ths_init, p_ths_init, sizeof(ths_init_t));
 
-    return ble_server_prf_add(&ths_prf_info);
+    memset(&s_ths_env.ths_att_db, 0, sizeof(ble_gatts_create_db_t));
+
+    s_ths_env.start_hdl = PRF_INVALID_HANDLE;
+    s_ths_env.ths_att_db.shdl                  = &s_ths_env.start_hdl;
+    s_ths_env.ths_att_db.uuid                  = s_ths_svc_uuid;
+    s_ths_env.ths_att_db.attr_tab_cfg          = (uint8_t *)&s_char_mask;
+    s_ths_env.ths_att_db.max_nb_attr           = THS_IDX_NB;
+    s_ths_env.ths_att_db.srvc_perm             = BLE_GATTS_SRVC_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128);
+    s_ths_env.ths_att_db.attr_tab_type         = BLE_GATTS_SERVICE_TABLE_TYPE_128;
+    s_ths_env.ths_att_db.attr_tab.attr_tab_128 = ths_attr_tab;
+
+    return ble_gatts_prf_add(&s_ths_env.ths_att_db, ths_ble_evt_handler);
 }
 

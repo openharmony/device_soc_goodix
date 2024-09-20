@@ -49,27 +49,26 @@
  * @details The Next DST Change Service exposes the Time with DST characteristic. This module
  *          implements the Next DST Change Service with Time with DST characteristics.
  *
- *          The application must call \ref ndcs_service_init() to add Next DST Change Service
+ *          The application must call \ref ndcs_service_init() to add Next DST Change Service 
  *          and Time with DST characteristic to the BLE Stack database.
  */
 
 #ifndef __NDCS_H__
 #define __NDCS_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup NDCS_MACRO Defines
  * @{
  */
-#define NDCS_CONNECTION_MAX          (10 < CFG_MAX_CONNECTIONS ? \
-                                     10 : CFG_MAX_CONNECTIONS)      /**< Maximum number of NDCS connections. */
-#define NDCS_TIME_WITH_DST_VAL_LEN   8                              /**< Length of Time with DST value. */
-#define NDCS_CHAR_FULL               0x07   /**< Bit mask for mandatory characteristic in NDCS. */
+#define NDCS_CONNECTION_MAX                10                             /**< Maximum number of NDCS connections. */
+#define NDCS_TIME_WITH_DST_VAL_LEN         8                              /**< Length of Time with DST value. */
+#define NDCS_CHAR_FULL                     0x07                           /**< Bit mask for mandatory characteristic in NDCS. */
 /** @} */
 
 /**
@@ -77,7 +76,8 @@
  * @{
  */
 /**@brief Daylight Saving Time Offset. */
-typedef enum {
+typedef enum
+{
     NDCS_DST_OFFSET_STANDAR_TIME,         /**< Standard Time. */
     NDCS_DST_OFFSET_HALF_HOUR,            /**< Half An Hour Daylight Time (+0.5h). */
     NDCS_DST_OFFSET_DAYLIGHT_TIME,        /**< Daylight Time (+1h). */
@@ -90,7 +90,8 @@ typedef enum {
  * @{
  */
 /**@brief Time with DST. */
-typedef struct {
+typedef struct
+{
     prf_date_time_t   date_time;       /**< Date Time. */
     ndcs_dst_offset_t dst_offset;    /**< Daylight Saving Time Offset. */
 } ndcs_time_dst_t;

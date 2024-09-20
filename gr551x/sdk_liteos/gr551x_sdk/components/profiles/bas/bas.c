@@ -49,7 +49,8 @@
  *****************************************************************************************
  */
 /**@brief Battery Service Attributes Indexes. */
-enum bas_attr_idx_t {
+enum bas_attr_idx_t
+{
     BAS_IDX_SVC,
 
     BAS_IDX_BATT_LVL_CHAR,
@@ -65,78 +66,43 @@ enum bas_attr_idx_t {
  *****************************************************************************************
  */
 /**@brief Battery Service environment variable. */
-struct bas_env_t {
-    bas_init_t          bas_init;                       /**< Battery Service initialization variables. */
-    uint16_t            start_hdl;                      /**< Battery Service start handle. */
-    uint16_t
-    ntf_cfg[BAS_CONNECTION_MAX];    /**< The configuration of Battery Level Notification \
-                                         which is configured by the peer devices. */
-    prf_char_pres_fmt_t
-    batt_level_pres_format;         /**< Battery Level Characteristic Presentation Format \
-                                         which should not change during connection. */
+struct bas_env_t
+{
+    bas_init_t              bas_init;                       /**< Battery Service initialization variables. */
+    uint16_t                start_hdl;                      /**< Battery Service start handle. */
+    uint16_t                ntf_cfg[BAS_CONNECTION_MAX];    /**< The configuration of Battery Level Notification which is configured by the peer devices. */
+    prf_char_pres_fmt_t     batt_level_pres_format;         /**< Battery Level Characteristic Presentation Format which should not change during connection. */
+    ble_gatts_create_db_t   bas_gatts_db;                   /**< Battery Service attributs database. */
 };
 
-/*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static sdk_err_t bas_init(void);
-static void      bas_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param);
-static void      bas_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-static void      bas_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value);
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
 static struct bas_env_t s_bas_env[BAS_INSTANCE_MAX];  /**< Battery service instance. */
 static uint8_t          s_bas_ins_cnt = 0;            /**< Number of Battery Server task instances. */
+static const uint8_t    s_bas_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_BATTERY_SERVICE);
 
 /**@brief Full BAS Database Description which is used to add attributes into the ATT database. */
-static const attm_desc_t bas_attr_tab[BAS_IDX_NB] = {
+static const ble_gatts_attm_desc_t bas_attr_tab[BAS_IDX_NB] =
+{
     // Battery Service Declaration
-    [BAS_IDX_SVC] = {BLE_ATT_DECL_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [BAS_IDX_SVC] = {BLE_ATT_DECL_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
 
     // Battery Level Characteristic - Declaration
-    [BAS_IDX_BATT_LVL_CHAR]     = {BLE_ATT_DECL_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [BAS_IDX_BATT_LVL_CHAR]     = {BLE_ATT_DECL_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // Battery Level Characteristic - Value
-    [BAS_IDX_BATT_LVL_VAL]      = {
-        BLE_ATT_CHAR_BATTERY_LEVEL,
-        READ_PERM_UNSEC | NOTIFY_PERM_UNSEC,
-        ATT_VAL_LOC_USER,
-        BAS_LVL_MAX_LEN
-    },
+    [BAS_IDX_BATT_LVL_VAL]      = {BLE_ATT_CHAR_BATTERY_LEVEL,
+                                   BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_NOTIFY_PERM_UNSEC,
+                                   BLE_GATTS_ATT_VAL_LOC_USER,
+                                   BAS_LVL_MAX_LEN},
     // Battery Level Characteristic - Client Characteristic Configuration Descriptor
-    [BAS_IDX_BATT_LVL_NTF_CFG]  = {
-        BLE_ATT_DESC_CLIENT_CHAR_CFG,
-        READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC,
-        ATT_VAL_LOC_USER,
-        0
-    },
+    [BAS_IDX_BATT_LVL_NTF_CFG]  = {BLE_ATT_DESC_CLIENT_CHAR_CFG, 
+                                   BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC,
+                                   BLE_GATTS_ATT_VAL_LOC_USER,
+                                   0},
     // Battery Level Characteristic - Characteristic Presentation Format Descriptor
-    [BAS_IDX_BATT_LVL_PRES_FMT] = {BLE_ATT_DESC_CHAR_PRES_FORMAT, READ_PERM_UNSEC, ATT_VAL_LOC_USER, 0},
-};
-
-/**@brief Battery Service interface required by profile manager. */
-static ble_prf_manager_cbs_t bas_mgr_cbs = {
-    (prf_init_func_t)bas_init,
-    NULL,
-    NULL
-};
-
-/**@brief Battery GATT Server Callbacks. */
-static gatts_prf_cbs_t bas_gatts_cbs = {
-    bas_read_att_cb,
-    bas_write_att_cb,
-    NULL,
-    NULL,
-    bas_cccd_set_cb
-};
-
-/**@brief Battery Service Information. */
-static const prf_server_info_t bas_prf_info = {
-    .max_connection_nb = BAS_CONNECTION_MAX,
-    .manager_cbs       = &bas_mgr_cbs,
-    .gatts_prf_cbs          = &bas_gatts_cbs
+    [BAS_IDX_BATT_LVL_PRES_FMT] = {BLE_ATT_DESC_CHAR_PRES_FORMAT, BLE_GATTS_READ_PERM_UNSEC, BLE_GATTS_ATT_VAL_LOC_USER, 0},
 };
 
 /*
@@ -145,75 +111,38 @@ static const prf_server_info_t bas_prf_info = {
  */
 /**
  *****************************************************************************************
- * @brief Initialize Battery service and create DB in ATT.
- *
- * @return Error code to know if service initialization succeed or not.
- *****************************************************************************************
- */
-static sdk_err_t bas_init(void)
-{
-    const uint8_t     bas_svc_uuid[] = BLE_ATT_16_TO_16_ARRAY(BLE_ATT_SVC_BATTERY_SERVICE);
-    sdk_err_t         error_code     = SDK_SUCCESS;
-    uint16_t          start_hdl;
-    gatts_create_db_t gatts_db;
-
-    error_code = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (error_code < 0) {
-        return error_code;
-    }
-
-    for (uint8_t i = 0; i < s_bas_ins_cnt; i++) {
-        // The start hanlde must be set with PRF_INVALID_HANDLE to be allocated automatically by BLE Stack.
-        start_hdl                     = PRF_INVALID_HANDLE;
-        gatts_db.shdl                 = &start_hdl;
-        gatts_db.uuid                 = bas_svc_uuid;
-        gatts_db.attr_tab_cfg         = (uint8_t *)&s_bas_env[i].bas_init.char_mask;
-        gatts_db.max_nb_attr          = BAS_IDX_NB;
-        gatts_db.srvc_perm            = 0;
-        gatts_db.attr_tab_type        = SERVICE_TABLE_TYPE_16;
-        gatts_db.attr_tab.attr_tab_16 = bas_attr_tab;
-
-        error_code = ble_gatts_srvc_db_create(&gatts_db);
-        if (SDK_SUCCESS == error_code) {
-            s_bas_env[i].start_hdl = *(gatts_db.shdl);
-        } else {
-            return error_code;
-        }
-    }
-
-    return error_code;
-}
-
-/**
- *****************************************************************************************
  * @brief Handles reception of the attribute info request message.
  *
  * @param[in] conn_idx: Connection index.
  * @param[in] p_param:  Point to the parameters of the read request.
  *****************************************************************************************
  */
-static void bas_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param)
+static void bas_read_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_read_t *p_param)
 {
-    uint8_t          handle = p_param->handle;
-    uint8_t          tab_index;
-    uint8_t          char_pres_value[PRF_CHAR_PRES_FMT_SIZE];
-    uint8_t          i;
-    gatts_read_cfm_t cfm;
+    uint8_t              handle = p_param->handle;
+    uint8_t              tab_index;
+    uint8_t              char_pres_value[PRF_CHAR_PRES_FMT_SIZE];
+    uint8_t              i;
+    ble_gatts_read_cfm_t cfm;
 
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    for (i = 0; i < s_bas_ins_cnt; i++) {
+    for (i = 0; i < s_bas_ins_cnt; i++)
+    {
         tab_index = prf_find_idx_by_handle(handle,
                                            s_bas_env[i].start_hdl,
                                            BAS_IDX_NB,
                                            &s_bas_env[i].bas_init.char_mask);
-        if (tab_index > 0) {
+
+        if (tab_index > 0)
+        {
             break;
         }
     }
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case BAS_IDX_BATT_LVL_VAL:
             cfm.length = sizeof(uint8_t);
             cfm.value  = (uint8_t *)(&s_bas_env[i].bas_init.batt_lvl);
@@ -247,35 +176,39 @@ static void bas_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param
  * @param[in] p_param Point to the parameters of the write request.
  *****************************************************************************************
  */
-static void bas_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void bas_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
-    uint16_t          handle     = p_param->handle;
-    uint16_t          cccd_value = 0;
-    uint8_t           tab_index  = 0;
-    uint8_t           i          = 0;
-    bas_evt_t         bas_evt;
-    gatts_write_cfm_t cfm;
+    uint16_t                handle     = p_param->handle;
+    uint16_t                cccd_value = 0;
+    uint8_t                 tab_index  = 0;
+    uint8_t                 i          = 0;
+    bas_evt_t               bas_evt;
+    ble_gatts_write_cfm_t   cfm;
 
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    for (i = 0; i < s_bas_ins_cnt; i++) {
+    for (i = 0; i < s_bas_ins_cnt; i++)
+    {
         tab_index = prf_find_idx_by_handle(handle,
                                            s_bas_env[i].start_hdl,
                                            BAS_IDX_NB,
                                            &s_bas_env[i].bas_init.char_mask);
-        if (tab_index > 0) {
+
+        if (tab_index > 0)
+        {
             break;
         }
     }
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case BAS_IDX_BATT_LVL_NTF_CFG:
             cccd_value = le16toh(&p_param->value[0]);
             s_bas_env[i].ntf_cfg[conn_idx] = cccd_value;
             bas_evt.evt_type = ((PRF_CLI_START_NTF == cccd_value) ? \
-                                BAS_EVT_NOTIFICATION_ENABLED : \
-                                BAS_EVT_NOTIFICATION_DISABLED);
+                                 BAS_EVT_NOTIFICATION_ENABLED : \
+                                 BAS_EVT_NOTIFICATION_DISABLED);
             break;
 
         default:
@@ -284,8 +217,9 @@ static void bas_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_par
     }
 
     if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && \
-            BAS_EVT_INVALID != bas_evt.evt_type && \
-            s_bas_env[i].bas_init.evt_handler) {
+        BAS_EVT_INVALID != bas_evt.evt_type && \
+        s_bas_env[i].bas_init.evt_handler)
+    {
         bas_evt.conn_idx = conn_idx;
         s_bas_env[i].bas_init.evt_handler(&bas_evt);
     }
@@ -302,32 +236,37 @@ static void bas_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_par
  * @param[in]: cccd_value: The value of cccd attribute.
  *****************************************************************************************
  */
-static void bas_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
+static void bas_cccd_set_evt_handler(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
 {
     uint8_t           tab_index  = 0;
     uint8_t           i          = 0;
     bas_evt_t         bas_evt;
 
-    if (!prf_is_cccd_value_valid(cccd_value)) {
+    if (!prf_is_cccd_value_valid(cccd_value))
+    {
         return;
     }
 
-    for (i = 0; i < s_bas_ins_cnt; i++) {
+    for (i = 0; i < s_bas_ins_cnt; i++)
+    {
         tab_index = prf_find_idx_by_handle(handle,
                                            s_bas_env[i].start_hdl,
                                            BAS_IDX_NB,
                                            &s_bas_env[i].bas_init.char_mask);
-        if (tab_index > 0) {
+
+        if (tab_index > 0)
+        {
             break;
         }
     }
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case BAS_IDX_BATT_LVL_NTF_CFG:
             s_bas_env[i].ntf_cfg[conn_idx] = cccd_value;
             bas_evt.evt_type = ((PRF_CLI_START_NTF == cccd_value) ? \
-                                BAS_EVT_NOTIFICATION_ENABLED : \
-                                BAS_EVT_NOTIFICATION_DISABLED);
+                                 BAS_EVT_NOTIFICATION_ENABLED : \
+                                 BAS_EVT_NOTIFICATION_DISABLED);
             break;
 
         default:
@@ -335,9 +274,33 @@ static void bas_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
             break;
     }
 
-    if (BAS_EVT_INVALID != bas_evt.evt_type && s_bas_env[i].bas_init.evt_handler) {
+    if (BAS_EVT_INVALID != bas_evt.evt_type && s_bas_env[i].bas_init.evt_handler)
+    {
         bas_evt.conn_idx = conn_idx;
         s_bas_env[i].bas_init.evt_handler(&bas_evt);
+    }
+}
+
+static void bas_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            bas_read_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.read_req);
+            break;
+
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            bas_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            bas_cccd_set_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt.gatts_evt.params.cccd_recovery.handle, p_evt->evt.gatts_evt.params.cccd_recovery.cccd_val);
+            break;
     }
 }
 
@@ -347,13 +310,15 @@ static void bas_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
  */
 sdk_err_t bas_batt_lvl_update(uint8_t conn_idx, uint8_t ins_idx, uint8_t batt_lvl)
 {
-    sdk_err_t        error_code = SDK_ERR_NTF_DISABLED;
-    gatts_noti_ind_t send_cmd;
+    sdk_err_t               error_code = SDK_ERR_NTF_DISABLED;
+    ble_gatts_noti_ind_t    send_cmd;
 
-    if (ins_idx <= s_bas_ins_cnt) {
+    if (ins_idx <= s_bas_ins_cnt)
+    {
         s_bas_env[ins_idx].bas_init.batt_lvl = batt_lvl;
 
-        if (PRF_CLI_START_NTF == s_bas_env[ins_idx].ntf_cfg[conn_idx]) {
+        if (PRF_CLI_START_NTF == s_bas_env[ins_idx].ntf_cfg[conn_idx])
+        {
             // Fill in the parameter structure
             send_cmd.type   = BLE_GATT_NOTIFICATION;
             send_cmd.handle = prf_find_handle_by_idx(BAS_IDX_BATT_LVL_VAL,
@@ -373,24 +338,42 @@ sdk_err_t bas_batt_lvl_update(uint8_t conn_idx, uint8_t ins_idx, uint8_t batt_lv
 
 sdk_err_t bas_service_init(bas_init_t *p_bas_init, uint8_t ins_num)
 {
-    sdk_err_t ret;
-    if (p_bas_init == NULL) {
+    sdk_err_t   error_code = SDK_SUCCESS;
+
+    if (NULL == p_bas_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    if (ins_num > BAS_INSTANCE_MAX) {
+    if (ins_num > BAS_INSTANCE_MAX)
+    {
         return SDK_ERR_INVALID_PARAM;
     }
 
-    for (uint8_t i = 0; i < ins_num; i++) {
-        ret = memcpy_s(&s_bas_env[i].bas_init, sizeof(bas_init_t), &p_bas_init[i], sizeof(bas_init_t));
-        if (ret < 0) {
-            return ret;
+    for (uint8_t i = 0; i < ins_num; i++)
+    {
+        memcpy(&s_bas_env[i].bas_init, &p_bas_init[i], sizeof(bas_init_t));
+        s_bas_env[i].start_hdl = PRF_INVALID_HANDLE;
+        s_bas_env[i].bas_gatts_db.shdl                  = &s_bas_env[i].start_hdl;
+        s_bas_env[i].bas_gatts_db.uuid                  = s_bas_svc_uuid;
+        s_bas_env[i].bas_gatts_db.attr_tab_cfg          = (uint8_t *)&s_bas_env[i].bas_init.char_mask;
+        s_bas_env[i].bas_gatts_db.max_nb_attr           = BAS_IDX_NB;
+        s_bas_env[i].bas_gatts_db.srvc_perm             = 0;
+        s_bas_env[i].bas_gatts_db.attr_tab_type         = BLE_GATTS_SERVICE_TABLE_TYPE_16;
+        s_bas_env[i].bas_gatts_db.attr_tab.attr_tab_16 = bas_attr_tab;
+        error_code = ble_gatts_prf_add(&s_bas_env[i].bas_gatts_db, bas_ble_evt_handler);
+        if(error_code)
+        {
+            return error_code;
         }
     }
 
     s_bas_ins_cnt = ins_num;
 
-    return ble_server_prf_add(&bas_prf_info);
+    return error_code;
 }
 
+uint16_t bas_service_start_handle_get(void)
+{
+    return s_bas_env[0].start_hdl;
+}

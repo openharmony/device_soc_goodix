@@ -47,52 +47,46 @@
  * @brief Definitions and prototypes for the RSCS interface.
  *
  * @details The Running Speed and Cadence (RSC) Service exposes speed, cadence and other data related to
- *          fitness applications such as the stride length and the total distance the user has traveled
+ *          fitness applications such as the stride length and the total distance the user has traveled 
  *          while using the Running Speed and Cadence sensor (Server). This module implements the Running
  *          Speed and Cadence Service with RSC Measurement, RSC Feature, Sensor Location and SC Control
  *          Point characteristics.
  *
  *          After \ref rscs_init_t variable is initialized, the application must call \ref rscs_service_init()
- *          to add the Running Speed and Cadence Service and RSC Measurement, RSC Feature, Sensor Location and
+ *          to add the Running Speed and Cadence Service and RSC Measurement, RSC Feature, Sensor Location and 
  *          SC Control Point characteristics to the BLE Stack database according to \ref rscs_init_t.char_mask.
  */
 
 #ifndef __RSCS_H__
 #define __RSCS_H__
 
+#include "gr_includes.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup RSCS_MACRO Defines
  * @{
  */
-#define RSCS_CONNECTION_MAX           (10 < CFG_MAX_CONNECTIONS ? \
-                                      10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of Running Speed and \
-                                                                    Cadence Service connections. */
-#define RSCS_MEAS_VAL_LEN_MAX         20      /**< Maximum length of RSC measurement value. */
-#define RSCS_FEAT_VAL_LEN_MAX         2       /**< Maximum length of RSC Feature value. */
-#define RSCS_SENSOR_LOC_VAL_LEN_MAX   1       /**< Maximum length of RSC Sensor Location value. */
-#define RSCS_CTRL_PT_RSP_LEN_MIN      3       /**< Mimimum length of SC Control Point responce value. */
-/**< Maximum length of SC Control Point value. */
-#define RSCS_CTRL_PT_VAL_LEN_MAX      (RSCS_CTRL_PT_RSP_LEN_MIN + RSCS_SENSOR_LOC_SUP_NB)
+#define RSCS_CONNECTION_MAX               10                                                    /**< Maximum number of Running Speed and Cadence Service connections. */
+#define RSCS_MEAS_VAL_LEN_MAX             20                                                    /**< Maximum length of RSC measurement value. */
+#define RSCS_FEAT_VAL_LEN_MAX             2                                                     /**< Maximum length of RSC Feature value. */
+#define RSCS_SENSOR_LOC_VAL_LEN_MAX       1                                                     /**< Maximum length of RSC Sensor Location value. */
+#define RSCS_CTRL_PT_RSP_LEN_MIN          3                                                     /**< Mimimum length of SC Control Point responce value. */
+#define RSCS_CTRL_PT_VAL_LEN_MAX          (RSCS_CTRL_PT_RSP_LEN_MIN + RSCS_SENSOR_LOC_SUP_NB)   /**< Maximum length of SC Control Point value. */
 
-#define RSCS_ERROR_PROC_IN_PROGRESS   0x80       /**< Error code: A previously triggered SC Control Point operation \
-                                                 is still in progress. */
-#define RSCS_ERROR_CCCD_INVALID       0x81       /**< Error code: The Client Characteristic Configuration descriptor \
-                                                 is not configured. */
+#define RSCS_ERROR_PROC_IN_PROGRESS       0x80       /**< Error code: A previously triggered SC Control Point operation is still in progress. */
+#define RSCS_ERROR_CCCD_INVALID           0x81       /**< Error code: The Client Characteristic Configuration descriptor is not configured. */
 
 /**
  * @defgroup RSCS_CHAR_MASK Characteristics Mask
  * @{
  * @brief Bit masks for the initialization of \ref rscs_init_t.char_mask.
  */
-#define RSCS_CHAR_MANDATORY           0x003f  /**< Bit mask for mandatory characteristic in RSCS.*/
-#define RSCS_CHAR_SENSOR_LOC_SUP      0x00c0  /**< Bit mask for Sensor Location characteristic that is optional.*/
-#define RSCS_CHAR_SC_CTRL_POINT       0x0700  /**< Bit mask for SC Control Point characteristic that is optional.*/
-#define RSCS_CHAR_FULL                0x07ff  /**< Bit mask of the full characteristic.*/
+#define RSCS_CHAR_MANDATORY               0x003f     /**< Bit mask for mandatory characteristic in RSCS. */
+#define RSCS_CHAR_SENSOR_LOC_SUP          0x00c0     /**< Bit mask for Sensor Location characteristic that is optional. */
+#define RSCS_CHAR_SC_CTRL_POINT           0x0700     /**< Bit mask for SC Control Point characteristic that is optional. */
+#define RSCS_CHAR_FULL                    0x07ff     /**< Bit mask of the full characteristic. */
 /** @} */
 
 /**
@@ -100,9 +94,9 @@
  * @{
  * @brief Running Speed and Cadence Measurement Flags.
  */
-#define RSCS_MEAS_FLAG_INST_STRIDE_LEN_BIT    (0x01 << 0)  /**< Flag bit for Instantaneous Stride Length Measurement.*/
-#define RSCS_MEAS_FLAG_TOTAL_DISTANCE_BIT     (0x01 << 1)  /**< Flag bit for Total Distance Measurement.*/
-#define RSCS_MEAS_FLAG_RUNNING_OR_WALKING_BIT (0x01 << 2)  /**< Flag bit for Running or Walking.*/
+#define RSCS_MEAS_FLAG_INST_STRIDE_LEN_BIT           (0x01 << 0)     /**< Flag bit for Instantaneous Stride Length Measurement. */
+#define RSCS_MEAS_FLAG_TOTAL_DISTANCE_BIT            (0x01 << 1)     /**< Flag bit for Total Distance Measurement. */
+#define RSCS_MEAS_FLAG_RUNNING_OR_WALKING_BIT        (0x01 << 2)     /**< Flag bit for Running or Walking. */
 /** @} */
 
 /**
@@ -110,13 +104,12 @@
  * @{
  * @brief Running Speed and Cadence Service feature bits.
  */
-/**< Bit for Instantaneous Stride Length Measurement Supported.*/
-#define RSCS_FEAT_INSTANT_STRIDE_LEN_BIT        (0x01 << 0)
-#define RSCS_FEAT_TOTAL_DISTANCE_BIT            (0x01 << 1) /**< Bit for Total Distance Measurement Supported. */
-#define RSCS_FEAT_RUNNING_OR_WALKING_STATUS_BIT (0x01 << 2) /**< Bit for Running or Walking Status Supported. */
-#define RSCS_FEAT_CALIBRATION_PROCEDURE_BIT     (0x01 << 3) /**< Bit for Calibration Procedure Supported. */
-#define RSCS_FEAT_MULTIPLE_SENSORS_BIT          (0x01 << 4) /**< Bit for Multiple Sensor Locations Supported. */
-#define RSCS_FEAR_FULL_BIT                      (0x1f)  /**< Bit for all RSC features Supported. */
+#define RSCS_FEAT_INSTANT_STRIDE_LEN_BIT             (0x01 << 0)     /**< Bit for Instantaneous Stride Length Measurement Supported. */
+#define RSCS_FEAT_TOTAL_DISTANCE_BIT                 (0x01 << 1)     /**< Bit for Total Distance Measurement Supported. */
+#define RSCS_FEAT_RUNNING_OR_WALKING_STATUS_BIT      (0x01 << 2)     /**< Bit for Running or Walking Status Supported. */
+#define RSCS_FEAT_CALIBRATION_PROCEDURE_BIT          (0x01 << 3)     /**< Bit for Calibration Procedure Supported. */
+#define RSCS_FEAT_MULTIPLE_SENSORS_BIT               (0x01 << 4)     /**< Bit for Multiple Sensor Locations Supported. */
+#define RSCS_FEAR_FULL_BIT                           (0x1f)          /**< Bit for all RSC features Supported. */
 /** @} */
 /** @} */
 
@@ -125,7 +118,8 @@
  * @{
  */
 /**@brief Running Speed and Cadence Service Sensor Location. */
-typedef enum {
+typedef enum
+{
     RSCS_SENSOR_LOC_OTHER,          /**< Sensor location: other. */
     RSCS_SENSOR_LOC_SHOE_TOP,       /**< Sensor location: top of shoe. */
     RSCS_SENSOR_LOC_SHOE_IN,        /**< Sensor location: inside of shoe. */
@@ -138,7 +132,8 @@ typedef enum {
 } rscs_sensor_loc_t;
 
 /**@brief Running Speed and Cadence Service Control Point Operation Code.*/
-typedef enum {
+typedef enum
+{
     RSCS_CTRL_PT_OP_RESERVED,         /**< Reserved for future use. */
     RSCS_CTRL_PT_OP_SET_CUMUL_VAL,    /**< Set Cumulative value Operation Code.*/
     RSCS_CTRL_PT_OP_START_CALIB,      /**< Start Sensor Calibration Operation Code.*/
@@ -148,7 +143,8 @@ typedef enum {
 } rscs_ctrl_pt_op_code_t;
 
 /**@brief Running Speed and Cadence Service Control Point Response value.*/
-typedef enum {
+typedef enum
+{
     RSCS_CTRL_PT_RSP_RESERVED,        /**< Reserved value. */
     RSCS_CTRL_PT_RSP_SUCCESS,         /**< Operation Succeeded. */
     RSCS_CTRL_PT_RSP_NOT_SUP,         /**< Operation Code Not Supported. */
@@ -157,18 +153,19 @@ typedef enum {
 } rscs_ctrl_pt_rsp_t;
 
 /**@brief Running Speed and Cadence Service event type.*/
-typedef enum {
-    RSCS_EVT_INVALID,                        /**< Indicate that invalid event. */
-    RSCS_EVT_RSC_MEAS_NOTIFICATION_ENABLE,   /**< Indicate that RSC Measurement notification has been enabled. */
-    RSCS_EVT_RSC_MEAS_NOTIFICATION_DISABLE,  /**< Indicate that RSC Measurement notification has been disabled. */
-    RSCS_EVT_CTRL_POINT_INDICATION_ENABLE,   /**< Indicate that SC Control Point indication has been enabled. */
-    RSCS_EVT_CTRL_POINT_INDICATION_DISABLE,  /**< Indicate that SC Control Point indication has been disabled. */
-    RSCS_EVT_RSC_MEAS_SEND_CPLT,             /**< Indicate that RSC Measurement has been notified. */
-    RSCS_EVT_CUMUL_VAL_SET,                  /**< Indicate that Total Distance value needs to be set. */
-    RSCS_EVT_SEBSOR_CALIBRATION,             /**< Indicate that Sensor calibration procedure should be initiated. */
-    RSCS_EVT_SEBSOR_LOC_UPD,                 /**< Indicate that Sensor Location needs to be reset. */
-    RSCS_EVT_SUP_SEBSOR_LOC_REQ,             /**< Indicate that request supported sensor location list. */
-    RSCS_EVT_CTRL_POINT_RSP_CPLT             /**< Indicate that SC Control Point response has been indicated. */
+typedef enum
+{
+    RSCS_EVT_INVALID,                                  /**< Indicate that invalid event. */
+    RSCS_EVT_RSC_MEAS_NOTIFICATION_ENABLE,             /**< Indicate that RSC Measurement notification has been enabled. */
+    RSCS_EVT_RSC_MEAS_NOTIFICATION_DISABLE,            /**< Indicate that RSC Measurement notification has been disabled. */
+    RSCS_EVT_CTRL_POINT_INDICATION_ENABLE,             /**< Indicate that SC Control Point indication has been enabled. */
+    RSCS_EVT_CTRL_POINT_INDICATION_DISABLE,            /**< Indicate that SC Control Point indication has been disabled. */
+    RSCS_EVT_RSC_MEAS_SEND_CPLT,                       /**< Indicate that RSC Measurement has been notified. */
+    RSCS_EVT_CUMUL_VAL_SET,                            /**< Indicate that Total Distance value needs to be set. */
+    RSCS_EVT_SEBSOR_CALIBRATION,                       /**< Indicate that Sensor calibration procedure should be initiated. */
+    RSCS_EVT_SEBSOR_LOC_UPD,                           /**< Indicate that Sensor Location needs to be reset. */
+    RSCS_EVT_SUP_SEBSOR_LOC_REQ,                       /**< Indicate that request supported sensor location list. */
+    RSCS_EVT_CTRL_POINT_RSP_CPLT                       /**< Indicate that SC Control Point response has been indicated. */
 } rscs_evt_type_t;
 /** @} */
 
@@ -177,7 +174,8 @@ typedef enum {
  * @{
  */
 /**@brief Running Speed and Cadence Service event. */
-typedef struct {
+typedef struct
+{
     rscs_evt_type_t evt_type;     /**< The RSCS event type. */
     uint8_t         conn_idx;     /**< The index of the connection. */
     const uint8_t  *p_data;       /**< Pointer to event data. */
@@ -185,7 +183,8 @@ typedef struct {
 } rscs_evt_t;
 
 /**@brief Running Speed and Cadence Measurement Character value structure. */
-typedef struct {
+typedef struct
+{
     bool        inst_stride_length_present;   /**< If Instantaneous Stride Length is present. */
     bool        total_distance_present;       /**< If Total Distance is present. */
     bool        is_run_or_walk;               /**< True: Running, False: Walking. */
@@ -208,12 +207,11 @@ typedef void (*rscs_evt_handler_t)(rscs_evt_t *p_evt);
  * @defgroup RSCS_STRUCT Structures
  * @{
  */
-/**@brief Running Speed and Cadence Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Running Speed and Cadence Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     rscs_evt_handler_t     evt_handler;                  /**< Running Speed and Cadence Service event handler. */
-    uint16_t
-    char_mask;         /**< Initial mask of supported characteristics, and configured with \ref RSCS_CHAR_MASK. */
+    uint16_t               char_mask;                    /**< Initial mask of supported characteristics, and configured with \ref RSCS_CHAR_MASK. */
     rscs_sensor_loc_t      sensor_location;              /**< Initial sensor location. */
     uint16_t               feature;                      /**< Initial value for features. */
 } rscs_init_t;

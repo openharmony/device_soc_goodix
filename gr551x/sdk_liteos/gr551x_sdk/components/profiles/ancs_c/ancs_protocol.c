@@ -35,22 +35,12 @@
  *****************************************************************************************
  */
 
+
+#include "ancs_protocol.h"
+#include "ancs_c.h"
 #include <stdio.h>
 #include <string.h>
 #include "app_log.h"
-#include "ancs_c.h"
-#include "ancs_protocol.h"
-
-#define LEN_2 2
-#define LEN_4 4
-#define LEN_6 6
-#define LEN_8 8
-#define INDEX_5 5
-#define INDEX_6 6
-#define INDEX_7 7
-#define INDEX_8 8
-#define OFFSET_8 8
-
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
@@ -58,7 +48,8 @@
 static uint32_t s_uid;
 
 /**@brief String literals for the iOS notification Category id types. Used then printing to UART. */
-static char const * lit_catid[] = {
+static char const * lit_catid[] =
+{
     "Other",
     "Incoming Call",
     "Missed Call",
@@ -74,14 +65,16 @@ static char const * lit_catid[] = {
 };
 
 /**@brief String literals for the iOS notification event types. Used then printing to UART. */
-static char const * lit_eventid[] = {
+static char const * lit_eventid[] =
+{
     "Added",
     "Modified",
     "Removed"
 };
 
 /**@brief String literals for the iOS notification attribute types. Used when printing to UART. */
-static char const * lit_attrid[] = {
+static char const * lit_attrid[] =
+{
     "App Identifier",
     "Title",
     "Subtitle",
@@ -108,25 +101,23 @@ static void ancs_notify_attr_print(void)
     uint16_t UID;
     uint8_t attr_id;
     uint16_t attr_size = 0;
-    uint8_t ret;
-    ret = memcpy_s(&UID, LEN_4, &s_attr_buf[1], LEN_4);
-    if (ret < 0) {
-        return;
-    }
-    ret = memcpy_s(&attr_size, LEN_2, &s_attr_buf[INDEX_6], LEN_2);
-    if (ret < 0) {
-        return;
-    }
+    memcpy(&UID, &s_attr_buf[1], 4);
+    memcpy(&attr_size, &s_attr_buf[6], 2);
 
-    if (commd_id == CTRL_POINT_GET_NTF_ATTRIBUTE) {
-        attr_id = s_attr_buf[INDEX_5];
+    if (commd_id == CTRL_POINT_GET_NTF_ATTRIBUTE)
+    {
+        attr_id = s_attr_buf[5];
         APP_LOG_INFO("UID=%d, ATTR_ID: %s, ATTR_SIZE=%d", UID, lit_attrid[attr_id], attr_size);
-        for (uint16_t idx = 0; idx < attr_size; idx++) {
-            printf("%c", s_attr_buf[INDEX_8 + idx]);
+        for (uint16_t idx = 0; idx < attr_size; idx++)
+        {
+            printf("%c", s_attr_buf[8 + idx]);
         }
         printf("\r\n");
-    } else if (commd_id == CTRL_POINT_GET_APP_ATTRIBUTE) {
-        for (uint16_t idx = 0; idx < attr_size; idx++) {
+    }
+    else if (commd_id == CTRL_POINT_GET_APP_ATTRIBUTE)
+    {
+        for (uint16_t idx = 0; idx < attr_size; idx++)
+        {
             printf("%c", s_attr_buf[idx]);
         }
         printf("\r\n");
@@ -143,34 +134,37 @@ static void ancs_notify_attr_print(void)
  */
 void ancs_decode_data_source(uint8_t *p_data, uint16_t length)
 {
-    uint8_t ret;
-    // It's the begginning of a attr info.
-    if (s_buf_index == 0) {
-        ret = memcpy_s(&s_attr_size, LEN_2, &p_data[INDEX_6], LEN_2);
-        if (ret < 0) {
-            return;
-        }
-        ret = memcpy_s(&s_attr_size, length, p_data, length);
-        if (ret < 0) {
-            return;
-        }
-        // It's the end of the attr info, a complete attr info is already stored in the buffer.
-        if (s_attr_size == length - LEN_8) {
+    //It's the begginning of a attr info.
+    if (0 == s_buf_index)
+    {
+        memcpy(&s_attr_size, &p_data[6], 2);
+        memcpy(s_attr_buf, p_data, length);
+        //It's the end of the attr info, a complete attr info is already stored in the buffer.
+        if (s_attr_size == length - 8)
+        {
             ancs_notify_attr_print();
             s_buf_index = 0;
-        } else {         // It's not the end of the attr info.
+        }
+        //It's not the end of the attr info.
+        else
+        {
             s_buf_index = length;
         }
-    } else {     // It isn't the begginning of a attr info.
-        ret = memcpy_s(&s_attr_buf[s_buf_index], length, p_data, length);
-        if (ret < 0) {
-            return;
-        }
-        // It's the end of the attr info, print the buffer.
-        if (s_attr_size == (s_buf_index - INDEX_8) + length) {
+    }
+    
+    //It isn't the begginning of a attr info.
+    else
+    {
+        memcpy(&s_attr_buf[s_buf_index], p_data, length);
+        //It's the end of the attr info, print the buffer.
+        if (s_attr_size == (s_buf_index - 8) + length)
+        {
             ancs_notify_attr_print();
             s_buf_index = 0;
-        } else {         // It's not the end of the attr info.
+        }
+        //It's not the end of the attr info.
+        else
+        {
             s_buf_index = s_buf_index + length;
         }
     }
@@ -181,52 +175,47 @@ void ancs_decode_data_source(uint8_t *p_data, uint16_t length)
  * @brief Get notification attribute
  *
  * @param[in] uid: The uid of notify message
- * @param[in] noti_attr: The notification attribute
+ * @param[in] noti_attr: The notification attribute 
  *
  *****************************************************************************************
  */
 void ancs_notify_attr_get(int uid, char noti_attr)
 {
-    int len = 0;
+    int     len = 0;
     uint8_t buf[8];
-    uint8_t ret;
     buf[0] = CTRL_POINT_GET_NTF_ATTRIBUTE;
-    ret = memcpy_s(&buf[1], LEN_4, &uid, LEN_4);
-    if (ret < 0) {
-        return;
-    }
-    buf[INDEX_5] = noti_attr;
+    memcpy(&buf[1], &uid, 4);
+    buf[5] = noti_attr;
     if (ANCS_NOTIF_ATTR_ID_TITLE == noti_attr || ANCS_NOTIF_ATTR_ID_SUBTITLE== noti_attr
-            || ANCS_NOTIF_ATTR_ID_MESSAGE== noti_attr) {
+                                              || ANCS_NOTIF_ATTR_ID_MESSAGE== noti_attr)
+    {
         len = CFG_ANCS_ATTRIBUTE_MAXLEN;
-        buf[INDEX_6] = (len & 0xff);
-        buf[INDEX_7] = (len >> OFFSET_8) & 0xff;
-        ancs_c_write_control_point(0, buf, LEN_8);
-    } else {
-        ancs_c_write_control_point(0, buf, LEN_6);
+        buf[6] = (len & 0xff);
+        buf[7] = (len>>8) & 0xff;
+        ancs_c_write_control_point(0, buf, 8);
+    }
+    else
+    {
+        ancs_c_write_control_point(0, buf, 6);
     }
 }
 
 /**
  *****************************************************************************************
- * @brief ancs perform action
+ * @brief ancs perform action  
  *
  * @param[in] uid: The uid of notify message
- * @param[in] action: The action status defined by specification
+ * @param[in] action: The action status defined by specification 
  *****************************************************************************************
  */
 void ancs_action_perform(int uid, int action)
 {
     uint8_t buf[6];
-    uint8_t ret;
     buf[0] = CTRL_POINT_PERFORM_NTF_ACTION;
-    ret = memcpy_s(&buf[1], LEN_4, &uid, LEN_4);
-    if (ret < 0) {
-        return;
-    }
-    buf[INDEX_5] = action;
-    ancs_c_write_control_point(0, buf, LEN_6);
-}
+    memcpy(&buf[1], &uid, 4);
+    buf[5] = action;
+    ancs_c_write_control_point(0, buf, 6);
+} 
 
 /**
  *****************************************************************************************
@@ -243,19 +232,24 @@ static void notification_content_print(ntf_source_pdu_t *p_notif)
     APP_LOG_INFO("Category Cnt:%u", (unsigned int) p_notif->category_count);
     APP_LOG_INFO("UID:         %u", (unsigned int) p_notif->notification_uid);
     APP_LOG_INFO("Flags: ");
-    if (p_notif->event_flags.silent == 1) {
+    if (p_notif->event_flags.silent == 1)
+    {
         APP_LOG_INFO(" Silent");
     }
-    if (p_notif->event_flags.important == 1) {
+    if (p_notif->event_flags.important == 1)
+    {
         APP_LOG_INFO(" Important");
     }
-    if (p_notif->event_flags.pre_existing == 1) {
+    if (p_notif->event_flags.pre_existing == 1)
+    {
         APP_LOG_INFO(" Pre-existing");
     }
-    if (p_notif->event_flags.positive_action == 1) {
+    if (p_notif->event_flags.positive_action == 1)
+    {
         APP_LOG_INFO(" Positive Action");
     }
-    if (p_notif->event_flags.negative_action == 1) {
+    if (p_notif->event_flags.negative_action == 1)
+    {
         APP_LOG_INFO(" Negative Action");
     }
 }

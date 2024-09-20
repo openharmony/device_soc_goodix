@@ -56,18 +56,17 @@
 #ifndef __LLS_C_H__
 #define __LLS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup LLS_C_MACRO Defines
  * @{
  */
-#define LLS_C_CONNECTION_MAX  (10 < CFG_MAX_CONNECTIONS ? \
-                              10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of LLS Client connections. */
+#define LLS_C_CONNECTION_MAX                10                       /**< Maximum number of LLS Client connections. */
 /** @} */
 
 /**
@@ -75,21 +74,22 @@
  * @{
  */
 /**@brief  Link Loss Service Client alert levels. */
-typedef enum {
+typedef enum
+{
     LLS_C_ALERT_LEVEL_NO_ALERT,       /**< No alert. */
     LLS_C_ALERT_LEVEL_MILD_ALERT,     /**< Mild alert. */
     LLS_C_ALERT_LEVEL_HIGH_ALERT,     /**< High alert. */
 } lls_c_alert_level_t;
 
 /**@brief Link Loss Service Client event type. */
-typedef enum {
-    LLS_C_EVT_INVALID,                  /**< LLS Client invalid event. */
-    LLS_C_EVT_DISCOVERY_COMPLETE,       /**< LLS Client has found LLS service and its characteristics. */
-    LLS_C_EVT_DISCOVERY_FAIL,           /**< LLS Client found LLS service failed \
-                                             because of invalid operation or no found at the peer. */
-    LLS_C_EVT_ALERT_LEVEL_SET_SUCCESS,  /**< LLS Client has set Alert Level characteristics. */
-    LLS_C_EVT_ALERT_LEVEL_SET_ERR,      /**< Error occured when LLS Client set Alert Level characteristics. */
-    LLS_C_EVT_ALERT_LEVEL_RECEIVE,      /**< LLS Client has received Alert Level value. */
+typedef enum
+{
+    LLS_C_EVT_INVALID,                      /**< LLS Client invalid event. */
+    LLS_C_EVT_DISCOVERY_COMPLETE,           /**< LLS Client has found LLS service and its characteristics. */
+    LLS_C_EVT_DISCOVERY_FAIL,               /**< LLS Client found LLS service failed because of invalid operation or no found at the peer. */
+    LLS_C_EVT_ALERT_LEVEL_SET_SUCCESS,      /**< LLS Client has set Alert Level characteristics. */
+    LLS_C_EVT_ALERT_LEVEL_SET_ERR,          /**< Error occured when LLS Client set Alert Level characteristics. */
+    LLS_C_EVT_ALERT_LEVEL_RECEIVE,          /**< LLS Client has received Alert Level value. */
 } lls_c_evt_type_t;
 /** @} */
 
@@ -98,15 +98,16 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t lls_srvc_start_handle;      /**< LLS Service start handle. */
     uint16_t lls_srvc_end_handle;        /**< LLS Service end handle. */
-    uint16_t lls_alert_level_handle;     /**< LLS Alert Level characteristic Value handle \
-                                              which has been got from peer. */
+    uint16_t lls_alert_level_handle;     /**< LLS Alert Level characteristic Value handle which has been got from peer. */
 } lls_c_handles_t;
 
 /**@brief Link Loss Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t                 conn_idx;            /**< The connection index. */
     lls_c_evt_type_t        evt_type;            /**< LLS Client event type. */
     lls_c_alert_level_t     alert_level;         /**< Alert level. */

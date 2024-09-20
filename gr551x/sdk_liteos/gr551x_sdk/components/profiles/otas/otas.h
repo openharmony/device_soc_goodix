@@ -3,7 +3,7 @@
  *
  * @file otas.h
  *
- * @brief OTA Service API
+ * @brief Over The Air Service API
  *
  ****************************************************************************************
  * @attention
@@ -46,8 +46,8 @@
  * @{
  * @brief Definitions and prototypes for the OTAS interface.
  *
- * @details The OTA Service exposes the state of a battery within a device.
- *          This module implements the Battery Service with the Battery Level
+ * @details The OTA Service is a customized service with Tx, Rx and Flow Control
+ *          characteristics. This module implements the Battery Service with the Battery Level
  *          characteristic. After @ref otas_init_t variable is initialized, the
  *          developer shall call @ref otas_service_init() to add the OTA
  *          Service and RX, TX, Control characteristic to the BLE stack database.
@@ -63,33 +63,53 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include "flash_scatter_config.h"
 
 /**
  * @defgroup OTAS_MACRO Defines
  * @{
  */
-#define OTAS_CONNECTION_MAX   (10 < CFG_MAX_CONNECTIONS ? \
-                              10 : CFG_MAX_CONNECTIONS) /**< Maximum number of OTA Service connections. */
-#define OTAS_MAX_DATA_LEN     244  /**< Maximum length of OTAS characteristic. */
-#define BLE_UUID_OTA_SERVICE  0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                              0x01, 0x04, 0xED, 0xA6  /**< The UUID of OTA Service for setting advertising data. */
-#define OTAS_CTRL_ENTER_DFU   0x474f4f44              /**< OTAS enter DFU control. */
+#define OTAS_CONNECTION_MAX         10                                                  /**< Maximum number of OTA Service connections. */
+#define OTAS_MAX_DATA_LEN           244                                                  /**< Maximum length of OTAS characteristic. */
+#define OTAS_VERSION                0x02                                                 /**< The OTA VERSION. */
+#define BLE_UUID_OTA_SERVICE        0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80,\
+                                    0x0A, 0x46, 0x44, 0xD3, 0x01, 0x04, 0xED, 0xA6       /**< The UUID of OTA Service for setting advertising data. */
 /** @} */
 
 /**
  * @defgroup OTA_ENUM Enumerations
  * @{
  */
+/**@brief OTA Service dfu mode.*/
+typedef enum
+{
+    OTAS_DFU_MODE_RESERVED,                     /**< Reserved for future use. */
+    OTAS_DFU_MODE_COPY_UPGRADE,                 /**< OTAS Copy DFU mode (Double bank, Background). */
+    OTAS_DFU_MODE_NON_COPY_UPGRADE,             /**< OTAS Non-Copy DFU mode (Single bank, Non-background). */
+} otas_dfu_mode_t;
+
+/**@brief OTA Service Control Point Operation Code.*/
+typedef enum
+{
+    OTAS_CTRL_PT_OP_RESERVED,                   /**< Reserved for future use. */
+    OTAS_CTRL_PT_OP_DFU_ENTER = 0x474f4f44,     /**< OTAS task enter Operation Code.*/
+    OTAS_CTRL_PT_OP_RSP_CODE = 0x10,            /**< Response code. */
+} otas_ctrl_pt_op_code_t;
+
 /**@brief OTA Service event type. */
-typedef enum {
-    OTAS_EVT_INVALID,
-    OTAS_EVT_TX_NOTIFICATION_ENABLED,
-    OTAS_EVT_TX_NOTIFICATION_DISABLED,
-    OTAS_EVT_RX_RECEIVE_DATA,
-    OTAS_EVT_NOTIFY_COMPLETE,
-    OTAS_EVT_DFU_MODE_ENTER,
+typedef enum
+{
+    OTAS_EVT_INVALID,                           /**< Invalid event for ota service. */
+    OTAS_EVT_TX_NOTIFICATION_ENABLED,           /**< tx notification enable event for ota service. */
+    OTAS_EVT_TX_NOTIFICATION_DISABLED,          /**< tx notification disable event for ota service. */
+    OTAS_EVT_CTRL_PT_INDICATION_ENABLED,        /**< control point indication enable event for ota service. */
+    OTAS_EVT_CTRL_PT_INDICATION_DISABLED,       /**< control point indication disable event for ota service. */
+    OTAS_EVT_RX_RECEIVE_DATA,                   /**< rx receive data event for ota service. */
+    OTAS_EVT_NOTIFY_COMPLETE,                   /**< notify complete event for ota service. */
+    OTAS_EVT_DFU_TASK_ENTER,                    /**< set dfu task enter event for ota service. */
+    OTAS_EVT_DFU_MODE_SET,                      /**< set dfu mode for ota service. */
 } otas_evt_type_t;
 /** @} */
 
@@ -98,11 +118,13 @@ typedef enum {
  * @{
  */
 /**@brief OTA Service event. */
-typedef struct {
-    otas_evt_type_t evt_type;         /**< The OTAS event. */
-    uint8_t         conn_idx;         /**< Index of connection. */
-    uint8_t        *p_data;           /**< Pointer to data. */
-    uint16_t        length;           /**< Length of data. */
+typedef struct
+{
+    otas_evt_type_t evt_type;                   /**< The OTAS event. */
+    uint8_t         conn_idx;                   /**< Index of connection. */
+    uint8_t        *p_data;                     /**< Pointer to data. */
+    uint16_t        length;                     /**< Length of data. */
+    otas_dfu_mode_t dfu_mode;                   /**< OTA Service dfu mode. */
 } otas_evt_t;
 /** @} */
 
@@ -112,9 +134,6 @@ typedef struct {
  */
 /**@brief OTA Service event handler type. */
 typedef void (*otas_evt_handler_t)(otas_evt_t *p_evt);
-
-/**@brief OTA Service function type. */
-typedef  void (*function)(void);
 /** @} */
 
 /**
@@ -122,8 +141,9 @@ typedef  void (*function)(void);
  * @{
  */
 /**@brief OTA Service initialization variable. */
-typedef struct {
-    otas_evt_handler_t evt_handler;    /**< Handler to handle otas event. */
+typedef struct
+{
+    otas_evt_handler_t evt_handler;          /**< Handler to handle otas event. */
 } otas_init_t;
 /** @} */
 
@@ -143,7 +163,6 @@ typedef struct {
  */
 sdk_err_t otas_service_init(otas_init_t *p_otas_init);
 
-
 /**
  *****************************************************************************************
  * @brief Send data to peer device
@@ -155,9 +174,19 @@ sdk_err_t otas_service_init(otas_init_t *p_otas_init);
  * @return Result of notify and indicate value
  *****************************************************************************************
  */
-sdk_err_t otas_notify_tx_data(uint8_t conn_idx, uint8_t *p_data, uint16_t length);
+sdk_err_t otas_notify_tx_data(uint8_t conn_idx, uint8_t *p_data,uint16_t length);
+
+/**
+ *****************************************************************************************
+ * @brief Provide the interface for other modules to obtain the ots service start handle .
+ *
+ * @return The ots service start handle.
+ *****************************************************************************************
+ */
+uint16_t otas_service_start_handle_get(void);
 /** @} */
 
 #endif
+
 /** @} */
 /** @} */

@@ -38,27 +38,34 @@
 #ifndef __APP_TIMER_H__
 #define __APP_TIMER_H__
 
+#include "grx_sys.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
 
 /**
  * @defgroup APP_TIMER_MAROC Defines
  * @{
  */
-#ifndef APP_TIMER_USE_SCHEDULER
-#define APP_TIMER_USE_SCHEDULER    0       /**< Enable scheduling app_timer events to app_scheduler. */
-#endif
+/** @brief For compatibility with previous version. */
+#define app_timer_start(a, b, c)  app_timer_start_api(&a, b, c)
+#define app_timer_stop(a)         app_timer_stop_api(&a)
+
+/** @brief App timer version difine. */
+#define APP_TIMER_VERSION         0x0200
+
+/** @brief App timer assert enable define. */
+#define APP_TIMER_ASSERT_ENABLE   0
 /** @} */
 
 /**
  * @defgroup APP_TIMER_ENUM Enumerations
  * @{
  */
-/**@brief App timer trigger types. */
-typedef enum {
-    ATIMER_ONE_SHOT = 0x0,        /**< The timer will expire only once. */
-    ATIMER_REPEAT                 /**< The timer will restart each time it expires. */
+/** @brief App timer trigger types. */
+typedef enum
+{
+   ATIMER_ONE_SHOT = 0x0,        /**< The timer will expire only once. */
+   ATIMER_REPEAT                 /**< The timer will restart each time it expires. */
 } app_timer_type_t;
 /** @} */
 
@@ -66,40 +73,36 @@ typedef enum {
  * @defgroup APP_TIMER_TYPEDEF Typedefs
  * @{
  */
-/**@brief The timer node trigger function. */
-typedef void (*app_timer_fun_t)(uint8_t* p_ctx);
+/** @brief The timer node trigger function. */
+typedef void (*app_timer_fun_t)(void* p_ctx);
 /** @} */
 
 /**
  * @defgroup APP_TIMER_STRUCT Structures
  * @{
  */
-/**@brief App timer global variable. */
-typedef struct {
-    uint8_t                  timer_node_used;            /**< Timer node is used or not. */
-    uint8_t                  timer_node_status;          /**< Timer node status. */
-    uint8_t                  next_trigger_mode;          /**< Next trigger mode. */
-    uint32_t                 original_delay;             /**< Original delay (us). */
-    uint32_t                 next_trigger_time;          /**< Next trigger time. */
-    uint8_t*                 next_trigger_callback_var;  /**< Timer trigger callback argument. */
-    app_timer_fun_t          next_trigger_callback;      /**< Timer trigger callback . */
+/** @brief App timer global variable. */
+typedef struct app_timer_s
+{
+    uint8_t                  timer_mark;
+    uint8_t                  timer_node_status;           /**< Timer node status. */
+    uint8_t                  timer_node_mode;             /**< Next trigger mode. */
+    uint64_t                 original_delay;              /**< Original delay (us). */
+    uint64_t                 next_shot_time;
+    void*                    arg;                         /**< Timer trigger callback argument. */
+    app_timer_fun_t          timer_node_cb;               /**< Timer trigger callback . */
+    struct app_timer_s       *p_next;
 } app_timer_t;
 
-#if APP_TIMER_USE_SCHEDULER
-/**@brief Structure passed to app_scheduler. */
-typedef struct {
-    app_timer_fun_t  timeout_handler;     /**< Timer timeout handler. */
-    void            *p_ctx;               /**< Pointer to callback argument. */
-} app_timer_evt_t;
-#endif
 /** @} */
 
 /**
  * @defgroup APP_TIMER_TYPEDEF Typedefs
  * @{
  */
-/**@brief The timer node id. */
-typedef app_timer_t* app_timer_id_t;
+/** @brief The timer node id. */
+typedef app_timer_t  app_timer_id_t;
+typedef app_timer_t* p_app_timer_id_t;
 /** @} */
 
 /**
@@ -133,19 +136,11 @@ sdk_err_t app_timer_create(app_timer_id_t *p_timer_id, app_timer_type_t mode, ap
 
 /**
  *****************************************************************************************
- * @brief  Gets the current app timer's switching status
- * @return state 0 means stop 1 means open
- *****************************************************************************************
- */
-uint8_t app_timer_get_status(void);
-
-/**
- *****************************************************************************************
  * @brief  To stop a existed timer in node list
  * @param[in] p_timer_id: the id of timer node
  *****************************************************************************************
  */
-void app_timer_stop(app_timer_id_t p_timer_id);
+void app_timer_stop_api(app_timer_id_t *p_timer_id);
 
 /**
  *****************************************************************************************
@@ -156,7 +151,7 @@ void app_timer_stop(app_timer_id_t p_timer_id);
  * @param[in] p_ctx : the pointer of context
  *****************************************************************************************
  */
-sdk_err_t app_timer_start(app_timer_id_t p_timer_id, uint32_t delay, uint8_t *p_ctx);
+sdk_err_t app_timer_start_api(app_timer_id_t *p_timer_id, uint32_t delay, void *p_ctx);
 
 /**
  *****************************************************************************************
@@ -169,14 +164,52 @@ sdk_err_t app_timer_delete(app_timer_id_t *p_timer_id);
 
 /**
  *****************************************************************************************
- * @brief  Stop the currently running timer and return the running time
- *
- * @param[in] p_timer_handle:  Pointer to the timer handle
- *
- * @return  The time that the current timer has run
+ * @brief  Gets the current app timer's switching status
+ * @return state 0 means stop, 1 means run
  *****************************************************************************************
  */
-uint32_t app_timer_stop_and_ret(app_timer_id_t p_timer_id);
+uint8_t app_timer_get_status(void);
+
+/**
+ *****************************************************************************************
+ * @brief  Set the app timer's trigger window, all timer nodes that fall within the window
+ *         will be triggered at the same time.
+ * @param[in] window_us: new trigger window size, in us
+ *****************************************************************************************
+ */
+void app_timer_trigger_window_set(uint64_t window_us);
+
+/**
+ *****************************************************************************************
+ * @brief  Get the app timer's trigger window, all timer nodes that fall within the window
+ *         will be triggered at the same time.
+ * @return current trigger window size, in us
+ *****************************************************************************************
+ */
+uint64_t app_timer_trigger_window_get(void);
+
+#define IS_APP_TIMER_MODE(MODE)                             \
+        (((MODE) == ATIMER_ONE_SHOT) || ((MODE) == ATIMER_REPEAT))
+
+#define APP_TIMER_DEFINE(name, func, mode)                  \
+        app_timer_t name =                                  \
+        {                                                   \
+            .timer_node_status = 0x0,                       \
+            .timer_node_mode   = mode,                      \
+            .timer_node_cb     = func,                      \
+        }
+
+#define APP_TIMER_QUICK_START(name, func, peido)            \
+        {                                                   \
+            app_timer_create(&name, ATIMER_REPEAT, func);   \
+            app_timer_start_api(&name, peido, &name);       \
+        }
+
+#define APP_TIMER_QUICK_STOP(name)                          \
+        {                                                   \
+            app_timer_stop_api(&name);                      \
+        }
+
 /** @} */
 
 #endif

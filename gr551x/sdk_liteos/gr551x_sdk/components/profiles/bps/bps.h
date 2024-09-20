@@ -70,18 +70,17 @@
 #ifndef __BPS_H__
 #define __BPS_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_utils.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup  BPS_MACRO Defines
  * @{
  */
-#define BPS_CONNECTION_MAX              (10 < CFG_MAX_CONNECTIONS ? \
-                                         10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of BPS connections. */
+#define BPS_CONNECTION_MAX              10                           /**< Maximum number of BPS connections. */
 #define BPS_BP_MEAS_MAX_LEN             20                           /**< Maximum notification length. */
 
 /**
@@ -100,7 +99,8 @@
  * @{
  */
 /**@brief Blood Pressure Service event type. */
-typedef enum {
+typedef enum
+{
     BPS_EVT_INVALID,                        /**< Invalid event. */
     BPS_EVT_BP_MEAS_INDICATION_ENABLED,     /**< The measurement indication has been enabled. */
     BPS_EVT_BP_MEAS_INDICATION_DISABLED,    /**< The measurement indication has been disabled. */
@@ -110,7 +110,8 @@ typedef enum {
 } bps_evt_type_t;
 
 /**@brief Blood Pressure Feature bits. */
-enum bp_feature_bit {
+enum bp_feature_bit
+{
     BP_FEATURE_BODY_MOVEMENT_BIT        = (0x01 << 0),    /**< Body Movement Detection Support bit. */
     BP_FEATURE_CUFF_FIT_BIT             = (0x01 << 1),    /**< Cuff Fit Detection Support bit. */
     BP_FEATURE_IRREGULAR_PULSE_BIT      = (0x01 << 2),    /**< Irregular Pulse Detection Support bit. */
@@ -133,33 +134,34 @@ typedef void (*bps_evt_handler_t)(uint8_t conn_idx, bps_evt_type_t event);
  * @{
  */
 /**@brief SFLOAT format (IEEE-11073 16-bit FLOAT, defined as a 16-bit value with 12-bit mantissa and 4-bit exponent. */
-typedef struct {
-    int8_t  exponent;     /**< Base 10 exponent, only 4 bits */
-    int16_t mantissa;     /**< Mantissa, only 12 bits */
-} ieee_float16_t;
+typedef struct
+{
+  int8_t  exponent;     /**< Base 10 exponent, only 4 bits */
+  int16_t mantissa;     /**< Mantissa, only 12 bits */
+} bps_ieee_float16_t;
 
 /**@brief Blood Pressure measurement structure. */
-typedef struct {
-    uint8_t         bl_unit_in_kpa;         /**< Blood Pressure Units Flag, 0=mmHg, 1=kPa */
-    uint8_t         time_stamp_present;     /**< Time Stamp Flag, 0=not present, 1=present. */
-    uint8_t         pulse_rate_present;     /**< Pulse Rate Flag, 0=not present, 1=present. */
-    uint8_t         user_id_present;        /**< User ID Flag, 0=not present, 1=present. */
-    uint8_t         meas_status_present;    /**< Measurement Status Flag, 0=not present, 1=present. */
-    ieee_float16_t  systolic;               /**< Blood Pressure Measurement Compound Value - Systolic. */
-    ieee_float16_t  diastolic;              /**< Blood Pressure Measurement Compound Value - Diastolic . */
-    ieee_float16_t  mean_arterial_pr;       /**< Blood Pressure Measurement Compound Value - Mean Arterial Pressure. */
-    prf_date_time_t time_stamp;             /**< Time Stamp. */
-    ieee_float16_t  pulse_rate;             /**< Pulse Rate. */
-    uint8_t         user_id;                /**< User ID. */
-    uint16_t        meas_status;            /**< Measurement Status. */
+typedef struct
+{
+    uint8_t             bl_unit_in_kpa;         /**< Blood Pressure Units Flag, 0=mmHg, 1=kPa */
+    uint8_t             time_stamp_present;     /**< Time Stamp Flag, 0=not present, 1=present. */
+    uint8_t             pulse_rate_present;     /**< Pulse Rate Flag, 0=not present, 1=present. */
+    uint8_t             user_id_present;        /**< User ID Flag, 0=not present, 1=present. */
+    uint8_t             meas_status_present;    /**< Measurement Status Flag, 0=not present, 1=present. */
+    bps_ieee_float16_t  systolic;               /**< Blood Pressure Measurement Compound Value - Systolic. */
+    bps_ieee_float16_t  diastolic;              /**< Blood Pressure Measurement Compound Value - Diastolic . */
+    bps_ieee_float16_t  mean_arterial_pr;       /**< Blood Pressure Measurement Compound Value - Mean Arterial Pressure. */
+    prf_date_time_t     time_stamp;             /**< Time Stamp. */
+    bps_ieee_float16_t  pulse_rate;             /**< Pulse Rate. */
+    uint8_t             user_id;                /**< User ID. */
+    uint16_t            meas_status;            /**< Measurement Status. */
 } bps_meas_t;
 
-/**@brief Blood Pressure Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Blood Pressure Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     bps_evt_handler_t evt_handler;                    /**< Blood Pressure Service event handler. */
-    uint16_t
-    char_mask;                      /**< Mask of Supported characteristics, and configured with \ref BPS_CHAR_MASK */
+    uint16_t          char_mask;                      /**< Mask of Supported characteristics, and configured with \ref BPS_CHAR_MASK */
     uint16_t          bp_feature;                     /**< Value of Blood Pressure Feature characteristic. */
 } bps_init_t;
 /** @} */

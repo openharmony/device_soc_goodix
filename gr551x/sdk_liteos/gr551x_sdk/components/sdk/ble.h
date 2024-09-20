@@ -35,10 +35,10 @@
  *****************************************************************************************
  */
 
-/**
-* @addtogroup BLE
-* @{
-*/
+ /**
+ * @addtogroup BLE
+ * @{
+ */
 
 /**
  @addtogroup BLE_COMMEN BLE Common
@@ -59,23 +59,28 @@
 #include "ble_l2cap.h"
 #include "ble_prf.h"
 #include "ble_sec.h"
+#include "ble_event.h"
+
+#include <stdio.h> 
 
 /** @addtogroup BLE_COMMEN_ENUM Enumerations
  * @{
  */
 /**
- * @brief RF TX mode.
+ * @brief RF TX mode. 
  */
-typedef enum {
+typedef enum
+{
     BLE_RF_TX_MODE_INVALID = 0,
     BLE_RF_TX_MODE_LP_MODE = 1,
     BLE_RF_TX_MODE_ULP_MODE = 2,
 } ble_rf_tx_mode_t;
 
 /**
- * @brief The resistance value (ohm) of the RF match circuit.
+ * @brief The resistance value (ohm) of the RF match circuit. 
  */
-typedef enum {
+typedef enum
+{
     BLE_RF_MATCH_CIRCUIT_25OHM = 25,
     BLE_RF_MATCH_CIRCUIT_100OHM = 100,
 } ble_rf_match_circuit_t;
@@ -85,20 +90,11 @@ typedef enum {
 /** @addtogroup BLE_COMMEN_STRUCTURES Structures
  * @{
  */
-/** @brief The app callbacks for GAP, GATT, SM and L2CAP. */
-typedef struct {
-    app_ble_init_cmp_cb_t
-    app_ble_init_cmp_callback;         /**< Callback function for BLE initialization completed */
-    gap_cb_fun_t                *app_gap_callbacks;                 /**< Callback function for GAP */
-    const gatt_common_cb_fun_t  *app_gatt_common_callback;          /**< Callback function for GATT common */
-    const gattc_cb_fun_t        *app_gattc_callback;                /**< Callback function for GATT Client */
-    sec_cb_fun_t                *app_sec_callback;                  /**< Callback function for SM*/
-} app_callback_t;
-
-/** @brief The table contains the pointers to four arrays which are used
+/**@brief The table contains the pointers to four arrays which are used
  * as heap memory by BLE stack in ROM. The size of four arrays depends on
  * the number of connections and the number of attributes of profiles. */
-typedef struct {
+typedef struct 
+{
     uint32_t  *env_ret;         /**< Pointer to the array for environment heap */
     uint32_t  *db_ret;          /**< Pointer to the array for ATT DB heap */
     uint32_t  *msg_ret;         /**< Pointer to the array for message heap */
@@ -113,18 +109,19 @@ typedef struct {
     uint32_t   bm_size;         /**< The size of the array for bond manager heap */
     uint8_t   *conn_buf;        /**< Pointer to the array for connection heap */
     uint32_t   conn_size;       /**< The size of the array for connection heap */
-} stack_heaps_table_t;
+    uint8_t   *scan_dup_filt_list_buf;  /**< Pointer to the array for adv duplicate filter */
+    uint32_t   scan_dup_filt_list_size; /**< The size of the array for adv duplicate filter */
+}stack_heaps_table_t;
 
-/** @brief The function pointers for HCI UART. */
-typedef struct {
-    void (*init)(void);                                                       /**< Initialize UART. */
-    void (*flow_on)(void);                                                    /**< Flow control on. */
-    bool (*flow_off)(void);                                                   /**< Flow control off. */
-    void (*finish_transfers)(void);                                           /**< Finish the current transferring. */
-    /**< Read data. */
-    void (*read)(uint8_t *bufptr, uint32_t size, uint8_t (*callback) (uint8_t*, uint8_t), uint8_t* dummy);
-    /**< Write data. */
-    void (*write)(uint8_t *bufptr, uint32_t size, uint8_t (*callback) (uint8_t*, uint8_t), uint8_t* dummy);
+/**@brief The function pointers for HCI UART. */
+typedef struct
+{
+    void (*init)(void);                                                                             /**< Initialize UART. */
+    void (*flow_on)(void);                                                                          /**< Flow control on. */
+    bool (*flow_off)(void);                                                                         /**< Flow control off. */
+    void (*finish_transfers)(void);                                                                 /**< Finish the current transferring. */
+    void (*read)(uint8_t *bufptr, uint32_t size, void (*callback) (void*, uint8_t), void* dummy);   /**< Read data. */
+    void (*write)(uint8_t *bufptr, uint32_t size, void (*callback) (void*, uint8_t), void* dummy);  /**< Write data. */
 } hci_uart_call_t;
 /** @} */
 
@@ -132,7 +129,7 @@ typedef struct {
  * @{
  */
 
-/** @brief The BLE sync event callback. */
+/**@brief The BLE sync event callback. */
 typedef void (*ble_sync_evt_cb_t)(uint32_t sync_cnt, uint16_t sync_period);
 /** @} */
 
@@ -140,13 +137,22 @@ typedef void (*ble_sync_evt_cb_t)(uint32_t sync_cnt, uint16_t sync_period);
  * @{ */
 /**
  *****************************************************************************************
- * @brief Initialize BEL Stack.
+ * @brief Initialize BLE Stack.
  *
- * @param[in] p_app_callback: Pointer to the structure of app callbacks.
+ * @param[in] evt_handler:    Pointer to ble events handler.
  * @param[in] p_heaps_table:  Pointer to the BLE stack heaps table.
  *****************************************************************************************
  */
-void ble_stack_init(app_callback_t *p_app_callback, stack_heaps_table_t *p_heaps_table);
+uint16_t ble_stack_init(ble_evt_handler_t evt_handler, stack_heaps_table_t *p_heaps_table);
+
+/**
+ *****************************************************************************************
+ * @brief Initialize only BLE Stack Controller.
+ *
+ * @param[in] p_heaps_table:  Pointer to the BLE stack heaps table.
+ *****************************************************************************************
+ */
+void ble_stack_controller_init(stack_heaps_table_t *p_heaps_table);
 
 /**
  *****************************************************************************************
@@ -173,42 +179,38 @@ void ble_idle_time_notify_cb_register(void (*callback)(uint32_t hs));
 
 /**
  *****************************************************************************************
- * @brief Register BLE event - start notification callback function.
+ * @brief Register BLE activity start notification callback function.
  *
- * @param[in] callback:  function pointer of BLE event - start notification.
- * @note            param[in] of callback: e_role - the role of event,
- *                  @ref gap_role_t for possible roles.
+ * @param[in] callback:  function pointer of BLE activity start notification function.
+ * @note            param[in] of callback: e_role - the role of activity, gap_activity_role_t for possible roles.
  *                  param[in] of callback: index - The index parameter is interpreted by role.
- *                  If the role is @ref GAP_EVENT_ROLE_ADV, it's the index of Advertising.
- *                  If the role is @ref GAP_EVENT_ROLE_CON, it's the index of Connection.
+ *                  If role is GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
+ *                  If role is GAP_ACTIVITY_ROLE_CON, it's the index of Connection.
  *                  For all other roles, it should be ignored.
- *                  A callback will be called by BLE ISR when the BLE event starts every time.
+ *                  Callback will be called by BLE ISR when the BLE activity starts every time.
  *                  It should be realized as simlpe as you can.
  *                  Notice: You must define the start callback in the RAM space to avoid hardfault.
  *                  It's not suitable for ISO activities.
  *****************************************************************************************
  */
-void ble_start_notify_cb_register(void (*callback)(gap_event_role_t e_role,
-        uint8_t index));
+void ble_activity_start_notify_cb_register(void (*callback)(ble_gap_actv_role_t e_role,  uint8_t index));
 
 /**
  *****************************************************************************************
- * @brief Register BLE event end notification callback function.
+ * @brief Register BLE activity end notification callback function.
  *
- * @param[in] callback:  function pointer of BLE event - end notification function.
- * @note            param[in] of callback: e_role - the role of event,
- *                  @ref gap_role_t for possible roles.
+ * @param[in] callback:  function pointer of BLE activity end notification function.
+ * @note            param[in] of callback: e_role - the role of activity,gap_activity_role_t for possible roles.
  *                  param[in] of callback: index - The index parameter is interpreted by role.
- *                  If the role is @ref GAP_EVENT_ROLE_ADV, it's the index of Advertising.
- *                  If the role is @ref GAP_EVENT_ROLE_CON, it's the index of Connection.
+ *                  If role is GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
+ *                  If role is GAP_ACTIVITY_ROLE_CON, it's the index of Connection.
  *                  For all other roles, it should be ignored.
- *                  A callback will be called by BLE ISR when the BLE event ends every time.
+ *                  Callback will be called by BLE ISR when the BLE activity ends every time.
  *                  It should be realized as simlpe as you can. You'd better to define it in the RAM space
  *                  It's not suitable for ISO activities.
  *****************************************************************************************
  */
-void ble_end_notify_cb_register(void (*callback)(gap_event_role_t e_role,
-        uint8_t index));
+void ble_activity_end_notify_cb_register(void (*callback)(ble_gap_actv_role_t e_role,  uint8_t index));
 
 /**
  *****************************************************************************************
@@ -264,10 +266,10 @@ uint16_t ble_sync_source_destroy(void);
  *                                        BLE_RF_TX_MODE_LP_MODE: LP mode.
  *                                        BLE_RF_TX_MODE_ULP_MODE: ULP mode.
  *                                        Others: invalid mode.
- *
+ *                               
  * @note  This function should be called before BLE stack init.
  *
- * @return        SDK_SUCCESS: Successfully set Tx mode.
+ * @return        SDK_SUCCESS: Successfully set Tx mode.   
  *                SDK_ERR_DISALLOWED: Failed to set Tx mode.
  *****************************************************************************************
  */
@@ -283,7 +285,7 @@ uint8_t ble_rf_tx_mode_set(ble_rf_tx_mode_t e_rf_tx_mode);
  *****************************************************************************************
  */
 ble_rf_tx_mode_t ble_rf_tx_mode_get(void);
-
+ 
 /**
  *****************************************************************************************
  * @brief Set the resistance value of the RF match circuit (unit: ohm).

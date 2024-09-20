@@ -1,4 +1,4 @@
-# Copyright (c) 2021 GOODIX.
+# Copyright (c) 2024 GOODIX.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,64 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This BUILD.gn is used to compile the SDK source code of Goodix GR551x SOC.
-# In this script, optionally add source code compilation. If the SDK is upgraded,
-# you can directly replace components, drivers, and toolchain folders.
-
 import("//kernel/liteos_m/liteos.gni")
 
-config("public") {
-  include_dirs = [
-    "components/app_drivers/inc",
-    "components/boards",
-    "components/drivers_ext/gr551x",
-    "components/libraries/app_lfs",
-    "components/libraries/app_assert",
-    "components/libraries/app_error",
-    "components/libraries/app_log",
-    "components/libraries/app_timer",
-    "components/libraries/hal_flash",
-    "components/libraries/pmu_calibration",
-    "components/libraries/ring_buffer",
-    "components/libraries/utility",
-    "components/patch/ind",
-    "components/sdk/",
-    "drivers/inc",
-    "toolchain/gr551x/include",
-  ]
-}
-
-kernel_module("gr551x_sdk") {
-  sources = [
-    "components/app_drivers/src/app_dma.c",
-    "components/app_drivers/src/app_gpiote.c",
-    "components/app_drivers/src/app_i2c.c",
-    "components/app_drivers/src/app_io.c",
-    "components/app_drivers/src/app_pwm.c",
-    "components/app_drivers/src/app_pwr_mgmt.c",
-    "components/app_drivers/src/app_rng.c",
-    "components/app_drivers/src/app_systick.c",
-    "components/app_drivers/src/app_uart.c",
-    "components/libraries/app_assert/app_assert.c",
-    "components/libraries/app_error/app_error.c",
-    "components/libraries/app_log/app_log.c",
-    "components/libraries/app_timer/app_timer.c",
-    "components/libraries/ring_buffer/ring_buffer.c",
-    "components/libraries/utility/utility.c",
-    "drivers/src/gr55xx_hal.c",
-    "drivers/src/gr55xx_hal_adc.c",
-    "drivers/src/gr55xx_hal_aon_gpio.c",
-    "drivers/src/gr55xx_hal_aon_wdt.c",
-    "drivers/src/gr55xx_hal_calendar.c",
-    "drivers/src/gr55xx_hal_exflash.c",
-    "drivers/src/gr55xx_hal_gpio.c",
-    "drivers/src/gr55xx_hal_i2c.c",
-    "drivers/src/gr55xx_hal_pwm.c",
-    "drivers/src/gr55xx_hal_pwr.c",
-    "drivers/src/gr55xx_hal_rng.c",
-    "drivers/src/gr55xx_hal_uart.c",
-    "toolchain/gr551x/source/interrupt_gr55xx.c",
-    "toolchain/gr551x/source/platform_gr55xx.c",
-    "toolchain/gr551x/source/system_gr55xx.c",
+module_group("gr551x_sdk") {
+  modules = [
+    "drivers",
+    "components",
+    "platform",
+    "external/segger_rtt",
   ]
 }

@@ -62,21 +62,19 @@
 #ifndef __DIS_H__
 #define __DIS_H__
 
-#include <stdint.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include <stdint.h>
 
 /**
  * @defgroup DIS_MACRO Defines
  * @{
  */
-#define DIS_CONNECTION_MAX                  (10 < CFG_MAX_CONNECTIONS ? \
-                                             10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of DIS connections. \
-                                                                             The value is configurable. */
-#define DIS_SYS_ID_LEN                      8     /**< System ID length. */
-#define DIS_PNP_ID_LEN                      7     /**< PnP ID length. */
-#define DIS_VAL_MAX_LEN                     128   /**< Maximal length for Characteristic values - 128 bytes. */
-#define DIS_IEEE_CERTIF_MIN_LEN             6     /**< IEEE Certification length (min 6 bytes). */
+#define DIS_CONNECTION_MAX                  10              /**< Maximum number of DIS connections.The value is configurable. */
+#define DIS_SYS_ID_LEN                      8               /**< System ID length. */
+#define DIS_PNP_ID_LEN                      7               /**< PnP ID length. */
+#define DIS_VAL_MAX_LEN                     128             /**< Maximal length for Characteristic values - 128 bytes. */
+#define DIS_IEEE_CERTIF_MIN_LEN             6               /**< IEEE Certification length (min 6 bytes). */
 
 /**
  * @defgroup DIS_CHAR_MASK Characteristics Mask
@@ -90,8 +88,7 @@
 #define DIS_CHAR_HARDWARE_REV_SUP           0x00000600      /**< Bit mask of the Hardware Revision. */
 #define DIS_CHAR_SOFTWARE_REV_SUP           0x00001800      /**< Bit mask of the Software Revision. */
 #define DIS_CHAR_MANUFACTURER_NAME_SUP      0x00006000      /**< Bit mask of the Manufacturer Name. */
-#define DIS_CHAR_11073_CERT_DATA_SUP        0x00018000      /**< Bit mask of the IEEE 11073-20601 \
-                                                                 Regulatory Certification Data List. */
+#define DIS_CHAR_11073_CERT_DATA_SUP        0x00018000      /**< Bit mask of the IEEE 11073-20601 Regulatory Certification Data List. */
 #define DIS_CHAR_PNP_ID_SUP                 0x00060000      /**< Bit mask of the PnP ID. */
 #define DIS_CHAR_FULL                       0x0007ffff      /**< Bit mask of the full characteristic. */
 /** @} */
@@ -112,27 +109,31 @@
  * @{
  */
 /**@brief UTF-8 string data type. */
-typedef struct {
+typedef struct
+{
     uint8_t  length;              /**< String length. */
     char     *p_str;               /**< String data. */
 } dis_string_t;
 
 /**@brief System ID parameters. The first field is the LSOs and the second
  *        field contains the MSOs. */
-typedef struct {
+typedef struct
+{
     uint8_t manufacturer_id[5];   /**< Manufacturer-defined ID. */
     uint8_t org_unique_id[3];     /**< Organizationally unique ID (OUI) which is issued by IEEE. */
 } dis_sys_id_t;
 
 /**@brief IEEE 11073-20601 Regulatory Certification Data List Structure. */
-typedef struct {
+typedef struct
+{
     char     *p_list;              /**< Pointer to the list which contains the encoded opaque
                                    *   structure based on IEEE 11073-20601 specification. */
     uint8_t  list_len;            /**< Length of the list. */
 } dis_reg_cert_data_list_t;
 
 /**@brief PnP ID parameters */
-typedef struct {
+typedef struct
+{
     uint8_t  vendor_id_source;    /**< Vendor ID Source. */
     uint16_t vendor_id;           /**< Vendor ID. */
     uint16_t product_id;          /**< Product ID. */
@@ -141,9 +142,9 @@ typedef struct {
 
 /**@brief Device Information Service init structure. This contains all options
  *        and data needed for initialization of the service. */
-typedef struct {
-    uint32_t
-    char_mask;            /**< Initial mask of Supported characteristics, and configured with \ref DIS_CHAR_MASK. */
+typedef struct
+{
+    uint32_t                  char_mask;            /**< Initial mask of Supported characteristics, and configured with \ref DIS_CHAR_MASK. */
     dis_string_t              manufact_name_str;    /**< Initial manufacturer Name String. */
     dis_string_t              model_num_str;        /**< Initial model Number String. */
     dis_string_t              serial_num_str;       /**< Initial serial Number String. */
@@ -170,6 +171,16 @@ typedef struct {
  *****************************************************************************************
  */
 sdk_err_t dis_service_init(dis_init_t *p_dis_init);
+
+/**
+ *****************************************************************************************
+ * @brief Provide the interface for other modules to obtain the dis service start handle .
+ *
+ * @return The dis service start handle.
+ *****************************************************************************************
+ */
+uint16_t dis_service_start_handle_get(void);
+
 /** @} */
 
 #endif

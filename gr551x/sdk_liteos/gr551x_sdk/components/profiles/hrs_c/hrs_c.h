@@ -58,21 +58,19 @@
 #ifndef __HRS_C_H__
 #define __HRS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
-
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup HRS_C_MACRO Defines
  * @{
  */
-#define HRS_C_CONNECTION_MAX          (10 < CFG_MAX_CONNECTIONS ? \
-                                      10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of HRS Client connections. */
-#define HRS_C_RR_INTERVALS_NUM_MAX          9     /**< Maximum number of RR intervals in HRS notifications.  */
-#define HRS_C_CTRL_POINT_ENERGY_EXP         0x01  /**< Value for control point characteristic. */
+#define HRS_C_CONNECTION_MAX                10                              /**< Maximum number of HRS Client connections. */
+#define HRS_C_RR_INTERVALS_NUM_MAX          9                               /**< Maximum number of RR intervals in HRS notifications.  */
+#define HRS_C_CTRL_POINT_ENERGY_EXP         0x01                            /**< Value for control point characteristic. */
 /** @} */
 
 /**
@@ -80,20 +78,22 @@
  * @{
  */
 /**@brief Heart Rate Service Client event type. */
-typedef enum {
+typedef enum
+{
     HRS_C_EVT_INVALID,                    /**< HRS Client invalid event. */
     HRS_C_EVT_DISCOVERY_COMPLETE,         /**< HRS Client has found HRS service and its characteristics. */
-    HRS_C_EVT_DISCOVERY_FAIL,             /**< HRS Client found HRS service failed because of invalid operation or \
-                                               no found at the peer. */
-    HRS_C_EVT_HR_MEAS_NTF_SET_SUCCESS,  /**< HRS Client has set Notification of Heart Rate Measure characteristic. */
-    HRS_C_EVT_HR_MEAS_VAL_RECEIVE,      /**< HRS Client has received Heart Rate Measure value notification from peer. */
-    HRS_C_EVT_SENSOR_LOC_READ_RSP,      /**< HRS Client has received Sensor Location Value read response. */
-    HRS_C_EVT_CTRL_POINT_SET,           /**< HRS Client has set Control Point completely. */
-    HRS_C_EVT_WRITE_OP_ERR,             /**< Error occured when HRS Client writen to peer. */
+    HRS_C_EVT_DISCOVERY_FAIL,             /**< HRS Client found HRS service failed because of invalid operation or no found at the peer. */
+    HRS_C_EVT_HR_MEAS_NTF_SET_SUCCESS,    /**< HRS Client has set Notification of Heart Rate Measure characteristic. */
+    HRS_C_EVT_HR_MEAS_VAL_RECEIVE,        /**< HRS Client has received Heart Rate Measure value notification from peer. */
+    HRS_C_EVT_SENSOR_LOC_READ_RSP,        /**< HRS Client has received Sensor Location Value read response. */
+    HRS_C_EVT_CTRL_POINT_SET,             /**< HRS Client has set Control Point completely. */
+    HRS_C_EVT_WRITE_OP_ERR,               /**< Error occured when HRS Client writen to peer. */
 } hrs_c_evt_type_t;
 
 /**@brief Heart Rate Service Measurement flag bit. */
-typedef enum {
+typedef enum
+{
+
     HRS_C_BIT_RATE_FORMAT              = 0x01,              /**< Heart Rate Value Format bit. */
     HRS_C_BIT_SENSOR_CONTACT_DETECTED  = 0x02,              /**< Sensor Contact Detected bit. */
     HRS_C_BIT_SENSOR_CONTACT_SUPPORTED = 0x04,              /**< Sensor Contact Supported bit. */
@@ -102,7 +102,8 @@ typedef enum {
 } hrs_c_flag_bit_t;
 
 /**@brief Values for sensor location. */
-typedef enum {
+typedef enum
+{
     HRS_C_SENS_LOC_OTHER,             /**< The sensor location is other. */
     HRS_C_SENS_LOC_CHEST,             /**< The sensor location is the chest. */
     HRS_C_SENS_LOC_WRIST,             /**< The sensor location is the wrist. */
@@ -118,34 +119,33 @@ typedef enum {
  * @{
  */
 /**@brief Heart Rate Measurement characteristic value structure. */
-typedef struct {
+typedef struct
+{
     bool     is_sensor_contact_detected;                  /**< True if sensor contact has been detected. */
     uint16_t hr_value;                                    /**< Heart Rate Value. */
     uint8_t  rr_intervals_num;                            /**< Number of RR intervals. */
     float    rr_intervals[HRS_C_RR_INTERVALS_NUM_MAX];    /**< RR intervals. */
-    uint16_t energy_expended;                             /**< The accumulated energy expended in kilo Joules \
-                                                               since the last time it was reset. */
+    uint16_t energy_expended;                             /**< The accumulated energy expended in kilo Joules since the last time it was reset. */
 } hrs_c_hr_meas_t;
 
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t hrs_srvc_start_handle;      /**< HRS Service start handle. */
     uint16_t hrs_srvc_end_handle;        /**< HRS Service end handle. */
-    uint16_t hrs_hr_meas_handle;         /**< HRS Heart Rate Measurement characteristic Value handle \
-                                              which has been got from peer. */
-    uint16_t hrs_hr_meas_cccd_handle;    /**< HRS CCCD handle of Heart Rate Measurement characteristic \
-                                              which has been got from peer. */
-    uint16_t hrs_sensor_loc_handle;      /**< HRS Sensor Location characteristic Value handle \
-                                              which has been got from peer. */
-    uint16_t hrs_ctrl_point_handle;      /**< HRS Control Point characteristic Value handle \
-                                              which has been got from peer. */
+    uint16_t hrs_hr_meas_handle;         /**< HRS Heart Rate Measurement characteristic Value handle which has been got from peer. */
+    uint16_t hrs_hr_meas_cccd_handle;    /**< HRS CCCD handle of Heart Rate Measurement characteristic which has been got from peer. */
+    uint16_t hrs_sensor_loc_handle;      /**< HRS Sensor Location characteristic Value handle which has been got from peer. */
+    uint16_t hrs_ctrl_point_handle;      /**< HRS Control Point characteristic Value handle which has been got from peer. */
 } hrs_c_handles_t;
 
 /**@brief Heart Rate Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t                 conn_idx;            /**< The connection index. */
     hrs_c_evt_type_t        evt_type;            /**< HRS Client event type. */
-    union {
+    union
+    {
         hrs_c_hr_meas_t     hr_meas_buff;        /**< Buffer of heart rate measurement value. */
         hrs_c_sensor_loc_t  sensor_loc;          /**< Sensor location. */
     } value;                                     /**< Decoded result of value received. */

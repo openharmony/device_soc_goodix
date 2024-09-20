@@ -66,21 +66,20 @@
 #ifndef __HIDS_H__
 #define __HIDS_H__
 
-#include <stdint.h>
 #include "ble_prf_utils.h"
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include <stdint.h>
 
 /**
  * @defgroup HIDS_MACRO Defines
  * @{
  */
 
-#define HIDS_CONNECTION_MAX         (10 < CFG_MAX_CONNECTIONS ? \
-                                    10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of Heart Rate Service connections. */
+#define HIDS_CONNECTION_MAX                      10      /**< Maximum number of Heart Rate Service connections. */
 
-#define HIDS_REPORT_MAX_SIZE        20       /**< Maximum length of report. */
-#define HIDS_REPORT_MAP_MAX_SIZE    512     /**< Limitation of length, as per Section 2.6.1 in HIDS Spec, version 1.0 */
+#define HIDS_REPORT_MAX_SIZE                     20      /**< Maximum length of report. */
+#define HIDS_REPORT_MAP_MAX_SIZE                 512     /**< Limitation of length, as per Section 2.6.1 in HIDS Spec, version 1.0 */
 
 /**
  * @defgroup HIDS_REPORT_TYPE Report Type values
@@ -97,8 +96,8 @@
  * @{
  * @brief HIDS Information Flags define.
  */
-#define HID_INFO_FLAG_REMOTE_WAKE_MSK           0x01  /**< Bit mask of Remote Wake flag in HIDS information. */
-#define HID_INFO_FLAG_NORMALLY_CONNECTABLE_MSK  0x02  /**< Bit mask of Normally Connectable flag in HIDS information. */
+#define HID_INFO_FLAG_REMOTE_WAKE_MSK            0x01      /**< Bit mask of Remote Wake flag in HIDS information. */
+#define HID_INFO_FLAG_NORMALLY_CONNECTABLE_MSK   0x02      /**< Bit mask of Normally Connectable flag in HIDS information. */
 /** @} */
 /** @} */
 
@@ -109,7 +108,8 @@
  */
 
 /**@brief HID Service event type. */
-typedef enum {
+typedef enum
+{
     HIDS_EVT_INVALID,                       /**< Invalid event. */
     HIDS_EVT_IN_REP_NOTIFY_ENABLED,         /**< Input report notification enabled event. */
     HIDS_EVT_IN_REP_NOTIFY_DISABLED,        /**< Input report notification disabled event. */
@@ -122,7 +122,8 @@ typedef enum {
 
 
 /**@brief HID Service write report type. */
-typedef enum {
+typedef enum
+{
     HIDS_REPORT_TYPE_RESERVED,              /**< The reserved report type. */
     HIDS_REPORT_TYPE_IN1,                   /**< The input report1 type. */
     HIDS_REPORT_TYPE_IN2,                   /**< The input report2 type. */
@@ -142,27 +143,23 @@ typedef enum {
  */
 
 /**@brief HID Service event. */
-typedef struct {
+typedef struct
+{
     hids_evt_type_t evt_type;               /**< Type of event. */
     uint8_t conn_idx;                       /**< Connect index. */
     hids_report_type_t report_type;         /**< Type of report, see @ref hids_report_type_t. */
     uint16_t           offset;              /**< Offset for the write operation. */
     uint16_t           len;                 /**< Length of the incoming data. */
     uint8_t    const * data;                /**< Incoming data, variable length */
-} hids_evt_t;
+}hids_evt_t;
 
 /**@brief HID Information characteristic value. */
-typedef struct {
-    uint16_t
-    bcd_hid;          /**< 16-bit unsigned integer representing version number of base USB HID Specification \
-                           implemented by HID Device */
-    uint8_t
-    b_country_code;   /**< Identifies which country the hardware is localized for. \
-                           Most hardware is not localized and thus this value would be zero (0). */
-    uint8_t
-    flags;            /**< See http://developer.bluetooth.org/gatt/characteristics/Pages/ \
-                           CharacteristicViewer.aspx?u=org.bluetooth.characteristic.hid_information.xml */
-} hids_hid_info_t;
+typedef struct
+{
+    uint16_t                      bcd_hid;          /**< 16-bit unsigned integer representing version number of base USB HID Specification implemented by HID Device */
+    uint8_t                       b_country_code;   /**< Identifies which country the hardware is localized for. Most hardware is not localized and thus this value would be zero (0). */
+    uint8_t                       flags;            /**< See http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.hid_information.xml */
+}hids_hid_info_t;
 
 
 /**@brief Value of a Report Reference descriptor.
@@ -170,22 +167,24 @@ typedef struct {
  * @details This is mapping information that maps the parent characteristic to the Report ID(s) and
  *          Report Type(s) defined within a Report Map characteristic.
  */
-typedef struct {
-    uint8_t report_id;      /**< Non-zero value if there is more than one instance of the same Report Type */
-    uint8_t report_type;    /**< Type of Report characteristic (see @ref HIDS_REPORT_TYPE) */
+typedef struct
+{
+    uint8_t report_id;                              /**< Non-zero value if there is more than one instance of the same Report Type */
+    uint8_t report_type;                            /**< Type of Report characteristic (see @ref HIDS_REPORT_TYPE) */
 } hids_report_ref_t;
 
 
 /**@brief HID Service Report characteristic define. */
-typedef struct {
+typedef struct
+{
     uint16_t value_len;                            /**< Length of characteristic value. */
-    hids_report_ref_t
-    ref;                       /**<  Value of a Report Reference descriptor, see @ref hids_report_ref_t. */
+    hids_report_ref_t  ref;                       /**<  Value of a Report Reference descriptor, see @ref hids_report_ref_t. */
 } hids_report_int_t;
 
 
 /**@brief HID Service Report Map characteristic value. */
-typedef struct {
+typedef struct
+{
     uint8_t *p_map;             /**< Pointer to the report map. */
     uint16_t len;               /**< The length of report map. */
 } hids_report_map_t;
@@ -199,19 +198,18 @@ typedef void (*hids_evt_handler_t)(hids_evt_t *p_evt);
 
 
 /**@brief HID Service initialization variable. */
-typedef struct {
-    hids_evt_handler_t  evt_handler;           /**< Handle events in HID Service. */
-    bool is_kb;                                /**< TRUE if device is operating as a keyboard, FALSE if it is not. */
-    bool is_mouse;                             /**< TRUE if device is operating as a mouse, FALSE if it is not. */
-    hids_hid_info_t     hid_info;              /**< Value of HID information characteristic. */
-    hids_report_map_t   report_map;            /**< HID Service Report Map characteristic value. */
-    uint8_t             input_report_count;    /**< Number of Input Report characteristics. */
-    hids_report_int_t   input_report_array[3]; /**< HID input Report Reference value. */
-    bool
-    out_report_sup;                     /**< TRUE if output Report characteristic suport, FALSE if it is nonsupport. */
+typedef struct
+{
+    hids_evt_handler_t  evt_handler;                        /**< Handle events in HID Service. */
+    bool is_kb;                                             /**< TRUE if device is operating as a keyboard, FALSE if it is not. */
+    bool is_mouse;                                          /**< TRUE if device is operating as a mouse, FALSE if it is not. */
+    hids_hid_info_t     hid_info;                           /**< Value of HID information characteristic. */
+    hids_report_map_t   report_map;                         /**< HID Service Report Map characteristic value. */
+    uint8_t             input_report_count;                 /**< Number of Input Report characteristics. */
+    hids_report_int_t   input_report_array[3];              /**< HID input Report Reference value. */
+    bool                out_report_sup;                     /**< TRUE if output Report characteristic suport, FALSE if it is nonsupport. */
     hids_report_int_t   output_report;                      /**< HID output Report Reference value. */
-    bool
-    feature_report_sup;                 /**< TRUE if feature Report characteristic suport, FALSE if it is nonsupport. */
+    bool                feature_report_sup;                 /**< TRUE if feature Report characteristic suport, FALSE if it is nonsupport. */
     hids_report_int_t   feature_report;                     /**< HID feature Report Reference value. */
 } hids_init_t;
 /** @} */
@@ -271,6 +269,16 @@ sdk_err_t hids_boot_kb_in_rep_send(uint8_t conn_idx, uint8_t *p_data, uint16_t l
  *****************************************************************************************
  */
 sdk_err_t hids_boot_mouse_in_rep_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length);
+
+/**
+ *****************************************************************************************
+ * @brief Provide the interface for other modules to obtain the hids service start handle .
+ *
+ * @return The hids service start handle.
+ *****************************************************************************************
+ */
+uint16_t hids_service_start_handle_get(void);
+
 /** @} */
 
 #endif

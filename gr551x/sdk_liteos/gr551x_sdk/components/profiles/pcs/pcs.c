@@ -49,10 +49,8 @@
  *****************************************************************************************
  */
 /**@brief The UUIDs of PCS characteristics. */
-#define PCS_CHARACTERISTIC_TX_UUID     {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
-                                        0x0A, 0x46, 0x44, 0xD3, 0x02, 0x05, 0xED, 0xA6}
-#define PCS_CHARACTERISTIC_SETTING_UUID    {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
-                                            0x0A, 0x46, 0x44, 0xD3, 0x03, 0x05, 0xED, 0xA6}
+#define PCS_CHARACTERISTIC_TX_UUID      {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x02, 0x05, 0xED, 0xA6}
+#define PCS_CHARACTERISTIC_SETTING_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x03, 0x05, 0xED, 0xA6}
 
 /**@brief Macros for conversion of 128bit to 16bit UUID. */
 #define ATT_128_PRIMARY_SERVICE BLE_ATT_16_TO_128_ARRAY(BLE_ATT_DECL_PRIMARY_SERVICE)
@@ -64,7 +62,8 @@
  *****************************************************************************************
  */
 /**@brief PCS Service Attributes Indexes. */
-enum pcs_attr_idx_t {
+enum pcs_attr_idx_t
+{
     PCS_IDX_SVC,
 
     PCS_IDX_TX_CHAR,
@@ -83,24 +82,14 @@ enum pcs_attr_idx_t {
  *****************************************************************************************
  */
 /**@brief PCS Service environment variable. */
-struct pcs_env_t {
-    pcs_init_t pcs_init;                            /**< PCS Service initialization variables. */
-    uint16_t   start_hdl;                           /**< Start handle of services */
-    uint16_t   tx_ntf_cfg[PCS_CONNECTION_MAX];      /**< TX Characteristic Notification configuration of the peers. */
-    uint16_t   setting_ind_cfg[PCS_CONNECTION_MAX]; /**< Setting Characteristic Indication configuration
-                                                        of the peers. */
+struct pcs_env_t
+{
+    pcs_init_t pcs_init;                               /**< PCS Service initialization variables. */
+    uint16_t   start_hdl;                              /**< Start handle of services */
+    uint16_t   tx_ntf_cfg[PCS_CONNECTION_MAX];         /**< TX Characteristic Notification configuration of the peers. */
+    uint16_t   setting_ind_cfg[PCS_CONNECTION_MAX];    /**< Setting Characteristic Indication configuration of the peers. */
+    ble_gatts_create_db_t   pcs_gatts_db;                            /**< Running Speed and Cadence Service attributs database. */
 };
-
-/*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static sdk_err_t   pcs_init(void);
-static void        pcs_disconnected(uint8_t conn_idx, uint8_t disconn_reason);
-static void        pcs_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-static void        pcs_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param);
-static void        pcs_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value);
-static void        pcs_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
@@ -108,68 +97,39 @@ static void        pcs_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_ga
  */
 static struct pcs_env_t s_pcs_env;
 static const uint16_t   s_char_mask = 0xFFFF;
+static const uint8_t    s_pcs_svc_uuid[] = {PCS_SERVICE_UUID};
 
 /**@brief Full PCS Database Description which is used to add attributes into the ATT database. */
-static const attm_desc_128_t pcs_att_db[PCS_IDX_NB] = {
+static const ble_gatts_attm_desc_128_t pcs_attr_tab[PCS_IDX_NB] =
+{
     // PCS service
-    [PCS_IDX_SVC]            = {ATT_128_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+    [PCS_IDX_SVC]            = {ATT_128_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
 
     // PCS TX Characteristic Declaration
-    [PCS_IDX_TX_CHAR]        = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [PCS_IDX_TX_CHAR]        = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // PCS TX Characteristic Value
-    [PCS_IDX_TX_VAL]         = {
-        PCS_CHARACTERISTIC_TX_UUID,
-        NOTIFY_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        PCS_MAX_DATA_LEN
-    },
+    [PCS_IDX_TX_VAL]         = {PCS_CHARACTERISTIC_TX_UUID, 
+                                BLE_GATTS_NOTIFY_PERM_UNSEC,
+                                (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                                PCS_MAX_DATA_LEN},
     // PCS TX Characteristic - Client Characteristic Configuration Descriptor
-    [PCS_IDX_TX_CFG]         = {
-        ATT_128_CLIENT_CHAR_CFG,
-        READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC,
-        0,
-        0
-    },
-
+    [PCS_IDX_TX_CFG]         = {ATT_128_CLIENT_CHAR_CFG,
+                                BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC,
+                                0,
+                                0},
+    
     // PCS settings
-    [PCS_IDX_SETTING_CHAR] = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
+    [PCS_IDX_SETTING_CHAR] = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
     // PCS settings Value
-    [PCS_IDX_SETTING_VAL]  = {
-        PCS_CHARACTERISTIC_SETTING_UUID,
-        (WRITE_CMD_PERM_UNSEC | INDICATE_PERM_UNSEC),
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        PCS_MAX_DATA_LEN
-    },
+    [PCS_IDX_SETTING_VAL]  = {PCS_CHARACTERISTIC_SETTING_UUID,
+                              (BLE_GATTS_WRITE_CMD_PERM_UNSEC | BLE_GATTS_INDICATE_PERM_UNSEC),
+                              (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                               PCS_MAX_DATA_LEN},
     // ths settings cfg
-    [PCS_IDX_SETTING_CFG]  = {
-        ATT_128_CLIENT_CHAR_CFG,
-        (READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC | WRITE_CMD_PERM_UNSEC),
-        0,
-        0
-    },
-};
-
-/**@brief PCS Service interface required by profile manager. */
-static ble_prf_manager_cbs_t pcs_mgr_cbs = {
-    (prf_init_func_t)pcs_init,
-    NULL,
-    pcs_disconnected,
-};
-
-/**@brief PCS GATT Server Callbacks. */
-static gatts_prf_cbs_t pcs_gatts_cbs = {
-    pcs_read_att_cb,
-    pcs_write_att_cb,
-    NULL,
-    pcs_ntf_ind_cb,
-    pcs_cccd_set_cb
-};
-
-/**@brief PCS Server Information. */
-static const prf_server_info_t pcs_prf_info = {
-    .max_connection_nb = PCS_CONNECTION_MAX,
-    .manager_cbs       = &pcs_mgr_cbs,
-    .gatts_prf_cbs     = &pcs_gatts_cbs
+    [PCS_IDX_SETTING_CFG]  = {ATT_128_CLIENT_CHAR_CFG,
+                              (BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC | BLE_GATTS_WRITE_CMD_PERM_UNSEC),
+                              0,
+                              0},
 };
 
 /*
@@ -178,50 +138,15 @@ static const prf_server_info_t pcs_prf_info = {
  */
 /**
  *****************************************************************************************
- * @brief Initialize PCS and create DB in ATT.
- *
- * @return Error code to know if service initialization succeed or not.
- *****************************************************************************************
- */
-static sdk_err_t pcs_init(void)
-{
-    const uint8_t     pcs_svc_uuid[] = {PCS_SERVICE_UUID};
-    uint16_t          start_hdl      = PRF_INVALID_HANDLE;
-    sdk_err_t         error_code;
-    gatts_create_db_t gatts_db;
-
-    error_code = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (error_code < 0) {
-        return error_code;
-    }
-
-    gatts_db.shdl                  = &start_hdl;
-    gatts_db.uuid                  = pcs_svc_uuid;
-    gatts_db.attr_tab_cfg          = (uint8_t *)&s_char_mask;
-    gatts_db.max_nb_attr           = PCS_IDX_NB;
-    gatts_db.srvc_perm             = SRVC_UUID_TYPE_SET(UUID_TYPE_128);
-    gatts_db.attr_tab_type         = SERVICE_TABLE_TYPE_128;
-    gatts_db.attr_tab.attr_tab_128 = pcs_att_db;
-
-    error_code = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_pcs_env.start_hdl = *gatts_db.shdl;
-    }
-
-    return error_code;
-}
-
-/**
- *****************************************************************************************
  * @brief Handles reception of the attribute info request message.
  *
  * @param[in] conn_idx: Index of the connection.
  * @param[in] p_param:  Pointer to the parameters of the read request.
  *****************************************************************************************
  */
-static void   pcs_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param)
+static void pcs_read_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_read_t *p_param)
 {
-    gatts_read_cfm_t cfm;
+    ble_gatts_read_cfm_t cfm;
     uint16_t         handle    = p_param->handle;
     uint8_t          tab_index = 0;
 
@@ -229,7 +154,8 @@ static void   pcs_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_par
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case PCS_IDX_TX_CFG:
             cfm.length = sizeof(uint16_t);
             cfm.value  = (uint8_t *)&s_pcs_env.tx_ntf_cfg[conn_idx];
@@ -241,7 +167,7 @@ static void   pcs_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_par
             cfm.value  = (uint8_t *)&s_pcs_env.setting_ind_cfg[conn_idx];
             cfm.status = BLE_SUCCESS;
             break;
-
+        
         default:
             cfm.length = 0;
             cfm.status = BLE_ATT_ERR_INVALID_HANDLE;
@@ -259,20 +185,22 @@ static void   pcs_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_par
  * @param[in] p_param:  Point to the parameters of the write request.
  *****************************************************************************************
  */
-static void   pcs_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void pcs_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
     uint8_t           handle    = p_param->handle;
     uint8_t           tab_index = 0;
     uint16_t          cccd_value;
     pcs_evt_t         event;
-    gatts_write_cfm_t cfm;
+    ble_gatts_write_cfm_t cfm;
 
     tab_index      = prf_find_idx_by_handle(handle, s_pcs_env.start_hdl, PCS_IDX_NB, (uint8_t *)&s_char_mask);
     event.conn_idx = conn_idx;
     cfm.handle     = handle;
     cfm.status     = BLE_SUCCESS;
+    
+    switch (tab_index)
+    {
 
-    switch (tab_index) {
         case PCS_IDX_TX_CFG:
             cccd_value     = le16toh(&p_param->value[0]);
             event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? PCS_EVT_TX_ENABLE : PCS_EVT_TX_DISABLE;
@@ -294,8 +222,8 @@ static void   pcs_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
             break;
     }
 
-    if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && PCS_EVT_INVALID != event.evt_type &&
-        s_pcs_env.pcs_init.evt_handler) {
+    if (BLE_ATT_ERR_INVALID_HANDLE != cfm.status && PCS_EVT_INVALID != event.evt_type && s_pcs_env.pcs_init.evt_handler)
+    {
         event.conn_idx = conn_idx;
         event.p_data   = (uint8_t *)p_param->value;
         event.length   = p_param->length;
@@ -315,12 +243,13 @@ static void   pcs_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
  * @param[in]: cccd_value: The value of cccd attribute.
  *****************************************************************************************
  */
-static void pcs_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
+static void pcs_cccd_set_evt_handler(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
 {
     uint8_t           tab_index = 0;
     pcs_evt_t         event;
 
-    if (!prf_is_cccd_value_valid(cccd_value)) {
+    if (!prf_is_cccd_value_valid(cccd_value))
+    {
         return;
     }
 
@@ -328,7 +257,8 @@ static void pcs_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
     event.conn_idx = conn_idx;
     event.evt_type = PCS_EVT_INVALID;
 
-    switch (tab_index) {
+    switch (tab_index)
+    {
         case PCS_IDX_SETTING_CFG:
             event.evt_type = (PRF_CLI_START_IND == cccd_value) ? PCS_EVT_SETTING_ENABLE : PCS_EVT_SETTING_DISABLE;
             s_pcs_env.setting_ind_cfg[conn_idx] = cccd_value;
@@ -338,7 +268,8 @@ static void pcs_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
             break;
     }
 
-    if (PCS_EVT_INVALID != event.evt_type && s_pcs_env.pcs_init.evt_handler) {
+    if (PCS_EVT_INVALID != event.evt_type && s_pcs_env.pcs_init.evt_handler)
+    {
         s_pcs_env.pcs_init.evt_handler(&event);
     }
 }
@@ -350,16 +281,18 @@ static void pcs_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
  * @param[in] conn_idx: Index of the connection.
  *****************************************************************************************
  */
-static void pcs_disconnected(uint8_t conn_idx, uint8_t disconn_reason)
+static void pcs_disconnect_evt_handler(uint8_t conn_idx, uint8_t disconn_reason)
 {
-    pcs_evt_t  event = {
+    pcs_evt_t  event = 
+    {
         .conn_idx = conn_idx,
         .evt_type = PCS_EVT_DISCONNECTED,
         .p_data   = &disconn_reason,
         .length   = sizeof(uint8_t)
     };
 
-    if (s_pcs_env.pcs_init.evt_handler) {
+    if (s_pcs_env.pcs_init.evt_handler)
+    {
         s_pcs_env.pcs_init.evt_handler(&event);
     }
 }
@@ -373,16 +306,49 @@ static void pcs_disconnected(uint8_t conn_idx, uint8_t disconn_reason)
  * @param[in] p_ntf_ind:  Pointer to the structure of the complete event.
  *****************************************************************************************
  */
-static void pcs_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind)
+static void pcs_ntf_ind_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gatts_evt_ntf_ind_t *p_ntf_ind)
 {
-    if (s_pcs_env.pcs_init.evt_handler != NULL) {
+    if (NULL != s_pcs_env.pcs_init.evt_handler)
+    {
         pcs_evt_t event;
         event.conn_idx = conn_idx;
 
-        if (BLE_SUCCESS == status && BLE_GATT_NOTIFICATION == p_ntf_ind->type) {
+        if (BLE_SUCCESS == status && BLE_GATT_NOTIFICATION == p_ntf_ind->type)
+        {
             event.evt_type = PCS_EVT_TX_DATA_SENT;
             s_pcs_env.pcs_init.evt_handler(&event);
         }
+    }
+}
+
+static void pcs_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            pcs_read_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.read_req);
+            break;
+
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            pcs_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+
+        case BLE_GATTS_EVT_NTF_IND:
+            pcs_ntf_ind_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt_status, &p_evt->evt.gatts_evt.params.ntf_ind_sended);
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            pcs_cccd_set_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt.gatts_evt.params.cccd_recovery.handle, p_evt->evt.gatts_evt.params.cccd_recovery.cccd_val);
+            break;
+
+        case BLE_GAPC_EVT_DISCONNECTED:
+            pcs_disconnect_evt_handler(p_evt->evt.gapc_evt.index, p_evt->evt.gapc_evt.params.disconnected.reason);
+            break;
     }
 }
 
@@ -393,9 +359,10 @@ static void pcs_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf
 sdk_err_t pcs_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
     sdk_err_t        error_code = SDK_ERR_NTF_DISABLED;
-    gatts_noti_ind_t send_rsp;
+    ble_gatts_noti_ind_t send_rsp;
 
-    if (PRF_CLI_START_NTF == s_pcs_env.tx_ntf_cfg[conn_idx]) {
+    if (PRF_CLI_START_NTF == s_pcs_env.tx_ntf_cfg[conn_idx])
+    {
         // Fill in the parameter structure
         send_rsp.type   = BLE_GATT_NOTIFICATION;
         send_rsp.handle = prf_find_handle_by_idx(PCS_IDX_TX_VAL, s_pcs_env.start_hdl, (uint8_t *)&s_char_mask);
@@ -414,9 +381,10 @@ sdk_err_t pcs_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 sdk_err_t pcs_setting_reply(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
     sdk_err_t        error_code = SDK_ERR_IND_DISABLED;
-    gatts_noti_ind_t send_cmd;
+    ble_gatts_noti_ind_t send_cmd;
 
-    if (PRF_CLI_START_IND == s_pcs_env.setting_ind_cfg[conn_idx]) {
+    if (PRF_CLI_START_IND == s_pcs_env.setting_ind_cfg[conn_idx])
+    {
         // Fill in the parameter structure
         send_cmd.type   = BLE_GATT_INDICATION;
         send_cmd.handle = prf_find_handle_by_idx(PCS_IDX_SETTING_VAL, s_pcs_env.start_hdl, (uint8_t *)&s_char_mask);
@@ -434,15 +402,22 @@ sdk_err_t pcs_setting_reply(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 
 sdk_err_t pcs_service_init(pcs_init_t *p_pcs_init)
 {
-    sdk_err_t ret;
-    if (p_pcs_init == NULL) {
+    if (NULL == p_pcs_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memcpy_s(&s_pcs_env.pcs_init, sizeof(pcs_init_t), p_pcs_init, sizeof(pcs_init_t));
-    if (ret < 0) {
-        return ret;
-    }
+    memcpy(&s_pcs_env.pcs_init, p_pcs_init, sizeof(pcs_init_t));
 
-    return ble_server_prf_add(&pcs_prf_info);
+    s_pcs_env.start_hdl  = PRF_INVALID_HANDLE;
+
+    s_pcs_env.pcs_gatts_db.shdl                  = &s_pcs_env.start_hdl;
+    s_pcs_env.pcs_gatts_db.uuid                  = s_pcs_svc_uuid;
+    s_pcs_env.pcs_gatts_db.attr_tab_cfg          = (uint8_t *)&s_char_mask;
+    s_pcs_env.pcs_gatts_db.max_nb_attr           = PCS_IDX_NB;
+    s_pcs_env.pcs_gatts_db.srvc_perm             = BLE_GATTS_SRVC_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128); 
+    s_pcs_env.pcs_gatts_db.attr_tab_type         = BLE_GATTS_SERVICE_TABLE_TYPE_128;
+    s_pcs_env.pcs_gatts_db.attr_tab.attr_tab_128 = pcs_attr_tab;
+
+    return ble_gatts_prf_add(&s_pcs_env.pcs_gatts_db, pcs_ble_evt_handler);
 }

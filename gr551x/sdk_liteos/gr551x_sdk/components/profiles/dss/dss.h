@@ -59,26 +59,28 @@
 #ifndef __DSS_H__
 #define __DSS_H__
 
-#include <stdint.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include <stdint.h>
 
 /**
  * @defgroup DSS_MACRO Defines
  * @{
  */
-#define DSS_CONNECTION_MAX                  (10 < CFG_MAX_CONNECTIONS ? \
-                                             10 : CFG_MAX_CONNECTIONS)      /**< Maximum number of DSS connections. */
-#define DSS_ROLE_VALUE_LEN                  1       /**< Length of Role characteristic value. */
-#define DSS_EVT_CNT_VALUE_LEN               4       /**< Length of Event Count characteristic value. */
-#define DSS_EVT_PERIOD_VALUE_LEN            2       /**< Length of Event Period characteristic value. */
-#define DSS_STATUS_VALUE_LEN                1       /**< Length of Status characteristic value. */
-#define DSS_CTRL_PT_VALUE_LEN               7       /**< Length of Control Point characteristic value. */
-#define DSS_CTRL_PT_RSP_VAL_LEN             3       /**< Length of Control Point Response characteristic value. */
+#define DSS_SERVICE_UUID   0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
+                           0x0A, 0x46, 0x44, 0xD3, 0x01, 0x0A, 0xED, 0xA6    /**< DSS service UUID. */
 
-#define DSS_SYNC_DEV_MAX_NUM                5       /**< Maximun num of Source Sync Device. */
-#define DSS_CFG_ADV_IDX                     0       /**< DSS Config Advertising Index. */
-#define DSS_SYNC_ADV_IDX                    1       /**< DSS Sync Advertising Index. */
+#define DSS_CONNECTION_MAX                  10                              /**< Maximum number of DSS connections. */
+#define DSS_ROLE_VALUE_LEN                  1                               /**< Length of Role characteristic value. */
+#define DSS_EVT_CNT_VALUE_LEN               4                               /**< Length of Event Count characteristic value. */
+#define DSS_EVT_PERIOD_VALUE_LEN            2                               /**< Length of Event Period characteristic value. */
+#define DSS_STATUS_VALUE_LEN                1                               /**< Length of Status characteristic value. */
+#define DSS_CTRL_PT_VALUE_LEN               7                               /**< Length of Control Point characteristic value. */
+#define DSS_CTRL_PT_RSP_VAL_LEN             3                               /**< Length of Control Point Response characteristic value. */
+
+#define DSS_SYNC_DEV_MAX_NUM                5                               /**< Maximun num of Source Sync Device. */
+#define DSS_CFG_ADV_IDX                     0                               /**< DSS Config Advertising Index. */
+#define DSS_SYNC_ADV_IDX                    1                               /**< DSS Sync Advertising Index. */
 /** @} */
 
 /**
@@ -86,14 +88,16 @@
  * @{
  */
 /**@brief Device Synchronize Service roles. */
-typedef enum {
+typedef enum
+{
     DSS_ROLE_SYNC_INVALID,        /**< Device synchronize invalid role. */
     DSS_ROLE_SYNC_SOURCE,         /**< Device synchronize source role (Create synchronize source and distribute). */
     DSS_ROLE_SYNC_DEVICE,         /**< Device synchronize deivce role. */
 } dss_role_t;
 
 /**@brief Device Synchronize Service status. */
-typedef enum {
+typedef enum
+{
     DSS_STATUS_CFG_READY,             /**< Device is ready for config, */
     DSS_STATUS_IN_ADV,                /**< Device is in advertising. */
     DSS_STATUS_IN_SCAN,               /**< Device is in scanning. */
@@ -101,7 +105,8 @@ typedef enum {
 } dss_staus_t;
 
 /**@brief Device Synchronize Service control point OP IDs. */
-typedef enum {
+typedef enum
+{
     DSS_OP_ID_INVALID,             /**< Invalid op id. */
     DSS_OP_ID_ROLE_SET,            /**< Set role op id.*/
     DSS_OP_ID_SYNC_SRC_CREATE,     /**< Create synchronize source op id. */
@@ -113,7 +118,8 @@ typedef enum {
 } dss_op_id_t;
 
 /**@brief Device Synchronize Service control point response IDs. */
-typedef enum {
+typedef enum
+{
     DSS_RSP_ID_SUCCESS,            /**< Success. */
     DSS_RSP_ID_UNSUPPORT,          /**< Unsupport op. */
     DSS_RSP_ID_DISALLOWED,         /**< Disallowed op. */
@@ -135,7 +141,8 @@ typedef enum {
 
 
 /**@brief Device Synchronize Service event types. */
-typedef enum {
+typedef enum
+{
     DSS_EVT_INVALID,              /**< Invalid event. */
     DSS_EVT_SOURCE_ROLE_SET,      /**< Source Role set event. */
     DSS_EVT_DEVICE_ROLE_SET,      /**< Device Role set event. */
@@ -153,7 +160,8 @@ typedef enum {
  * @{
  */
 /**@brief Device Synchronize Service Synchronize event. */
-typedef struct {
+typedef struct
+{
     dss_evt_type_t evt_type;          /**< Event type. */
     uint8_t        conn_idx;          /**< Connect index. */
     uint32_t       sync_cnt;          /**< Synchronize count. */
@@ -224,7 +232,7 @@ void dss_set_status(uint8_t conn_idx, dss_staus_t status);
  *
  * @param[in] conn_idx:            Connection index.
  * @param[in] is_auto_enter_lp:    Auto enter low power mode flag.
- * @param[in] is_auto_calib_drift: Auto calibration drift flag.
+ * @param[in] is_auto_calib_drift: Auto calibration drift flag. 
  *****************************************************************************************
  */
 void dss_set_sync_params(uint8_t conn_idx, bool is_auto_enter_lp, bool is_auto_calib_drift);
@@ -234,7 +242,7 @@ void dss_set_sync_params(uint8_t conn_idx, bool is_auto_enter_lp, bool is_auto_c
  * @brief Set Device whether in low power mode.
  *
  * @param[in] conn_idx:            Connection index.
- * @param[in] is_in_lp_mode:       Is Device in low power mode.
+ * @param[in] is_in_lp_mode:       Is Device in low power mode. 
  *****************************************************************************************
  */
 void dss_set_lp_mode(uint8_t conn_idx, bool is_in_lp_mode);
