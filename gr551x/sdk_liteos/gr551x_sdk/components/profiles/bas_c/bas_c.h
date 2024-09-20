@@ -57,18 +57,17 @@
 #ifndef __BAS_C_H__
 #define __BAS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup BAS_C_MACRO Defines
  * @{
  */
-#define BAS_C_CONNECTION_MAX      (10 < CFG_MAX_CONNECTIONS ? \
-                                  10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of BAS Client connections. */
+#define BAS_C_CONNECTION_MAX                10       /**< Maximum number of BAS Client connections. */
 /** @} */
 
 /**
@@ -76,16 +75,14 @@
  * @{
  */
 /**@brief Battery Service Client event type. */
-typedef enum {
-    BAS_C_EVT_INVALID,                     /**< BAS Client invalid event. */
-    BAS_C_EVT_DISCOVERY_COMPLETE,          /**< BAS Client has found BAS service and its characteristics. */
-    BAS_C_EVT_DISCOVERY_FAIL,              /**< BAS Client found BAS service failed because of invalid operation \
-                                                or no found at the peer. */
-    BAS_C_EVT_BAT_LEVEL_NTF_SET_SUCCESS,   /**< BAS Client has enabled Notification of Battery Level characteristics. */
-    BAS_C_EVT_BAT_LEVEL_NTF_SET_ERR,        /**< Error occured when BAS Client set Notification \
-                                                 of Battery Level characteristics. */
-    BAS_C_EVT_BAT_LEVE_RECEIVE,             /**< BAS Client has received Battery Level value \
-                                                 (Read or Notification from peer). */
+typedef enum
+{
+    BAS_C_EVT_INVALID,                      /**< BAS Client invalid event. */
+    BAS_C_EVT_DISCOVERY_COMPLETE,           /**< BAS Client has found BAS service and its characteristics. */
+    BAS_C_EVT_DISCOVERY_FAIL,               /**< BAS Client found BAS service failed because of invalid operation or no found at the peer. */
+    BAS_C_EVT_BAT_LEVEL_NTF_SET_SUCCESS,    /**< BAS Client has enabled Notification of Battery Level characteristics. */
+    BAS_C_EVT_BAT_LEVEL_NTF_SET_ERR,        /**< Error occured when BAS Client set Notification of Battery Level characteristics. */
+    BAS_C_EVT_BAT_LEVE_RECEIVE,             /**< BAS Client has received Battery Level value (Read or Notification from peer). */
 } bas_c_evt_type_t;
 /** @} */
 
@@ -94,19 +91,18 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t bas_srvc_start_handle;      /**< BAS Service start handle. */
     uint16_t bas_srvc_end_handle;        /**< BAS Service end handle. */
-    uint16_t bas_bat_level_handle;       /**< BAS Battery Level characteristic Value handle \
-                                              which has been got from peer. */
-    uint16_t bas_bat_level_cccd_handle;  /**< BAS CCCD handle of Battery Level characteristic \
-                                              which has been got from peer. */
-    uint16_t bas_bat_level_pres_handle;  /**< BAS Presentation Format Descriptor handle of \
-                                              Battery Level characteristic which has been got from peer. */
+    uint16_t bas_bat_level_handle;       /**< BAS Battery Level characteristic Value handle which has been got from peer. */
+    uint16_t bas_bat_level_cccd_handle;  /**< BAS CCCD handle of Battery Level characteristic which has been got from peer. */
+    uint16_t bas_bat_level_pres_handle;  /**< BAS Presentation Format Descriptor handle of Battery Level characteristic which has been got from peer. */
 } bas_c_handles_t;
 
 /**@brief Battery Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t          conn_idx;            /**< The connection index. */
     bas_c_evt_type_t evt_type;            /**< BAS Client event type. */
     uint8_t          bat_level;           /**< Battery level. */

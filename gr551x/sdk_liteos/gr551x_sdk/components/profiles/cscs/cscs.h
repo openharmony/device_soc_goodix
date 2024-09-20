@@ -51,45 +51,41 @@
  *          and Cadence Service with CSC Measurement, CSC Feature, Sensor Location and SC Control Point characteristics.
  *
  *          After \ref cscs_init_t variable is initialized, the application must call \ref cscs_service_init()
- *          to add the Cycling Speed and Cadence Service and CSC Measurement, CSC Feature, Sensor Location and
+ *          to add the Cycling Speed and Cadence Service and CSC Measurement, CSC Feature, Sensor Location and 
  *          SC Control Point characteristics to the BLE Stack database according to \ref cscs_init_t.char_mask.
  */
 
 #ifndef __CSCS_H__
 #define __CSCS_H__
 
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup CSCS_MACRO Defines
  * @{
  */
-#define CSCS_CONNECTION_MAX              (10 < CFG_MAX_CONNECTIONS ? \
-                                          10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of CSCS connections. */
-#define CSCS_MEAS_VAL_LEN_MAX            20   /**< Maximum length of CSC Measurment value. */
-#define CSCS_FEAT_VAL_LEN_MAX            2    /**< Maximum length of CSC Feature value. */
-#define CSCS_SENSOR_LOC_VAL_LEN_MAX      1    /**< Maximum length of Sensor Location value. */
-#define CSCS_CTRL_PT_RSP_LEN_MIN         3    /**< Mimimum length of SC Control Point response value. */
-/**< Maximum length of SC Control Point value. */
-#define CSCS_CTRL_PT_VAL_LEN_MAX         (CSCS_CTRL_PT_RSP_LEN_MIN + CSCS_SENSOR_LOC_SUP_NB)
+#define CSCS_CONNECTION_MAX              10                             /**< Maximum number of CSCS connections. */
+#define CSCS_MEAS_VAL_LEN_MAX            20                                                     /**< Maximum length of CSC Measurment value. */
+#define CSCS_FEAT_VAL_LEN_MAX            2                                                      /**< Maximum length of CSC Feature value. */
+#define CSCS_SENSOR_LOC_VAL_LEN_MAX      1                                                      /**< Maximum length of Sensor Location value. */
+#define CSCS_CTRL_PT_RSP_LEN_MIN         3                                                      /**< Mimimum length of SC Control Point response value. */
+#define CSCS_CTRL_PT_VAL_LEN_MAX         (CSCS_CTRL_PT_RSP_LEN_MIN + CSCS_SENSOR_LOC_SUP_NB)    /**< Maximum length of SC Control Point value. */
 
-#define CSCS_ERROR_PROC_IN_PROGRESS   0x80  /**< Error code: A previously triggered SC Control Point operation \
-                                                 is still in progress. */
-#define CSCS_ERROR_CCCD_INVALID       0x81  /**< Error code: The Client Characteristic Configuration descriptor \
-                                                 is not configured. */
+#define CSCS_ERROR_PROC_IN_PROGRESS       0x80                                                  /**< Error code: A previously triggered SC Control Point operation is still in progress. */
+#define CSCS_ERROR_CCCD_INVALID           0x81                                                  /**< Error code: The Client Characteristic Configuration descriptor is not configured. */
 
 /**
  * @defgroup CSCS_CHAR_MASK Characteristics Mask
  * @{
  * @brief Bit masks for the initialization of \ref cscs_init_t.char_mask.
  */
-#define CSCS_CHAR_MANDATORY             0x003f   /**< Bit mask for mandatory characteristic in CSCS. */
-#define CSCS_CHAR_SENSOR_LOC_SUP        0x00c0   /**< Bit mask for Sensor Location characteristic that is optional. */
-#define CSCS_CHAR_SC_CTRL_POINT         0x0700   /**< Bit mask for SC Control Point characteristic that is optional. */
-#define CSCS_CHAR_FULL                  0x07ff   /**< Bit mask of the full characteristic. */
+#define CSCS_CHAR_MANDATORY               0x003f     /**< Bit mask for mandatory characteristic in CSCS. */
+#define CSCS_CHAR_SENSOR_LOC_SUP          0x00c0     /**< Bit mask for Sensor Location characteristic that is optional. */
+#define CSCS_CHAR_SC_CTRL_POINT           0x0700     /**< Bit mask for SC Control Point characteristic that is optional. */
+#define CSCS_CHAR_FULL                    0x07ff     /**< Bit mask of the full characteristic. */
 /** @} */
 
 /**
@@ -97,8 +93,8 @@
  * @{
  * @brief Cycling Speed and Cadence Measurement Flags.
  */
-#define CSCS_MEAS_FLAG_WHEEL_REVOLUTION_BIT  (0x01 << 0) /**< Flag bit for Wheel Revolution Data Present. */
-#define CSCS_MEAS_FLAG_CRANK_REVOLUTION_BIT  (0x01 << 1) /**< Flag bit for Crank Revolution Data Present. */
+#define CSCS_MEAS_FLAG_WHEEL_REVOLUTION_BIT           (0x01 << 0)     /**< Flag bit for Wheel Revolution Data Present. */
+#define CSCS_MEAS_FLAG_CRANK_REVOLUTION_BIT           (0x01 << 1)     /**< Flag bit for Crank Revolution Data Present. */
 /** @} */
 
 /**
@@ -106,10 +102,10 @@
  * @{
  * @brief Cycling Speed and Cadence Service feature bits.
  */
-#define CSCS_FEAT_WHEEL_REVOLUTION_SUP_BIT   (0x01 << 0)     /**< Bit for Wheel Revolution Data Supported. */
-#define CSCS_FEAT_CRANK_REVOLUTION_SUP_BIT   (0x01 << 1)     /**< Bit for Crank Revolution Data Supported. */
-#define CSCS_FEAT_MULTIPLE_SENSORS_BIT       (0x01 << 2)     /**< Bit for Multiple Sensor Locations Supported. */
-#define CSCS_FEAR_FULL_BIT                   (0x07)          /**< Bit for all CSC features Supported. */
+#define CSCS_FEAT_WHEEL_REVOLUTION_SUP_BIT          (0x01 << 0)     /**< Bit for Wheel Revolution Data Supported. */
+#define CSCS_FEAT_CRANK_REVOLUTION_SUP_BIT          (0x01 << 1)     /**< Bit for Crank Revolution Data Supported. */
+#define CSCS_FEAT_MULTIPLE_SENSORS_BIT              (0x01 << 2)     /**< Bit for Multiple Sensor Locations Supported. */
+#define CSCS_FEAR_FULL_BIT                          (0x07)          /**< Bit for all CSC features Supported. */
 /** @} */
 /** @} */
 
@@ -118,7 +114,8 @@
  * @{
  */
 /**@brief Cycling Speed and Cadence Service Sensor Location. */
-typedef enum {
+typedef enum
+{
     CSCS_SENSOR_LOC_OTHER,          /**< Sensor location: other. */
     CSCS_SENSOR_LOC_SHOE_TOP,       /**< Sensor location: top of shoe. */
     CSCS_SENSOR_LOC_SHOE_IN,        /**< Sensor location: inside of shoe. */
@@ -131,7 +128,8 @@ typedef enum {
 } cscs_sensor_loc_t;
 
 /**@brief Cycling Speed and Cadence Service Control Point Operation Code.*/
-typedef enum {
+typedef enum
+{
     CSCS_CTRL_PT_OP_RESERVED,         /**< Reserved for future use. */
     CSCS_CTRL_PT_OP_SET_CUMUL_VAL,    /**< Set Cumulative value Operation Code.*/
     CSCS_CTRL_PT_OP_START_CALIB,      /**< Start Sensor Calibration Operation Code.*/
@@ -141,7 +139,8 @@ typedef enum {
 } cscs_ctrl_pt_op_code_t;
 
 /**@brief Cycling Speed and Cadence Service Control Point Response value.*/
-typedef enum {
+typedef enum
+{
     CSCS_CTRL_PT_RSP_RESERVED,        /**< Reserved value. */
     CSCS_CTRL_PT_RSP_SUCCESS,         /**< Operation Success. */
     CSCS_CTRL_PT_RSP_NOT_SUP,         /**< Operation Code Not Supported. */
@@ -150,18 +149,19 @@ typedef enum {
 } cscs_ctrl_pt_rsp_t;
 
 /**@brief Cycling Speed and Cadence Service event type.*/
-typedef enum {
-    CSCS_EVT_INVALID,                         /**< Indicate that invalid event. */
-    CSCS_EVT_CSC_MEAS_NOTIFICATION_ENABLE,    /**< Indicate that CSC Measurement notification has been enabled. */
-    CSCS_EVT_CSC_MEAS_NOTIFICATION_DISABLE,   /**< Indicate that CSC Measurement notification has been disabled. */
-    CSCS_EVT_CTRL_POINT_INDICATION_ENABLE,    /**< Indicate that SC Control Point indication has been enabled. */
-    CSCS_EVT_CTRL_POINT_INDICATION_DISABLE,   /**< Indicate that SC Control Point indication has been disabled. */
-    CSCS_EVT_CSC_MEAS_SEND_CPLT,              /**< Indicate that CSC Measurement has been notified. */
-    CSCS_EVT_CUMUL_VAL_SET,                   /**< Indicate that Wheel Revolution Data needs to be set. */
-    CSCS_EVT_SEBSOR_CALIBRATION,              /**< Indicate that Sensor calibration procedure should be initiated. */
-    CSCS_EVT_SEBSOR_LOC_UPD,                  /**< Indicate that Sensor Location needs to be reset. */
-    CSCS_EVT_SUP_SEBSOR_LOC_REQ,              /**< Indicate that request supported sensor location list. */
-    CSCS_EVT_CTRL_POINT_RSP_CPLT              /**< Indicate that SC Control Point response has been indicated. */
+typedef enum
+{
+    CSCS_EVT_INVALID,                                  /**< Indicate that invalid event. */
+    CSCS_EVT_CSC_MEAS_NOTIFICATION_ENABLE,             /**< Indicate that CSC Measurement notification has been enabled. */
+    CSCS_EVT_CSC_MEAS_NOTIFICATION_DISABLE,            /**< Indicate that CSC Measurement notification has been disabled. */
+    CSCS_EVT_CTRL_POINT_INDICATION_ENABLE,             /**< Indicate that SC Control Point indication has been enabled. */
+    CSCS_EVT_CTRL_POINT_INDICATION_DISABLE,            /**< Indicate that SC Control Point indication has been disabled. */
+    CSCS_EVT_CSC_MEAS_SEND_CPLT,                       /**< Indicate that CSC Measurement has been notified. */
+    CSCS_EVT_CUMUL_VAL_SET,                            /**< Indicate that Wheel Revolution Data needs to be set. */
+    CSCS_EVT_SEBSOR_CALIBRATION,                       /**< Indicate that Sensor calibration procedure should be initiated. */
+    CSCS_EVT_SEBSOR_LOC_UPD,                           /**< Indicate that Sensor Location needs to be reset. */
+    CSCS_EVT_SUP_SEBSOR_LOC_REQ,                       /**< Indicate that request supported sensor location list. */
+    CSCS_EVT_CTRL_POINT_RSP_CPLT                       /**< Indicate that SC Control Point response has been indicated. */
 } cscs_evt_type_t;
 /** @} */
 
@@ -170,7 +170,8 @@ typedef enum {
  * @{
  */
 /**@brief Cycling Speed and Cadence Service event. */
-typedef struct {
+typedef struct
+{
     cscs_evt_type_t evt_type;     /**< The CSCS event type. */
     uint8_t         conn_idx;     /**< The index of the connection. */
     const uint8_t  *p_data;       /**< Pointer to event data. */
@@ -191,7 +192,8 @@ typedef void (*cscs_evt_handler_t)(cscs_evt_t *p_evt);
  * @{
  */
 /**@brief Cycling Speed and Cadence Measurement Character value structure. */
-typedef struct {
+typedef struct
+{
     bool        wheel_rev_data_present;         /**< If Wheel Revolution Data is present. */
     bool        crank_rev_data_present;         /**< If Crank Revolution Data is present. */
     uint32_t    cumulative_wheel_revs;          /**< Cumulative Wheel Revolutions. */
@@ -200,13 +202,11 @@ typedef struct {
     uint16_t    last_crank_event_time;          /**< Last Crank Event Time. */
 } cscs_meas_val_t;
 
-/**@brief Cycling Speed and Cadence Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Cycling Speed and Cadence Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     cscs_evt_handler_t     evt_handler;                  /**< Cycling Speed and Cadence Service event handler. */
-    uint16_t
-    char_mask;                    /**< Initial mask of supported characteristics, \
-                                       and configured with \ref CSCS_CHAR_MASK. */
+    uint16_t               char_mask;                    /**< Initial mask of supported characteristics, and configured with \ref CSCS_CHAR_MASK. */
     cscs_sensor_loc_t      sensor_location;              /**< Initial sensor location. */
     uint16_t               feature;                      /**< Initial value for features. */
 } cscs_init_t;

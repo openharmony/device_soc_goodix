@@ -39,11 +39,11 @@
  * @addtogroup SYSTEM
  * @{
  */
-/**
- @addtogroup NVDS Non-Volatile Data Storage
- @{
- @brief Definitions and prototypes for the NVDS interface.
-*/
+ /**
+  @addtogroup NVDS Non-Volatile Data Storage
+  @{
+  @brief Definitions and prototypes for the NVDS interface.
+ */
 
 #ifndef __GR55XX_NVDS_H__
 #define __GR55XX_NVDS_H__
@@ -55,22 +55,18 @@
  * @{ */
 #define NV_TAGCAT_APP       0x4000  /**< NVDS tag mask for user application. */
 
-/** @brief Get NVDS tag for user application.
+/**@brief Get NVDS tag for user application.
  * The values of Tag 0x0000 and 0xFFFF are invalid. idx should not be used
  * as the parameter of NVDS APIs directly. The range of idx is 0x0001~0x3FFF.
  */
-static inline uint32_t ble_nv_tag_app(uint32_t idx)
-{
-    return (NV_TAGCAT_APP | ((idx) & 0x3FFF));
-}
-
-#define NV_TAG_APP(idx)     ble_nv_tag_app(idx)
+#define NV_TAG_APP(idx)     (NV_TAGCAT_APP | ((idx) & 0x3FFF))
 /** @} */
 
-/** @addtogroup NVDS_ENUMERATIONS Enumerations
+/**@addtogroup NVDS_ENUMERATIONS Enumerations
  * @{ */
-/** @brief NVDS Returned Status. */
-enum NVDS_STATUS {
+/**@brief NVDS Returned Status. */
+enum NVDS_STATUS
+{
     NVDS_SUCCESS,                /**< NVDS succeeds. */
     NVDS_FAIL,                   /**< NVDS failed. */
     NVDS_TAG_NOT_EXISTED,        /**< NVDS tag does not exist. */
@@ -80,17 +76,17 @@ enum NVDS_STATUS {
     NVDS_INVALID_START_ADDR,     /**< NVDS invalid start address. */
     NVDS_INVALID_SECTORS,        /**< NVDS invalid sector. */
     NVDS_COMPACT_FAILED,         /**< NVDS failed to compact sectors. */
-    NVDS_STORAGE_ACCESS_FAILED,  /**< NVDS failed to access storage. */
+    NVDS_STORAGE_ACCESS_FAILED , /**< NVDS failed to access storage. */
     NVDS_GC_COMPLETE,            /**< NVDS garbage collection complete. */
     NVDS_NOT_INIT,               /**< NVDS not initialize. */
     NVDS_POINTER_NULL            /**< NVDS or driver function repalce error: NULL. */
 };
 /** @} */
 
-/** @addtogroup NVDS_STRUCTURES Structures
+/**@addtogroup NVDS_STRUCTURES Structures
  * @{ */
-/** @brief NVDS Item tag. */
-typedef unsigned short NvdsTag_t;
+/**@brief NVDS Item tag. */
+typedef uint16_t NvdsTag_t;
 /** @} */
 
 /** @addtogroup NVDS_FUNCTIONS Functions
@@ -113,6 +109,24 @@ typedef unsigned short NvdsTag_t;
  */
 uint8_t nvds_init(uint32_t start_addr, uint8_t sectors);
 
+/** @addtogroup NVDS_FUNCTIONS Functions
+ * @{ */
+/**
+ ****************************************************************************************
+ * @brief De-initialize the sectors for NVDS.
+ *
+ * @note nvds_deinit will erase the flash sectors.
+ *
+ * @param[in] start_addr: Start address of NVDS area. If the value does not equal zero, 
+                          it must be sector-aligned. If the value equals zero, 
+                          NVDS area will locate in the last sector(s) in flash memory.
+ * @param[in] sectors:    The number of sectors.
+ *
+ * @return Result of nvds deinit.
+ ****************************************************************************************
+ */
+uint8_t nvds_deinit(uint32_t start_addr, uint8_t sectors);
+
 /**
  ****************************************************************************************
  * @brief Read data from NVDS.
@@ -132,7 +146,7 @@ uint8_t nvds_get(NvdsTag_t tag, uint16_t *p_len, uint8_t *p_buf);
  * @brief Write data to NVDS. If the tag does not exist, create one.
  *
  * @param[in] tag:   Valid NVDS item tag.
- * @param[in] len:   Length of data to be written.
+ * @param[in] len:   Length of data to be written, the max length of data is 1024 bytes.
  * @param[in] p_buf: Data to be written.
  *
  * @return ::NVDS_SUCCESS: if successful.
@@ -168,7 +182,7 @@ uint16_t nvds_tag_length(NvdsTag_t tag);
 
 /** @addtogroup LOCAL_FLASH_FUNCTIONS Local Flash Functions
  * @{ */
-/** @brief Flash operation API based on hal flash.*/
+/**@brief Flash operation API based on hal flash.*/
 /**
  ****************************************************************************************
  * @brief Erase flash chip.
@@ -257,7 +271,7 @@ void local_hal_flash_set_security(bool enable);
 
 /**
  *******************************************************************************
- * @brief Write flash Memory reliably.
+ * @brief Write flash Memory reliably. 
  *
  * @note It's possible that the data was not written into Flash Memory
  *       successfully. This function reads the data from Flash Memory to check

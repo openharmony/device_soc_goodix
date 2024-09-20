@@ -56,18 +56,17 @@
 #ifndef __TPS_C_H__
 #define __TPS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup TPS_C_MACRO Defines
  * @{
  */
-#define TPS_C_CONNECTION_MAX              (10 < CFG_MAX_CONNECTIONS ? \
-                                          10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of TPS Client connections. */
+#define TPS_C_CONNECTION_MAX                10       /**< Maximum number of TPS Client connections. */
 /** @} */
 
 /**
@@ -75,11 +74,11 @@
  * @{
  */
 /**@brief Tx Power Service Client event type. */
-typedef enum {
+typedef enum
+{
     TPS_C_EVT_INVALID,                      /**< TPS Client invalid event. */
     TPS_C_EVT_DISCOVERY_COMPLETE,           /**< TPS Client has found TPS service and its characteristics. */
-    TPS_C_EVT_DISCOVERY_FAIL,               /**< TPS Client found TPS service failed because of invalid operation or \
-                                            no found at the peer. */
+    TPS_C_EVT_DISCOVERY_FAIL,               /**< TPS Client found TPS service failed because of invalid operation or no found at the peer. */
     TPS_C_EVT_TX_POWER_LEVEL_RECEIVE,       /**< TPS Client has received Tx Power Level value. */
 } tps_c_evt_type_t;
 /** @} */
@@ -89,15 +88,16 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t tps_srvc_start_handle;      /**< TPS Service start handle. */
     uint16_t tps_srvc_end_handle;        /**< TPS Service end handle. */
-    uint16_t tps_tx_power_level_handle;  /**< TPS Tx Power Level characteristic Value handle \
-                                         which has been got from peer. */
+    uint16_t tps_tx_power_level_handle;  /**< TPS Tx Power Level characteristic Value handle which has been got from peer. */
 } tps_c_handles_t;
 
 /**@brief Tx Power Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t          conn_idx;            /**< The connection index. */
     tps_c_evt_type_t evt_type;            /**< TPS Client event type. */
     int8_t           tx_power_level;      /**< Tx Power level. */

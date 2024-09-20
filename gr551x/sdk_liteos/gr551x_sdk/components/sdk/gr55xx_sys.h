@@ -46,11 +46,14 @@
  * @brief Definitions and prototypes for the system SDK interface.
 */
 
+
+
 #ifndef __GR55XX_SYS_H__
 #define __GR55XX_SYS_H__
 
 #include "gr55xx_sys_cfg.h"
 #include "gr55xx_nvds.h"
+#include "gr55xx_dfu.h"
 #include "gr55xx_pwr.h"
 #include "gr55xx_fpb.h"
 #include "ble.h"
@@ -63,94 +66,95 @@
 /** @addtogroup GR55XX_SYS_DEFINES Defines
  * @{
  */
-#define SYS_INVALID_TIMER_ID              0xFF              /**< Invalid system Timer ID. */
-#define SYS_BD_ADDR_LEN                   GAP_ADDR_LEN      /**< Length of Bluetoth Device Address. */
-#define SYS_CHIP_UID_LEN                  0x10              /**< Length of Bluetoth Chip UID. */
-
-static inline uint8_t ble_sys_set_bd_addr(uint8_t *BD_ADDR_ARRAY)
-{
-    return nvds_put(0xC001, SYS_BD_ADDR_LEN, BD_ADDR_ARRAY);
-}
-
-#define SYS_SET_BD_ADDR(BD_ADDR_ARRAY) ble_sys_set_bd_addr(BD_ADDR_ARRAY)  /**< NVDS put BD address. */
+#define SYS_INVALID_TIMER_ID              0xFF                  /**< Invalid system Timer ID. */
+#define SYS_BD_ADDR_LEN                   BLE_GAP_ADDR_LEN      /**< Length of Bluetoth Device Address. */
+#define SYS_CHIP_UID_LEN                  0x10                  /**< Length of Bluetoth Chip UID. */
+#define SYS_SET_BD_ADDR(BD_ADDR_ARRAY)    nvds_put(0xC001, SYS_BD_ADDR_LEN, BD_ADDR_ARRAY)  /**< NVDS put BD address. */
+#define SYS_ROM_VERSION_ADDR              0x45000               /**< The rom version address. */
 /** @} */
 
 /**
  * @defgroup GR55XX_SYS_TYPEDEF Typedefs
  * @{
  */
-/** @brief The function pointers to register event callback. */
+/**@brief The function pointers to register event callback. */
 typedef void (*callback_t)(int);
 
 /** @brief Timer callback type. */
 typedef void (*timer_callback_t)(uint8_t timer_id);
 
-/** @brief Printf callback type. */
+/**@brief Printf callback type. */
 typedef int (*vprintf_callback_t) (const char *fmt, va_list argp);
 
-/** @brief Low power clock update function type. */
+/**@brief Low power clock update function type. */
 typedef void (*void_func_t)(void);
 
-/** @brief Low power clock update function type with resturn. */
+/**@brief Low power clock update function type with resturn. */
 typedef int (*int_func_t)(void);
 
-/** @brief Function type for saving user context before deep sleep. */
+/**@brief Function type for saving user context before deep sleep. */
 typedef void (*sys_context_func_t)(void);
 
-/** @brief Error assert callback type. */
+/**@brief Error assert callback type. */
 typedef void (*assert_err_cb_t)(const char *expr, const char *file, int line);
 
-/** @brief Parameter assert callback type. */
+/**@brief Parameter assert callback type. */
 typedef void (*assert_param_cb_t)(int param0, int param1, const char *file, int line);
 
-/** @brief Warning assert callback type. */
+/**@brief Warning assert callback type. */
 typedef void (*assert_warn_cb_t)(int param0, int param1, const char *file, int line);
 /** @} */
 
 /** @addtogroup GR55XX_SYS_ENUMERATIONS Enumerations
  * @{
  */
-/** @brief Definition of Device SRAM Size Enumerations. */
-typedef enum {
+/**@brief Definition of Device SRAM Size Enumerations. */
+typedef enum
+{
     SYS_DEV_SRAM_64K           = 0x02,    /**< Supported 64K SRAM.                   */
     SYS_DEV_SRAM_128K          = 0x01,    /**< Supported 128K SRAM.                  */
     SYS_DEV_SRAM_256K          = 0x00,    /**< Supported 256K SRAM.                  */
 } sram_size_t;
 
-/** @brief package type. */
-typedef enum {
+/**@brief package type. */
+typedef enum
+{
     PACKAGE_NONE            = 0,    /**< Package unused. */
     PACKAGE_GR5515RGBD      = 1,    /**< BGA68 package. */
     PACKAGE_GR5515GGBD      = 2,    /**< BGA55 package. */
-    PACKAGE_GR5515IGND      = 3,    /**< QFN56 + 1024K flash package. */
-    PACKAGE_GR5515I0ND      = 4,    /**< QFN56 + no flash package, support external high voltage flash only */
+    PACKAGE_GR5515IGND      = 3,    /**< QFN56 + 1024KB flash package. */
+    PACKAGE_GR5515I0ND      = 4,    /**< QFN56 + no flash package, support external high voltage flash only*/
     PACKAGE_GR5513BEND      = 5,    /**< QFN40 + 128KB RAM + 512KB flash packet. */
     PACKAGE_GR5515BEND      = 6,    /**< QFN40 + 256KB RAM + 512KB flash packet. */
-    PACKAGE_GR5513BENDU     = 7,    /**< QFN40 + 256KB RAM + 512KB flash packet @1.7V ~ 3.6V. */
+    PACKAGE_GR5513BENDU     = 7,    /**< QFN40 + 128KB RAM + 512KB flash packet @1.7V ~ 3.6V. */
     PACKAGE_GR5515I0NDA      = 8,    /**< QFN56 + no flash package, support external high/low voltage flash  */
+    PACKAGE_GR5515IENDU      = 9,    /**< QFN56 + 512KB flash package */
 } package_type_t;
 /** @} */
 
 /** @addtogroup GR55XX_SYS_STRUCTURES Structures
  * @{
  */
-/** @brief SDK version definition. */
-typedef struct {
+/**@brief SDK version definition. */
+typedef struct
+{
     uint8_t  major;                         /**< Major version. */
     uint8_t  minor;                         /**< Minor version. */
     uint16_t build;                         /**< Build number. */
     uint32_t commit_id;                     /**< commit ID. */
-} sdk_version_t;
+}sdk_version_t;
 
-/** @brief Assert callbacks.*/
-typedef struct {
+/**@brief Assert callbacks.*/
+typedef struct
+{
     assert_err_cb_t   assert_err_cb;    /**< Assert error type callback. */
     assert_param_cb_t assert_param_cb;  /**< Assert parameter error type callback. */
     assert_warn_cb_t  assert_warn_cb;   /**< Assert warning type callback. */
-} sys_assert_cb_t;
+}sys_assert_cb_t;
 
-/** @brief Link RX information definition. */
-typedef struct {
+/**@brief Link RX information definition. */
+typedef struct
+{
     uint32_t rx_total_cnt;     /**< Counts of RX times. */
     uint32_t rx_sync_err_cnt;  /**< Counts of RX sync error times. */
     uint32_t rx_crc_err_cnt;   /**< Counts of RX crc error times. */
@@ -160,34 +164,37 @@ typedef struct {
     uint32_t rx_normal_cnt;    /**< Counts of RX normal times. */
 } link_rx_info_t;
 
-/** @brief RF trim parameter information definition. */
-typedef struct {
+/**@brief RF trim parameter information definition. */
+typedef struct
+{
     int8_t  rssi_cali;    /**< RSSI calibration. */
     int8_t  tx_power;     /**< TX power. */
 } rf_trim_info_t;
 
-/** @brief ADC trim parameter information definition. */
-typedef struct {
-    uint16_t adc_temp;                /** < ADC TEMP. */
-    uint16_t slope_int_0p8;           /** < Internal reference 0.8v. */
-    uint16_t offset_int_0p8;          /** < Internal reference 0.8v. */
-    uint16_t slope_int_1p2;           /** < Internal reference 1.2v. */
-    uint16_t offset_int_1p2;          /** < Internal reference 1.2v. */
-    uint16_t slope_int_1p6;           /** < Internal reference 1.6v. */
-    uint16_t offset_int_1p6;          /** < Internal reference 1.6v. */
-    uint16_t slope_int_2p0;           /** < Internal reference 2.0v. */
-    uint16_t offset_int_2p0;          /** < Internal reference 2.0v. */
-    uint16_t slope_ext_1p0;           /** < External reference 1.0v. */
-    uint16_t offset_ext_1p0;          /** < External reference 1.0v. */
+/**@brief ADC trim parameter information definition. */
+typedef struct
+{
+    uint16_t adc_temp;                /**< ADC TEMP. */
+    uint16_t slope_int_0p8;           /**< Internal reference 0.8v. */
+    uint16_t offset_int_0p8;          /**< Internal reference 0.8v. */ 
+    uint16_t slope_int_1p2;           /**< Internal reference 1.2v. */ 
+    uint16_t offset_int_1p2;          /**< Internal reference 1.2v. */ 
+    uint16_t slope_int_1p6;           /**< Internal reference 1.6v. */ 
+    uint16_t offset_int_1p6;          /**< Internal reference 1.6v. */ 
+    uint16_t slope_int_2p0;           /**< Internal reference 2.0v. */ 
+    uint16_t offset_int_2p0;          /**< Internal reference 2.0v. */ 
+    uint16_t slope_ext_1p0;           /**< External reference 1.0v. */ 
+    uint16_t offset_ext_1p0;          /**< External reference 1.0v. */ 
 } adc_trim_info_t;
 
-/** @brief PMU trim parameter information definition. */
-typedef struct {
-    uint8_t io_ldo_bypass;    /** < IO LDO bypass */
-    uint8_t io_ldo_vout;      /** < IO LDO Vout. */
-    uint8_t dig_ldo_64m;      /** < DIG LDO 64m. */
-    uint8_t dig_ldo_16m;      /** < DIG LDO 16m */
-    uint8_t dcdc_vout;        /** < DCDC Vout */
+/**@brief PMU trim parameter information definition. */
+typedef struct
+{
+    uint8_t  io_ldo_bypass;    /**< IO LDO bypass */
+    uint8_t  io_ldo_vout;      /**< IO LDO Vout. */
+    uint8_t  dig_ldo_64m;      /**< DIG LDO 64m. */
+    uint8_t  dig_ldo_16m;      /**< DIG LDO 16m */
+    uint8_t  dcdc_vout;        /**< DCDC Vout */
 } pmu_trim_info_t;
 
 /** @} */
@@ -240,7 +247,7 @@ void *sys_malloc(uint32_t size);
  * @param[in] p_mem: Pointer to memory block.
  *****************************************************************************************
  */
-void sys_free(uint8_t *p_mem);
+void sys_free(void *p_mem);
 
 /**
  *****************************************************************************************
@@ -376,12 +383,28 @@ uint16_t sys_crystal_trim_get(uint16_t *p_crystal_trim);
 
 /**
  *****************************************************************************************
- * @brief Jump to firmware and run.
+ * @brief app boot project turn on the encrypt clock.
  *
- * @param[in] fw_addr: Firmware run address.
  *****************************************************************************************
  */
-void sys_firmware_jump(uint32_t fw_addr);
+void app_boot_turn_on_encrypt_clock(void);
+
+/**
+ *****************************************************************************************
+ * @brief app boot project set  the security clock.
+ *
+ *****************************************************************************************
+ */
+void app_boot_security_clock_set(void);
+
+/**
+ *****************************************************************************************
+ * @brief jump to app firmware.	69
+ *
+ * @param[in] p_boot_info: Firmware system firmware information	71
+ *****************************************************************************************
+ */
+void sys_firmware_jump(dfu_boot_info_t *p_boot_info);
 
 /**
  *****************************************************************************************
@@ -449,9 +472,6 @@ uint16_t sys_device_sram_get(sram_size_t *p_sram_size);
  */
 uint16_t sys_device_package_get(package_type_t *p_package_type);
 
-
-#if defined(GR5515_D)
-
 /**
  *****************************************************************************************
  * @brief Get the chip's IO LDO voltage.
@@ -465,8 +485,6 @@ uint16_t sys_device_package_get(package_type_t *p_package_type);
  */
 uint16_t sys_get_efuse_io_ldo(uint16_t *io_ldo);
 
-#endif
-
 /**
  *****************************************************************************************
  * @brief Set low power CLK frequency.
@@ -478,12 +496,12 @@ void sys_lpclk_set(uint32_t user_lpclk);
 
 /**
  ****************************************************************************************
- * @brief Convert a duration in μs into a duration in lp cycles.
+ * @brief Convert a duration in us into a duration in lp cycles.
  *
- * The function converts a duration in μs into a duration in lp cycles, according to the
+ * The function converts a duration in us into a duration in lp cycles, according to the
  * low power clock frequency (32768Hz or 32000Hz).
  *
- * @param[in] us:    Duration in μs.
+ * @param[in] us:    Duration in us.
  *
  * @return Duration in lpcycles.
  ****************************************************************************************
@@ -492,18 +510,26 @@ uint32_t sys_us_2_lpcycles(uint32_t us);
 
 /**
  ****************************************************************************************
- * @brief Convert a duration in lp cycles into a duration in half μs.
+ * @brief Convert a duration in lp cycles into a duration in half us.
  *
- * The function converts a duration in lp cycles into a duration in half μs, according to the
+ * The function converts a duration in lp cycles into a duration in half us, according to the
  * low power clock frequency (32768Hz or 32000Hz).
  * @param[in]     lpcycles:    Duration in lp cycles.
- * @param[in,out] error_corr:  Insert and retrieve error created by truncating the LP Cycle
- *                             Time to a half μs (in half μs).
+ * @param[in,out] error_corr:  Insert and retrieve error created by truncating the LP Cycle Time to a half us (in half us).
  *
- * @return Duration in half μs
+ * @return Duration in half us
  ****************************************************************************************
  */
 uint32_t sys_lpcycles_2_hus(uint32_t lpcycles, uint32_t *error_corr);
+
+/**
+ *****************************************************************************************
+ * @brief Reverse the policy for static address created by chip uuid .
+ * @note  After sdk_v1.6.10, this policy has been updated.
+ *
+ *****************************************************************************************
+ */
+void sys_ble_static_addr_policy_reverse(void);
 
 /**
  *****************************************************************************************
@@ -511,12 +537,13 @@ uint32_t sys_lpcycles_2_hus(uint32_t lpcycles, uint32_t *error_corr);
  * @note  The BLE Sleep HeartBeat Period is used to Wakeup BLE Periodically when BLE is IDLE.
  *
  * @param[in] period_hus: The wake up duration of BLE when BLE is IDEL.
- *            Range 0x00000000-0xFFFFFFFF (in unit of μs).
- *
- * @retval SDK_SUCCESS: Operation is Success.
+ *            Range 0x00000000-0xFFFFFFFF (in unit of us).
+ *                               
+ * @retval ::SDK_SUCCESS Operation is Success.
  *****************************************************************************************
  */
 uint16_t sys_ble_heartbeat_period_set(uint32_t period_hus);
+
 
 /**
  *****************************************************************************************
@@ -524,9 +551,9 @@ uint16_t sys_ble_heartbeat_period_set(uint32_t period_hus);
  * @note  The BLE Sleep HeartBeat Period is used to Wakeup BLE Periodically when BLE is IDLE.
  *
  * @param[in] p_period_hus: Pointer to the wake up duration.
- *            Range 0x00000000-0xFFFFFFFF (in unit of μs).
- *
- * @retval SDK_SUCCESS: Operation is Success.
+ *            Range 0x00000000-0xFFFFFFFF (in unit of us).
+ *                               
+ * @retval ::SDK_SUCCESS Operation is Success.
  *****************************************************************************************
  */
 uint16_t sys_ble_heartbeat_period_get(uint32_t* p_period_hus);
@@ -700,7 +727,6 @@ void sys_swd_disable(void);
 /**
  ****************************************************************************************
  * @brief  RTC calibration function.
- * @retval : void
  ****************************************************************************************
  */
 void rtc_calibration(void);
@@ -709,7 +735,6 @@ void rtc_calibration(void);
  ****************************************************************************************
  * @brief  RNG calibration function.
  * @note The function will call between platform_init_push and platform_init_pop.
- * @retval : void
  ****************************************************************************************
  */
 void rng_calibration(void);
@@ -717,7 +742,7 @@ void rng_calibration(void);
 /**
  ****************************************************************************************
  * @brief  Reverse byte order (32 bit).  For example, 0x12345678 becomes 0x78563412.
- * @retval : Reversed value
+ * @return Byte Reversed value
  ****************************************************************************************
  */
 uint32_t sys_reverse_word(uint32_t value);
@@ -725,7 +750,7 @@ uint32_t sys_reverse_word(uint32_t value);
 /**
  ****************************************************************************************
  * @brief   Reverse byte order (16 bit). For example, 0x1234 becomes 0x3412.
- * @retval : Reversed value
+ * @return  Byte Reversed value
  ****************************************************************************************
  */
 uint16_t sys_reverse_hword(uint16_t value);

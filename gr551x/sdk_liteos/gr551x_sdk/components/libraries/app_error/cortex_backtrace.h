@@ -38,71 +38,8 @@
 #ifndef __CORTEX_BACKTRACE_H__
 #define __CORTEX_BACKTRACE_H__
 
-#include <stdint.h>
 #include "app_error_cfg.h"
-
-#if ENABLE_BACKTRACE_FEASS
-#define TWO 2
-#define FOUR 4
-#define LEFT_MOV_2BIT 2
-#define REGISTER_CNT 8
-#define DRG_R0 0
-#define DRG_R1 1
-#define DRG_R2 2
-#define DRG_R3 3
-#define DRG_R4 4
-#define DRG_R5 5
-#define DRG_R6 6
-#define DRG_R7 7
-
-#if defined(__CC_ARM)
-#define CSTACK_BLOCK_NAME               ARM_LIB_STACKHEAP     /**< C stack block name: ARM_LIB_STACKHEAP. */
-#define CODE_SECTION_NAME               FLASH_CODE            /**< Code section name: ER_FLASH. */
-
-#define SECTION_START(_name_)           _name_##$$Base
-#define SECTION_END(_name_)             _name_##$$Limit
-#define IMAGE_SECTION_START(_name_)     Image$$##_name_##$$Base
-#define IMAGE_SECTION_END(_name_)       Image$$##_name_##$$ZI$$Limit
-#define CSTACK_BLOCK_START(_name_)      IMAGE_SECTION_START(_name_)
-#define CSTACK_BLOCK_END(_name_)        IMAGE_SECTION_END(_name_)
-#define CODE_SECTION_START(_name_)      IMAGE_SECTION_START(_name_)
-#define CODE_SECTION_END(_name_)        IMAGE_SECTION_END(_name_)
-
-extern const int CSTACK_BLOCK_START(CSTACK_BLOCK_NAME);
-extern const int CSTACK_BLOCK_END(CSTACK_BLOCK_NAME);
-extern const int CODE_SECTION_START(CODE_SECTION_NAME);
-extern const int CODE_SECTION_END(CODE_SECTION_NAME);
-#elif defined(__ICCARM__)
-#define CSTACK_BLOCK_NAME          "CSTACK"              /**< C stack block name, default is 'CSTACK'. */
-#define CODE_SECTION_NAME          ".text"               /**< Code section name, default is '.text'. */
-
-#pragma section = CMB_CSTACK_BLOCK_NAME
-#pragma section = CMB_CODE_SECTION_NAME
-#elif defined(__GNUC__)
-
-/**< C stack block start address, defined on linker script file, default is _sstack. */
-#define CSTACK_BLOCK_START         _sstack
-/**< C stack block end address, defined on linker script file, default is _estack. */
-#define CSTACK_BLOCK_END           _estack
-/**< code section start address, defined on linker script file, default is _stext. */
-#define CODE_SECTION_START         _stext
-/**< code section end address, defined on linker script file, default is _etext. */
-#define CODE_SECTION_END           _etext
-#define CALLBACK_CNT        9
-#define ZERO                0
-
-extern const int CSTACK_BLOCK_START;
-extern const int CSTACK_BLOCK_END;
-extern const int CODE_SECTION_START;
-extern const int CODE_SECTION_END;
-#else
-#error "not supported compiler"
-#endif
-#endif
-
-void fault_trace_nvds_save_prepare(void);
-void fault_trace_nvds_add(const char *format, ...);
-void fault_trace_nvds_save_flush(void);
+#include <stdint.h>
 
 /**
  * @defgroup CORTEX_BACKTRACE_MAROC Defines
@@ -113,34 +50,25 @@ void fault_trace_nvds_save_flush(void);
 #define CB_CPU_ARM_CORTEX_M4          (0x04U)      /**< Cortex-M4 Core */
 #define CB_CPU_ARM_CORTEX_M7          (0x07U)      /**< Cortex-M7 Core */
 
-/**< System Handler Control and State Register.*/
-#define CB_SYSHND_CTRL                (*(volatile unsigned int*)  (0xE000ED24u))
-/**< Memory management fault State register. */
-#define CB_NVIC_MFSR                  (*(volatile unsigned char*) (0xE000ED28u))
-/**< Bus fault State register. */
-#define CB_NVIC_BFSR                  (*(volatile unsigned char*) (0xE000ED29u))
-/**< Usage fault State register. */
-#define CB_NVIC_UFSR                  (*(volatile unsigned short*)(0xE000ED2Au))
-/**< Hard fault State register. */
-#define CB_NVIC_HFSR                  (*(volatile unsigned int*)  (0xE000ED2Cu))
-/**< Debug fault State register. */
-#define CB_NVIC_DFSR                  (*(volatile unsigned short*)(0xE000ED30u))
-/**< Memory management fault address register. */
-#define CB_NVIC_MMAR                  (*(volatile unsigned int*)  (0xE000ED34u))
-/**< Bus fault manage address register. */
-#define CB_NVIC_BFAR                  (*(volatile unsigned int*)  (0xE000ED38u))
-/**< Auxiliary fault State register. */
-#define CB_NVIC_AFSR                  (*(volatile unsigned short*)(0xE000ED3Cu))
+#define CB_SYSHND_CTRL                (*(volatile unsigned int*)  (0xE000ED24u))    /**< System Handler Control and State Register. */
+#define CB_NVIC_MFSR                  (*(volatile unsigned char*) (0xE000ED28u))    /**< Memory management fault State register. */
+#define CB_NVIC_BFSR                  (*(volatile unsigned char*) (0xE000ED29u))    /**< Bus fault State register. */
+#define CB_NVIC_UFSR                  (*(volatile unsigned short*)(0xE000ED2Au))    /**< Usage fault State register. */
+#define CB_NVIC_HFSR                  (*(volatile unsigned int*)  (0xE000ED2Cu))    /**< Hard fault State register. */
+#define CB_NVIC_DFSR                  (*(volatile unsigned short*)(0xE000ED30u))    /**< Debug fault State register. */
+#define CB_NVIC_MMAR                  (*(volatile unsigned int*)  (0xE000ED34u))    /**< Memory management fault address register. */
+#define CB_NVIC_BFAR                  (*(volatile unsigned int*)  (0xE000ED38u))    /**< Bus fault manage address register. */
+#define CB_NVIC_AFSR                  (*(volatile unsigned short*)(0xE000ED3Cu))    /**< Auxiliary fault State register. */
 
 /**@brief ELF(Executable and Linking Format) file extension name for each compiler. */
 #if defined(__CC_ARM)
-#define CB_ELF_FILE_EXTENSION_NAME          ".axf"
+    #define CB_ELF_FILE_EXTENSION_NAME          ".axf"
 #elif defined(__ICCARM__)
-#define CB_ELF_FILE_EXTENSION_NAME          ".out"
+    #define CB_ELF_FILE_EXTENSION_NAME          ".out"
 #elif defined(__GNUC__)
-#define CB_ELF_FILE_EXTENSION_NAME          ".elf"
+    #define CB_ELF_FILE_EXTENSION_NAME          ".elf"
 #else
-#error "not supported compiler"
+    #error "not supported compiler"
 #endif
 /** @} */
 
@@ -149,123 +77,130 @@ void fault_trace_nvds_save_flush(void);
  * @{
  */
 /**@brief Cortex-M fault registers. */
-typedef struct {
-    struct {
-        unsigned int r0;                     /**< Register R0. */
-        unsigned int r1;                     /**< Register R1. */
-        unsigned int r2;                     /**< Register R2. */
-        unsigned int r3;                     /**< Register R3. */
-        unsigned int r12;                    /**< Register R12. */
-        unsigned int lr;                     /**< Link register. */
-        unsigned int pc;                     /**< Program counter. */
-        union {
-            unsigned int value;
-            struct {
-                unsigned int IPSR : 8;           /**< Interrupt Program Status register (IPSR). */
-                unsigned int EPSR : 19;          /**< Execution Program Status register (EPSR). */
-                unsigned int APSR : 5;           /**< Application Program Status register (APSR). */
-            } bits;
-        } psr;                               /**< Program status register. */
-    } saved;
+typedef struct
+{
+  struct 
+  {
+    unsigned int r0;                     /**< Register R0. */
+    unsigned int r1;                     /**< Register R1. */
+    unsigned int r2;                     /**< Register R2. */
+    unsigned int r3;                     /**< Register R3. */
+    unsigned int r12;                    /**< Register R12. */
+    unsigned int lr;                     /**< Link register. */
+    unsigned int pc;                     /**< Program counter. */
+    union 
+    {
+      unsigned int value;
+      struct 
+      {
+        unsigned int IPSR : 8;           /**< Interrupt Program Status register (IPSR). */
+        unsigned int EPSR : 19;          /**< Execution Program Status register (EPSR). */
+        unsigned int APSR : 5;           /**< Application Program Status register (APSR). */
+      } bits;
+    } psr;                               /**< Program status register. */
+  } saved;
 
-    union {
-        unsigned int value;
-        struct {
-            unsigned int MEMFAULTACT    : 1;   /**< Read as 1 if memory management fault is active. */
-            unsigned int BUSFAULTACT    : 1;   /**< Read as 1 if bus fault exception is active. */
-            unsigned int UnusedBits1    : 1;   /**< Unused Bits 1. */
-            unsigned int USGFAULTACT    : 1;   /**< Read as 1 if usage fault exception is active. */
-            unsigned int UnusedBits2    : 3;   /**< Unused Bits 2. */
-            unsigned int SVCALLACT      : 1;   /**< Read as 1 if SVC exception is active. */
-            unsigned int MONITORACT     : 1;   /**< Read as 1 if debug monitor exception is active. */
-            unsigned int UnusedBits3    : 1;   /**< Unused Bits 3. */
-            unsigned int PENDSVACT      : 1;   /**< Read as 1 if PendSV exception is active. */
-            unsigned int SYSTICKACT     : 1;   /**< Read as 1 if SYSTICK exception is active. */
-/**< Usage fault pended; usage fault started but was replaced by a higher-priority exception. */
-            unsigned int USGFAULTPENDED : 1;
-/**< Memory management fault pended; memory management fault started but was replaced
- * by a higher-priority exception. */
-            unsigned int MEMFAULTPENDED : 1;
-/**< Bus fault pended; bus fault handler was started but was replaced by a higher-priority exception. */
-            unsigned int BUSFAULTPENDED : 1;
-/**< SVC pended; SVC was started but was replaced by a higher-priority exception. */
-            unsigned int SVCALLPENDED   : 1;
-            unsigned int MEMFAULTENA    : 1;   /**< Memory management fault handler enable. */
-            unsigned int BUSFAULTENA    : 1;   /**< Bus fault handler enable. */
-            unsigned int USGFAULTENA    : 1;   /**< Usage fault handler enable. */
-        } bits;
-    } syshndctrl;                          /**< System Handler Control and State Register (0xE000ED24). */
+  union
+  {
+    unsigned int value;
+    struct
+    {
+      unsigned int MEMFAULTACT    : 1;   /**< Read as 1 if memory management fault is active. */
+      unsigned int BUSFAULTACT    : 1;   /**< Read as 1 if bus fault exception is active. */
+      unsigned int UnusedBits1    : 1;   /**< Unused Bits 1. */
+      unsigned int USGFAULTACT    : 1;   /**< Read as 1 if usage fault exception is active. */
+      unsigned int UnusedBits2    : 3;   /**< Unused Bits 2. */
+      unsigned int SVCALLACT      : 1;   /**< Read as 1 if SVC exception is active. */
+      unsigned int MONITORACT     : 1;   /**< Read as 1 if debug monitor exception is active. */
+      unsigned int UnusedBits3    : 1;   /**< Unused Bits 3. */
+      unsigned int PENDSVACT      : 1;   /**< Read as 1 if PendSV exception is active. */
+      unsigned int SYSTICKACT     : 1;   /**< Read as 1 if SYSTICK exception is active. */
+      unsigned int USGFAULTPENDED : 1;   /**< Usage fault pended; usage fault started but was replaced by a higher-priority exception. */
+      unsigned int MEMFAULTPENDED : 1;   /**< Memory management fault pended; memory management fault started but was replaced by a higher-priority exception. */
+      unsigned int BUSFAULTPENDED : 1;   /**< Bus fault pended; bus fault handler was started but was replaced by a higher-priority exception. */
+      unsigned int SVCALLPENDED   : 1;   /**< SVC pended; SVC was started but was replaced by a higher-priority exception. */
+      unsigned int MEMFAULTENA    : 1;   /**< Memory management fault handler enable. */
+      unsigned int BUSFAULTENA    : 1;   /**< Bus fault handler enable. */
+      unsigned int USGFAULTENA    : 1;   /**< Usage fault handler enable. */
+    } bits;
+  } syshndctrl;                          /**< System Handler Control and State Register (0xE000ED24). */
 
-    union {
-        unsigned char value;
-        struct {
-            unsigned char IACCVIOL    : 1;     /**< Instruction access violation. */
-            unsigned char DACCVIOL    : 1;     /**< Data access violation. */
-            unsigned char UnusedBits  : 1;     /**< Unused Bits 1. */
-            unsigned char MUNSTKERR   : 1;     /**< Unstacking error. */
-            unsigned char MSTKERR     : 1;     /**< Stacking error. */
-            unsigned char MLSPERR     : 1;     /**< Floating-point lazy state preservation (M4/M7). */
-            unsigned char UnusedBits2 : 1;     /**< Unused Bits 2. */
-            unsigned char MMARVALID   : 1;     /**< Indicates the MMAR is valid. */
-        } bits;
-    } mfsr;                                /**< Memory Management Fault Status Register (0xE000ED28). */
-    unsigned int mmar;                     /**< Memory Management Fault Address Register (0xE000ED34). */
+  union
+  {
+    unsigned char value;
+    struct
+    {
+      unsigned char IACCVIOL    : 1;     /**< Instruction access violation. */
+      unsigned char DACCVIOL    : 1;     /**< Data access violation. */
+      unsigned char UnusedBits  : 1;     /**< Unused Bits 1. */
+      unsigned char MUNSTKERR   : 1;     /**< Unstacking error. */
+      unsigned char MSTKERR     : 1;     /**< Stacking error. */
+      unsigned char MLSPERR     : 1;     /**< Floating-point lazy state preservation (M4/M7). */
+      unsigned char UnusedBits2 : 1;     /**< Unused Bits 2. */
+      unsigned char MMARVALID   : 1;     /**< Indicates the MMAR is valid. */
+    } bits;
+  } mfsr;                                /**< Memory Management Fault Status Register (0xE000ED28). */
+  unsigned int mmar;                     /**< Memory Management Fault Address Register (0xE000ED34). */
 
-    union {
-        unsigned char value;
-        struct {
-            unsigned char IBUSERR    : 1;      /**< Instruction access violation. */
-            unsigned char PRECISERR  : 1;      /**< Precise data access violation. */
-            unsigned char IMPREISERR : 1;      /**< Imprecise data access violation. */
-            unsigned char UNSTKERR   : 1;      /**< Unstacking error. */
-            unsigned char STKERR     : 1;      /**< Stacking error. */
-            unsigned char LSPERR     : 1;      /**<  Floating-point lazy state preservation (M4/M7). */
-            unsigned char UnusedBits : 1;      /**< Unused Bits 1. */
-            unsigned char BFARVALID  : 1;      /**< Indicates BFAR is valid. */
-        } bits;
-    } bfsr;                                /**< Bus Fault Status Register (0xE000ED29). */
-    unsigned int bfar;                     /**< Bus Fault Manage Address Register (0xE000ED38). */
+  union
+  {
+    unsigned char value;
+    struct
+    {
+      unsigned char IBUSERR    : 1;      /**< Instruction access violation. */
+      unsigned char PRECISERR  : 1;      /**< Precise data access violation. */
+      unsigned char IMPREISERR : 1;      /**< Imprecise data access violation. */
+      unsigned char UNSTKERR   : 1;      /**< Unstacking error. */
+      unsigned char STKERR     : 1;      /**< Stacking error. */
+      unsigned char LSPERR     : 1;      /**<  Floating-point lazy state preservation (M4/M7). */
+      unsigned char UnusedBits : 1;      /**< Unused Bits 1. */
+      unsigned char BFARVALID  : 1;      /**< Indicates BFAR is valid. */
+    } bits;
+  } bfsr;                                /**< Bus Fault Status Register (0xE000ED29). */
+  unsigned int bfar;                     /**< Bus Fault Manage Address Register (0xE000ED38). */
 
-    union {
-        unsigned short value;
-        struct {
-            unsigned short UNDEFINSTR : 1;     /**< Attempts to execute an undefined instruction. */
-            unsigned short INVSTATE   : 1;     /**< Attempts to switch to an invalid state (e.g., ARM). */
-            /**< Attempts to do an exception with a bad value in the EXC_RETURN number. */
-            unsigned short INVPC      : 1;
-            unsigned short NOCP       : 1;     /**< Attempts to execute a coprocessor instruction. */
-            unsigned short UnusedBits : 4;     /**< Unused Bits 1. */
-            unsigned short UNALIGNED  : 1;     /**< Indicates that an unaligned access fault has taken place. */
-unsigned short DIVBYZERO0 :
-            1;     /**< Indicates a divide by zero has taken place (can be set only if DIV_0_TRP is set). */
-        } bits;
-    } ufsr;                                /**< Usage Fault Status Register (0xE000ED2A). */
+  union
+  {
+    unsigned short value;
+    struct
+    {
+      unsigned short UNDEFINSTR : 1;     /**< Attempts to execute an undefined instruction. */
+      unsigned short INVSTATE   : 1;     /**< Attempts to switch to an invalid state (e.g., ARM). */
+      unsigned short INVPC      : 1;     /**< Attempts to do an exception with a bad value in the EXC_RETURN number. */
+      unsigned short NOCP       : 1;     /**< Attempts to execute a coprocessor instruction. */
+      unsigned short UnusedBits : 4;     /**< Unused Bits 1. */
+      unsigned short UNALIGNED  : 1;     /**< Indicates that an unaligned access fault has taken place. */
+      unsigned short DIVBYZERO0 : 1;     /**< Indicates a divide by zero has taken place (can be set only if DIV_0_TRP is set). */
+    } bits;
+  } ufsr;                                /**< Usage Fault Status Register (0xE000ED2A). */
 
-    union {
-        unsigned int value;
-        struct {
-            unsigned int UnusedBits  : 1;
-            unsigned int VECTBL      : 1;      /**< Indicates hard fault is caused by failed vector fetch. */
-            unsigned int UnusedBits2 : 28;     /**< Unused Bits 1. */
-unsigned int FORCED      :
-            1;      /**< Indicates hard fault is taken because of bus fault/memory management fault/usage fault. */
-            unsigned int DEBUGEVT    : 1;      /**< Indicates hard fault is triggered by debug event. */
-        } bits;
-    } hfsr;                                /**< Hard Fault Status Register (0xE000ED2C). */
+  union
+  {
+    unsigned int value;
+    struct
+    {
+      unsigned int UnusedBits  : 1;
+      unsigned int VECTBL      : 1;      /**< Indicates hard fault is caused by failed vector fetch. */
+      unsigned int UnusedBits2 : 28;     /**< Unused Bits 1. */
+      unsigned int FORCED      : 1;      /**< Indicates hard fault is taken because of bus fault/memory management fault/usage fault. */
+      unsigned int DEBUGEVT    : 1;      /**< Indicates hard fault is triggered by debug event. */
+    } bits;
+  } hfsr;                                /**< Hard Fault Status Register (0xE000ED2C). */
 
-    union {
-        unsigned int value;
-        struct {
-            unsigned int HALTED   : 1;         /**< Halt requested in NVIC. */
-            unsigned int BKPT     : 1;         /**< BKPT instruction executed. */
-            unsigned int DWTTRAP  : 1;         /**< DWT match occurred. */
-            unsigned int VCATCH   : 1;         /**< Vector fetch occurred. */
-            unsigned int EXTERNAL : 1;         /**< EDBGRQ signal asserted. */
-        } bits;                              /**< Unused Bits 1. */
-    } dfsr;                                /**< Debug Fault Status Register (0xE000ED30). */
+  union
+  {
+    unsigned int value;
+    struct
+    {
+      unsigned int HALTED   : 1;         /**< Halt requested in NVIC. */
+      unsigned int BKPT     : 1;         /**< BKPT instruction executed. */
+      unsigned int DWTTRAP  : 1;         /**< DWT match occurred. */
+      unsigned int VCATCH   : 1;         /**< Vector fetch occurred. */
+      unsigned int EXTERNAL : 1;         /**< EDBGRQ signal asserted. */
+    } bits;                              /**< Unused Bits 1. */
+  } dfsr;                                /**< Debug Fault Status Register (0xE000ED30). */
 
-    unsigned int
-    afsr;                     /**< Auxiliary Fault Status Register (0xE000ED3C), Vendor controlled (optional). */
+  unsigned int afsr;                     /**< Auxiliary Fault Status Register (0xE000ED3C), Vendor controlled (optional). */
 } cb_hard_fault_regs_t;
 /** @} */
 

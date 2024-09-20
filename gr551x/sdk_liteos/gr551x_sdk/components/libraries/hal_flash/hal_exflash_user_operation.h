@@ -34,10 +34,7 @@
 #define SPI_FLASH_CMD_DP                0xB9
 #define SPI_FLASH_CMD_RDP               0xAB
 
-extern exflash_handle_t g_exflash_handle;
-extern hal_status_t hal_xqspi_command_receive_patch(xqspi_handle_t *p_xqspi, xqspi_command_t *p_cmd, \
-                                                    uint8_t *p_data, uint32_t retry);
-
 uint32_t hal_flash_read_identification_id(void);
+hal_status_t platform_exflash_enable_quad(exflash_handle_t *p_exflash);
 
 #endif /* __HAL_EXFLASH_USER_OPERATION_H_ */

@@ -56,19 +56,18 @@
 #ifndef __DIS_C_H__
 #define __DIS_C_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "ble_prf_types.h"
 #include "custom_config.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup DIS_C_MACRO Defines
  * @{
  */
-#define DIS_C_CONNECTION_MAX    (10 < CFG_MAX_CONNECTIONS ? \
-                                10 : CFG_MAX_CONNECTIONS)      /**< Maximum number of DIS Client connections. */
-#define DIS_C_STRING_LEN_MAX    128        /**< Maximal length for Characteristic values - 128 bytes. */
+#define DIS_C_CONNECTION_MAX                 10                             /**< Maximum number of DIS Client connections. */
+#define DIS_C_STRING_LEN_MAX                 128                            /**< Maximal length for Characteristic values - 128 bytes. */
 
 /**
  * @defgroup DIS_IEEE_11073_BODY IEEE 11073-20601 Authoritative Body Type
@@ -87,16 +86,17 @@
  * @{
  */
 /**@brief Device Information Service Client event type. */
-typedef enum {
-    DIS_C_EVT_INVALID,               /**< DIS Client invalid event. */
-    DIS_C_EVT_DISCOVERY_COMPLETE,    /**< DIS Client has found Device Information Service and its characteristics. */
-    DIS_C_EVT_DISCOVERY_FAIL,        /**< DIS Client found DIS service failed because of invalid operation or \
-                                          no found at the peer. */
+typedef enum
+{
+    DIS_C_EVT_INVALID,                      /**< DIS Client invalid event. */
+    DIS_C_EVT_DISCOVERY_COMPLETE,           /**< DIS Client has found Device Information Service and its characteristics. */
+    DIS_C_EVT_DISCOVERY_FAIL,               /**< DIS Client found DIS service failed because of invalid operation or no found at the peer. */
     DIS_C_EVT_DEV_INFORMATION_READ_RSP,     /**< DIS Client has received device information value read response. */
 } dis_c_evt_type_t;
 
 /**@brief Device Information Service Client characteristic type. */
-typedef enum {
+typedef enum
+{
     DIS_C_SYS_ID,                /**< System ID characteristic. */
     DIS_C_MODEL_NUM,             /**< Model Number String characteristic. */
     DIS_C_SERIAL_NUM,            /**< Serial Number String characteristic. */
@@ -115,33 +115,37 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t dis_srvc_start_handle;                 /**< DIS Serivce start handle. */
     uint16_t dis_srvc_end_handle;                   /**< DIS Service end handle. */
     uint16_t dis_char_handle[DIS_C_CHARACTER_NB];   /**< DIS characteristic handle. */
 } dis_c_handles_t;
 
 /**@brief Response data for string-based DIS characteristics. */
-typedef struct {
+typedef struct
+{
     uint8_t   *p_data;    /**< Pointer to response data. */
     uint16_t   length;    /**< Response data length. */
 } dis_c_string_t;
 
 /**@brief Response data for System ID parameters. */
-typedef struct {
+typedef struct
+{
     uint8_t manufacturer_id[5];   /**< Manufacturer-defined ID. */
     uint8_t org_unique_id[3];     /**< Organizationally unique ID (OUI) which is issued by IEEE. */
 } dis_c_sys_id_t;
 
 /**@brief Response data for IEEE 11073-20601 Regulatory Certification Data List Structure. */
-typedef struct {
-    uint8_t  *p_list;               /**< Pointer to the list which contains the encoded opaque structure \
-                                         based on IEEE 11073-20601 specification. */
+typedef struct
+{
+    uint8_t  *p_list;               /**< Pointer to the list which contains the encoded opaque structure based on IEEE 11073-20601 specification. */
     uint16_t  list_length;          /**< Length of the list. */
 } dis_c_reg_cert_data_list_t;
 
 /**@brief Response data for PnP ID parameters */
-typedef struct {
+typedef struct
+{
     uint8_t  vendor_id_source;    /**< Vendor ID Source. */
     uint16_t vendor_id;           /**< Vendor ID. */
     uint16_t product_id;          /**< Product ID. */
@@ -149,21 +153,21 @@ typedef struct {
 } dis_c_pnp_id_t;
 
 /**@brief Device Information Service Client Read Response encode structure. */
-typedef struct {
+typedef struct
+{
     dis_c_char_type_t char_type;                   /**< Characteristic type. */
-    union {
+    union
+    {
         dis_c_sys_id_t             sys_id;         /**< System ID characteristic response data. */
-        dis_c_string_t
-        string_data;    /**< Model Number, Serial Number, Hardware Revision, Firmware Revision, Software Revision, \
-                             Manufacturer Name String characteristic response data. */
-        dis_c_reg_cert_data_list_t
-        cert_list;      /**< IEEE 11073-20601 Regulatory Certification Data List characteristic response data. */
+        dis_c_string_t             string_data;    /**< Model Number, Serial Number, Hardware Revision, Firmware Revision, Software Revision, Manufacturer Name String characteristic response data. */
+        dis_c_reg_cert_data_list_t cert_list;      /**< IEEE 11073-20601 Regulatory Certification Data List characteristic response data. */
         dis_c_pnp_id_t             pnp_id;         /**< PnP ID characteristic response data. */
     } encode_rst;                                  /**< Result of encoding. */
 } ble_dis_c_read_rsp_t;
 
 /**@brief Device Information Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t                   conn_idx;            /**< The connection index. */
     dis_c_evt_type_t          evt_type;            /**< DIS Client event type. */
     ble_dis_c_read_rsp_t      read_rsp;            /**< DIS Client characteristic Read Response encode. */

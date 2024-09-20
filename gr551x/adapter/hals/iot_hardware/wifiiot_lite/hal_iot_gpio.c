@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 GOODIX.
+ * Copyright (c) 2024 GOODIX.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +17,8 @@
 #include "iot_gpio.h"
 #include "app_io.h"
 #include "app_gpiote.h"
-#include "stdbool.h"
+#include <stdio.h>
+#include <stdbool.h>
 
 
 /* ID 0~31    Normal GPIO */
@@ -118,7 +119,7 @@ static int get_pin_index(uint32_t pin)
     return index;
 }
 
-static void app_io_callback(app_gpiote_evt_t *p_evt)
+static void app_io_callback(app_io_evt_t *p_evt)
 {
     uint32_t index = 0;
 
@@ -160,7 +161,7 @@ unsigned int IoTGpioSetDir(unsigned int id, IotGpioDir dir)
     if (dir == IOT_GPIO_DIR_IN) {
         io_init.mode = APP_IO_MODE_INPUT;
     } else if (dir == IOT_GPIO_DIR_OUT) {
-        io_init.mode = APP_IO_MODE_OUT_PUT;
+        io_init.mode = APP_IO_MODE_OUTPUT;
     }
 
     g_gpio_dir[id] = dir;
@@ -244,7 +245,6 @@ unsigned int IoTGpioRegisterIsrFunc(unsigned int id, IotGpioIntType intType, Iot
     gpiote_param.type = io_type;
     gpiote_param.pin  = pin;
     gpiote_param.pull = APP_IO_PULLUP;
-    gpiote_param.handle_mode = APP_IO_ENABLE_WAKEUP;
     if (intType == IOT_INT_TYPE_LEVEL) {
         if (intPolarity == IOT_GPIO_EDGE_FALL_LEVEL_LOW) {
             isr_cfg_info[id].mode = APP_IO_MODE_IT_LOW;
@@ -293,7 +293,6 @@ unsigned int IoTGpioUnregisterIsrFunc(unsigned int id)
     gpiote_param.pin  = pin;
     gpiote_param.mode = isr_cfg_info[id].mode;
     gpiote_param.pull = APP_IO_PULLUP;
-    gpiote_param.handle_mode = APP_IO_ENABLE_WAKEUP;
     gpiote_param.io_evt_cb = NULL;
 
     if (isr_cfg_info[id].initialized == false) {
@@ -330,7 +329,6 @@ unsigned int IoTGpioSetIsrMode(unsigned int id, IotGpioIntType intType, IotGpioI
     gpiote_param.type = io_type;
     gpiote_param.pin  = pin;
     gpiote_param.pull = APP_IO_PULLUP;
-    gpiote_param.handle_mode = APP_IO_ENABLE_WAKEUP;
     gpiote_param.io_evt_cb = app_io_callback;
 
     if (intType == IOT_INT_TYPE_LEVEL) {

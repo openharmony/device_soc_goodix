@@ -41,12 +41,13 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
+#include "app_assert.h"
+#include "app_log.h"
 #include <cmsis_compiler.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include "app_log.h"
-#include "app_assert.h"
+
 
 /*
  * DEFINITIONS
@@ -76,7 +77,8 @@
  *****************************************************************************************
  */
 /**@brief Assert information save. */
-struct app_asser_info_t {
+struct app_asser_info_t
+{
     char    file_name[APP_ASSERT_FILE_NAME_LEN];
     int     magic1;
     int     file_line;
@@ -94,8 +96,9 @@ struct app_asser_info_t {
  */
 static struct app_asser_info_t  s_assert_info;
 
-static sys_assert_cb_t s_assert_cbs = {
-    .assert_err_cb   = app_assert_err_cb,
+static sys_assert_cb_t s_assert_cbs =
+{
+    .assert_err_cb   = app_assert_err_cb ,
     .assert_param_cb = app_assert_param_cb,
     .assert_warn_cb  = app_assert_warn_cb,
 };
@@ -114,28 +117,21 @@ static sys_assert_cb_t s_assert_cbs = {
 static void app_assert_info_output(uint8_t assert_type)
 {
     char  assert_info[1024]  = {0};
-    uint32_t ret;
 
     s_assert_info.file_name[APP_ASSERT_FILE_NAME_LEN - 1] = ' ';
     s_assert_info.expr[APP_ASSERT_FILE_NAME_LEN - 1]      = ' ';
 
-    if (assert_type == APP_ASSERT_ERROR) {
-        ret = sprintf_s(assert_info, sizeof(assert_info), "[ERROR] %s", s_assert_info.expr);
-        if (ret < 0) {
-            return;
-        }
-    } else if (assert_type == APP_ASSERT_WARNING) {
-        ret = sprintf_s(assert_info, sizeof(assert_info), "[WARNING] Param0:%d,Param1:%d", s_assert_info.param0,
-                        s_assert_info.param1);
-        if (ret < 0) {
-            return;
-        }
-    } else if (assert_type == APP_ASSERT_PARAM) {
-        ret = sprintf_s(assert_info, sizeof(assert_info), "[PARAM] Param0:%d,Param1:%d", \
-                        s_assert_info.param0, s_assert_info.param1);
-        if (ret < 0) {
-            return;
-        }
+    if (APP_ASSERT_ERROR == assert_type)
+    {
+        sprintf(assert_info,"[ERROR] %s", s_assert_info.expr);
+    }
+    else if (APP_ASSERT_WARNING == assert_type)
+    {
+        sprintf(assert_info,"[WARNING] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
+    }
+    else if (APP_ASSERT_PARAM == assert_type)
+    {
+        sprintf(assert_info,"[PARAM] Param0:%d,Param1:%d", s_assert_info.param0, s_assert_info.param1);
     }
 
     app_log_output(APP_LOG_LVL_ERROR,
@@ -160,8 +156,8 @@ __WEAK void app_assert_warn_cb(int param0, int param1, const char *file, int lin
 
     file_name_len = (APP_ASSERT_FILE_NAME_LEN < strlen(file)) ? APP_ASSERT_FILE_NAME_LEN : strlen(file);
 
-    memset_s(&s_assert_info, sizeof(s_assert_info), 0, sizeof(s_assert_info));
-    memcpy_s(s_assert_info.file_name, sizeof (s_assert_info.file_name), file, file_name_len);
+    memset(&s_assert_info, 0, sizeof(s_assert_info));
+    memcpy(s_assert_info.file_name, file, file_name_len);
 
     s_assert_info.magic1    = APP_ASSERT_WARN_MAGIC_1;
     s_assert_info.file_line = line;
@@ -177,14 +173,14 @@ __WEAK void app_assert_warn_cb(int param0, int param1, const char *file, int lin
 
 __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int line)
 {
-    __disable_irq();
+    __disable_irq(); 
 
     uint32_t file_name_len;
 
     file_name_len = (APP_ASSERT_FILE_NAME_LEN < strlen(file)) ? APP_ASSERT_FILE_NAME_LEN : strlen(file);
 
-    memset_s(&s_assert_info, sizeof (s_assert_info), 0, sizeof(s_assert_info));
-    memcpy_s(s_assert_info.file_name, sizeof (s_assert_info.file_name), file, file_name_len);
+    memset(&s_assert_info, 0, sizeof(s_assert_info));
+    memcpy(s_assert_info.file_name, file, file_name_len);
 
     s_assert_info.magic1    = (int)APP_ASSERT_PARAM_MAGIC_1;
     s_assert_info.file_line = line;
@@ -196,13 +192,13 @@ __WEAK void app_assert_param_cb(int param0, int param1, const char *file, int li
 
     // Also can store assert info to flash
     app_assert_info_output(APP_ASSERT_PARAM);
-    while (1) {
-    };
+
+    while(1);
 }
 
 __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
 {
-    __disable_irq();
+    __disable_irq(); 
 
     uint32_t file_name_len;
     uint32_t expre_len;
@@ -210,9 +206,10 @@ __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
     file_name_len = (APP_ASSERT_FILE_NAME_LEN < strlen(file)) ? APP_ASSERT_FILE_NAME_LEN : strlen(file);
     expre_len     = (APP_ASSERT_EXPR_NAME_LEN < strlen(expr)) ? APP_ASSERT_EXPR_NAME_LEN : strlen(expr);
 
-    memset_s(&s_assert_info, sizeof(s_assert_info), 0, sizeof(s_assert_info));
-    memcpy_s(s_assert_info.file_name, sizeof(s_assert_info.file_name), file, file_name_len);
-    memcpy_s(s_assert_info.expr, sizeof(s_assert_info.expr), expr, expre_len);
+    memset(&s_assert_info, 0, sizeof(s_assert_info));
+    memcpy(s_assert_info.file_name, file, file_name_len);
+    memcpy(s_assert_info.expr, expr, expre_len);
+
     s_assert_info.magic1    = (int)APP_ASSERT_ERR_MAGIC_1;
     s_assert_info.file_line = line;
     s_assert_info.magic2    = (int)APP_ASSERT_ERR_MAGIC_2;
@@ -221,8 +218,7 @@ __WEAK void app_assert_err_cb(const char *expr, const char *file, int line)
 
     // Also can store assert info to flash
     app_assert_info_output(APP_ASSERT_ERROR);
-    while (1) {
-    };
+    while(1);
 }
 
 void app_assert_init(void)
@@ -232,7 +228,10 @@ void app_assert_init(void)
 
 void app_assert_handler(const char *expr, const char *file, int line)
 {
-    if (s_assert_cbs.assert_err_cb) {
+    if (s_assert_cbs.assert_err_cb)
+    {
         s_assert_cbs.assert_err_cb(expr, file, line);
     }
 }
+
+

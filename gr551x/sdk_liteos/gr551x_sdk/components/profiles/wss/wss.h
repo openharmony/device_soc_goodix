@@ -50,29 +50,28 @@
  *          (Server) intended for consumer healthcare as well as sports/fitness applications.
  *
  *          After \ref wss_init_t variable is intialized, the application must call \ref wss_service_init()
- *          to add Weight Scale Feature and Weight Measurement characteristics to the BLE Stack database
+ *          to add Weight Scale Feature and Weight Measurement characteristics to the BLE Stack database 
  *          according to \ref wss_init_t.char_mask.
  */
 
 #ifndef __WSS_H__
 #define __WSS_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
 #include "ble_prf_utils.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @defgroup WSS_MACRO Defines
  * @{
  */
-#define WSS_CONNECTION_MAX      (10 < CFG_MAX_CONNECTIONS ? \
-                                10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of Weight Scale Service connections. */
-#define WSS_MEAS_VAL_LEN_MAX    15                          /**< Maximum length of Weight Measurment value. */
-#define WSS_CACHE_MEAS_NUM_MAX  25       /**< Maximum number of cache muasurements value for each user. */
-#define WSS_FEAT_VAL_LEN_MAX    1        /**< Maximum length of WS Feature value. */
-#define WSS_MEAS_UNSUCCESS      0xFFFF   /**< Measurement Unsuccessful. */
+#define WSS_CONNECTION_MAX                 10                              /**< Maximum number of Weight Scale Service connections. */
+#define WSS_MEAS_VAL_LEN_MAX               15                              /**< Maximum length of Weight Measurment value. */
+#define WSS_CACHE_MEAS_NUM_MAX             25                              /**< Maximum number of cache muasurements value for each user. */
+#define WSS_FEAT_VAL_LEN_MAX               1                               /**< Maximum length of WS Feature value. */
+#define WSS_MEAS_UNSUCCESS                 0xFFFF                          /**< Measurement Unsuccessful. */
 /**
  * @defgroup WSS_CHAR_MASK Characteristics Mask
  * @{
@@ -86,22 +85,19 @@
  * @defgroup WSS_ENUM Enumerations
  * @{
  */
-/**
- * @defgroup WSS_MEAS_FLAG_BIT Measurement Flag Bits
- * @{
- * @brief Weight Scale Measurement Flags.
- */
-enum wss_meas_flag_bits {
+/**@brief Weight Scale Measurement Flags.*/
+enum wss_meas_flag_bits
+{
     WSS_MEAS_FLAG_UNIT_SI              = 0x00,     /**< Flag bit for SI Measurement Units Present. */
     WSS_MEAS_FLAG_UNIT_IMPERIAL        = 0x01,     /**< Flag bit for Imperial Measurement Units Present. */
     WSS_MEAS_FLAG_DATE_TIME_PRESENT    = 0x02,     /**< Flag bit for Time Stamp Present. */
     WSS_MEAS_FLAG_USER_ID_PRESENT      = 0x04,     /**< Flag bit for User ID Present. */
     WSS_MEAS_FLAG_BMI_HEIGHT_PRESENT   = 0x08,     /**< Flag bit for BMI and Height Present. */
 };
-/** @} */
 
 /**@brief Weight Scale Feature characteristic bit values.*/
-typedef enum {
+typedef enum
+{
     /* Supported Flags */
     WSS_FEAT_TIME_STAMP        = 0x00000001,  /**< Time Stamp supported. */
     WSS_FEAT_MULTI_USER        = 0x00000002,  /**< Multiple Users supported. */
@@ -115,17 +111,18 @@ typedef enum {
     WSS_FEAT_MASS_RES_20G      = 0x00000028,  /**< Resolution of 0.02kg or 0.05lb. */
     WSS_FEAT_MASS_RES_10G      = 0x00000030,  /**< Resolution of 0.01kg or 0.02lb. */
     WSS_FEAT_MASS_RES_5G       = 0x00000038,  /**< Resolution of 0.005kg or 0.01lb. */
-
+    
     /* Height Measurement Resolution */
     WSS_FEAT_HEIGHT_RES_10MM   = 0x00000080,  /**< Resolution of 0.01m or 1in. */
     WSS_FEAT_HEIGHT_RES_5MM    = 0x00000100,  /**< Resolution of 0.005m or 0.5in. */
     WSS_FEAT_HEIGHT_RES_1MM    = 0x00000180,  /**< Resolution of 0.001m or 0.1in. */
-
+    
     WSS_FEAT_FULL_BIT          = 0x000001BF,
 } wss_feature_t;
 
 /**@brief WSS Weight Measurement resolutions. */
-typedef enum {
+typedef enum
+{
     WSS_MASS_RES_500G, /**< Resolution of 0.5kg or 1lb. */
     WSS_MASS_RES_200G, /**< Resolution of 0.2kg or 0.5lb. */
     WSS_MASS_RES_100G, /**< Resolution of 0.1kg or 0.2lb. */
@@ -136,34 +133,38 @@ typedef enum {
 } wss_mass_res_t;
 
 /**@brief WSS Height Measurement resolutions. */
-typedef enum {
+typedef enum
+{
     WSS_HEIGHT_RES_10MM, /**< Resolution of 0.01m or 1in. */
     WSS_HEIGHT_RES_5MM,  /**< Resolution of 0.005m or 0.5in. */
     WSS_HEIGHT_RES_1MM,  /**< Resolution of 0.001m or 0.1in. */
 } wss_height_res_t;
 
 /**@brief WSS unit types. */
-typedef enum {
+typedef enum
+{
     WSS_UNIT_SI,        /**< Weight in kilograms and height in meters */
     WSS_UNIT_IMPERIAL,  /**< Weight in pounds and height in inches */
 } wss_unit_t;
 
-/**@brief Weight Scale Service event type. */
-typedef enum {
+ /**@brief Weight Scale Service event type. */
+typedef enum
+{
     WSS_EVT_INVALID,                    /**< Indicate that invalid event. */
     WSS_EVT_MEAS_INDICATION_ENABLE,     /**< Indicate that body composition measurement indication has been enabled. */
     WSS_EVT_MEAS_INDICATION_DISABLE,    /**< Indicate that body composition measurement indication has been disabled. */
     WSS_EVT_MEAS_INDICATION_CPLT,       /**< Indicate that BC Measurement has been indicated. */
     WSS_EVT_MEAS_READ_CHARACTERISTIC,   /**< The peer reads the characteristic. */
-} wss_evt_type_t;
+} wss_evt_type_t;                       
 /** @} */
 
-/**
+/**                                     
  * @defgroup WSS_STRUCT Structures
  * @{
- */
+ */                                     
 /**@brief Weight Scale Measurement data. */
-typedef struct {
+typedef struct
+{
     uint16_t         weight;            /**< Weight. */
     prf_date_time_t  time_stamp;        /**< Time stamp. */
     uint8_t          user_id;           /**< User index. */
@@ -172,10 +173,11 @@ typedef struct {
 } wss_meas_val_t;
 
 /**@brief Weight Scale Service event. */
-typedef struct {
+typedef struct
+{
     wss_evt_type_t evt_type;    /**< The WSS event type. */
-    uint8_t        conn_idx;    /**< The index of the connection. */
-    const uint8_t  *p_data;     /**< Pointer to event data. */
+    uint8_t        conn_idx;    /**< The index of the connection. */ 
+    const uint8_t  *p_data;     /**< Pointer to event data. */ 
     uint16_t       length;      /**< Length of event data. */
 } wss_evt_t;
 /** @} */
@@ -193,11 +195,11 @@ typedef void (*wss_evt_handler_t)(wss_evt_t *p_evt);
  * @{
  */
 /**@brief Weight Scale Service Init variable. */
-typedef struct {
+typedef struct
+{
     wss_evt_handler_t  evt_handler;           /**< Weight Scale Service event handler. */
     uint32_t           feature;               /**< Initial value for features. */
-    uint8_t
-    char_mask;             /**< Initial mask of Supported characteristics, and configured with \ref WSS_CHAR_MASK */
+    uint8_t            char_mask;             /**< Initial mask of Supported characteristics, and configured with \ref WSS_CHAR_MASK */ 
     wss_unit_t         wss_unit;              /**< Initial the unit system as SI or Imperial. */
     wss_mass_res_t     wss_mass_res;          /**< Initial resolution of mass value. */
     wss_height_res_t   wss_height_res;        /**< Initial resolution of height value. */
@@ -215,8 +217,8 @@ typedef struct {
  *****************************************************************************************
  * @brief Initialize a Weight Scale Service instance and add in the DB.
  *
- * @param[in] p_wss_init: Pointer to WSS Service initialization variable.
- *
+ * @param[in] p_wss_init:         Pointer to WSS Service initialization variable.
+ * @param[in] p_bcs_start_handle: Pointer to the included service(BCS) start handle.
  * @return Result of service initialization.
  *****************************************************************************************
  */

@@ -3,7 +3,7 @@
  *
  * @file mlmr.c
  *
- * @brief Goodix UART Service Implementation.
+ * @brief MLMR Service Implementation.
  *
  *****************************************************************************************
  * @attention
@@ -45,19 +45,15 @@
 #include "utility.h"
 #include "user_app.h"
 #include "app_log.h"
-#define MTU_DEF_OFFSET 3
-#define DATA_COPY_LEN 2
+
 /*
  * DEFINES
  *****************************************************************************************
  */
-/**@brief The UUIDs of GUS characteristics. */
-#define GUS_SERVER_TX_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75,
-                            0x80, 0x0A, 0x46, 0x44, 0xD3, 0x02, 0x02, 0xED, 0xA6}
-#define GUS_SERVER_RX_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75,
-                            0x80, 0x0A, 0x46, 0x44, 0xD3, 0x03, 0x02, 0xED, 0xA6}
-#define GUS_FLOW_CTRL_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75,
-                            0x80, 0x0A, 0x46, 0x44, 0xD3, 0x04, 0x02, 0xED, 0xA6}
+/**@brief The UUIDs of MLMR characteristics. */
+#define MLMR_SERVER_TX_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x02, 0x02, 0xED, 0xA6}
+#define MLMR_SERVER_RX_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x03, 0x02, 0xED, 0xA6}
+#define MLMR_FLOW_CTRL_UUID {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, 0x04, 0x02, 0xED, 0xA6}
 
 /**@brief Macros for conversion of 128bit to 16bit UUID. */
 #define ATT_128_PRIMARY_SERVICE BLE_ATT_16_TO_128_ARRAY(BLE_ATT_DECL_PRIMARY_SERVICE)
@@ -68,131 +64,91 @@
  * ENUMERATIONS
  *****************************************************************************************
  */
-/**@brief Goodix UART Service Attributes Indexes. */
-enum gus_attr_idx_t {
-    GUS_IDX_SVC,
+/**@brief Multi Link Multi Role Service Attributes Indexes. */
+enum mlmr_attr_idx_t
+{
+    MLMR_IDX_SVC,
+    
+    MLMR_IDX_TX_CHAR,
+    MLMR_IDX_TX_VAL,
+    MLMR_IDX_TX_CFG,
 
-    GUS_IDX_TX_CHAR,
-    GUS_IDX_TX_VAL,
-    GUS_IDX_TX_CFG,
+    MLMR_IDX_RX_CHAR,
+    MLMR_IDX_RX_VAL,
 
-    GUS_IDX_RX_CHAR,
-    GUS_IDX_RX_VAL,
+    MLMR_IDX_FLOW_CTRL_CHAR,
+    MLMR_IDX_FLOW_CTRL_VAL,
+    MLMR_IDX_FLOW_CTRL_CFG,
 
-    GUS_IDX_FLOW_CTRL_CHAR,
-    GUS_IDX_FLOW_CTRL_VAL,
-    GUS_IDX_FLOW_CTRL_CFG,
-
-    GUS_IDX_NB,
+    MLMR_IDX_NB,
 };
 
 /*
  * STRUCTURES
  *****************************************************************************************
  */
-/**@brief Goodix UART Service environment variable. */
-struct gus_env_t {
-    gus_init_t gus_init;                               /**< Goodix UART Service initialization variables. */
+/**@brief Multi Link Multi Role Service environment variable. */
+struct mlmr_env_t
+{
+    mlmr_init_t mlmr_init;                               /**< Multi Link Multi Role Service initialization variables. */
     uint16_t   start_hdl;                              /**< Start handle of services */
-    uint16_t   tx_ntf_cfg[GUS_CONNECTION_MAX];         /**< TX Characteristic Notification configuration of
-                                                        the peers. */
-    uint16_t
-    flow_ctrl_ntf_cfg[GUS_CONNECTION_MAX];  /**< Flow Control Characteristic Notification configuration of the peers. */
+    uint16_t   tx_ntf_cfg[MLMR_CONNECTION_MAX];         /**< TX Characteristic Notification configuration of the peers. */
+    uint16_t   flow_ctrl_ntf_cfg[MLMR_CONNECTION_MAX];  /**< Flow Control Characteristic Notification configuration of the peers. */
+    ble_gatts_create_db_t   mlmr_gatts_db;                            /**< Running Speed and Cadence Service attributs database. */
 };
-
-/*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static sdk_err_t   gus_init(void);
-static void        gus_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param);
-static void        gus_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param);
-static void        gus_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value);
-static void        gus_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind);
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
-static struct gus_env_t s_gus_env;
+static struct mlmr_env_t s_mlmr_env;
 static const uint16_t   s_char_mask = 0x003F;
+static uint8_t           s_mlmr_svc_uuid[] = {MLMR_SERVICE_UUID};
 
 static uint16_t         received_data_len[CFG_BOND_DEVS];
 static uint16_t         send_data_len[CFG_BOND_DEVS];
 static uint8_t          adv_header           = 0xA0;
 static uint8_t          rx_buffer[CFG_BOND_DEVS][516];
 
-/**@brief Full GUS Database Description which is used to add attributes into the ATT database. */
-static const attm_desc_128_t gus_att_db[GUS_IDX_NB] = {
-    // GUS service
-    [GUS_IDX_SVC]            = {ATT_128_PRIMARY_SERVICE, READ_PERM_UNSEC, 0, 0},
+/**@brief Full MLMR Database Description which is used to add attributes into the ATT database. */
+static const ble_gatts_attm_desc_128_t mlmr_attr_tab[MLMR_IDX_NB] =
+{
+    // MLMR service
+    [MLMR_IDX_SVC]            = {ATT_128_PRIMARY_SERVICE, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
 
-    // GUS TX Characteristic Declaration
-    [GUS_IDX_TX_CHAR]        = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
-    // GUS TX Characteristic Value
-    [GUS_IDX_TX_VAL]         = {
-        GUS_SERVER_TX_UUID,
-        NOTIFY_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        GUS_MAX_DATA_LEN
-    },
-    // GUS TX Characteristic - Client Characteristic Configuration Descriptor
-    [GUS_IDX_TX_CFG]         = {
-        ATT_128_CLIENT_CHAR_CFG,
-        READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC,
-        0,
-        0
-    },
+    // MLMR TX Characteristic Declaration
+    [MLMR_IDX_TX_CHAR]        = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
+    // MLMR TX Characteristic Value
+    [MLMR_IDX_TX_VAL]         = {MLMR_SERVER_TX_UUID, 
+                                BLE_GATTS_NOTIFY_PERM_UNSEC,
+                                (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                                MLMR_MAX_DATA_LEN},
+    // MLMR TX Characteristic - Client Characteristic Configuration Descriptor
+    [MLMR_IDX_TX_CFG]         = {ATT_128_CLIENT_CHAR_CFG,
+                                BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC,
+                                0,
+                                0},
 
-    // GUS RX Characteristic Declaration
-    [GUS_IDX_RX_CHAR]        = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
-    // GUS RX Characteristic Value
-    [GUS_IDX_RX_VAL]         = {
-        GUS_SERVER_RX_UUID,
-        WRITE_REQ_PERM_UNSEC | WRITE_CMD_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        GUS_MAX_DATA_LEN
-    },
+    // MLMR RX Characteristic Declaration
+    [MLMR_IDX_RX_CHAR]        = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
+    // MLMR RX Characteristic Value
+    [MLMR_IDX_RX_VAL]         = {MLMR_SERVER_RX_UUID,
+                                BLE_GATTS_WRITE_REQ_PERM_UNSEC | BLE_GATTS_WRITE_CMD_PERM_UNSEC,
+                                (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                                MLMR_MAX_DATA_LEN},
 
-    // GUS FLOW_CTRL Characteristic Declaration
-    [GUS_IDX_FLOW_CTRL_CHAR] = {ATT_128_CHARACTERISTIC, READ_PERM_UNSEC, 0, 0},
-    // GUS FLOW_CTRL Characteristic Value
-    [GUS_IDX_FLOW_CTRL_VAL]  = {
-        GUS_FLOW_CTRL_UUID,
-        NOTIFY_PERM_UNSEC | WRITE_REQ_PERM_UNSEC,
-        (ATT_VAL_LOC_USER | ATT_UUID_TYPE_SET(UUID_TYPE_128)),
-        GUS_MAX_DATA_LEN
-    },
-    // GUS FLOW_CTRL Characteristic - Client Characteristic Configuration Descriptor
-    [GUS_IDX_FLOW_CTRL_CFG]  = {
-        ATT_128_CLIENT_CHAR_CFG,
-        READ_PERM_UNSEC | WRITE_REQ_PERM_UNSEC,
-        0,
-        0
-    },
-};
-
-/**@brief GUS Service interface required by profile manager. */
-static ble_prf_manager_cbs_t gus_mgr_cbs = {
-    (prf_init_func_t)gus_init,
-    NULL,
-    NULL,
-};
-
-/**@brief GUS GATT Server Callbacks. */
-static gatts_prf_cbs_t gus_gatts_cbs = {
-    gus_read_att_cb,
-    gus_write_att_cb,
-    NULL,
-    gus_ntf_ind_cb,
-    gus_cccd_set_cb
-};
-
-/**@brief GUS Server Information. */
-static const prf_server_info_t gus_prf_info = {
-    .max_connection_nb = GUS_CONNECTION_MAX,
-    .manager_cbs       = &gus_mgr_cbs,
-    .gatts_prf_cbs     = &gus_gatts_cbs
+    // MLMR FLOW_CTRL Characteristic Declaration
+    [MLMR_IDX_FLOW_CTRL_CHAR] = {ATT_128_CHARACTERISTIC, BLE_GATTS_READ_PERM_UNSEC, 0, 0},
+    // MLMR FLOW_CTRL Characteristic Value
+    [MLMR_IDX_FLOW_CTRL_VAL]  = {MLMR_FLOW_CTRL_UUID,
+                                BLE_GATTS_NOTIFY_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC,
+                                (BLE_GATTS_ATT_VAL_LOC_USER | BLE_GATTS_ATT_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128)),
+                                MLMR_MAX_DATA_LEN},
+    // MLMR FLOW_CTRL Characteristic - Client Characteristic Configuration Descriptor
+    [MLMR_IDX_FLOW_CTRL_CFG]  = {ATT_128_CLIENT_CHAR_CFG,
+                                BLE_GATTS_READ_PERM_UNSEC | BLE_GATTS_WRITE_REQ_PERM_UNSEC,
+                                0,
+                                0},
 };
 
 /*
@@ -201,67 +157,33 @@ static const prf_server_info_t gus_prf_info = {
  */
 /**
  *****************************************************************************************
- * @brief Initialize GUS and create DB in ATT.
- *
- * @return Error code to know if service initialization succeed or not.
- *****************************************************************************************
- */
-static sdk_err_t gus_init(void)
-{
-    const uint8_t     gus_svc_uuid[] = {GUS_SERVICE_UUID};
-    uint16_t          start_hdl      = PRF_INVALID_HANDLE;
-    sdk_err_t         error_code;
-    gatts_create_db_t gatts_db;
-
-    error_code = memset_s(&gatts_db, sizeof(gatts_db), 0, sizeof(gatts_db));
-    if (error_code < 0) {
-        return;
-    }
-
-    gatts_db.shdl                  = &start_hdl;
-    gatts_db.uuid                  = gus_svc_uuid;
-    gatts_db.attr_tab_cfg          = (uint8_t *)&s_char_mask;
-    gatts_db.max_nb_attr           = GUS_IDX_NB;
-    gatts_db.srvc_perm             = SRVC_UUID_TYPE_SET(UUID_TYPE_128);
-    gatts_db.attr_tab_type         = SERVICE_TABLE_TYPE_128;
-    gatts_db.attr_tab.attr_tab_128 = gus_att_db;
-
-    error_code = ble_gatts_srvc_db_create(&gatts_db);
-    if (SDK_SUCCESS == error_code) {
-        s_gus_env.start_hdl = *gatts_db.shdl;
-    }
-
-    return error_code;
-}
-
-/**
- *****************************************************************************************
  * @brief Handles reception of the attribute info request message.
  *
  * @param[in] conn_idx: Index of the connection.
  * @param[in] p_param:  Pointer to the parameters of the read request.
  *****************************************************************************************
  */
-static void gus_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param)
+static void mlmr_read_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_read_t *p_param)
 {
-    gatts_read_cfm_t cfm;
+    ble_gatts_read_cfm_t cfm;
     uint16_t         handle    = p_param->handle;
     uint8_t          tab_index = 0;
 
-    tab_index  = prf_find_idx_by_handle(handle, s_gus_env.start_hdl, GUS_IDX_NB, (uint8_t *)&s_char_mask);
+    tab_index  = prf_find_idx_by_handle(handle, s_mlmr_env.start_hdl, MLMR_IDX_NB, (uint8_t *)&s_char_mask);
     cfm.handle = handle;
     cfm.status = BLE_SUCCESS;
 
-    switch (tab_index) {
-        case GUS_IDX_TX_CFG:
+    switch (tab_index)
+    {
+        case MLMR_IDX_TX_CFG:
             cfm.length = sizeof(uint16_t);
-            cfm.value  = (uint8_t *)&s_gus_env.tx_ntf_cfg[conn_idx];
+            cfm.value  = (uint8_t *)&s_mlmr_env.tx_ntf_cfg[conn_idx];
             cfm.status = BLE_SUCCESS;
             break;
 
-        case GUS_IDX_FLOW_CTRL_CFG:
+        case MLMR_IDX_FLOW_CTRL_CFG:
             cfm.length = sizeof(uint16_t);
-            cfm.value  = (uint8_t *)&s_gus_env.flow_ctrl_ntf_cfg[conn_idx];
+            cfm.value  = (uint8_t *)&s_mlmr_env.flow_ctrl_ntf_cfg[conn_idx];
             cfm.status = BLE_SUCCESS;
             break;
 
@@ -274,18 +196,15 @@ static void gus_read_att_cb(uint8_t conn_idx, const gatts_read_req_cb_t *p_param
     ble_gatts_read_cfm(conn_idx, &cfm);
 }
 
-void gus_combin_received_packet(uint8_t conn_idx, uint16_t length, uint8_t *p_received_data, uint8_t *p_combin_data)
+void mlmr_combin_received_packet(uint8_t conn_idx, uint16_t length, uint8_t *p_received_data, uint8_t *p_combin_data)
 {
     uint8_t *buffer = p_combin_data;
-    uint8_t ret;
 
-    if (send_data_len[conn_idx] > received_data_len[conn_idx]) {
+    if(send_data_len[conn_idx] > received_data_len[conn_idx])
+    {
         buffer += received_data_len[conn_idx];
-        ret = memcpy_s(buffer, length, p_received_data, length);
-        if (ret < 0) {
-            return;
-        }
-        received_data_len[conn_idx] += length;
+        memcpy(buffer, p_received_data, length);
+        received_data_len[conn_idx] += length; 
     }
 }
 
@@ -297,68 +216,74 @@ void gus_combin_received_packet(uint8_t conn_idx, uint16_t length, uint8_t *p_re
  * @param[in] p_param:  Point to the parameters of the write request.
  *****************************************************************************************
  */
-static void   gus_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_param)
+static void   mlmr_write_att_evt_handler(uint8_t conn_idx, const ble_gatts_evt_write_t *p_param)
 {
     uint8_t           handle    = p_param->handle;
     uint8_t           tab_index = 0;
     uint16_t          cccd_value;
-    gus_evt_t         event;
-    gatts_write_cfm_t cfm;
-    uint8_t           ret;
+    mlmr_evt_t         event;
+    ble_gatts_write_cfm_t cfm;
 
-    tab_index      = prf_find_idx_by_handle(handle, s_gus_env.start_hdl, GUS_IDX_NB, (uint8_t *)&s_char_mask);
+    tab_index      = prf_find_idx_by_handle(handle,s_mlmr_env.start_hdl, MLMR_IDX_NB, (uint8_t *)&s_char_mask);
     event.conn_idx = conn_idx;
     cfm.handle     = handle;
     cfm.status     = BLE_SUCCESS;
-
-    switch (tab_index) {
-        case GUS_IDX_RX_VAL:
-            event.evt_type       = GUS_EVT_RX_DATA_RECEIVED;
-            if (((uint8_t *)p_param->value)[0] == adv_header) {
+    
+    switch (tab_index)
+    {
+        case MLMR_IDX_RX_VAL:
+            event.evt_type       = MLMR_EVT_RX_DATA_RECEIVED;
+            if(((uint8_t *)p_param->value)[0] == adv_header)
+            {
                 uint16_t data_len;
-                ret = memcpy(&data_len, DATA_COPY_LEN, &(((uint8_t *)p_param->value)[1]), DATA_COPY_LEN);
-                if (ret < 0) {
-                    return;
-                }
+                memcpy(&data_len, &(((uint8_t *)p_param->value)[1]), 2);
+                received_data_len[conn_idx] = 0;
+                memset(rx_buffer[conn_idx], 0, 516);
 
-                if (data_len <= (MAX_MTU_DEFUALT - MTU_DEF_OFFSET)) {
+                if(data_len <= (MAX_MTU_DEFUALT - 3))
+                {
                     event.p_data = (uint8_t *)p_param->value;
                     event.length = p_param->length;
-                    s_gus_env.gus_init.evt_handler(&event);
-                } else {
+                    s_mlmr_env.mlmr_init.evt_handler(&event);
+                }
+                else
+                {
                     send_data_len[conn_idx] = data_len;
-                    gus_combin_received_packet(conn_idx, p_param->length,
-                                               (uint8_t *)p_param->value, rx_buffer[conn_idx]);
-                    if (received_data_len[conn_idx] == send_data_len[conn_idx]) {
+                    mlmr_combin_received_packet(conn_idx, p_param->length, (uint8_t *)p_param->value, rx_buffer[conn_idx]);
+                    if(received_data_len[conn_idx] == send_data_len[conn_idx])
+                    {
                         event.p_data = rx_buffer[conn_idx];
                         event.length = send_data_len[conn_idx];
-                        s_gus_env.gus_init.evt_handler(&event);
+                        s_mlmr_env.mlmr_init.evt_handler(&event);
                         received_data_len[conn_idx] = 0;
                     }
                 }
-            } else {
-                gus_combin_received_packet(conn_idx, p_param->length, (uint8_t *)p_param->value, rx_buffer[conn_idx]);
-
-                if (received_data_len[conn_idx] == send_data_len[conn_idx]) {
+            }
+            else
+            {
+                mlmr_combin_received_packet(conn_idx, p_param->length, (uint8_t *)p_param->value, rx_buffer[conn_idx]);
+                
+                if(received_data_len[conn_idx] == send_data_len[conn_idx])
+                {
                     event.p_data = rx_buffer[conn_idx];
                     event.length = send_data_len[conn_idx];
-                    s_gus_env.gus_init.evt_handler(&event);
+                    s_mlmr_env.mlmr_init.evt_handler(&event);
                     received_data_len[conn_idx] = 0;
                 }
             }
 
             break;
 
-        case GUS_IDX_TX_CFG:
+        case MLMR_IDX_TX_CFG:
             cccd_value     = le16toh(&p_param->value[0]);
-            event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? GUS_EVT_TX_PORT_OPENED : GUS_EVT_TX_PORT_CLOSED;
-            s_gus_env.tx_ntf_cfg[conn_idx] = cccd_value;
-            s_gus_env.gus_init.evt_handler(&event);
+            event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? MLMR_EVT_TX_PORT_OPENED : MLMR_EVT_TX_PORT_CLOSED;
+            s_mlmr_env.tx_ntf_cfg[conn_idx] = cccd_value;
+            s_mlmr_env.mlmr_init.evt_handler(&event);
             break;
 
         default:
             cfm.status = BLE_ATT_ERR_INVALID_HANDLE;
-            s_gus_env.gus_init.evt_handler(&event);
+            s_mlmr_env.mlmr_init.evt_handler(&event);
             break;
     }
 
@@ -374,36 +299,39 @@ static void   gus_write_att_cb(uint8_t conn_idx, const gatts_write_req_cb_t *p_p
  * @param[in]: cccd_value: The value of cccd attribute.
  *****************************************************************************************
  */
-static void gus_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
+static void mlmr_cccd_set_evt_handler(uint8_t conn_idx, uint16_t handle, uint16_t cccd_value)
 {
     uint8_t           tab_index = 0;
-    gus_evt_t         event;
+    mlmr_evt_t         event;
 
-    if (!prf_is_cccd_value_valid(cccd_value)) {
+    if (!prf_is_cccd_value_valid(cccd_value))
+    {
         return;
     }
 
-    tab_index      = prf_find_idx_by_handle(handle, s_gus_env.start_hdl, GUS_IDX_NB, (uint8_t *)&s_char_mask);
+    tab_index      = prf_find_idx_by_handle(handle,s_mlmr_env.start_hdl, MLMR_IDX_NB, (uint8_t *)&s_char_mask);
     event.conn_idx = conn_idx;
-    event.evt_type = GUS_EVT_INVALID;
+    event.evt_type = MLMR_EVT_INVALID;
 
-    switch (tab_index) {
-        case GUS_IDX_TX_CFG:
-            event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? GUS_EVT_TX_PORT_OPENED : GUS_EVT_TX_PORT_CLOSED;
-            s_gus_env.tx_ntf_cfg[conn_idx] = cccd_value;
+    switch (tab_index)
+    {
+        case MLMR_IDX_TX_CFG:
+            event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? MLMR_EVT_TX_PORT_OPENED : MLMR_EVT_TX_PORT_CLOSED;
+            s_mlmr_env.tx_ntf_cfg[conn_idx] = cccd_value;
             break;
 
-        case GUS_IDX_FLOW_CTRL_CFG:
-            event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? GUS_EVT_FLOW_CTRL_ENABLE : GUS_EVT_FLOW_CTRL_DISABLE;
-            s_gus_env.flow_ctrl_ntf_cfg[conn_idx] = cccd_value;
+        case MLMR_IDX_FLOW_CTRL_CFG:
+            event.evt_type = (PRF_CLI_START_NTF == cccd_value) ? MLMR_EVT_FLOW_CTRL_ENABLE : MLMR_EVT_FLOW_CTRL_DISABLE;
+            s_mlmr_env.flow_ctrl_ntf_cfg[conn_idx] = cccd_value;
             break;
 
         default:
             break;
     }
 
-    if (GUS_EVT_INVALID != event.evt_type && s_gus_env.gus_init.evt_handler) {
-        s_gus_env.gus_init.evt_handler(&event);
+    if (MLMR_EVT_INVALID != event.evt_type && s_mlmr_env.mlmr_init.evt_handler)
+    {
+        s_mlmr_env.mlmr_init.evt_handler(&event);
     }
 }
 
@@ -416,16 +344,45 @@ static void gus_cccd_set_cb(uint8_t conn_idx, uint16_t handle, uint16_t cccd_val
  * @param[in] p_ntf_ind:  Pointer to the parameters of the complete event.
  *****************************************************************************************
  */
-static void gus_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf_ind_t *p_ntf_ind)
+static void mlmr_ntf_ind_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gatts_evt_ntf_ind_t *p_ntf_ind)
 {
-    if (s_gus_env.gus_init.evt_handler != NULL) {
-        gus_evt_t event;
+    if (NULL != s_mlmr_env.mlmr_init.evt_handler)
+    {
+        mlmr_evt_t event;
         event.conn_idx = conn_idx;
 
-        if (BLE_SUCCESS == status && BLE_GATT_NOTIFICATION == p_ntf_ind->type) {
-            event.evt_type = GUS_EVT_TX_DATA_SENT;
-            s_gus_env.gus_init.evt_handler(&event);
+        if (BLE_SUCCESS == status && BLE_GATT_NOTIFICATION == p_ntf_ind->type)
+        {
+            event.evt_type = MLMR_EVT_TX_DATA_SENT;
+            s_mlmr_env.mlmr_init.evt_handler(&event);
         }
+    }
+}
+
+static void mlmr_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTS_EVT_READ_REQUEST:
+            mlmr_read_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.read_req);
+            break;
+
+        case BLE_GATTS_EVT_WRITE_REQUEST:
+            mlmr_write_att_evt_handler(p_evt->evt.gatts_evt.index, &p_evt->evt.gatts_evt.params.write_req);
+            break;
+
+        case BLE_GATTS_EVT_NTF_IND:
+            mlmr_ntf_ind_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt_status, &p_evt->evt.gatts_evt.params.ntf_ind_sended);
+            break;
+
+        case BLE_GATTS_EVT_CCCD_RECOVERY:
+            mlmr_cccd_set_evt_handler(p_evt->evt.gatts_evt.index, p_evt->evt.gatts_evt.params.cccd_recovery.handle, p_evt->evt.gatts_evt.params.cccd_recovery.cccd_val);
+            break;
     }
 }
 
@@ -433,31 +390,37 @@ static void gus_ntf_ind_cb(uint8_t conn_idx, uint8_t status, const ble_gatts_ntf
  * GLOBAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
-sdk_err_t gus_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
+sdk_err_t mlmr_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
     sdk_err_t        error_code = SDK_ERR_NTF_DISABLED;
-    gatts_noti_ind_t send_cmd;
+    ble_gatts_noti_ind_t send_cmd;
     uint8_t          *buffer    = p_data;
 
-    if (PRF_CLI_START_NTF == s_gus_env.tx_ntf_cfg[conn_idx]) {
+    if (PRF_CLI_START_NTF == s_mlmr_env.tx_ntf_cfg[conn_idx])
+    {
         send_cmd.type   = BLE_GATT_NOTIFICATION;
-        send_cmd.handle = prf_find_handle_by_idx(GUS_IDX_TX_VAL, s_gus_env.start_hdl, (uint8_t *)&s_char_mask);
+        send_cmd.handle = prf_find_handle_by_idx(MLMR_IDX_TX_VAL, s_mlmr_env.start_hdl, (uint8_t *)&s_char_mask);
 
-        if (length > (MAX_MTU_DEFUALT - MTU_DEF_OFFSET)) {
-            while length > MAX_MTU_DEFUALT - MTU_DEF_OFFSET) {
+        if(length > (MAX_MTU_DEFUALT - 3))
+        {
+            while(length > MAX_MTU_DEFUALT - 3)
+            {
                 send_cmd.value  = buffer;
-                send_cmd.length = MAX_MTU_DEFUALT - MTU_DEF_OFFSET;
+                send_cmd.length = MAX_MTU_DEFUALT - 3;
                 error_code = ble_gatts_noti_ind(conn_idx, &send_cmd);
-                buffer += (MAX_MTU_DEFUALT - MTU_DEF_OFFSET);
-                length -= (MAX_MTU_DEFUALT - MTU_DEF_OFFSET);
+                buffer += (MAX_MTU_DEFUALT - 3);
+                length -= (MAX_MTU_DEFUALT - 3);
             }
-
-            if (length != 0 && length < (MAX_MTU_DEFUALT - MTU_DEF_OFFSET)) {
+            
+            if(length != 0 && length < (MAX_MTU_DEFUALT - 3))
+            {
                 send_cmd.length = length;
                 send_cmd.value  = buffer;
                 error_code = ble_gatts_noti_ind(conn_idx, &send_cmd);
             }
-        } else {
+        }
+        else
+        {
             send_cmd.value  = buffer;
             send_cmd.length = length;
             error_code = ble_gatts_noti_ind(conn_idx, &send_cmd);
@@ -467,15 +430,16 @@ sdk_err_t gus_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
     return error_code;
 }
 
-sdk_err_t gus_rx_flow_ctrl_set(uint8_t conn_idx, uint8_t flow_ctrl)
+sdk_err_t mlmr_rx_flow_ctrl_set(uint8_t conn_idx, mlmr_flow_ctrl_state_t flow_ctrl)
 {
     sdk_err_t        error_code = BLE_SUCCESS;
-    gatts_noti_ind_t send_cmd;
+    ble_gatts_noti_ind_t send_cmd;
 
-    if (PRF_CLI_START_NTF == s_gus_env.flow_ctrl_ntf_cfg[conn_idx]) {
+    if (PRF_CLI_START_NTF == s_mlmr_env.flow_ctrl_ntf_cfg[conn_idx])
+    {
         // Fill in the parameter structure
         send_cmd.type   = BLE_GATT_NOTIFICATION;
-        send_cmd.handle = prf_find_handle_by_idx(GUS_IDX_FLOW_CTRL_VAL, s_gus_env.start_hdl, (uint8_t *)&s_char_mask);
+        send_cmd.handle = prf_find_handle_by_idx(MLMR_IDX_FLOW_CTRL_VAL, s_mlmr_env.start_hdl, (uint8_t *)&s_char_mask);
 
         // Pack measured value in database
         send_cmd.length = 1;
@@ -488,16 +452,24 @@ sdk_err_t gus_rx_flow_ctrl_set(uint8_t conn_idx, uint8_t flow_ctrl)
     return error_code;
 }
 
-sdk_err_t gus_service_init(gus_init_t *p_gus_init)
+sdk_err_t mlmr_service_init(mlmr_init_t *p_mlmr_init)
 {
-    sdk_err_t ret;
-    if (p_gus_init == NULL) {
+    if (NULL == p_mlmr_init)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memcpy_s(&s_gus_env.gus_init, sizeof(gus_init_t), p_gus_init, sizeof(gus_init_t));
-    if (ret < 0) {
-        return ret;
-    }
-    return ble_server_prf_add(&gus_prf_info);
+    memcpy(&s_mlmr_env.mlmr_init, p_mlmr_init, sizeof(mlmr_init_t));
+
+    s_mlmr_env.start_hdl  = PRF_INVALID_HANDLE;
+
+    s_mlmr_env.mlmr_gatts_db.shdl                  = &s_mlmr_env.start_hdl;
+    s_mlmr_env.mlmr_gatts_db.uuid                  = s_mlmr_svc_uuid;
+    s_mlmr_env.mlmr_gatts_db.attr_tab_cfg          = (uint8_t *)&s_char_mask;
+    s_mlmr_env.mlmr_gatts_db.max_nb_attr           = MLMR_IDX_NB;
+    s_mlmr_env.mlmr_gatts_db.srvc_perm             = BLE_GATTS_SRVC_UUID_TYPE_SET(BLE_GATTS_UUID_TYPE_128); 
+    s_mlmr_env.mlmr_gatts_db.attr_tab_type         = BLE_GATTS_SERVICE_TABLE_TYPE_128;
+    s_mlmr_env.mlmr_gatts_db.attr_tab.attr_tab_128 = mlmr_attr_tab;
+
+    return ble_gatts_prf_add(&s_mlmr_env.mlmr_gatts_db, mlmr_ble_evt_handler);
 }

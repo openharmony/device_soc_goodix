@@ -57,10 +57,10 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
+#include "ble_prf_types.h"
+#include "gr_includes.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_prf_types.h"
-#include "gr55xx_sys.h"
 
 /**
  * @defgroup GLS_RACP_MACRO Defines
@@ -75,19 +75,20 @@
  * @{
  */
 /**@brief Glucose Recoerd Access Control Point Operation Codes. */
-typedef enum {
+typedef enum
+{
     GLS_RACP_OP_RESERVED,               /**< Reserved for future use. */
     GLS_RACP_OP_REP_STRD_RECS,          /**< Report stored records (Operator: Value from Operator Table). */
     GLS_RACP_OP_DEL_STRD_RECS,          /**< Delete stored records (Operator: Value from Operator Table). */
     GLS_RACP_OP_ABORT_OP,               /**< Abort operation (Operator: Null 'value of 0x00 from Operator Table'). */
     GLS_RACP_OP_REP_NB_OF_STRD_RECS,    /**< Report number of stored records (Operator: Value from Operator Table). */
-    GLS_RACP_OP_NB_OF_STRD_RECS_RSP,    /**< Number of stored records response \
-                                             (Operator: Null 'value of 0x00 from Operator Table'). */
+    GLS_RACP_OP_NB_OF_STRD_RECS_RSP,    /**< Number of stored records response (Operator: Null 'value of 0x00 from Operator Table'). */
     GLS_RACP_OP_RSP_CODE,               /**< Response Code (Operator: Null 'value of 0x00 from Operator Table'). */
 } gls_racp_op_code_t;
 
 /**@brief Glucose Recoerd Access Control Point Operator. */
-typedef enum {
+typedef enum
+{
     GLS_RACP_OPERATOR_NULL,             /**< NULL. */
     GLS_RACP_OPERATOR_ALL_RECS,         /**< All records. */
     GLS_RACP_OPERATOR_LE_OR_EQ,         /**< Less than or equal to. */
@@ -98,17 +99,15 @@ typedef enum {
 } gls_racp_operator_t;
 
 /**@brief Glucose Recoerd Access Control Point Response codes. */
-typedef enum {
+typedef enum
+{
     GLS_RACP_RSP_RESERVED,                  /**< Reserved for future use. */
     GLS_RACP_RSP_SUCCESS,                   /**< Normal response for successful operation. */
     GLS_RACP_RSP_OP_CODE_NOT_SUP,           /**< Normal response if unsupported Op Code is received. */
-    GLS_RACP_RSP_INVALID_OPERATOR,          /**< Normal response if Operator received does not meet \
-                                                 the requirements of the service (e.g. Null was expected). */
+    GLS_RACP_RSP_INVALID_OPERATOR,          /**< Normal response if Operator received does not meet the requirements of the service (e.g. Null was expected). */
     GLS_RACP_RSP_OPERATOR_NOT_SUP,          /**< Normal response if unsupported Operator is received. */
-    GLS_RACP_RSP_INVALID_OPERAND,           /**< Normal response if Operand received does not meet \
-                                                 the requirements of the service. */
-    GLS_RACP_RSP_NO_RECS_FOUND,             /**< Normal response if request to report stored records or request to \
-                                                 delete stored records resulted in no records meeting criteria. */
+    GLS_RACP_RSP_INVALID_OPERAND,           /**< Normal response if Operand received does not meet the requirements of the service. */
+    GLS_RACP_RSP_NO_RECS_FOUND,             /**< Normal response if request to report stored records or request to delete stored records resulted in no records meeting criteria. */
     GLS_RACP_RSP_ABORT_UNSUCCESSFUL,        /**< Normal response if request for Abort cannot be completed. */
     GLS_RACP_RSP_PROCEDURE_NOT_COMPLETED,   /**< Normal response if unable to complete a procedure for any reason. */
     GLS_RACP_RSP_OPERAND_NOT_SUP,           /**< Normal response if unsupported Operand is received. */
@@ -116,7 +115,8 @@ typedef enum {
 } gls_racp_operand_t;
 
 /**@brief Glucose Recoerd Access Control Point filter types. */
-typedef enum {
+typedef enum
+{
     GLS_RACP_FILTER_RESERVED,           /**< Reserved for future use. */
     GLS_RACP_FILTER_SEQ_NUMBER,         /**< Filter data using Sequence Number criteria. */
     GLS_RACP_FILTER_USER_FACING_TIME,   /**< Filter data using User Facing Time criteria. */
@@ -128,36 +128,42 @@ typedef enum {
  * @{
  */
 /**@brief Glucose Recoerd Access Control Point filter value. */
-typedef struct {
+typedef struct
+{
     gls_racp_operator_t    racp_operator;           /**< Glucose Recoerd Access Control Point Operator. */
     gls_racp_filter_type_t racp_filter_type;        /**< Glucose Recoerd Access Control Point filter types. */
-    union {
-        struct {
+    union
+    {
+        struct
+        {
             uint16_t min;                            /**< Min sequence number. */
             uint16_t max;                            /**< Max sequence number. */
-        } seq_num;                                   /**< Sequence number filtering \
-                                                          (racp_filter_type = GLS_RACP_FILTER_SEQ_NUMBER). */
-        struct {
+        } seq_num;                                   /**< Sequence number filtering (racp_filter_type = GLS_RACP_FILTER_SEQ_NUMBER). */
+        struct
+        {
             prf_date_time_t min;                     /**< Min base time. */
             prf_date_time_t max;                     /**< Max base time. */
-        } time;                                      /**< User facing time filtering \
-                                                          (filter_type = GLS_RACP_FILTER_USER_FACING_TIME). */
+        } time;                                      /**< User facing time filtering (filter_type = GLS_RACP_FILTER_USER_FACING_TIME). */
     } val;                                           /**< Filter union. */
 } gls_racp_filter_t;
 
 /**@brief Glucose Recoerd Access Control Point request value. */
-typedef struct {
+typedef struct
+{
     gls_racp_op_code_t   op_code;            /**< Glucose Recoerd Access Control Point Operation Code. */
     gls_racp_filter_t    filter;             /**< Glucose Recoerd Access Control Point Operation Code. */
 } gls_racp_req_t;
 
 /**@brief Glucose Recoerd Access Control Point response value. */
-typedef struct {
+typedef struct
+{
     gls_racp_op_code_t   op_code;            /**< Glucose Recoerd Access Control Point Operation Code. */
     gls_racp_operator_t  racp_operator;      /**< Glucose Recoerd Access Control Point Operator. */
-    union {
+    union
+    {
         uint16_t num_of_record;              /**< Number of record (if op_code = GLS_RACP_OP_REP_NB_OF_STRD_RECS). */
-        struct {
+        struct
+        {
             gls_racp_op_code_t op_code_req;             /**< Request Op Code. */
             gls_racp_operand_t status;                  /**< Command Status (if op_code = GLS_RACP_OP_RSP_CODE). */
         } rsp;                               /**< Response. */

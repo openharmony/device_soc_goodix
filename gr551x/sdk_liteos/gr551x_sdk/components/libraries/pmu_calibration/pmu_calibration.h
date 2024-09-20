@@ -1,5 +1,5 @@
-#ifndef _PMU_CALIBRATION_H
-#define _PMU_CALIBRATION_H
+#ifndef _PMU_CALIB_H
+#define _PMU_CALIB_H
 
 #include <stdio.h>
 #include <stdint.h>

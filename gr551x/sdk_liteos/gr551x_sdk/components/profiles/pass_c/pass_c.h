@@ -3,7 +3,7 @@
  *
  * @file pass_c.h
  *
- * @brief  API
+ * @brief Phone Alert Status Service Client API.
  *
  *****************************************************************************************
  * @attention
@@ -59,11 +59,11 @@
 #ifndef __PASS_C_H__
 #define __PASS_C_H__
 
+#include "ble_prf_types.h"
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_prf_types.h"
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup PASS_C_MACRO Defines
@@ -74,8 +74,7 @@
  * @{
  * @brief PASS Alert Status bits.
  */
-#define PASS_C_CONNECTION_MAX         (10 < CFG_MAX_CONNECTIONS ? \
-                                       10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of HRS Client connections. */
+#define PASS_C_CONNECTION_MAX         10                           /**< Maximum number of HRS Client connections. */
 #define PASS_C_NO_STATE_ACTIVE        (0x00)                       /**< Bit for no state active. */
 #define PASS_C_RINGER_ACTIVE          (0x01 << 0)                  /**< Bit for ringer State active. */
 #define PASS_C_VIBRATE_ACTIVE         (0x01 << 1)                  /**< Bit for vibrate State active. */
@@ -100,26 +99,25 @@
  * @{
  */
 /**@brief Phone Alert Status Service Client Ringer Control Point. */
-typedef enum {
+typedef enum
+{
     PASS_C_CTRL_PT_SILENT_MODE = 0x01,    /**< Silent Mode. */
     PASS_C_CTRL_PT_MUTE_ONCE,             /**< Mute Once. */
     PASS_C_CTRL_PT_CANCEL_SLIENT_MODE,    /**< Cancel Silent Mode. */
 } pass_c_ringer_ctrl_pt_t;
 
 /**@brief Phone Alert Status Service Client event type. */
-typedef enum {
-    PASS_C_EVT_INVALID,                         /**< PASS Client invalid event. */
+typedef enum
+{
+    PASS_C_EVT_INVALID,                         /*<* PASS Client invalid event. */
     PASS_C_EVT_DISCOVERY_COMPLETE,              /**< PASS Client has found PASS service and its characteristics. */
-    PASS_C_EVT_DISCOVERY_FAIL,                  /**< PASS Client found PASS service failed because of \
-                                                     invalid operation or no found at the peer. */
-    PASS_C_EVT_ALERT_STATUS_NTF_SET_SUCCESS,  /**< PASS Client has set Notification of Alert Status characteristic. */
-    PASS_C_EVT_RINGER_SET_NTF_SET_SUCCESS,    /**< PASS Client has set Notification of Ringer Setting characteristic. */
-    PASS_C_EVT_ALERT_STATUS_RECEIVE,          /**< PASS Client has received Alert Status value \
-                                                   (Read or Notification from peer). */
-    PASS_C_EVT_RINGER_SET_RECEIVE,            /**< PASS Client has received Ringer Setting Value \
-                                                     (Read or Notification from peer). */
-    PASS_C_EVT_CTRL_POINT_SET_SUCCESS,        /**< PASS Client has writen Control Point completely. */
-    PASS_C_EVT_WRITE_OP_ERR,                  /**< Error occured when PASS Client writen to peer. */
+    PASS_C_EVT_DISCOVERY_FAIL,                  /**< PASS Client found PASS service failed because of invalid operation or no found at the peer. */
+    PASS_C_EVT_ALERT_STATUS_NTF_SET_SUCCESS,    /**< PASS Client has set Notification of Alert Status characteristic. */
+    PASS_C_EVT_RINGER_SET_NTF_SET_SUCCESS,      /**< PASS Client has set Notification of Ringer Setting characteristic. */
+    PASS_C_EVT_ALERT_STATUS_RECEIVE,            /**< PASS Client has received Alert Status value (Read or Notification from peer). */
+    PASS_C_EVT_RINGER_SET_RECEIVE,              /**< PASS Client has received Ringer Setting Value (Read or Notification from peer). */
+    PASS_C_EVT_CTRL_POINT_SET_SUCCESS,          /**< PASS Client has writen Control Point completely. */
+    PASS_C_EVT_WRITE_OP_ERR,                    /**< Error occured when PASS Client writen to peer. */
 } pass_c_evt_type_t;
 
 /** @} */
@@ -129,26 +127,24 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
+typedef struct
+{
     uint16_t pass_srvc_start_handle;            /**< PASS Service start handle. */
     uint16_t pass_srvc_end_handle;              /**< PASS Service end handle. */
-    uint16_t pass_alert_status_handle;          /**< PASS Alert Status characteristic Value handle \
-                                                     which has been got from peer. */
-    uint16_t pass_alert_status_cccd_handle;     /**< PASS CCCD handle of Alert Status characteristic \
-                                                     which has been got from peer. */
-    uint16_t pass_ringer_set_handle;            /**< PASS Ringer Setting characteristic Value handle \
-                                                     which has been got from peer. */
-    uint16_t pass_ringer_set_cccd_handle;       /**< PASS CCCD handle of Ringer Setting characteristic \
-                                                     which has been got from peer. */
-    uint16_t pass_ringer_ctrl_pt_handle;        /**< PASS Ringer Control Point characteristic Value handle \
-                                                     which has been got from peer. */
+    uint16_t pass_alert_status_handle;          /**< PASS Alert Status characteristic Value handle which has been got from peer. */
+    uint16_t pass_alert_status_cccd_handle;     /**< PASS CCCD handle of Alert Status characteristic which has been got from peer. */
+    uint16_t pass_ringer_set_handle;            /**< PASS Ringer Setting characteristic Value handle which has been got from peer. */
+    uint16_t pass_ringer_set_cccd_handle;       /**< PASS CCCD handle of Ringer Setting characteristic which has been got from peer. */
+    uint16_t pass_ringer_ctrl_pt_handle;        /**< PASS Ringer Control Point characteristic Value handle which has been got from peer. */
 } pass_c_handles_t;
 
 /**@brief Phone Alert Status Client Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t            conn_idx;        /**< The index of the connection. */
     pass_c_evt_type_t  evt_type;        /**< The PASS event type. */
-    union {
+    union
+    {
         uint8_t        alert_status;    /**< Alert status received. */
         uint8_t        ringer_set;      /**< Ringer setting received. */
     } value;                            /**< Value received. */

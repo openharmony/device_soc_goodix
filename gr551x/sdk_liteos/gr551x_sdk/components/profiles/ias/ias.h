@@ -47,9 +47,9 @@
  * @brief Definitions and prototypes for the IAS interface.
  *
  * @details The Immediate Alert Service exposes a control point to allow a peer device to cause
- *          the device to immediately alert.
+ *          the device to immediately alert. 
  *
- *          The application must provide an event handler to set \ref ias_init_t.evt_handler.
+ *          The application must provide an event handler to set \ref ias_init_t.evt_handler. 
  *          After \ref ias_init_t variable is initialized, the application must call \ref ias_service_init()
  *          to add the Immediate Alert Service and Alert Level characteristic to the BLE Stack database,
  *          the service will notify the application when the value of Alert Level characteristic is changed
@@ -63,26 +63,28 @@
 #ifndef __IAS_H__
 #define __IAS_H__
 
-#include <stdint.h>
-#include "gr55xx_sys.h"
+#include "gr_includes.h"
 #include "custom_config.h"
+#include <stdint.h>
 
 /**
  * @defgroup IAS_ENUM Enumerations
  * @{
  */
 /**@brief Immediate Alert Service Alert levels. */
-enum {
+enum
+{
     IAS_ALERT_NONE,     /**< No alert. */
     IAS_ALERT_MILD,     /**< Mild alert. */
     IAS_ALERT_HIGH,     /**< High alert. */
 };
 
 /**@brief Immediate Alert Service event type. */
-typedef enum {
+typedef enum
+{
     IAS_EVT_INVALID,              /**< Invalid IAS event. */
     IAS_EVT_ALERT_LEVEL_UPDATED,  /**< Alert Level Updated event. */
-} ias_evt_type_t;
+}ias_evt_type_t;
 /** @} */
 
 /**
@@ -90,10 +92,11 @@ typedef enum {
  * @{
  */
 /**@brief Immediate Alert Service event. */
-typedef struct {
+typedef struct
+{
     ias_evt_type_t evt_type;    /**< Type of event. */
     uint8_t alert_level;        /**< New value of Alert level. */
-} ias_evt_t;
+}ias_evt_t;
 /** @} */
 
 /**
@@ -108,9 +111,9 @@ typedef void (*ias_evt_handler_t)(ias_evt_t *p_evt);
  * @addtogroup IAS_STRUCT Structures
  * @{
  */
-/**@brief Immediate Alert Service init stucture.
- * This contains all option and data needed for initialization of the service. */
-typedef struct {
+/**@brief Immediate Alert Service init stucture. This contains all option and data needed for initialization of the service. */
+typedef struct
+{
     ias_evt_handler_t evt_handler;      /**< Immediate Alert Service event handler. */
 } ias_init_t;
 /** @} */

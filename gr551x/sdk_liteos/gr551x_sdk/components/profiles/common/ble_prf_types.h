@@ -50,8 +50,8 @@
 #ifndef __BLE_PRF_TYPES_H__
 #define __BLE_PRF_TYPES_H__
 
+#include "gr_includes.h"
 #include <stdint.h>
-#include "gr55xx_sys.h"
 
 /** @defgroup BLE_MACRO Defines
  * @{
@@ -66,7 +66,8 @@
  * @{
  */
 /**@brief The values for setting client configuration characteristics. */
-typedef enum {
+typedef enum
+{
     PRF_CLI_STOP_NTFIND = 0x0000,   /**< Stop notification/indication. */
     PRF_CLI_START_NTF,              /**< Start notification. */
     PRF_CLI_START_IND,              /**< Start indication. */
@@ -86,7 +87,8 @@ typedef void (*prf_error_handler_t)(sdk_err_t err_code);
  */
 /**@brief Characteristic Presentation Format Descriptor structure.
  *        The packed size is \ref PRF_CHAR_PRES_FMT_SIZE. */
-typedef struct {
+typedef struct
+{
     uint16_t unit;              /**< Unit (The Unit is a UUID). */
     uint16_t description;       /**< Description. */
     uint8_t  format;            /**< Format. */
@@ -95,7 +97,8 @@ typedef struct {
 } prf_char_pres_fmt_t;
 
 /**@brief The date and time structure. The packed size is 7 bytes. */
-typedef struct {
+typedef struct
+{
     uint16_t year;              /**< year time element. */
     uint8_t  month;             /**< month time element. */
     uint8_t  day;               /**< day time element. */
@@ -105,7 +108,8 @@ typedef struct {
 } prf_date_time_t;
 
 /**@brief Slave preferred connection parameters. */
-typedef struct {
+typedef struct
+{
     uint16_t con_intv_min;      /**< Connection interval minimum. */
     uint16_t con_intv_max;      /**< Connection interval maximum. */
     uint16_t slave_latency;     /**< Slave latency. */
@@ -113,7 +117,8 @@ typedef struct {
 } gap_slv_pref_t;
 
 /**@brief Attribute information. */
-typedef struct {
+typedef struct
+{
     uint16_t  handle;           /**< Attribute Handle. */
     uint16_t  offset;           /**< Offset of the attribute value . */
     uint16_t  length;           /**< Attribute length. */

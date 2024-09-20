@@ -39,62 +39,33 @@
  * INCLUDE FILES
  *****************************************************************************************
  */
-#include <string.h>
+#include "lls_c.h"
 #include "ble_prf_utils.h"
 #include "utility.h"
-#include "lls_c.h"
+#include <string.h>
 
-#define OFFSET_8 8
 /*
  * STRUCT DEFINE
  *****************************************************************************************
  */
 /**@brief Link Loss Service environment variable. */
-struct lls_c_env_t {
+struct lls_c_env_t
+{
     lls_c_handles_t     handles;            /**< Handles of LLS characteristics which will be got for peer. */
     lls_c_evt_handler_t evt_handler;        /**< Handler of LLS Client event  */
     uint8_t             prf_id;             /**< LLS Client profile id. */
 };
 
 /*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static void lls_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp);
-static void lls_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle);
-static void lls_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);
-
-/*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
 static struct lls_c_env_t s_lls_c_env;     /**< Link Loss Service Client environment variable. */
-
-/**@brief Link Loss Service Client interface required by profile manager. */
-static ble_prf_manager_cbs_t lls_c_mgr_cbs = {
-    NULL,
-    NULL,
-    NULL
-};
-
-/**@brief Link Loss Service GATT Client Callbacks. */
-static gattc_prf_cbs_t lls_c_gattc_cbs = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    lls_c_att_read_cb,
-    lls_c_att_write_cb,
-    NULL,
-    lls_c_srvc_browse_cb,
-    NULL,
-};
-
-/**@brief Link Loss Service Client Information. */
-static const prf_client_info_t lls_c_prf_info = {
-    .max_connection_nb = LLS_C_CONNECTION_MAX,
-    .manager_cbs       = &lls_c_mgr_cbs,
-    .gattc_prf_cbs     = &lls_c_gattc_cbs
+static uint8_t      s_target_uuid[2] = {LO_U16(BLE_ATT_SVC_LINK_LOSS), HI_U16(BLE_ATT_SVC_LINK_LOSS)};
+static ble_uuid_t   s_lls_service_uuid =
+{
+    .uuid_len = 2,
+    .uuid     = s_target_uuid,
 };
 
 /*
@@ -110,55 +81,59 @@ static const prf_client_info_t lls_c_prf_info = {
  */
 void lls_c_evt_handler_excute(lls_c_evt_t *p_evt)
 {
-    if (s_lls_c_env.evt_handler != NULL && LLS_C_EVT_INVALID != p_evt->evt_type) {
+    if (NULL != s_lls_c_env.evt_handler && LLS_C_EVT_INVALID != p_evt->evt_type)
+    {
         s_lls_c_env.evt_handler(p_evt);
     }
 }
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving read response.
+ * @brief This event handler function will be called when receiving read response.
  *
  * @param[in] conn_idx:   The connection index.
  * @param[in] status:     The status of GATTC operation.
  * @param[in] p_read_rsp: The information of read response.
  *****************************************************************************************
  */
-static void lls_c_att_read_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_read_rsp_t *p_read_rsp)
+static void lls_c_att_read_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_read_t *p_read_rsp)
 {
     lls_c_evt_t lls_c_evt;
 
     lls_c_evt.conn_idx = conn_idx;
     lls_c_evt.evt_type = LLS_C_EVT_INVALID;
 
-    if (BLE_SUCCESS != status) {
+    if (BLE_SUCCESS != status)
+    {
         return;
     }
 
-    if (p_read_rsp->vals[0].handle == s_lls_c_env.handles.lls_alert_level_handle) {
+    if (p_read_rsp->value[0].handle == s_lls_c_env.handles.lls_alert_level_handle)
+    {
         lls_c_evt.evt_type  = LLS_C_EVT_ALERT_LEVEL_RECEIVE;
-        lls_c_evt.alert_level = (lls_c_alert_level_t)p_read_rsp->vals[0].p_value[0];
+        lls_c_evt.alert_level = (lls_c_alert_level_t)p_read_rsp->value[0].p_value[0];
         lls_c_evt_handler_excute(&lls_c_evt);
     }
 }
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving read response.
+ * @brief This event handler function will be called when receiving read response.
  *
  * @param[in] conn_idx:   The connection index.
  * @param[in] status:     The status of GATTC operation.
  * @param[in] handle:     The handle of attribute.
  *****************************************************************************************
  */
-static void lls_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle)
+static void lls_c_att_write_evt_handler(uint8_t conn_idx, uint8_t status, uint16_t handle)
 {
     lls_c_evt_t lls_c_evt;
 
     lls_c_evt.conn_idx = conn_idx;
     lls_c_evt.evt_type = LLS_C_EVT_INVALID;
 
-    if (handle == s_lls_c_env.handles.lls_alert_level_handle) {
+    if (handle == s_lls_c_env.handles.lls_alert_level_handle)
+    {
         lls_c_evt.evt_type = (BLE_SUCCESS == status) ?\
                              LLS_C_EVT_ALERT_LEVEL_SET_SUCCESS :\
                              LLS_C_EVT_ALERT_LEVEL_SET_ERR;
@@ -169,14 +144,14 @@ static void lls_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving browse service indication.
+ * @brief This event handler function will be called when receiving browse service indication.
  *
  * @param[in] conn_idx:      The connection index.
  * @param[in] status:        The status of GATTC operation.
  * @param[in] p_browse_srvc: The information of service browse.
  *****************************************************************************************
  */
-static void lls_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc)
+static void lls_c_srvc_browse_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_browse_srvc_t *p_browse_srvc)
 {
     lls_c_evt_t  lls_c_evt;
     uint16_t     uuid_disc;
@@ -185,94 +160,105 @@ static void lls_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gat
     lls_c_evt.conn_idx = conn_idx;
     lls_c_evt.evt_type = LLS_C_EVT_DISCOVERY_FAIL;
 
-    if (BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status) {
+    if(BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status)
+    {
         return;
     }
 
-    if (status != BLE_SUCCESS) {
-        return;
-    }
-    uuid_disc = p_browse_srvc->uuid[0] | p_browse_srvc->uuid[1] << OFFSET_8;
+    if (BLE_SUCCESS == status)
+    {
+        uuid_disc = p_browse_srvc->uuid[0] | p_browse_srvc->uuid[1] << 8;
 
-    if (BLE_ATT_SVC_LINK_LOSS == uuid_disc) {
-        s_lls_c_env.handles.lls_srvc_start_handle = p_browse_srvc->start_hdl;
-        s_lls_c_env.handles.lls_srvc_end_handle   = p_browse_srvc->end_hdl;
+        if (BLE_ATT_SVC_LINK_LOSS == uuid_disc)
+        {
+            s_lls_c_env.handles.lls_srvc_start_handle = p_browse_srvc->start_hdl;
+            s_lls_c_env.handles.lls_srvc_end_handle   = p_browse_srvc->end_hdl;
 
-        for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++) {
-            uuid_disc   = p_browse_srvc->info[i].attr.uuid[0] | p_browse_srvc->info[i].attr.uuid[1] << OFFSET_8;
-            handle_disc = p_browse_srvc->start_hdl + i + 1;
+            for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++)
+            {
+                uuid_disc   = p_browse_srvc->info[i].attr.uuid[0] | p_browse_srvc->info[i].attr.uuid[1] << 8;
+                handle_disc = p_browse_srvc->start_hdl + i + 1;
 
-            if (BLE_GATTC_BROWSE_ATTR_VAL == p_browse_srvc->info[i].attr_type) {
-                if (BLE_ATT_CHAR_ALERT_LEVEL == uuid_disc) {
-                    s_lls_c_env.handles.lls_alert_level_handle = handle_disc;
+                if (BLE_GATTC_BROWSE_ATTR_VAL == p_browse_srvc->info[i].attr_type)
+                {
+                    if (BLE_ATT_CHAR_ALERT_LEVEL == uuid_disc)
+                    {
+                        s_lls_c_env.handles.lls_alert_level_handle = handle_disc;
+                    }
                 }
-            } else if (BLE_GATTC_BROWSE_NONE == p_browse_srvc->info[i].attr_type) {
-                break;
+                else if (BLE_GATTC_BROWSE_NONE == p_browse_srvc->info[i].attr_type)
+                {
+                    break;
+                }
             }
-        }
 
-        lls_c_evt.evt_type = LLS_C_EVT_DISCOVERY_COMPLETE;
+            lls_c_evt.evt_type = LLS_C_EVT_DISCOVERY_COMPLETE;
+        }
     }
 
     lls_c_evt_handler_excute(&lls_c_evt);
 }
 
+static void lls_c_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTC_EVT_WRITE_RSP:
+            lls_c_att_write_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, p_evt->evt.gattc_evt.params.write_rsp.handle);
+            break;
+            
+        case BLE_GATTC_EVT_READ_RSP:
+            lls_c_att_read_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.read_rsp);
+            break;
+
+        case BLE_GATTC_EVT_SRVC_BROWSE:
+            lls_c_srvc_browse_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.srvc_browse);
+            break;
+    }
+}
 /*
  * GLOBAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
 sdk_err_t lls_client_init(lls_c_evt_handler_t evt_handler)
 {
-    sdk_err_t ret;
-    if (evt_handler == NULL) {
+    if (NULL == evt_handler)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memset_s(&s_lls_c_env, sizeof(s_lls_c_env), 0, sizeof(s_lls_c_env));
-    if (ret < 0) {
-        return ret;
-    }
+    memset(&s_lls_c_env, 0, sizeof(s_lls_c_env));
     s_lls_c_env.evt_handler = evt_handler;
 
-    return ble_client_prf_add(&lls_c_prf_info, &s_lls_c_env.prf_id);
+    return ble_gattc_prf_add(&s_lls_service_uuid, lls_c_ble_evt_handler);
 }
 
 sdk_err_t lls_c_disc_srvc_start(uint8_t conn_idx)
 {
-    uint8_t target_uuid[2];
-
-    target_uuid[0] = LO_U16(BLE_ATT_SVC_LINK_LOSS);
-    target_uuid[1] = HI_U16(BLE_ATT_SVC_LINK_LOSS);
-
-    const ble_uuid_t lls_service_uuid = {
-        .uuid_len = 2,
-        .uuid     = target_uuid,
-    };
-
-    return ble_gattc_prf_services_browse(s_lls_c_env.prf_id, conn_idx, &lls_service_uuid);
+    return ble_gattc_services_browse(conn_idx, &s_lls_service_uuid);
 }
 
 sdk_err_t lls_c_alert_level_set(uint8_t conn_idx, lls_c_alert_level_t alert_level)
 {
-    gattc_write_attr_value_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_lls_c_env.handles.lls_alert_level_handle) {
+    if (BLE_ATT_INVALID_HDL == s_lls_c_env.handles.lls_alert_level_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_lls_c_env.handles.lls_alert_level_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = sizeof(uint8_t);
-    write_attr_value.p_value = (uint8_t *)&alert_level;
-
-    return ble_gattc_prf_write(s_lls_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_lls_c_env.handles.lls_alert_level_handle, 0, sizeof(uint8_t), (uint8_t *)&alert_level);
 }
 
 sdk_err_t lls_c_alert_level_read(uint8_t conn_idx)
 {
-    if (BLE_ATT_INVALID_HDL == s_lls_c_env.handles.lls_alert_level_handle) {
+    if (BLE_ATT_INVALID_HDL == s_lls_c_env.handles.lls_alert_level_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    return  ble_gattc_prf_read(s_lls_c_env.prf_id, conn_idx, s_lls_c_env.handles.lls_alert_level_handle, 0);
+    return  ble_gattc_read(conn_idx, s_lls_c_env.handles.lls_alert_level_handle, 0);
 }

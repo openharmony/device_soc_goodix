@@ -41,66 +41,35 @@
  */
 #include "ths_c.h"
 #include <string.h>
-#define ATTR_VALUE_LEN 2
-#define UUID_LEN 16
 
 /*
  * STRUCT DEFINE
  *****************************************************************************************
  */
 /**@brief Throughput Service Client environment variable. */
-struct ths_c_env_t {
+struct ths_c_env_t
+{
     ths_c_handles_t      handles;            /**< Handles of THS characteristics which will be got for peer. */
     ths_c_evt_handler_t  evt_handler;        /**< Handler of THS client event  */
     uint8_t              prf_id;             /**< THS Client profile id. */
 };
 
 /*
- * LOCAL FUNCTION DECLARATION
- *****************************************************************************************
- */
-static void ths_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle);
-static void ths_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind);
-static void ths_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc);
-
-/*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
  */
-static struct ths_c_env_t
-    s_ths_c_env;                                                  /**< THS Client environment variable. */
+static struct ths_c_env_t s_ths_c_env;                                                  /**< THS Client environment variable. */
 static uint8_t            s_ths_uuid[16]              = THS_SVC_UUID;
 static uint8_t            s_ths_tx_char_uuid[16]      = THS_TX_CHAR_UUID;
 static uint8_t            s_ths_rx_char_uuid[16]      = THS_RX_CHAR_UUID;
 static uint8_t            s_ths_setting_char_uuid[16] = THS_SETTING_CHAR_UUID;
 static uint8_t            s_toggle_char_uuid[16]      = THS_TOGGLE_CHAR_UUID;
-/**@brief THS Client interface required by profile manager. */
-static ble_prf_manager_cbs_t ths_c_mgr_cbs = {
-    NULL,
-    NULL,
-    NULL
-};
 
-/**@brief THS GATT Client Callbacks. */
-static gattc_prf_cbs_t ths_c_gattc_cbs = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    ths_c_att_write_cb,
-    ths_c_att_ntf_ind_cb,
-    ths_c_srvc_browse_cb,
-    NULL,
+static ble_uuid_t         s_ths_service_uuid =
+{
+    .uuid_len = 16,
+    .uuid     = s_ths_uuid,
 };
-
-/**@brief THS Client Information. */
-static const prf_client_info_t ths_c_prf_info = {
-    .max_connection_nb = THS_C_CONNECTION_MAX,
-    .manager_cbs       = &ths_c_mgr_cbs,
-    .gattc_prf_cbs     = &ths_c_gattc_cbs
-};
-
 /*
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
@@ -114,47 +83,57 @@ static const prf_client_info_t ths_c_prf_info = {
  */
 static void ths_c_evt_handler_excute(ths_c_evt_t *p_evt)
 {
-    if (s_ths_c_env.evt_handler != NULL && THS_C_EVT_INVALID != p_evt->evt_type) {
+    if (NULL != s_ths_c_env.evt_handler && THS_C_EVT_INVALID != p_evt->evt_type)
+    {
         s_ths_c_env.evt_handler(p_evt);
     }
 }
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving read response.
+ * @brief This event handler function will be called when receiving read response.
  *
  * @param[in] conn_idx:   The connection index.
  * @param[in] status:     The status of GATTC operation.
  * @param[in] handle:     The handle of attribute.
  *****************************************************************************************
  */
-static void ths_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle)
+static void ths_c_att_write_evt_handler(uint8_t conn_idx, uint8_t status, uint16_t handle)
 {
     ths_c_evt_t ths_c_evt;
 
     ths_c_evt.conn_idx = conn_idx;
     ths_c_evt.evt_type = THS_C_EVT_INVALID;
 
-    if (handle == s_ths_c_env.handles.ths_tx_cccd_handle) {
+    if (handle == s_ths_c_env.handles.ths_tx_cccd_handle)
+    {
         ths_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             THS_C_EVT_TX_NTF_SET_SUCCESS : \
-                             THS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_ths_c_env.handles.ths_setting_cccd_handle) {
+                              THS_C_EVT_TX_NTF_SET_SUCCESS : \
+                              THS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_ths_c_env.handles.ths_setting_cccd_handle)
+    {
         ths_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             THS_C_EVT_SETTING_NTF_SET_SUCCESS : \
-                             THS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_ths_c_env.handles.ths_toggle_handle) {
+                              THS_C_EVT_SETTING_NTF_SET_SUCCESS : \
+                              THS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_ths_c_env.handles.ths_toggle_handle)
+    {
         ths_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             THS_C_EVT_TOGGLE_SET_SUCCESS : \
-                             THS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_ths_c_env.handles.ths_setting_handle) {
+                              THS_C_EVT_TOGGLE_SET_SUCCESS : \
+                              THS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_ths_c_env.handles.ths_setting_handle)
+    {
         ths_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             THS_C_EVT_PARAM_SET_SUCCESS : \
-                             THS_C_EVT_WRITE_OP_ERR;
-    } else if (handle == s_ths_c_env.handles.ths_rx_handle) {
+                              THS_C_EVT_PARAM_SET_SUCCESS : \
+                              THS_C_EVT_WRITE_OP_ERR;
+    }
+    else if (handle == s_ths_c_env.handles.ths_rx_handle)
+    {
         ths_c_evt.evt_type = (BLE_SUCCESS == status) ? \
-                             THS_C_EVT_TX_SUCCESS : \
-                             THS_C_EVT_WRITE_OP_ERR;
+                              THS_C_EVT_TX_SUCCESS : \
+                              THS_C_EVT_WRITE_OP_ERR;
     }
 
     ths_c_evt_handler_excute(&ths_c_evt);
@@ -162,14 +141,14 @@ static void ths_c_att_write_cb(uint8_t conn_idx, uint8_t status, uint16_t handle
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving notification or indication.
+ * @brief This event handler function will be called when receiving notification or indication.
  *
  * @param[in] conn_idx:  The connection index.
  * @param[in] status:    The status of GATTC operation.
  * @param[in] p_ntf_ind: The information of notification or indication.
  *****************************************************************************************
  */
-static void ths_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_ntf_ind)
+static void ths_c_att_ntf_ind_evt_handler(uint8_t conn_idx, const ble_gattc_evt_ntf_ind_t *p_ntf_ind)
 {
     ths_c_evt_t ths_c_evt;
 
@@ -178,9 +157,12 @@ static void ths_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_
     ths_c_evt.p_data   = p_ntf_ind->p_value;
     ths_c_evt.length   = p_ntf_ind->length;
 
-    if (p_ntf_ind->handle == s_ths_c_env.handles.ths_setting_handle) {
+    if (p_ntf_ind->handle == s_ths_c_env.handles.ths_setting_handle)
+    {
         ths_c_evt.evt_type = THS_C_EVT_SETTING_RSP_RECEIVE;
-    } else if (p_ntf_ind->handle == s_ths_c_env.handles.ths_tx_handle) {
+    }
+    else if (p_ntf_ind->handle == s_ths_c_env.handles.ths_tx_handle)
+    {
         ths_c_evt.evt_type = THS_C_EVT_THRP_DATA_RECEIVE;
     }
 
@@ -189,14 +171,14 @@ static void ths_c_att_ntf_ind_cb(uint8_t conn_idx, const ble_gattc_ntf_ind_t *p_
 
 /**
  *****************************************************************************************
- * @brief This callback function will be called when receiving browse service indication.
+ * @brief This event handler function will be called when receiving browse service indication.
  *
  * @param[in] conn_idx:      The connection index.
  * @param[in] status:        The status of GATTC operation.
  * @param[in] p_browse_srvc: The information of service browse.
  *****************************************************************************************
  */
-static void ths_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gattc_browse_srvc_t *p_browse_srvc)
+static void ths_c_srvc_browse_evt_handler(uint8_t conn_idx, uint8_t status, const ble_gattc_evt_browse_srvc_t *p_browse_srvc)
 {
     ths_c_evt_t  ths_c_evt;
     uint16_t     handle_disc;
@@ -204,153 +186,154 @@ static void ths_c_srvc_browse_cb(uint8_t conn_idx, uint8_t status, const ble_gat
     ths_c_evt.conn_idx = conn_idx;
     ths_c_evt.evt_type = THS_C_EVT_DISCOVERY_FAIL;
 
-    if (BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status) {
+    if(BLE_GATT_ERR_BROWSE_NO_ANY_MORE == status)
+    {
         return;
     }
 
-    if (status != BLE_SUCCESS) {
-        return;
-    }
-    if (p_browse_srvc->uuid_len == UUID_LEN && memcmp(p_browse_srvc->uuid, s_ths_uuid, UUID_LEN) == 0) {
-        s_ths_c_env.handles.ths_srvc_start_handle = p_browse_srvc->start_hdl;
-        s_ths_c_env.handles.ths_srvc_end_handle   = p_browse_srvc->end_hdl;
+    if (BLE_SUCCESS == status)
+    {
+        if (16 == p_browse_srvc->uuid_len && 0 == memcmp(p_browse_srvc->uuid, s_ths_uuid, 16))
+        {
+            s_ths_c_env.handles.ths_srvc_start_handle = p_browse_srvc->start_hdl;
+            s_ths_c_env.handles.ths_srvc_end_handle   = p_browse_srvc->end_hdl;
 
-        for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++) {
-            handle_disc = p_browse_srvc->start_hdl + i + 1;
+            for (uint32_t i = 0; i < (p_browse_srvc->end_hdl - p_browse_srvc->start_hdl); i++)
+            {
+                handle_disc = p_browse_srvc->start_hdl + i + 1;
 
-            if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_ATTR_VAL) {
-                if (memcmp(p_browse_srvc->info[i].attr.uuid, s_ths_rx_char_uuid, UUID_LEN) == 0) {
-                    s_ths_c_env.handles.ths_rx_handle = handle_disc;
-                } else if ((memcmp(p_browse_srvc->info[i].attr.uuid, s_ths_tx_char_uuid, UUID_LEN) == 0)) {
-                    s_ths_c_env.handles.ths_tx_handle      = handle_disc;
-                    s_ths_c_env.handles.ths_tx_cccd_handle = handle_disc + 1;
-                } else if (memcmp(p_browse_srvc->info[i].attr.uuid, s_ths_setting_char_uuid, UUID_LEN) == 0) {
-                    s_ths_c_env.handles.ths_setting_handle      = handle_disc;
-                    s_ths_c_env.handles.ths_setting_cccd_handle = handle_disc + 1;
-                } else if (memcmp(p_browse_srvc->info[i].attr.uuid, s_toggle_char_uuid, UUID_LEN) == 0) {
-                    s_ths_c_env.handles.ths_toggle_handle = handle_disc;
+                if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_ATTR_VAL)
+                {
+                    if (0 == memcmp(p_browse_srvc->info[i].attr.uuid, s_ths_rx_char_uuid, 16))
+                    {
+                        s_ths_c_env.handles.ths_rx_handle = handle_disc;
+                    }
+                    else if (0 == (memcmp(p_browse_srvc->info[i].attr.uuid, s_ths_tx_char_uuid, 16)))
+                    {
+                        s_ths_c_env.handles.ths_tx_handle      = handle_disc;
+                        s_ths_c_env.handles.ths_tx_cccd_handle = handle_disc + 1;
+                    }
+                    else if (0 == memcmp(p_browse_srvc->info[i].attr.uuid, s_ths_setting_char_uuid, 16))
+                    {
+                        s_ths_c_env.handles.ths_setting_handle      = handle_disc;
+                        s_ths_c_env.handles.ths_setting_cccd_handle = handle_disc + 1;
+                    }
+                    else if (0 == memcmp(p_browse_srvc->info[i].attr.uuid, s_toggle_char_uuid, 16))
+                    {
+                        s_ths_c_env.handles.ths_toggle_handle = handle_disc;
+                    }
+                }
+
+                if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_NONE)
+                {
+                    break;
                 }
             }
 
-            if (p_browse_srvc->info[i].attr_type == BLE_GATTC_BROWSE_NONE) {
-                break;
-            }
+            ths_c_evt.evt_type = THS_C_EVT_DISCOVERY_COMPLETE;
         }
-
-        ths_c_evt.evt_type = THS_C_EVT_DISCOVERY_COMPLETE;
     }
 
     ths_c_evt_handler_excute(&ths_c_evt);
 }
 
+static void ths_c_ble_evt_handler(const ble_evt_t *p_evt)
+{
+    if (NULL == p_evt)
+    {
+        return;
+    }
+
+    switch (p_evt->evt_id)
+    {
+        case BLE_GATTC_EVT_SRVC_BROWSE:
+            ths_c_srvc_browse_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, &p_evt->evt.gattc_evt.params.srvc_browse);
+            break;
+
+        case BLE_GATTC_EVT_WRITE_RSP:
+            ths_c_att_write_evt_handler(p_evt->evt.gattc_evt.index, p_evt->evt_status, p_evt->evt.gattc_evt.params.write_rsp.handle);
+            break;
+
+        case BLE_GATTC_EVT_NTF_IND:
+            ths_c_att_ntf_ind_evt_handler(p_evt->evt.gattc_evt.index, &p_evt->evt.gattc_evt.params.ntf_ind);
+            break;
+    }
+}
 /*
  * GLOBAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
 sdk_err_t ths_client_init(ths_c_evt_handler_t evt_handler)
 {
-    sdk_err_t ret;
-    if (evt_handler == NULL) {
+    if (NULL == evt_handler)
+    {
         return SDK_ERR_POINTER_NULL;
     }
 
-    ret = memset_s(&s_ths_c_env, sizeof(s_ths_c_env), 0, sizeof(s_ths_c_env));
-    if (ret < 0) {
-        return ret;
-    }
+    memset(&s_ths_c_env, 0, sizeof(s_ths_c_env));
     s_ths_c_env.evt_handler = evt_handler;
 
-    return ble_client_prf_add(&ths_c_prf_info, &s_ths_c_env.prf_id);
+    return ble_gattc_prf_add(&s_ths_service_uuid, ths_c_ble_evt_handler);
 }
 
 sdk_err_t ths_c_disc_srvc_start(uint8_t conn_idx)
 {
-    const ble_uuid_t ths_uuid = {
-        .uuid_len = 16,
-        .uuid     = s_ths_uuid,
-    };
-
-    return ble_gattc_prf_services_browse(s_ths_c_env.prf_id, conn_idx, &ths_uuid);
+    return ble_gattc_services_browse(conn_idx, &s_ths_service_uuid);
 }
 
 sdk_err_t ths_c_tx_notify_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_attr_value_t write_attr_value;
     uint16_t ntf_value = is_enable ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND;
 
-    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_tx_cccd_handle) {
+    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_tx_cccd_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_ths_c_env.handles.ths_tx_cccd_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ntf_value;
-
-    return ble_gattc_prf_write(s_ths_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx,s_ths_c_env.handles.ths_tx_cccd_handle, 0, 2, (uint8_t *)&ntf_value);
 }
 
 sdk_err_t ths_c_setting_notify_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_attr_value_t write_attr_value;
     uint16_t ntf_value = is_enable ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND;
 
-    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_setting_cccd_handle) {
+    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_setting_cccd_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.handle  = s_ths_c_env.handles.ths_setting_cccd_handle;
-    write_attr_value.offset  = 0;
-    write_attr_value.length  = ATTR_VALUE_LEN;
-    write_attr_value.p_value = (uint8_t *)&ntf_value;
-
-    return ble_gattc_prf_write(s_ths_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write(conn_idx, s_ths_c_env.handles.ths_setting_cccd_handle, 0, 2, (uint8_t *)&ntf_value);
 }
 
 sdk_err_t ths_c_comm_param_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
-    gattc_write_no_resp_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_setting_handle) {
+    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_setting_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.signed_write  = false;
-    write_attr_value.handle        = s_ths_c_env.handles.ths_setting_handle;
-    write_attr_value.length        = length;
-    write_attr_value.p_value       = p_data;
-
-    return ble_gattc_prf_write_no_resp(s_ths_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write_no_resp(conn_idx, false, s_ths_c_env.handles.ths_setting_handle, length, p_data);
 }
 
 sdk_err_t ths_c_toggle_set(uint8_t conn_idx, bool is_enable)
 {
-    gattc_write_no_resp_t write_attr_value;
-
-    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_toggle_handle) {
+    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_toggle_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.signed_write = false;
-    write_attr_value.handle       = s_ths_c_env.handles.ths_toggle_handle;
-    write_attr_value.length       = 1;
-    write_attr_value.p_value      = (uint8_t *)&is_enable;
-
-    return ble_gattc_prf_write_no_resp(s_ths_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write_no_resp(conn_idx, false, s_ths_c_env.handles.ths_toggle_handle, 1, (uint8_t *)&is_enable);
 }
 
 sdk_err_t ths_c_tx_data_send(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
 {
-    gattc_write_no_resp_t write_attr_value;
 
-    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_rx_handle) {
+    if (BLE_ATT_INVALID_HDL == s_ths_c_env.handles.ths_rx_handle)
+    {
         return SDK_ERR_INVALID_HANDLE;
     }
 
-    write_attr_value.signed_write  = false;
-    write_attr_value.handle        = s_ths_c_env.handles.ths_rx_handle;
-    write_attr_value.length        = length;
-    write_attr_value.p_value       = p_data;
-
-    return ble_gattc_prf_write_no_resp(s_ths_c_env.prf_id, conn_idx, &write_attr_value);
+    return ble_gattc_write_no_resp(conn_idx, false, s_ths_c_env.handles.ths_rx_handle, length, p_data);
 }
+
+

@@ -3,7 +3,7 @@
  *
  * @file otas_c.h
  *
- * @brief OTAS Client API
+ * @brief Over The Air Service Client API
  *
  *****************************************************************************************
  * @attention
@@ -55,32 +55,31 @@
 #ifndef __OTAS_C_H__
 #define __OTAS_C_H__
 
+#include "ble_prf_types.h"
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "ble_prf_types.h"
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup OTAS_C_MACRO Defines
  * @{
  */
-#define OTAS_C_CONNECTION_MAX (10 < CFG_MAX_CONNECTIONS ? \
-                              10 : CFG_MAX_CONNECTIONS) /**< Maximum number of OTAS Client connections. */
+#define OTAS_C_CONNECTION_MAX     10                                                 /**< Maximum number of OTAS Client connections. */
 
 /**
  * @defgroup OTAS_UUID OTAS UUIDs
  * @{
  * @brief OTAS service and characteristcs UUID.
  */
-#define OTAS_SVC_UUID         {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                               0x01, 0x04, 0xED, 0xA6}     /**< UUID of OTA Service. */
-#define OTAS_TX_CHAR_UUID     {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                               0x02, 0x04, 0xED, 0xA6}     /**< UUID of OTA TX Characteristic. */
-#define OTAS_RX_CHAR_UUID     {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                               0x03, 0x04, 0xED, 0xA6}     /**< UUID of OTA RX Characteristic. */
-#define OTAS_CTRL_CHAR_UUID   {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, 0x0A, 0x46, 0x44, 0xD3, \
-                               0x04, 0x04, 0xED, 0xA6}     /**< UUID of OTA Control Characteristic. */
+#define OTAS_SVC_UUID           {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
+                                 0x0A, 0x46, 0x44, 0xD3, 0x01, 0x04, 0xED, 0xA6}     /**< UUID of OTA Service. */
+#define OTAS_TX_CHAR_UUID       {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
+                                 0x0A, 0x46, 0x44, 0xD3, 0x02, 0x04, 0xED, 0xA6}     /**< UUID of OTA TX Characteristic. */
+#define OTAS_RX_CHAR_UUID       {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
+                                 0x0A, 0x46, 0x44, 0xD3, 0x03, 0x04, 0xED, 0xA6}     /**< UUID of OTA RX Characteristic. */
+#define OTAS_CTRL_CHAR_UUID     {0x1B, 0xD7, 0x90, 0xEC, 0xE8, 0xB9, 0x75, 0x80, \
+                                 0x0A, 0x46, 0x44, 0xD3, 0x04, 0x04, 0xED, 0xA6}     /**< UUID of OTA Control Characteristic. */
 /** @} */
 /** @} */
 
@@ -89,16 +88,16 @@
  * @{
  */
 /**@brief OTA Service Client event type. */
-typedef enum {
-    OTAS_C_EVT_INVALID,             /**< OTA Client invalid event. */
-    OTAS_C_EVT_DISCOVERY_COMPLETE,  /**< OTA Client has found THS service and its characteristics. */
-    OTAS_C_EVT_DISCOVERY_FAIL,      /**< OTA Client found THS service failed because of invalid operation \
-                                         or no found at the peer. */
-    OTAS_C_EVT_TX_NTF_SET_SUCCESS,  /**< OTA Client has set peer Tx notify. */
-    OTAS_C_EVT_CTRL_SUCCESS,        /**< OTA Client has set control info. */
-    OTAS_C_EVT_PEER_DATA_RECEIVE,   /**< OTA Client has received data from peer. */
-    OTAS_C_EVT_TX_CPLT,             /**< OTA Client has sent something to a peer successfully. */
-    OTAS_C_EVT_WRITE_OP_ERR,        /**< Error occured when OTA Client writen to peer. */
+typedef enum
+{
+    OTAS_C_EVT_INVALID,                      /**< OTA Client invalid event. */
+    OTAS_C_EVT_DISCOVERY_COMPLETE,           /**< OTA Client has found THS service and its characteristics. */
+    OTAS_C_EVT_DISCOVERY_FAIL,               /**< OTA Client found THS service failed because of invalid operation or no found at the peer. */
+    OTAS_C_EVT_TX_NTF_SET_SUCCESS,           /**< OTA Client has set peer Tx notify. */
+    OTAS_C_EVT_CTRL_SUCCESS,                 /**< OTA Client has set control info. */
+    OTAS_C_EVT_PEER_DATA_RECEIVE,            /**< OTA Client has received data from peer. */
+    OTAS_C_EVT_TX_CPLT,                      /**< OTA Client has sent something to a peer successfully. */
+    OTAS_C_EVT_WRITE_OP_ERR,                 /**< Error occured when OTA Client writen to peer. */
 } otas_c_evt_type_t;
 /** @} */
 
@@ -107,17 +106,19 @@ typedef enum {
  * @{
  */
 /**@brief Handles on the connected peer device needed to interact with it. */
-typedef struct {
-    uint16_t otas_srvc_start_handle;  /**< OTA Service start handle. */
-    uint16_t otas_srvc_end_handle;    /**< OTA Service end handle. */
-    uint16_t otas_tx_handle;          /**< OTA tx characteristic handle which has been got from peer. */
-    uint16_t otas_tx_cccd_handle;     /**< OTA tx characteristic CCCD handle which has been got from peer. */
-    uint16_t otas_rx_handle;          /**< OTA rx characteristic handle which has been got from peer. */
-    uint16_t otas_ctrl_handle;        /**< OTA control characteristic handle which has been got from peer. */
+typedef struct
+{
+    uint16_t otas_srvc_start_handle;       /**< OTA Service start handle. */
+    uint16_t otas_srvc_end_handle;         /**< OTA Service end handle. */
+    uint16_t otas_tx_handle;               /**< OTA tx characteristic handle which has been got from peer. */
+    uint16_t otas_tx_cccd_handle;          /**< OTA tx characteristic CCCD handle which has been got from peer. */
+    uint16_t otas_rx_handle;               /**< OTA rx characteristic handle which has been got from peer. */
+    uint16_t otas_ctrl_handle;             /**< OTA control characteristic handle which has been got from peer. */
 } otas_c_handles_t;
 
 /**@brief OTA Service Client event. */
-typedef struct {
+typedef struct
+{
     uint8_t           conn_idx;            /**< The connection index. */
     otas_c_evt_type_t evt_type;            /**< OTA client event type. */
     uint8_t          *p_data;              /**< Pointer to event data. */

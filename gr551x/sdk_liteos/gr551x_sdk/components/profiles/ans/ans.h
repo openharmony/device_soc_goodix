@@ -46,7 +46,7 @@
  * @brief Alert Notification Service module.
  *
  * @details The Alert Notification Service exposes alert information in a device. This information
- *          includes the following:Type of alert occurring in a device, Additional text information
+ *          includes the following: Type of alert occurring in a device, Additional text information
  *          such as caller ID or sender ID, Count of new alerts and Count of unread alert items.
  *
  *          After \ref ans_init_t variable is intialized, the application must call \ref ans_service_init()
@@ -58,24 +58,23 @@
 #ifndef __ANS_H__
 #define __ANS_H__
 
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup ANS_MACRO Defines
  * @{
  */
-#define ANS_CONNECTION_MAX  (10 < CFG_MAX_CONNECTIONS ? \
-                            10 : CFG_MAX_CONNECTIONS)  /**< Maximum number of Alert Notification Service connections. */
-#define ANS_ERROR_CMD_NOT_SUP             0xa0        /**< Command not supported. */
-#define ANS_UTF_8_STR_LEN_MAX             18          /**< Maximum length of “UTF-8 string”. */
-#define ANS_SUP_NEW_ALERT_CAT_VAL_LEN     2           /**< Length of Supported New Alert Category value. */
-#define ANS_NEWS_ALERT_VAL_LEN            (ANS_UTF_8_STR_LEN_MAX + 2)   /**< Length of New Alert value. */
-#define ANS_SUP_UNREAD_ALERT_CAT_VAL_LEN  2           /**< Length of Supported Unread Alert Category value. */
-#define ANS_UNREAD_ALERT_STA_VAL_LEN      2           /**< Length of Unread Alert Status value. */
-#define ANS_ALERT_NTF_CTRL_PT_VAL_LEN     2           /**< Length of Alert Notification Control Point value. */
+#define ANS_CONNECTION_MAX                  10                            /**< Maximum number of Alert Notification Service connections. */
+#define ANS_ERROR_CMD_NOT_SUP               0xa0                          /**< Command not supported. */
+#define ANS_UTF_8_STR_LEN_MAX               18                            /**< Maximum length of “UTF-8 string”. */
+#define ANS_SUP_NEW_ALERT_CAT_VAL_LEN       2                             /**< Length of Supported New Alert Category value. */
+#define ANS_NEWS_ALERT_VAL_LEN              (ANS_UTF_8_STR_LEN_MAX + 2)   /**< Length of New Alert value. */
+#define ANS_SUP_UNREAD_ALERT_CAT_VAL_LEN    2                             /**< Length of Supported Unread Alert Category value. */
+#define ANS_UNREAD_ALERT_STA_VAL_LEN        2                             /**< Length of Unread Alert Status value. */
+#define ANS_ALERT_NTF_CTRL_PT_VAL_LEN       2                             /**< Length of Alert Notification Control Point value. */
 
 /**
  * @defgroup ANS_CAT_ID_BIT_MASK Category ID Bit Masks
@@ -101,7 +100,8 @@
  * @{
  */
 /**@brief Alert Notification Service Categories of alerts/messages. */
-typedef enum {
+typedef enum
+{
     ANS_CAT_ID_SMPL_ALERT,            /**< Simple Alert: General text alert or non-text alert. */
     ANS_CAT_ID_EMAIL,                 /**< Email: Alert when Email messages arrive. */
     ANS_CAT_ID_NEWS,                  /**< News: News feeds such as RSS, Atom. */
@@ -117,7 +117,8 @@ typedef enum {
 } ans_alert_cat_id_t;
 
 /**@brief Alert Notification Service Control point. */
-typedef enum {
+typedef enum
+{
     ANS_CTRL_PT_EN_NEW_INC_ALERT_NTF,       /**< Enable New Incoming Alert Notification. */
     ANS_CTRL_PT_EN_UNREAD_CAT_STA_NTF,      /**< Enable Unread Category Status Notification. */
     ANS_CTRL_PT_DIS_NEW_INC_ALERT_NTF,      /**< Disable New Incoming Alert Notification. */
@@ -127,16 +128,15 @@ typedef enum {
 } ans_ctrl_pt_id_t;
 
 /**@brief Alert Notification Service Event type. */
-typedef enum {
+typedef enum
+{
     ANS_EVT_INVALID,                        /**< Invalid ANS event type. */
     ANS_EVT_NEW_ALERT_NTF_ENABLE,           /**< NEW Alert notification is enabled. */
     ANS_EVT_NEW_ALERT_NTF_DISABLE,          /**< NEW Alert notification is disabled. */
     ANS_EVT_UNREAD_ALERT_STA_NTF_ENABLE,    /**< Unread Alert Status notification is enabled. */
     ANS_EVT_UNREAD_ALERT_STA_NTF_DISABLE,   /**< Unread Alert Status notification is disabled. */
-    ANS_EVT_NEW_ALERT_IMME_NTF_REQ,         /**< Request: notify the New Alert characteristic \
-                                                 to the client immediately. */
-    ANS_EVT_Unread_ALERT_IMME_NTF_REQ,      /**< Request: notify the Unread Alert Status characteristic \
-                                                 to the client immediately. */
+    ANS_EVT_NEW_ALERT_IMME_NTF_REQ,         /**< Request: notify the New Alert characteristic to the client immediately. */
+    ANS_EVT_Unread_ALERT_IMME_NTF_REQ,      /**< Request: notify the Unread Alert Status characteristic to the client immediately. */
 } ans_evt_type_t;
 /** @} */
 
@@ -145,7 +145,8 @@ typedef enum {
  * @{
  */
 /**@brief Alert Notification Service New Alert value. */
-typedef struct {
+typedef struct
+{
     ans_alert_cat_id_t  cat_id;                            /**< Category ID. */
     uint8_t             alert_num;                         /**< Number of new alert. */
     uint8_t             str_info[ANS_UTF_8_STR_LEN_MAX];   /**< Text String Information. */
@@ -153,19 +154,22 @@ typedef struct {
 } ans_new_alert_t;
 
 /**@brief Alert Notification Service Unread Alert Status value. */
-typedef struct {
+typedef struct
+{
     ans_alert_cat_id_t  cat_id;         /**< Category ID. */
     uint8_t             unread_num;     /**< Number of unread alert. */
 } ans_unread_alert_t;
 
 /**@brief Alert Notification Service Control Point value. */
-typedef struct {
+typedef struct
+{
     ans_ctrl_pt_id_t    cmd_id;     /**< Command ID. */
     ans_alert_cat_id_t  cat_id;     /**< Category ID. */
 } ans_ctrl_pt_t;
 
 /**@brief Alert Notification Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t          conn_idx;        /**< The index of the connection. */
     ans_evt_type_t   evt_type;        /**< The ANS event type. */
     uint16_t         cat_ids;         /**< Category IDs. */
@@ -184,9 +188,9 @@ typedef void (*ans_evt_handler_t)(ans_evt_t *p_evt);
  * @defgroup ANS_STRUCT Structures
  * @{
  */
-/**@brief Alert Notification Service init stucture. \
- * This contains all options and data needed for initialization of the service. */
-typedef struct {
+/**@brief Alert Notification Service init stucture. This contains all options and data needed for initialization of the service. */
+typedef struct
+{
     ans_evt_handler_t   evt_handler;             /**< Phone Alert Status Service event handler. */
     uint16_t            sup_new_alert_cat;       /**< Initial mask of Supported New Alert Category. */
     uint16_t            sup_unread_alert_sta;    /**< Initial mask of Unread Alert Status. */

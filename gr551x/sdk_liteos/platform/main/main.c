@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 GOODIX.
+ * Copyright (c) 2024 GOODIX.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,41 +18,54 @@
 #include "stdint.h"
 #include "gr55xx_sys.h"
 #include "custom_config.h"
-#include "uart.h"
 #include "app_rng.h"
 #include "app_log.h"
 #include "los_task.h"
+#include "los_event.h"
 #include "cmsis_os2.h"
+#include "board_SK.h"
 
-#define CN_MINISECONDS_IN_SECOND    1000
-#define CN_MAINBOOT_TASK_STACKSIZE  0X1000
-#define CN_MAINBOOT_TASK_PRIOR      2
-#define CN_MAINBOOT_TASK_NAME       "MainBoot"
+#define CN_MINISECONDS_IN_SECOND   1000
+#define CN_MAINBOOT_TASK_STACKSIZE 0X1000
+#define CN_MAINBOOT_TASK_PRIOR     2
+#define CN_MAINBOOT_TASK_NAME      "MainBoot"
 
-#define RNG_PARAM   {APP_RNG_TYPE_POLLING, {RNG_SEED_FR0_S0, RNG_LFSR_MODE_59BIT, RNG_OUTPUT_LFSR, RNG_POST_PRO_NOT}}
-
-static const uint8_t  s_bd_addr[SYS_BD_ADDR_LEN] = {0x08, 0x08, 0x08, 0xea, 0xea, 0xea};
+static const uint8_t s_bd_addr[SYS_BD_ADDR_LEN] = {0x08, 0x08, 0x08, 0xea, 0xea, 0xea};
 static uint16_t g_random_seed[8] = {0x1234, 0x5678, 0x90AB, 0xCDEF, 0x1468, 0x2345, 0x5329, 0x2411};
+
+int DeviceManagerStart();
 
 /* Initialize system peripherals. */
 void SystemPeripheralsInit(void)
 {
-    uint8_t   addr[6];
-    uint16_t  lenght = 6;
+    uint8_t addr[6];
+    uint16_t lenght = 6;
 
-    if (NVDS_TAG_NOT_EXISTED == nvds_get(0xC001, &lenght, (uint8_t*)addr)) {
+    if (NVDS_TAG_NOT_EXISTED == nvds_get(0xC001, &lenght, (uint8_t *)addr)) {
         SYS_SET_BD_ADDR(s_bd_addr);
     }
 
     bsp_log_init();
     APP_LOG_INFO("GR551x system start!!!");
+#if LOSCFG_USE_SHELL
+    extern EVENT_CB_S g_shellInputEvent;
+    LOS_EventWrite(&g_shellInputEvent, 0x1);
+#endif // LOSCFG_USE_SHELL
 }
 
 /* Initialize Hardware RNG peripherals. */
 void HardwareRandomInit(void)
 {
-    app_rng_params_t params_t = RNG_PARAM;
-    app_rng_init(&params_t, NULL);
+    static app_rng_params_t rng_params = {
+        .use_type = APP_RNG_TYPE_POLLING,
+        .init = {
+            .seed_mode = RNG_SEED_FR0_S0,
+            .lfsr_mode = RNG_LFSR_MODE_59BIT,
+            .out_mode = RNG_OUTPUT_LFSR,
+            .post_mode = RNG_POST_PRO_NOT,
+        },
+    };
+    app_rng_init(&rng_params, NULL);
 }
 
 int HardwareRandomGet(uint32_t *p_random)
@@ -70,7 +83,7 @@ int HardwareRandomGet(uint32_t *p_random)
 void OSVectorInit(void)
 {
     uint32_t *p_vector = (uint32_t *)SCB->VTOR;
-    p_vector[SVCall_IRQn + OS_SYS_VECTOR_CNT]  = SVC_Handler;
+    p_vector[SVCall_IRQn + OS_SYS_VECTOR_CNT] = (uint32_t)SVC_Handler;
 
     OsSetVector(WDT_IRQn, (HWI_PROC_FUNC)WDT_IRQHandler);
     OsSetVector(BLE_SDK_IRQn, (HWI_PROC_FUNC)BLE_SDK_Handler);
@@ -92,7 +105,7 @@ void OSVectorInit(void)
     OsSetVector(HMAC_IRQn, (HWI_PROC_FUNC)HMAC_IRQHandler);
     OsSetVector(EXT2_IRQn, (HWI_PROC_FUNC)EXT2_IRQHandler);
     OsSetVector(RNG_IRQn, (HWI_PROC_FUNC)RNG_IRQHandler);
-    OsSetVector(PMU_IRQn, (HWI_PROC_FUNC)PMU_IRQHandler);
+    OsSetVector(BOD_ASSERT_IRQn, (HWI_PROC_FUNC)BOD_ASSERT_IRQHandler);
     OsSetVector(PKC_IRQn, (HWI_PROC_FUNC)PKC_IRQHandler);
     OsSetVector(XQSPI_IRQn, (HWI_PROC_FUNC)XQSPI_IRQHandler);
     OsSetVector(QSPI1_IRQn, (HWI_PROC_FUNC)QSPI1_IRQHandler);
@@ -110,12 +123,14 @@ void OSVectorInit(void)
     NVIC_SetPriorityGrouping(0x3);
 }
 
-static void OHOS_SystemInitWrapper(void *parg)
+static void *OHOS_SystemInitWrapper(void *parg)
 {
+    // Avoiding HCTEST being called before real LiteParamService
+    LiteParamService();
     UNUSED(parg);
+    LiteParamService();
     OHOS_SystemInit();
-    LOS_TaskDelete(LOS_CurTaskIDGet());
-    LOS_ASSERT_COND(0);
+    return NULL;
 }
 
 static void MainBoot(void)
@@ -135,16 +150,19 @@ static void MainBoot(void)
 }
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
     UINT32 ret;
 
+    // Disable interrupt before IRQHandlers are properly initialized
+    uint32_t intSave = LOS_IntLock();
     ret = LOS_KernelInit();
     if (ret == LOS_OK) {
         OSVectorInit();
+        LOS_IntRestore(intSave);
 #if (LOSCFG_USE_SHELL == 1)
         LosShellInit();
         OsShellInit();
@@ -158,4 +176,3 @@ int main(void)
     }
     return 0;
 }
-

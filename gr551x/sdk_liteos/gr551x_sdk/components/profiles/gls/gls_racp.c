@@ -42,47 +42,64 @@
 #include "gls_racp.h"
 #include "ble_prf_utils.h"
 #include "utility.h"
-#define SCALE_2 2
-#define ADD_2 2
+
 /*
  * GLOBAL FUNCTION DEFINITIONS
  ****************************************************************************************
  */
 int8_t gls_racp_user_time_compare(prf_date_time_t *p_compared_date_time, prf_date_time_t *p_base_date_time)
 {
-    if (p_compared_date_time->year < p_base_date_time->year) {
+    if (p_compared_date_time->year < p_base_date_time->year)
+    {
         return -1;
-    } else if (p_compared_date_time->year > p_base_date_time->year) {
+    }
+    else if (p_compared_date_time->year > p_base_date_time->year)
+    {
         return 1;
     }
 
-    if (p_compared_date_time->month < p_base_date_time->month) {
+    if (p_compared_date_time->month < p_base_date_time->month)
+    {
         return -1;
-    } else if (p_compared_date_time->month > p_base_date_time->month) {
+    }
+    else if (p_compared_date_time->month > p_base_date_time->month)
+    {
         return 1;
     }
 
-    if (p_compared_date_time->day < p_base_date_time->day) {
+    if (p_compared_date_time->day < p_base_date_time->day)
+    {
         return -1;
-    } else if (p_compared_date_time->day > p_base_date_time->day) {
+    }
+    else if (p_compared_date_time->day > p_base_date_time->day)
+    {
         return 1;
     }
 
-    if (p_compared_date_time->hour < p_base_date_time->hour) {
+    if (p_compared_date_time->hour < p_base_date_time->hour)
+    {
         return -1;
-    } else if (p_compared_date_time->hour > p_base_date_time->hour) {
+    }
+    else if (p_compared_date_time->hour > p_base_date_time->hour)
+    {
         return 1;
     }
 
-    if (p_compared_date_time->min < p_base_date_time->min) {
+    if (p_compared_date_time->min < p_base_date_time->min)
+    {
         return -1;
-    } else if (p_compared_date_time->min > p_base_date_time->min) {
+    }
+    else if (p_compared_date_time->min > p_base_date_time->min)
+    {
         return 1;
     }
 
-    if (p_compared_date_time->sec < p_base_date_time->sec) {
+    if (p_compared_date_time->sec < p_base_date_time->sec)
+    {
         return -1;
-    } else if (p_compared_date_time->sec > p_base_date_time->sec) {
+    }
+    else if (p_compared_date_time->sec > p_base_date_time->sec)
+    {
         return 1;
     }
 
@@ -96,78 +113,132 @@ gls_racp_operand_t gls_racp_req_decode(const uint8_t *p_data, uint16_t length, g
     p_racp_req->op_code              = (gls_racp_op_code_t)p_data[index++];
     p_racp_req->filter.racp_operator = (gls_racp_operator_t)p_data[index++];
 
-    if ((GLS_RACP_OP_ABORT_OP != p_racp_req->op_code) && \
-            (GLS_RACP_OPERATOR_ALL_RECS > p_racp_req->filter.racp_operator)) {
-        return GLS_RACP_RSP_INVALID_OPERATOR;
+    if (GLS_RACP_OP_REP_STRD_RECS == p_racp_req->op_code ||
+        GLS_RACP_OP_DEL_STRD_RECS == p_racp_req->op_code ||
+        GLS_RACP_OP_REP_NB_OF_STRD_RECS == p_racp_req->op_code)
+    {
+        if(GLS_RACP_OPERATOR_ALL_RECS > p_racp_req->filter.racp_operator)
+        {
+            return GLS_RACP_RSP_INVALID_OPERATOR;
+        }
+    }
+    else
+    {
+        if(GLS_RACP_OPERATOR_ALL_RECS <= p_racp_req->filter.racp_operator)
+        {
+            return GLS_RACP_RSP_INVALID_OPERATOR;
+        }
     }
 
-    if (GLS_RACP_OPERATOR_LAST_REC < p_racp_req->filter.racp_operator) {
+    if (GLS_RACP_OPERATOR_LAST_REC < p_racp_req->filter.racp_operator)
+    {
         return GLS_RACP_RSP_OPERATOR_NOT_SUP;
     }
 
     if ((GLS_RACP_OPERATOR_LE_OR_EQ <= p_racp_req->filter.racp_operator) && \
-            ((GLS_RACP_OPERATOR_WITHIN_RANGE_OF) >= p_racp_req->filter.racp_operator)) {
-        if (length <= index) {
+            ((GLS_RACP_OPERATOR_WITHIN_RANGE_OF) >= p_racp_req->filter.racp_operator))
+    {
+        if (length <= index)
+        {
             return GLS_RACP_RSP_INVALID_OPERAND;
-        } else {
+        }
+        else
+        {
             p_racp_req->filter.racp_filter_type = (gls_racp_filter_type_t)p_data[index++];
 
-            if (GLS_RACP_FILTER_SEQ_NUMBER == p_racp_req->filter.racp_filter_type) {
-                if (GLS_RACP_OPERATOR_LE_OR_EQ == p_racp_req->filter.racp_operator) {
-                    if (GLS_RACP_FILTER_SEQ_NUM_LEN != (length - index)) {
+            if (GLS_RACP_FILTER_SEQ_NUMBER == p_racp_req->filter.racp_filter_type)
+            {
+                if (GLS_RACP_OPERATOR_LE_OR_EQ == p_racp_req->filter.racp_operator)
+                {
+                    if (GLS_RACP_FILTER_SEQ_NUM_LEN != (length - index))
+                    {
                         return GLS_RACP_RSP_INVALID_OPERAND;
-                    } else {
+                    }
+                    else
+                    {
                         p_racp_req->filter.val.seq_num.max = BUILD_U16(p_data[index], p_data[index + 1]);
                     }
-                } else if (GLS_RACP_OPERATOR_GT_OR_EQ == p_racp_req->filter.racp_operator) {
-                    if (GLS_RACP_FILTER_SEQ_NUM_LEN != (length - index)) {
+                }
+                else if (GLS_RACP_OPERATOR_GT_OR_EQ == p_racp_req->filter.racp_operator)
+                {
+                    if (GLS_RACP_FILTER_SEQ_NUM_LEN != (length - index))
+                    {
                         return GLS_RACP_RSP_INVALID_OPERAND;
-                    } else {
+                    }
+                    else
+                    {
                         p_racp_req->filter.val.seq_num.min = BUILD_U16(p_data[index], p_data[index + 1]);
                     }
-                } else if (GLS_RACP_OPERATOR_WITHIN_RANGE_OF == p_racp_req->filter.racp_operator) {
-                    if (GLS_RACP_FILTER_SEQ_NUM_LEN * SCALE_2 != (length - index)) {
+                }
+                else if (GLS_RACP_OPERATOR_WITHIN_RANGE_OF == p_racp_req->filter.racp_operator)
+                {
+                    if (GLS_RACP_FILTER_SEQ_NUM_LEN * 2 != (length - index))
+                    {
                         return GLS_RACP_RSP_INVALID_OPERAND;
-                    } else {
+                    }
+                    else
+                    {
                         p_racp_req->filter.val.seq_num.min = BUILD_U16(p_data[index], p_data[index + 1]);
-                        p_racp_req->filter.val.seq_num.max = BUILD_U16(p_data[index + ADD_2], p_data[index + 3]);
+                        p_racp_req->filter.val.seq_num.max = BUILD_U16(p_data[index + 2], p_data[index + 3]);
 
-                        if (p_racp_req->filter.val.seq_num.min > p_racp_req->filter.val.seq_num.max) {
+                        if (p_racp_req->filter.val.seq_num.min > p_racp_req->filter.val.seq_num.max)
+                        {
                             return GLS_RACP_RSP_INVALID_OPERAND;
                         }
                     }
                 }
-            } else if (GLS_RACP_FILTER_USER_FACING_TIME == p_racp_req->filter.racp_filter_type) {
-                if (GLS_RACP_OPERATOR_LE_OR_EQ == p_racp_req->filter.racp_operator) {
-                    if (GLS_RACP_FILTER_USER_TIME_LEN != (length - index)) {
+
+            }
+            else if (GLS_RACP_FILTER_USER_FACING_TIME == p_racp_req->filter.racp_filter_type)
+            {
+                if (GLS_RACP_OPERATOR_LE_OR_EQ == p_racp_req->filter.racp_operator)
+                {
+                    if (GLS_RACP_FILTER_USER_TIME_LEN != (length - index))
+                    {
                         return GLS_RACP_RSP_INVALID_OPERAND;
-                    } else {
+                    }
+                    else
+                    {
                         prf_unpack_date_time(&p_data[index], &p_racp_req->filter.val.time.max);
                     }
-                } else if (GLS_RACP_OPERATOR_GT_OR_EQ == p_racp_req->filter.racp_operator) {
-                    if (GLS_RACP_FILTER_USER_TIME_LEN != (length - index)) {
+                }
+                else if (GLS_RACP_OPERATOR_GT_OR_EQ == p_racp_req->filter.racp_operator)
+                {
+                    if (GLS_RACP_FILTER_USER_TIME_LEN != (length - index))
+                    {
                         return GLS_RACP_RSP_INVALID_OPERAND;
-                    } else {
+                    }
+                    else
+                    {
                         prf_unpack_date_time(&p_data[index], &p_racp_req->filter.val.time.min);
                     }
-                } else if (GLS_RACP_OPERATOR_WITHIN_RANGE_OF == p_racp_req->filter.racp_operator) {
-                    if (GLS_RACP_FILTER_USER_TIME_LEN * SCALE_2 != (length - index)) {
+                }
+                else if (GLS_RACP_OPERATOR_WITHIN_RANGE_OF == p_racp_req->filter.racp_operator)
+                {
+                    if (GLS_RACP_FILTER_USER_TIME_LEN * 2 != (length - index))
+                    {
                         return GLS_RACP_RSP_INVALID_OPERAND;
-                    } else {
+                    }
+                    else
+                    {
                         index += prf_unpack_date_time(&p_data[index], &p_racp_req->filter.val.time.min);
                         prf_unpack_date_time(&p_data[index], &p_racp_req->filter.val.time.max);
 
-                        if (gls_racp_user_time_compare(&p_racp_req->filter.val.time.max,
-                                                       &p_racp_req->filter.val.time.min) != -1) {
+                        if (-1 != gls_racp_user_time_compare(&p_racp_req->filter.val.time.max, &p_racp_req->filter.val.time.min))
+                        {
                             return GLS_RACP_RSP_INVALID_OPERAND;
                         }
                     }
                 }
-            } else {
+            }
+            else
+            {
                 return GLS_RACP_RSP_OPERAND_NOT_SUP;
             }
         }
-    } else if (length - index) != 0) {
+    }
+    else if (0 != (length - index))
+    {
         return GLS_RACP_RSP_INVALID_OPERAND;
     }
 
@@ -181,10 +252,13 @@ uint16_t gls_racp_rsp_encode(gls_racp_rsp_t *p_racp_rsp, uint8_t *p_encoded_buff
     p_encoded_buffer[length++] = p_racp_rsp->op_code;
     p_encoded_buffer[length++] = GLS_RACP_OPERATOR_NULL;
 
-    if (GLS_RACP_OP_REP_NB_OF_STRD_RECS == p_racp_rsp->op_code) {
+    if (GLS_RACP_OP_REP_NB_OF_STRD_RECS == p_racp_rsp->op_code)
+    {
         p_encoded_buffer[length++] = LO_U16(p_racp_rsp->operand.num_of_record);
         p_encoded_buffer[length++] = HI_U16(p_racp_rsp->operand.num_of_record);
-    } else {
+    }
+    else
+    {
         p_encoded_buffer[length++] = p_racp_rsp->operand.rsp.op_code_req;
         p_encoded_buffer[length++] = p_racp_rsp->operand.rsp.status;
     }

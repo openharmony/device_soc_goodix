@@ -55,9 +55,8 @@
  *          However the value of Heart Rate Measurement characteristic is stored in user space.
  *
  *          If a device supports Body Sensor Location, \ref hrs_init_t.char_mask should be
- *          set with the mask \ref HRS_CHAR_BODY_SENSOR_LOC_SUP to expose the Body Sensor Location characteristic.
- *          If Energy Expended Field is included in the Heart Rate Measurement characteristic, \ref hrs_init_t.
- *          char_mask must be set with \ref HRS_CHAR_ENGY_EXP_SUP.
+ *          set with the mask \ref HRS_CHAR_BODY_SENSOR_LOC_SUP to expose the Body Sensor Location characteristic. If Energy Expended Field is included
+ *          in the Heart Rate Measurement characteristic, \ref hrs_init_t.char_mask must be set with \ref HRS_CHAR_ENGY_EXP_SUP.
  *
  *          If an event handler is provided by the application, the Heart Rate Service will pass
  *          Heart Rate Service events to the application.
@@ -69,20 +68,19 @@
 #ifndef __HRS_H__
 #define __HRS_H__
 
+#include "gr_includes.h"
+#include "custom_config.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gr55xx_sys.h"
-#include "custom_config.h"
 
 /**
  * @defgroup HRS_MACRO Defines
  * @{
  */
 
-#define HRS_CONNECTION_MAX  (10 < CFG_MAX_CONNECTIONS ? \
-                            10 : CFG_MAX_CONNECTIONS)   /**< Maximum number of Heart Rate Service connections. */
-#define HRS_MEAS_MAX_LEN                20  /**< Maximum length of heart rate measurement characteristic. */
-#define HRS_MAX_BUFFERED_RR_INTERVALS   9   /**< Size of RR Interval buffer inside service. */
+#define HRS_CONNECTION_MAX                  10                                  /**< Maximum number of Heart Rate Service connections. */
+#define HRS_MEAS_MAX_LEN                    20                                  /**< Maximum length of heart rate measurement characteristic. */
+#define HRS_MAX_BUFFERED_RR_INTERVALS       9                                   /**< Size of RR Interval buffer inside service. */
 
 /**
  * @defgroup HRS_CHAR_MASK Characteristics Mask
@@ -101,7 +99,8 @@
  * @{
  */
 /**@brief Values for sensor location. */
-typedef enum {
+typedef enum
+{
     HRS_SENS_LOC_OTHER,             /**< The sensor location is other. */
     HRS_SENS_LOC_CHEST,             /**< The sensor location is the chest. */
     HRS_SENS_LOC_WRIST,             /**< The sensor location is the wrist. */
@@ -112,7 +111,8 @@ typedef enum {
 } hrs_sensor_loc_t;
 
 /**@brief Heart Rate Service event types. */
-typedef enum {
+typedef enum
+{
     HRS_EVT_NOTIFICATION_ENABLED,    /**< Heart Rate value notification has been enabled. */
     HRS_EVT_NOTIFICATION_DISABLED,   /**< Heart Rate value notification has been disabled. */
     HRS_EVT_RESET_ENERGY_EXPENDED,   /**< The peer device requests to reset Energy Expended. */
@@ -125,7 +125,8 @@ typedef enum {
  * @{
  */
 /**@brief Heart Rate Service event. */
-typedef struct {
+typedef struct
+{
     uint8_t         conn_idx;    /**< Index of connection. */
     hrs_evt_type_t  evt_type;    /**< Heart Rate Service event type. */
 } hrs_evt_t;
@@ -144,12 +145,12 @@ typedef void (*hrs_evt_handler_t)(hrs_evt_t *p_evt);
  * @{
  */
 /**@brief Heart Rate Service Init variable. */
-typedef struct {
-    hrs_evt_handler_t  evt_handler;    /**< Heart Rate Service event handler. */
-    bool is_sensor_contact_supported;  /**< Determine if sensor contact detection is to be supported. */
-    uint8_t char_mask;                 /**< Mask of Supported characteristics, and configured with \ref HRS_CHAR_MASK */
-    hrs_sensor_loc_t
-    sensor_loc;     /**< The value of Body Sensor Location characteristic is static while in a connection. */
+typedef struct
+{
+    hrs_evt_handler_t  evt_handler;                       /**< Heart Rate Service event handler. */
+    bool is_sensor_contact_supported;                     /**< Determine if sensor contact detection is to be supported. */
+    uint8_t char_mask;                                    /**< Mask of Supported characteristics, and configured with \ref HRS_CHAR_MASK */
+    hrs_sensor_loc_t sensor_loc;                          /**< The value of Body Sensor Location characteristic is static while in a connection. */
 } hrs_init_t;
 /** @} */
 
@@ -234,6 +235,16 @@ void hrs_rr_interval_add(uint16_t rr_interval);
  *****************************************************************************************
  */
 sdk_err_t hrs_service_init(hrs_init_t *p_hrs_init);
+
+/**
+ *****************************************************************************************
+ * @brief Provide the interface for other modules to obtain the hrs service start handle .
+ *
+ * @return The hrs service start handle.
+ *****************************************************************************************
+ */
+uint16_t hrs_service_start_handle_get(void);
+
 /** @} */
 
 #endif
